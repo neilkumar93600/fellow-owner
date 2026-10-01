@@ -1,5 +1,5 @@
-import type * as React from 'react';
 import Link from 'next/link';
+import type * as React from 'react';
 import { Logo } from '@/components/shared/logo';
 import { cn } from '@/lib/utils';
 
@@ -42,9 +42,18 @@ export function SplitShell({
             hideAsideOnMobile && 'hidden lg:block',
           )}
         >
-          <div aria-hidden className="pointer-events-none absolute -right-24 -bottom-28 -z-10 size-[28rem] rounded-full bg-blur-1 opacity-40 blur-3xl" />
-          <div aria-hidden className="pointer-events-none absolute right-40 -bottom-40 -z-10 size-[26rem] rounded-full bg-blur-2 opacity-40 blur-3xl" />
-          <div aria-hidden className="pointer-events-none absolute -right-10 bottom-40 -z-10 size-[20rem] rounded-full bg-blur-3 opacity-35 blur-3xl" />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-24 -bottom-28 -z-10 size-[28rem] rounded-full bg-blur-1 opacity-40 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute right-40 -bottom-40 -z-10 size-[26rem] rounded-full bg-blur-2 opacity-40 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-10 bottom-40 -z-10 size-[20rem] rounded-full bg-blur-3 opacity-35 blur-3xl"
+          />
           {aside}
         </aside>
       </div>

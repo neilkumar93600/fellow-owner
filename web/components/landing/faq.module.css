@@ -212,7 +212,7 @@
 }
 
 .trigger:focus-visible {
-  outline: 2px solid rgb(124 58 237 / 0.4);
+  outline: 2px solid var(--purple);
   outline-offset: 2px;
 }
 
@@ -223,7 +223,7 @@
   }
 
   .item:has(.trigger:focus-visible) {
-    outline: 2px solid rgb(124 58 237 / 0.4);
+    outline: 2px solid var(--purple);
     outline-offset: 2px;
   }
 

@@ -5,7 +5,9 @@ import { apiFetch } from '@/lib/fetcher';
 
 /** GET /api/studio/handle-check?handle= : availability plus up to 3 suggestions. */
 export function checkHandle(handle: string, signal?: AbortSignal): Promise<HandleCheck> {
-  return apiFetch<HandleCheck>(`/api/studio/handle-check?handle=${encodeURIComponent(handle)}`, { signal });
+  return apiFetch<HandleCheck>(`/api/studio/handle-check?handle=${encodeURIComponent(handle)}`, {
+    signal,
+  });
 }
 
 /** POST /api/studio/space : finish onboarding; creates the space and the owner membership. */

@@ -76,7 +76,19 @@ function FocusClear() {
         if (document.activeElement !== el || !el.matches(':focus-visible')) return;
         const clear = navClear();
         const rect = el.getBoundingClientRect();
-        if (rect.height === 0 || rect.top >= clear || rect.bottom <= 0) return;
+        if (rect.height === 0) return;
+        // Fully off-screen (e.g. Shift+Tab into a pinned scene while Lenis is still animating elsewhere):
+        // cancel the in-flight smooth scroll and centre the control, pinned layer or not.
+        if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+          const centred = Math.max(
+            0,
+            window.scrollY + rect.top - (window.innerHeight - rect.height) / 2,
+          );
+          if (lenis) lenis.scrollTo(centred, { immediate: true, force: true });
+          else window.scrollTo({ top: centred, behavior: 'instant' });
+          return;
+        }
+        if (rect.top >= clear) return;
         if (inPinnedLayer(el)) return;
         const target = Math.max(0, window.scrollY + rect.top - clear);
         if (lenis) lenis.scrollTo(target, { immediate: true, force: true });
