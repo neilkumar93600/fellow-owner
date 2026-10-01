@@ -147,18 +147,21 @@ describe('PATCH and DELETE /api/posts/:id', () => {
       title: 'An older idea',
       createdAt: new Date(Date.now() - 25 * 3_600_000),
     });
+    const links = [{ label: 'Repo', url: 'https://github.com/arjun/gym-log' }];
+    await repos.posts.update(mira.space.id, old.id, { links });
     const closed = await request(app)
       .patch(`/api/posts/${old.id}`)
       .set('Cookie', author.cookie)
       .send({ title: 'A late change' })
       .expect(403);
     expect(closed.body.error.code).toBe('edit_window_closed');
+    // The whole form sent back unchanged (links come back from jsonb with another key order).
     const status = await request(app)
       .patch(`/api/posts/${old.id}`)
       .set('Cookie', author.cookie)
-      .send({ title: 'An older idea', status: 'building' })
+      .send({ title: 'An older idea', links, rolesNeeded: [], status: 'building' })
       .expect(200);
-    expect(status.body).toMatchObject({ status: 'building', canEdit: false });
+    expect(status.body).toMatchObject({ status: 'building', canEdit: false, links });
   });
 
   it('soft-deletes for the author only', async () => {
