@@ -1,0 +1,301 @@
+/*
+ * Marketing footer (landing brief v2, part 12): a giant two-line wordmark band on the shell, then the link
+ * grid and the bottom row. Reveals are CSS driven and armed by JS, so the footer reads fine without JS.
+ */
+
+.footer {
+  /* Content edge shared by the band and the link grid: max(centred 1280 column, gutter). */
+  --gutter: 24px;
+  --inset: 8px;
+
+  padding-top: clamp(24px, 4vw, 56px);
+  background: var(--page);
+}
+
+@media (min-width: 768px) {
+  .footer {
+    --gutter: 32px;
+    --inset: 12px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .footer {
+    --gutter: 40px;
+  }
+}
+
+/* Band: the reference shell (grey, radius 40, soft blue/teal/sand blur bottom right). */
+.bandWrap {
+  padding-inline: var(--inset);
+}
+
+.band {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 32px;
+  background-color: var(--shell);
+  background-image:
+    radial-gradient(
+      42% 60% at 96% 104%,
+      color-mix(in oklab, var(--blur-2) 55%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      48% 70% at 74% 112%,
+      color-mix(in oklab, var(--blur-1) 50%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      36% 52% at 104% 62%,
+      color-mix(in oklab, var(--blur-3) 50%, transparent),
+      transparent 70%
+    );
+  /* Percentages resolve against the band's width (viewport minus both insets). */
+  padding: 24px max(calc((100% - 1280px) / 2), calc(var(--gutter) - var(--inset))) 0;
+}
+
+@media (min-width: 768px) {
+  .band {
+    border-radius: 40px;
+    padding-top: 36px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .band {
+    padding-top: 44px;
+  }
+}
+
+.bandTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* The hero's own line break: "Turn followers / into fellow owners." on phones, one line above. */
+.tagline span {
+  display: block;
+}
+
+.tagline {
+  padding-top: 10px;
+  color: var(--ink);
+  font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+@media (min-width: 768px) {
+  .tagline span {
+    display: inline;
+  }
+}
+
+.toTop {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  color: var(--ink);
+  background: rgb(255 255 255 / 0.45);
+  border: 1px solid rgb(255 255 255 / 0.6);
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    transform var(--dur-fast) var(--ease-out-quart);
+}
+
+.toTop:hover {
+  background: rgb(255 255 255 / 0.8);
+}
+
+.toTop:active {
+  transform: scale(0.96);
+}
+
+.toTop svg {
+  transition: transform var(--dur-slow) var(--ease-out-quart);
+}
+
+.toTop:hover svg {
+  transform: translate3d(0, -2px, 0);
+}
+
+/*
+ * The wordmark: two lines, "Owners" set right, cropped by the band's lower edge. Inter's baseline sits
+ * just above the 0.8 line box, so the negative margin hides the lower part of the second line.
+ */
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  margin: clamp(28px, 6vw, 72px) -0.03em -0.17em -0.07em;
+  color: var(--ink);
+  font-size: min(26.5vw, 22rem);
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .wordmark {
+    font-size: min(19.5vw, 22rem);
+  }
+}
+
+.line {
+  display: block;
+}
+
+.line + .line {
+  align-self: flex-end;
+}
+
+/* Link grid. */
+.inner {
+  width: 100%;
+  max-width: calc(1280px + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.grid {
+  display: grid;
+  gap: 40px;
+  padding-top: clamp(48px, 6vw, 88px);
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 32px;
+  }
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  max-width: 36ch;
+}
+
+.introCopy {
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 24px;
+}
+
+@media (min-width: 768px) {
+  .columns {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.heading {
+  margin-bottom: 8px;
+  color: var(--ink-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Shared by links and the demo buttons (overrides the layered .btn sizing so both read as links). */
+.flink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: auto;
+  height: auto;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 450;
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--dur-fast) var(--ease-out-quart);
+}
+
+.flink:hover {
+  background: transparent;
+  text-decoration-color: currentColor;
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .flink {
+    min-height: 36px;
+  }
+}
+
+/* Bottom row. */
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: clamp(48px, 6vw, 80px);
+  padding-block: 20px max(28px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+@media (min-width: 768px) {
+  .bottom {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+/* Scroll reveal: only armed by JS when the block starts below the fold and motion is allowed. */
+.reveal[data-reveal="armed"] .rv {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+
+.reveal[data-reveal="armed"] .line {
+  opacity: 0;
+  transform: translate3d(0, 34%, 0);
+}
+
+.reveal[data-reveal="shown"] .rv {
+  transition:
+    opacity 600ms var(--ease-out-quart) var(--d, 0ms),
+    transform 600ms var(--ease-out-quart) var(--d, 0ms);
+}
+
+.reveal[data-reveal="shown"] .line {
+  transition:
+    opacity 700ms var(--ease-out-quart) var(--d, 0ms),
+    transform 900ms var(--ease-out-expo) var(--d, 0ms);
+}
