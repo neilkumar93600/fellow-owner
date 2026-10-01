@@ -1,23 +1,40 @@
 'use client';
 
-import { motion, type Variants } from 'motion/react';
 import type * as React from 'react';
-
-const EASE = [0.25, 1, 0.5, 1] as const; // ease-out-quart
-
-const container: Variants = {
-  hidden: {},
-  shown: { transition: { staggerChildren: 0.08, delayChildren: 0.04 } },
-};
-
-const item: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  shown: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
-};
+import { createElement, useEffect, useRef } from 'react';
 
 type Tag = 'div' | 'section' | 'ul' | 'ol' | 'li' | 'header' | 'p' | 'h2' | 'h3' | 'article';
 
-/** Fades and rises its children into view once (16px, 600ms, ease-out-quart). Reduced motion: shown at once. */
+/**
+ * Progressive reveal: the server HTML is always visible (no JavaScript, crawlers, slow hydration).
+ * After hydration, elements that start below the fold are hidden and fade + rise 16px into view once
+ * (600ms, ease-out-quart; styles in globals.css). Elements already on screen are never hidden.
+ * Reduced motion keeps everything shown.
+ */
+function useReveal(attribute: 'data-reveal' | 'data-reveal-group') {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
+      el.setAttribute(attribute, 'shown');
+      return;
+    }
+    el.setAttribute(attribute, 'pending');
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        el.setAttribute(attribute, 'shown');
+        observer.disconnect();
+      },
+      { rootMargin: '0px 0px -80px 0px' },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [attribute]);
+  return ref;
+}
+
 export function Reveal({
   as = 'div',
   className,
@@ -29,24 +46,20 @@ export function Reveal({
   children: React.ReactNode;
   delay?: number;
 }) {
-  const Component = motion[as];
-  return (
-    <Component
-      className={className}
-      initial="hidden"
-      whileInView="shown"
-      viewport={{ once: true, margin: '-80px' }}
-      variants={{
-        hidden: { opacity: 0, y: 16 },
-        shown: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE, delay } },
-      }}
-    >
-      {children}
-    </Component>
+  const ref = useReveal('data-reveal');
+  return createElement(
+    as,
+    {
+      ref,
+      className,
+      'data-reveal': '',
+      style: delay ? ({ '--reveal-delay': `${delay}s` } as React.CSSProperties) : undefined,
+    },
+    children,
   );
 }
 
-/** Staggers its RevealItem children (80ms apart). */
+/** Staggers its direct RevealItem children (80ms apart, by position). */
 export function RevealGroup({
   as = 'div',
   className,
@@ -56,18 +69,8 @@ export function RevealGroup({
   className?: string;
   children: React.ReactNode;
 }) {
-  const Component = motion[as];
-  return (
-    <Component
-      className={className}
-      initial="hidden"
-      whileInView="shown"
-      viewport={{ once: true, margin: '-80px' }}
-      variants={container}
-    >
-      {children}
-    </Component>
-  );
+  const ref = useReveal('data-reveal-group');
+  return createElement(as, { ref, className, 'data-reveal-group': '' }, children);
 }
 
 export function RevealItem({
@@ -79,10 +82,5 @@ export function RevealItem({
   className?: string;
   children: React.ReactNode;
 }) {
-  const Component = motion[as];
-  return (
-    <Component className={className} variants={item}>
-      {children}
-    </Component>
-  );
+  return createElement(as, { className, 'data-reveal-item': '' }, children);
 }

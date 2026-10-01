@@ -4,7 +4,7 @@ import { Logo } from '@/components/shared/logo';
 /** Temporary page for routes that are specified in 03-app-flow but not built yet. */
 export function ComingSoon({ title, description }: { title: string; description: string }) {
   return (
-    <main className="grid min-h-svh place-items-center bg-page p-4 sm:p-6">
+    <main id="main" className="grid min-h-svh place-items-center bg-page p-4 sm:p-6">
       <section className="relative isolate flex w-full max-w-2xl flex-col items-center overflow-hidden rounded-shell bg-shell px-6 py-16 text-center sm:px-12">
         <div
           aria-hidden
