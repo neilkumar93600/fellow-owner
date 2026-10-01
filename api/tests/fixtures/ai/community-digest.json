@@ -1,0 +1,78 @@
+{
+  "task": "communityDigest",
+  "description": "Recorded smart-tier answer for the P1 community digest.",
+  "cases": [
+    {
+      "name": "fitness-crew-week",
+      "input": {
+        "communityName": "Fitness Crew",
+        "periodDate": "2026-10-01",
+        "posts": [
+          {
+            "id": "4a1b2c3d-0000-4000-8000-000000000001",
+            "title": "Couch to 5k buddy system",
+            "summary": "Pairs beginners with running buddies for an 8-week plan.",
+            "signals": 17
+          },
+          {
+            "id": "4a1b2c3d-0000-4000-8000-000000000002",
+            "title": "Mobility timer for desk workers",
+            "summary": "A timer that prompts 2-minute mobility breaks.",
+            "signals": 23
+          },
+          {
+            "id": "4a1b2c3d-0000-4000-8000-000000000003",
+            "title": "Best protein snacks?",
+            "summary": null,
+            "signals": 4
+          },
+          {
+            "id": "4a1b2c3d-0000-4000-8000-000000000004",
+            "title": "Saturday park workouts",
+            "summary": "Free group workouts in the park every Saturday.",
+            "signals": 12
+          }
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "summary": "A busy week: members built tools for beginners and desk workers, and the Saturday park workouts keep growing.",
+            "themes": [
+              "beginner running",
+              "Mobility",
+              "group workouts",
+              "beginner running"
+            ],
+            "standouts": [
+              {
+                "post": "p2",
+                "why": "Most signals this week and a clear, buildable tool."
+              },
+              {
+                "post": "p1",
+                "why": "A simple buddy system that helps beginners stay consistent."
+              }
+            ]
+          },
+          "usage": {
+            "prompt_tokens": 700,
+            "completion_tokens": 110
+          }
+        }
+      ],
+      "expect": {
+        "themes": [
+          "beginner running",
+          "mobility",
+          "group workouts"
+        ],
+        "standoutIds": [
+          "4a1b2c3d-0000-4000-8000-000000000002",
+          "4a1b2c3d-0000-4000-8000-000000000001"
+        ],
+        "requests": 1
+      }
+    }
+  ]
+}

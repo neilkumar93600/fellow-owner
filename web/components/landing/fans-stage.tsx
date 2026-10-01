@@ -16,7 +16,9 @@ import { FAN_INTRO, FAN_STEPS, STEP_STARTS } from './fans-data';
  *  - static: server markup and no-JS. Phones swipe the screens (CSS scroll snap); wider screens show screen 1.
  *  - pin: 768px and up with motion allowed. A sticky 100svh stage; scroll turns the phone and steps the screens.
  *  - tabs: 768px and up with reduced motion (or a very short window). Static phone; the steps switch screens.
- *  - swipe: under 768px. No pin; the screens are a snap row inside a static, tilted phone, synced to the steps.
+ *  - swipe: under 768px. No pin; the screens are a snap row inside the phone, synced to the pager and the
+ *    caption under it. With motion allowed the phone turns a little as it passes through the viewport,
+ *    and the first time it comes into view the screens nudge sideways to show they swipe.
  *
  * React state changes only when the active step changes; everything per frame is written through refs.
  */
@@ -50,6 +52,7 @@ export function FansStage({
   const rootRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
+  const deviceRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef(0);
   const lockRef = useRef(0);
   const [mode, setMode] = useState<Mode>('static');
@@ -101,16 +104,22 @@ export function FansStage({
     };
   }, [mode, select]);
 
+  /** Page scroll position of step `index`'s moment in the pinned scene. */
+  const sceneTarget = (index: number): number | null => {
+    const scene = sceneRef.current;
+    if (!scene) return null;
+    const top = scene.getBoundingClientRect().top + window.scrollY;
+    const distance = scene.offsetHeight - window.innerHeight;
+    const start = STEP_STARTS[index] ?? 0;
+    const at = index === 0 ? 0.02 : start + (stepEnd(index) - start) * 0.62;
+    return top + distance * at;
+  };
+
   const goTo = (index: number) => {
     if (mode === 'pin') {
       // Scroll the page to that step's moment in the scene; the scene then sets the step itself.
-      const scene = sceneRef.current;
-      if (!scene) return;
-      const top = scene.getBoundingClientRect().top + window.scrollY;
-      const distance = scene.offsetHeight - window.innerHeight;
-      const start = STEP_STARTS[index] ?? 0;
-      const at = index === 0 ? 0.02 : start + (stepEnd(index) - start) * 0.62;
-      const target = top + distance * at;
+      const target = sceneTarget(index);
+      if (target === null) return;
       if (lenis) lenis.scrollTo(target, { duration: 1.1 });
       else window.scrollTo({ top: target, behavior: 'smooth' });
       return;
@@ -123,6 +132,28 @@ export function FansStage({
       }
     }
     select(index);
+  };
+
+  /*
+   * Pin mode, keyboard: a step button sits in the sticky stage, so the browser's own scroll-into-view
+   * cannot reach it from outside the scene, and Lenis' smoothed scroll can undo it (Shift+Tab from the
+   * next section left focus 700px above the viewport). Map focus to the step's moment in the scene,
+   * as a click does: at once when the button is off-screen, smoothly when it is already in view.
+   */
+  const onStepFocus = (index: number, button: HTMLButtonElement) => {
+    if (mode !== 'pin') return;
+    requestAnimationFrame(() => {
+      if (document.activeElement !== button || !button.matches(':focus-visible')) return;
+      const target = sceneTarget(index);
+      if (target === null) return;
+      const rect = button.getBoundingClientRect();
+      const offscreen = rect.bottom <= 0 || rect.top >= window.innerHeight;
+      if (lenis) {
+        lenis.scrollTo(target, offscreen ? { immediate: true, force: true } : { duration: 0.8 });
+      } else {
+        window.scrollTo({ top: target, behavior: offscreen ? 'instant' : 'smooth' });
+      }
+    });
   };
 
   return (
@@ -146,6 +177,7 @@ export function FansStage({
                       aria-current={index === active ? 'step' : undefined}
                       tabIndex={mode === 'swipe' ? -1 : undefined}
                       onClick={() => goTo(index)}
+                      onFocus={(event) => onStepFocus(index, event.currentTarget)}
                     >
                       <span className={cn(st.num, 'tabular')} aria-hidden="true">
                         {index + 1}
@@ -159,7 +191,7 @@ export function FansStage({
             })}
           </ol>
 
-          <div className={st.device} aria-hidden="true">
+          <div ref={deviceRef} className={st.device} aria-hidden="true">
             <div className={st.disc} data-fans-disc />
             <div className={st.floor} data-fans-floor />
             <div className={st.phone} data-fans-phone>
@@ -169,7 +201,9 @@ export function FansStage({
               <span className={cn(st.key, st.keyPower)} />
               <div className={st.body}>
                 <div className={st.screen}>
-                  <div ref={rowRef} className={st.screens}>
+                  {/* Scrollable, so browsers would make it a tab stop; it is decorative (aria-hidden),
+                      and the pager and the steps already drive it. */}
+                  <div ref={rowRef} className={st.screens} tabIndex={-1}>
                     {screens.map((screen, index) => (
                       <div
                         // biome-ignore lint/suspicious/noArrayIndexKey: four fixed screens in step order.
@@ -216,6 +250,9 @@ export function FansStage({
         </div>
       </div>
       {mode === 'pin' ? <PinDriver rootRef={rootRef} sceneRef={sceneRef} onStep={select} /> : null}
+      {mode === 'swipe' && !reduced ? (
+        <SwipeDriver deviceRef={deviceRef} rowRef={rowRef} activeRef={activeRef} />
+      ) : null}
     </div>
   );
 }
@@ -357,6 +394,75 @@ function PinDriver({
       }
     },
     'pin',
+  );
+
+  return null;
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+
+/**
+ * Swipe mode (phones, motion allowed). The phone turns from -16deg to +8deg as it passes through the
+ * viewport, and the first time it is well in view the screens nudge a sixth of the way to the next one
+ * and settle back, so the row reads as swipeable. Unmounting hands the phone back to its CSS pose.
+ */
+function SwipeDriver({
+  deviceRef,
+  rowRef,
+  activeRef,
+}: {
+  deviceRef: RefObject<HTMLDivElement | null>;
+  rowRef: RefObject<HTMLDivElement | null>;
+  activeRef: RefObject<number>;
+}) {
+  const els = useRef<{ phone: HTMLElement | null; glare: HTMLElement | null } | null>(null);
+
+  useEffect(() => {
+    const device = deviceRef.current;
+    const row = rowRef.current;
+    if (!device || !row) return;
+    const found = {
+      phone: device.querySelector<HTMLElement>('[data-fans-phone]'),
+      glare: device.querySelector<HTMLElement>('[data-fans-glare]'),
+    };
+    els.current = found;
+
+    let timer = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        // Only as a hint: never once the visitor has swiped or picked a step.
+        if (row.scrollLeft > 0 || activeRef.current !== 0) return;
+        row.setAttribute('data-nudge', '');
+        timer = window.setTimeout(() => row.removeAttribute('data-nudge'), 1400);
+      },
+      { threshold: 0.7 },
+    );
+    observer.observe(device);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(timer);
+      row.removeAttribute('data-nudge');
+      for (const el of [found.phone, found.glare]) if (el) el.style.transform = '';
+      els.current = null;
+    };
+  }, [deviceRef, rowRef, activeRef]);
+
+  useScrollScene(
+    deviceRef,
+    ({ progress }) => {
+      const e = els.current;
+      if (!e?.phone) return;
+      const t = smooth(progress);
+      const ry = lerp(-16, 8, t);
+      const rx = lerp(7, 2, t);
+      const rz = lerp(-1.5, 0.5, t);
+      e.phone.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg)`;
+      if (e.glare) e.glare.style.transform = `translate3d(${(ry * 1.6).toFixed(2)}%, 0, 0)`;
+    },
+    'pass',
   );
 
   return null;

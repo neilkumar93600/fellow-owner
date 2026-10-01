@@ -12,7 +12,8 @@ const NO_SCRIPT_CSS =
  */
 export function LoopSection() {
   return (
-    <section id="loop" className="relative">
+    // Named by the scene's heading; it stays the name when the scene is hidden (reduced motion, no JS).
+    <section id="loop" aria-labelledby="loop-title" className="relative">
       <div data-loop-scene className="motion-reduce:hidden">
         <LoopScene />
       </div>

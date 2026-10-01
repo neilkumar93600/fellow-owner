@@ -19,6 +19,7 @@ import {
   loopStages,
 } from './loop-data';
 import { LoopFeatured } from './loop-featured';
+import { createFrameCache, type DecodedFrame, type FrameCache } from './loop-frames';
 
 /*
  * Scroll timeline, in pinned progress (0 at pin start, 1 at pin end):
@@ -27,16 +28,38 @@ import { LoopFeatured } from './loop-featured';
  *   0.04 to 0.92  scrub frames 2 to 120; the stage follows the frame range it owns
  *   0.92 to 1     hold the last frame: the Featured card and its click count
  * Frame 1 is an out-of-focus plate with nothing on it, so the scrub starts one frame in.
+ *
+ * Frames 94 to 106 (zero-based 93 to 105) are where the generated clip melts the white cluster into the slab:
+ * smeared, half-transparent spheres, an edge-on plank and stains on the floor. The scrub never shows or
+ * loads them. It dissolves frame 93 into frame 107 (the clean slab) over MELT_BLEND frames' worth of scroll
+ * instead, so every shown frame keeps its own step.
  */
 const FIRST_FRAME = 1;
 const FRAMES_START = 0.04;
 const FRAMES_END = 0.92;
 const INTRO_OUT: [number, number] = [0.025, 0.06];
 const STAGES_START = 0.06;
-/** Featured card fades in while the slab turns to face the camera (frame positions, zero-based). */
-const PAYOFF_IN: [number, number] = [112.5, 118.5];
-const CLICKS_FROM = 116;
+/** Last clean frame before the melt and first clean frame after it (zero-based). */
+const MELT_FROM = 92;
+const MELT_TO = 106;
+const MELT_SPAN = MELT_TO - MELT_FROM;
+/** Scroll the dissolve takes, in frame steps (about 125px at 1440x900). */
+const MELT_BLEND = 5;
+/** Scrub length in frame steps: one per shown frame, plus the dissolve. */
+const STEPS = LOOP_FRAME_COUNT - FIRST_FRAME - MELT_SPAN + MELT_BLEND;
+/** The frames the scrub draws (and so the only ones it fetches). */
+const SHOWN: readonly number[] = Array.from(
+  { length: LOOP_FRAME_COUNT - FIRST_FRAME },
+  (_, i) => i + FIRST_FRAME,
+).filter((frame) => frame <= MELT_FROM || frame >= MELT_TO);
+/**
+ * Featured card fades in as the clean slab turns to face the camera (frame positions, zero-based), so the
+ * slab is never seen blank for long while Action is the active stage.
+ */
+const PAYOFF_IN: [number, number] = [108.5, 113.5];
+const CLICKS_FROM = 114;
 const DPR_CAP = 2;
+const FETCHES_IN_FLIGHT = 6;
 /**
  * Phones: the clip is 16:9 in a portrait window, so cover-fit already crops hard. The 1.3x zoom is
  * capped so at least this share of the frame's width stays visible, which keeps the lifted card
@@ -46,6 +69,8 @@ const PHONE_MIN_VISIBLE = 0.36;
 /** Narrowest card face that still holds readable text; below it the card lifts off the slab. */
 const FACE_MIN_WIDTH = 300;
 const LIFTED_CARD_MAX = 340;
+/** Narrowest lifted card; below it the cqw-typeset text gets too small to read. */
+const LIFTED_CARD_MIN = 240;
 const EDGE = 16;
 const GAP = 14;
 
@@ -90,11 +115,16 @@ function zoomFor(width: number, height: number): number {
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
-/** Continuous frame position (zero-based) for a pinned progress. */
+/**
+ * Continuous frame position (zero-based) for a pinned progress. Inside the melt it runs across the skipped
+ * frames at the dissolve's pace, so stage timing (in frames) still reads naturally.
+ */
 function frameProgress(progress: number): number {
-  return (
-    FIRST_FRAME + segment(progress, FRAMES_START, FRAMES_END) * (LOOP_FRAME_COUNT - FIRST_FRAME)
-  );
+  const step = FIRST_FRAME + segment(progress, FRAMES_START, FRAMES_END) * STEPS;
+  if (step <= MELT_FROM) return step;
+  if (step < MELT_FROM + MELT_BLEND)
+    return MELT_FROM + ((step - MELT_FROM) / MELT_BLEND) * MELT_SPAN;
+  return step - MELT_BLEND + MELT_SPAN;
 }
 
 function frameIndex(progress: number): number {
@@ -103,8 +133,39 @@ function frameIndex(progress: number): number {
 
 /** Inverse of frameProgress: the pinned progress at which a frame position is reached. */
 function progressAt(frame: number): number {
-  const t = (frame - FIRST_FRAME) / (LOOP_FRAME_COUNT - FIRST_FRAME);
-  return FRAMES_START + t * (FRAMES_END - FRAMES_START);
+  let step = frame;
+  if (frame > MELT_FROM && frame < MELT_TO) {
+    step = MELT_FROM + ((frame - MELT_FROM) / MELT_SPAN) * MELT_BLEND;
+  } else if (frame >= MELT_TO) step = frame + MELT_BLEND - MELT_SPAN;
+  return FRAMES_START + ((step - FIRST_FRAME) / STEPS) * (FRAMES_END - FRAMES_START);
+}
+
+/** What the canvas shows at a frame position: one frame, or the dissolve across the melt. */
+function drawTarget(position: number): { from: number; to: number; mix: number } {
+  if (position > MELT_FROM && position < MELT_TO) {
+    const t = (position - MELT_FROM) / MELT_SPAN;
+    // Smoothstep, quantised so a slow scroll does not redraw for invisible alpha changes.
+    return { from: MELT_FROM, to: MELT_TO, mix: Math.round(t * t * (3 - 2 * t) * 48) / 48 };
+  }
+  const frame = Math.min(LOOP_FRAME_COUNT - 1, Math.floor(position));
+  return { from: frame, to: frame, mix: 0 };
+}
+
+/** The frame the decode window centres on. */
+function focusFrame(progress: number): number {
+  const target = drawTarget(frameProgress(progress));
+  return target.mix >= 0.5 ? target.to : target.from;
+}
+
+function drawCover(
+  ctx: CanvasRenderingContext2D,
+  frame: DecodedFrame,
+  width: number,
+  height: number,
+  zoom: number,
+) {
+  const box = coverBox(frame.width / frame.height || LOOP_FRAME_RATIO, width, height, zoom);
+  ctx.drawImage(frame.image, box.x, box.y, box.w, box.h);
 }
 
 function stageAt(progress: number, index: number): number {
@@ -150,7 +211,7 @@ export function LoopScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
-  const railRef = useRef<HTMLElement>(null);
+  const railRef = useRef<HTMLFieldSetElement>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
   const loaderFillRef = useRef<HTMLSpanElement>(null);
   const loaderValueRef = useRef<HTMLSpanElement>(null);
@@ -158,14 +219,19 @@ export function LoopScene() {
   const countRef = useRef<HTMLSpanElement>(null);
 
   // Hot values live in refs; React state only changes when the stage or the load status changes.
-  const framesRef = useRef<HTMLImageElement[]>([]);
-  const okRef = useRef<boolean[]>([]);
+  const cacheRef = useRef<FrameCache | null>(null);
+  /** Every frame's bytes have settled, so the decode window can run. */
+  const fetchedRef = useRef(false);
+  /** The scene is within a screen of the viewport and the tab is visible: bitmaps may stay decoded. */
+  const residentRef = useRef(false);
   const readyRef = useRef(false);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   /** Media window size (CSS px), its offset inside the shell, DPR and zoom. */
   const sizeRef = useRef({ w: 0, h: 0, x: 0, y: 0, dpr: 1, zoom: 1 });
   const progressRef = useRef(0);
-  const drawnRef = useRef(-1);
+  const directionRef = useRef(1);
+  /** What the canvas holds now (source frames and mix), so a scroll tick only redraws on a change. */
+  const drawnRef = useRef('');
   const stageRef = useRef(-1);
   const introOutRef = useRef(-1);
   const revealRef = useRef(-1);
@@ -176,30 +242,45 @@ export function LoopScene() {
   const [active, setActive] = useState(-1);
   const [status, setStatus] = useState<LoadStatus>('idle');
 
-  const draw = useCallback((index: number) => {
+  /**
+   * Draws the frame (or the melt dissolve) for a progress from already-decoded bitmaps. Never waits on a
+   * decode: while the exact frame is still decoding, its nearest decoded neighbour stands in, and the scene
+   * repaints when the real one lands. Returns whether the canvas holds a frame.
+   */
+  const paint = useCallback((progress: number): boolean => {
     const ctx = ctxRef.current;
+    const cache = cacheRef.current;
     const { w, h, dpr, zoom } = sizeRef.current;
-    if (!ctx || w === 0 || h === 0) return;
-    let source = index;
-    if (!okRef.current[source]) {
-      // A frame that failed to load falls back to its nearest loaded neighbour.
-      for (let offset = 1; offset < LOOP_FRAME_COUNT; offset += 1) {
-        if (okRef.current[index - offset]) {
-          source = index - offset;
-          break;
-        }
-        if (okRef.current[index + offset]) {
-          source = index + offset;
-          break;
-        }
-      }
-    }
-    const img = framesRef.current[source];
-    if (!img || !okRef.current[source]) return;
-    const box = coverBox(img.naturalWidth / img.naturalHeight || LOOP_FRAME_RATIO, w, h, zoom);
+    if (!ctx || !cache || w === 0 || h === 0) return false;
+    const target = drawTarget(frameProgress(progress));
+    // Nothing decoded yet (the window just moved): keep whatever the canvas shows.
+    const from = cache.nearest(target.from);
+    if (!from) return drawnRef.current !== '';
+    const to = target.mix > 0 ? cache.nearest(target.to) : null;
+    const blend = to && to.frame !== from.frame ? target.mix : 0;
+    const key = blend > 0 && to ? `${from.frame}>${to.frame}@${blend}` : String(from.frame);
+    if (key === drawnRef.current) return true;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.drawImage(img, box.x, box.y, box.w, box.h);
-    drawnRef.current = index;
+    ctx.globalAlpha = 1;
+    drawCover(ctx, blend >= 1 && to ? to.decoded : from.decoded, w, h, zoom);
+    if (blend > 0 && blend < 1 && to) {
+      ctx.globalAlpha = blend;
+      drawCover(ctx, to.decoded, w, h, zoom);
+      ctx.globalAlpha = 1;
+    }
+    drawnRef.current = key;
+    if (!readyRef.current) {
+      readyRef.current = true;
+      setStatus('ready');
+    }
+    return true;
+  }, []);
+
+  /** Points the decode window at the current frame while the scene is resident. */
+  const focus = useCallback((progress: number) => {
+    const cache = cacheRef.current;
+    if (!cache || !fetchedRef.current || !residentRef.current) return;
+    cache.focus(focusFrame(progress), directionRef.current);
   }, []);
 
   /** Writes the Featured card's reveal and the click count for the current progress. */
@@ -322,7 +403,7 @@ export function LoopScene() {
         width = (width * room) / height;
         height = room;
       }
-      if (width >= 240) {
+      if (width >= LIFTED_CARD_MIN) {
         const cy = (face.top + face.bottom) / 2;
         box = {
           x: clamp((face.left + face.right) / 2 - width / 2, EDGE, shellW - EDGE - width),
@@ -332,6 +413,38 @@ export function LoopScene() {
         };
       }
       payoffFromRef.current = clamp(faceW / width, 0.6, 0.96);
+    }
+
+    if (!box) {
+      // Short, wide screens (a laptop at 200% zoom): there is no room above or below the copy, so the card
+      // stands beside it instead, in the column between the copy and the rail, at the full height.
+      let left = EDGE;
+      let right = shellW - EDGE;
+      const cx = (face.left + face.right) / 2;
+      for (const o of obstacles) {
+        if ((o.left + o.right) / 2 < cx) left = Math.max(left, o.right + GAP);
+        else right = Math.min(right, o.left - GAP);
+      }
+      let width = Math.min(LIFTED_CARD_MAX, right - left);
+      if (width >= LIFTED_CARD_MIN) {
+        el.style.width = `${width}px`;
+        el.dataset.compact = 'true';
+        let height = el.offsetHeight;
+        const room = shellH - 2 * EDGE;
+        if (height > room) {
+          width = (width * room) / height;
+          height = room;
+        }
+        if (width >= LIFTED_CARD_MIN) {
+          box = {
+            x: clamp(cx - width / 2, left, right - width),
+            y: clamp((face.top + face.bottom) / 2 - height / 2, EDGE, shellH - EDGE - height),
+            w: width,
+            h: height,
+          };
+          payoffFromRef.current = 0.96;
+        }
+      }
     }
 
     if (box) {
@@ -356,16 +469,21 @@ export function LoopScene() {
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     if (posterRef.current) posterRef.current.style.transform = zoom === 1 ? '' : `scale(${zoom})`;
-    if (!ctxRef.current) {
-      ctxRef.current = canvas.getContext('2d', { alpha: false });
-      if (ctxRef.current) ctxRef.current.imageSmoothingQuality = 'high';
+    if (!ctxRef.current) ctxRef.current = canvas.getContext('2d', { alpha: false });
+    // Setting the canvas size resets the context state, smoothing included: set it again every time.
+    if (ctxRef.current) {
+      ctxRef.current.imageSmoothingEnabled = true;
+      ctxRef.current.imageSmoothingQuality = 'high';
     }
-    if (readyRef.current) draw(Math.max(0, drawnRef.current));
+    drawnRef.current = '';
+    paint(progressRef.current);
     layoutPayoff();
-  }, [draw, layoutPayoff]);
+  }, [paint, layoutPayoff]);
 
   const onFrame = useCallback(
     ({ progress }: SceneFrame) => {
+      if (progress !== progressRef.current)
+        directionRef.current = progress > progressRef.current ? 1 : -1;
       progressRef.current = progress;
 
       const out = easeOut(segment(progress, INTRO_OUT[0], INTRO_OUT[1]));
@@ -375,10 +493,10 @@ export function LoopScene() {
         introRef.current.style.transform = out > 0 ? `translate3d(0, ${-24 * out}px, 0)` : '';
       }
 
-      const index = frameIndex(progress);
-      if (readyRef.current && index !== drawnRef.current) draw(index);
+      focus(progress);
+      paint(progress);
 
-      const stage = stageAt(progress, index);
+      const stage = stageAt(progress, frameIndex(progress));
       if (stage !== stageRef.current) {
         stageRef.current = stage;
         setActive(stage);
@@ -386,7 +504,7 @@ export function LoopScene() {
 
       paintPayoff(progress);
     },
-    [draw, paintPayoff],
+    [focus, paint, paintPayoff],
   );
 
   useScrollScene(sceneRef, onFrame, 'pin');
@@ -400,8 +518,10 @@ export function LoopScene() {
     return () => observer.disconnect();
   }, [resize]);
 
-  // Preload every frame before scrubbing starts. Begins when the browser is idle after load, or when the
-  // section comes within a screen and a half, whichever is first. Reduced motion never loads frames.
+  // Fetch every shown frame's bytes before scrubbing starts. Begins when the browser is idle after load, or
+  // when the section comes within a screen and a half, whichever is first. Decoding is separate and windowed
+  // (loop-frames.ts): only frames near the current one are decoded, off the main thread, and the window is
+  // released while the scene is more than a screen away or the tab is hidden. Reduced motion never loads.
   useEffect(() => {
     if (reduced || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const scene = sceneRef.current;
@@ -410,7 +530,9 @@ export function LoopScene() {
     let cancelled = false;
     let timer = 0;
     let idle = 0;
-    const images: HTMLImageElement[] = [];
+    const controller = new AbortController();
+    const cache = createFrameCache(SHOWN, () => paint(progressRef.current));
+    cacheRef.current = cache;
 
     const setBar = (fraction: number) => {
       const percent = Math.round(fraction * 100);
@@ -422,45 +544,66 @@ export function LoopScene() {
     const start = () => {
       if (started || cancelled) return;
       started = true;
-      observer.disconnect();
+      starter.disconnect();
       setStatus('loading');
       const set: LoopFrameSet = isPhone() ? 'mobile' : 'desktop';
-      okRef.current = new Array(LOOP_FRAME_COUNT).fill(false);
+      const queue = [...SHOWN];
       let settled = 0;
-      let loaded = 0;
-      const finish = (index: number, ok: boolean) => {
+      const worker = async () => {
+        for (let frame = queue.shift(); frame !== undefined; frame = queue.shift()) {
+          try {
+            const response = await fetch(loopFrameSrc(set, frame), { signal: controller.signal });
+            if (!response.ok) throw new Error(`Frame ${frame}: ${response.status}`);
+            cache.add(frame, await response.blob());
+          } catch {
+            // A missing frame is skipped; the scrub shows its nearest neighbour.
+            if (controller.signal.aborted) return;
+          }
+          settled += 1;
+          setBar(settled / SHOWN.length);
+        }
+      };
+      Promise.all(Array.from({ length: FETCHES_IN_FLIGHT }, worker)).then(() => {
         if (cancelled) return;
-        okRef.current[index] = ok;
-        settled += 1;
-        if (ok) loaded += 1;
-        setBar(settled / LOOP_FRAME_COUNT);
-        if (settled < LOOP_FRAME_COUNT) return;
-        if (loaded === 0) {
+        if (cache.size === 0) {
           setStatus('failed');
           return;
         }
-        readyRef.current = true;
-        draw(frameIndex(progressRef.current));
-        setStatus('ready');
-      };
-      for (let i = 0; i < LOOP_FRAME_COUNT; i += 1) {
-        const img = new window.Image();
-        img.decoding = 'async';
-        img.onload = () => finish(i, true);
-        img.onerror = () => finish(i, false);
-        img.src = loopFrameSrc(set, i);
-        images.push(img);
-      }
-      framesRef.current = images;
+        fetchedRef.current = true;
+        focus(progressRef.current);
+      });
     };
 
-    const observer = new IntersectionObserver(
+    const starter = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) start();
       },
       { rootMargin: '150% 0px 150% 0px' },
     );
-    observer.observe(scene);
+    starter.observe(scene);
+
+    // Residency: decoded bitmaps live only while the scene is within a screen and the tab is visible.
+    let near = false;
+    const settle = () => {
+      const resident = near && document.visibilityState !== 'hidden';
+      if (resident === residentRef.current) return;
+      residentRef.current = resident;
+      if (resident) {
+        focus(progressRef.current);
+      } else {
+        cache.release();
+        drawnRef.current = '';
+      }
+    };
+    const resident = new IntersectionObserver(
+      ([entry]) => {
+        near = Boolean(entry?.isIntersecting);
+        settle();
+      },
+      { rootMargin: '100% 0px 100% 0px' },
+    );
+    resident.observe(scene);
+    document.addEventListener('visibilitychange', settle);
 
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } })
       .connection;
@@ -478,16 +621,19 @@ export function LoopScene() {
 
     return () => {
       cancelled = true;
-      observer.disconnect();
+      controller.abort();
+      starter.disconnect();
+      resident.disconnect();
+      document.removeEventListener('visibilitychange', settle);
       window.removeEventListener('load', scheduleIdle);
       window.clearTimeout(timer);
       if (idle && 'cancelIdleCallback' in window) window.cancelIdleCallback(idle);
-      for (const img of images) {
-        img.onload = null;
-        img.onerror = null;
-      }
+      cache.dispose();
+      cacheRef.current = null;
+      fetchedRef.current = false;
+      residentRef.current = false;
     };
-  }, [reduced, draw]);
+  }, [reduced, paint, focus]);
 
   const goToStage = useCallback(
     (index: number) => {
@@ -509,12 +655,15 @@ export function LoopScene() {
         <div ref={shellRef} className={styles.shell}>
           {/* The clip is decorative: the stage copy carries its meaning in text. */}
           <div ref={mediaRef} aria-hidden="true" className={styles.media}>
+            {/* Eager (it is tiny) so a visitor landing mid-loop never sees an empty shell; low priority. */}
             <NextImage
               ref={posterRef}
               src={LOOP_POSTER}
               alt=""
               fill
               sizes="100vw"
+              loading="eager"
+              fetchPriority="low"
               className={styles.poster}
             />
             <canvas ref={canvasRef} className={styles.canvas} data-ready={status === 'ready'} />
@@ -533,8 +682,8 @@ export function LoopScene() {
                 id="loop-title"
                 className="mt-5 text-[2.25rem] leading-[1.02] font-medium tracking-[-0.035em] text-ink md:text-section"
               >
-                <span className="block">From followers</span>
-                <span className="block">to fellow owners.</span>
+                <span className="block">One link.</span>
+                <span className="block">Five stages.</span>
               </h2>
             </div>
 
@@ -556,8 +705,8 @@ export function LoopScene() {
             </div>
           </div>
 
-          {/* Progress rail: bottom on phones, top right from 768. */}
-          <nav ref={railRef} aria-label="Loop stages" className={styles.rail}>
+          {/* Progress rail: bottom on phones, top right from 768. Scrubber buttons, so a group, not a nav. */}
+          <fieldset ref={railRef} aria-label="Loop stages" className={styles.rail}>
             <ol className={styles.railList}>
               {loopStages.map((stage, index) => {
                 const state = index === active ? 'active' : index < active ? 'done' : 'next';
@@ -582,7 +731,7 @@ export function LoopScene() {
                 );
               })}
             </ol>
-          </nav>
+          </fieldset>
 
           {/* Real preload progress; the poster shows underneath until every frame is in. */}
           <div className={styles.loaderWrap}>

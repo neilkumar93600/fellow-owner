@@ -14,17 +14,19 @@ import {
   PenTool,
   Plus,
   Sparkles,
+  Timer,
   Users,
 } from 'lucide-react';
 import type * as React from 'react';
 import { cn } from '@/lib/utils';
-import { DemoButton } from './demo-button';
 import { communities, creator, showcase } from './demo-data';
 import st from './features.module.css';
 import {
   avatarTint,
   CLICKS_PEAK,
   CLICKS_TOTAL,
+  clock,
+  DEMO_ROLES,
   formatNumber,
   type IconName,
   initials,
@@ -47,6 +49,9 @@ import { FeaturesStage } from './features-motion';
  *
  * Desktop (1200+): 12 columns. Bio link 6x2; Triage and Taste 3x1; Try it 6x1 beside the bio link;
  * Teams, Pitches and Links 4x1. Tablet (640+): 2 columns, the bio link spanning two rows. Phone: 1 column.
+ *
+ * Lime stays out of the bento's large surfaces: it belongs to the #demo field two sections down, so the
+ * one-click demo tile shows the demo picker on a deeper aqua instead of a second set of Enter buttons.
  */
 
 const ICON = { strokeWidth: 1.5, 'aria-hidden': true } as const;
@@ -143,7 +148,7 @@ function Tile({
   className,
   children,
 }: {
-  tint?: 'white' | 'lavender' | 'peach' | 'lime';
+  tint?: 'white' | 'lavender' | 'peach' | 'aqua';
   size?: 'sm' | 'lg';
   title: string;
   body: React.ReactNode;
@@ -406,11 +411,16 @@ function TasteTile() {
 
 /* ---------- 7. Try it in one click ---------- */
 
+/**
+ * The one-click demo as a feature, not a call to action: a picture of the demo picker (two roles and the
+ * three-minute clock). The real Enter buttons live in the hero, the nav and the lime #demo field.
+ */
 function TryTile() {
+  const total = DEMO_ROLES.reduce((sum, role) => sum + role.seconds, 0);
   return (
-    <div className={cn(st.tile, st.tTry)} data-tint="lime">
+    <div className={cn(st.tile, st.tTry)} data-tint="aqua">
       <Cube tone="violet" className={st.tryCube} />
-      <Orb tone="aqua" className={st.tryOrb} />
+      <Orb tone="lavender" className={st.tryOrb} />
       <div className={st.tryText}>
         <h3 className={st.tileTitleLg}>Try it in one click</h3>
         <p className={st.tileBodyLg}>
@@ -418,9 +428,37 @@ function TryTile() {
           sign-up; the demo resets every night.
         </p>
       </div>
-      <div className={st.tryActions}>
-        <DemoButton as="creator" />
-        <DemoButton as="fan" />
+      <div
+        className={cn(st.frame, st.pickFrame)}
+        role="img"
+        aria-label={`Demo picker. ${DEMO_ROLES.map((r) => `${r.name}, ${r.role}: ${r.detail}, ${clock(r.seconds)}`).join('. ')}. The whole path takes ${clock(total)}.`}
+      >
+        <span className={st.pickHead}>
+          <span className={st.pickLabel}>Who do you want to be?</span>
+          <span className={cn(st.timer, 'tabular')}>
+            <Timer size={13} {...ICON} />
+            {clock(total)}
+          </span>
+        </span>
+        <span className={st.picks}>
+          {DEMO_ROLES.map((r, i) => (
+            <span
+              key={r.role}
+              className={st.pick}
+              data-selected={i === 0 || undefined}
+              style={{ '--bg': TINT_COLORS[r.tint].bg } as React.CSSProperties}
+            >
+              <Avatar name={r.name} />
+              <span className={st.pickText}>
+                <span className={st.pickName}>
+                  {r.firstName} · {r.role}
+                </span>
+                <span className={st.pickMeta}>{r.detail}</span>
+              </span>
+              <span className={cn(st.pickTime, 'tabular')}>{clock(r.seconds)}</span>
+            </span>
+          ))}
+        </span>
       </div>
     </div>
   );

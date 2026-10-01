@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
-import { ComingSoon } from '@/components/shared/coming-soon';
+import { readAuthRequest } from '@/components/auth/auth-server';
+import { LoginForm } from '@/components/auth/login-form';
 
-// Placeholder until this screen is built (see docs/03-app-flow.md).
 export const metadata: Metadata = { title: 'Sign in' };
 
-export default function Page() {
-  return (
-    <ComingSoon
-      title="Sign in"
-      description="Sign in with a 6-digit email code, or with Google outside in-app browsers."
-    />
-  );
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const { returnTo, inAppBrowser, oauthError } = await readAuthRequest(searchParams);
+  return <LoginForm returnTo={returnTo} inAppBrowser={inAppBrowser} oauthError={oauthError} />;
 }

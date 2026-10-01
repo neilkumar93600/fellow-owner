@@ -1,0 +1,339 @@
+{
+  "task": "promoteDrafts",
+  "description": "Recorded smart-tier answers for promoteDrafts (Promote composer). Lengths count hashtags and the short link (X: 23).",
+  "cases": [
+    {
+      "name": "four-platform-drafts",
+      "description": "Drafts for all four platforms in the creator's voice; hashtags normalized (the # is dropped).",
+      "input": {
+        "post": {
+          "id": "9d2e7a3b-3c2d-4e0a-9c73-2f8b5e3b1c01",
+          "type": "project",
+          "status": "forming_team",
+          "title": "Gym-log app for creators who lift",
+          "body": "I'm building a simple workout logger for people who follow creator programs. You pick a program, log sets in two taps, and it tells you when to add weight. I have a working React Native prototype and 12 friends testing it. Looking for a designer and someone who knows HealthKit.",
+          "links": [
+            {
+              "label": "Prototype",
+              "url": "https://github.com/arjun/gymlog"
+            }
+          ],
+          "rolesNeeded": [
+            "Designer",
+            "iOS developer"
+          ],
+          "communityName": "Builders",
+          "authorName": "Arjun Mehta"
+        },
+        "team": [
+          {
+            "name": "Arjun Mehta",
+            "role": "Lead"
+          }
+        ],
+        "tasteProfile": {
+          "promote": [
+            "Tools that help people train consistently",
+            "Projects built by people in my community",
+            "Honest creator-economy tools"
+          ],
+          "never": [
+            "Crypto or trading schemes",
+            "Diet pills and supplements"
+          ],
+          "voice": [
+            "Shipped a new workout series today. Short, no fluff, 20 minutes. If you try it, tell me what broke.",
+            "Every big thing I've done started as a small, slightly embarrassing first version. Post yours.",
+            "Building in public is scary. Do it anyway."
+          ]
+        },
+        "voice": [
+          "Shipped a new workout series today. Short, no fluff, 20 minutes. If you try it, tell me what broke.",
+          "Every big thing I've done started as a small, slightly embarrassing first version. Post yours.",
+          "Building in public is scary. Do it anyway."
+        ],
+        "creatorName": "Mira Kapoor"
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "A two-tap gym log, built in the Builders community",
+            "drafts": {
+              "x": {
+                "text": "Arjun Mehta from my Builders community is building a gym-log app: pick a creator program, log a set in two taps, and it tells you when to add weight. He needs a designer and an iOS developer. Want in?",
+                "hashtags": [
+                  "BuildInPublic",
+                  "#fitness"
+                ]
+              },
+              "instagram": {
+                "text": "Small first versions are how big things start.\n\nArjun Mehta from my Builders community is building a gym-log app for people who follow creator programs. You pick a program, log each set in two taps, and the app tells you when it's time to add weight.\n\nHe has a working prototype and 12 friends are already testing it. Now he's forming a team and needs a designer and an iOS developer who knows HealthKit.\n\nThis is exactly the kind of tool I want to exist: simple, honest, and built to help you train consistently.\n\nIf that's you, or you just want to try it, tap the link in bio and say hi.",
+                "hashtags": [
+                  "buildinpublic",
+                  "fitness",
+                  "gym log",
+                  "creators",
+                  "indie apps"
+                ]
+              },
+              "linkedin": {
+                "text": "One of my favourite things about this community: people don't just talk about ideas, they build them.\n\nArjun Mehta, from the Builders community in my space, is making a gym-log app for people who follow creator training programs. The idea is simple. Pick a program, log a set in two taps, and the app tells you when to add weight.\n\nHe already has a working React Native prototype, and 12 friends are testing it. The project is now forming a team, and two roles are open: a designer and an iOS developer, ideally someone who knows HealthKit.\n\nI back tools that help people train consistently, and this is one of them.\n\nKnow someone who should be on this team? Send them the link or tag them below.",
+                "hashtags": [
+                  "BuildInPublic",
+                  "Fitness"
+                ]
+              },
+              "youtube": {
+                "text": "Quick spotlight from the community.\n\nArjun Mehta in our Builders group is building a gym-log app for people who follow creator programs: log a set in two taps and it tells you when to add weight. He's looking for a designer and an iOS developer to join the team.\n\nWould you use this for my programs? Tell me in the comments.",
+                "hashtags": [
+                  "community"
+                ]
+              }
+            }
+          },
+          "usage": {
+            "prompt_tokens": 1900,
+            "completion_tokens": 720
+          }
+        }
+      ],
+      "expect": {
+        "platforms": [
+          "x",
+          "instagram",
+          "linkedin",
+          "youtube"
+        ],
+        "failed": [],
+        "headline": "A two-tap gym log, built in the Builders community",
+        "xHashtags": [
+          "BuildInPublic",
+          "fitness"
+        ],
+        "instagramHashtags": [
+          "buildinpublic",
+          "fitness",
+          "GymLog",
+          "creators",
+          "IndieApps"
+        ],
+        "requests": 1
+      }
+    },
+    {
+      "name": "x-too-long-and-invented-claim",
+      "description": "Attempt 1: the X draft is too long and LinkedIn invents 10,000 downloads, so run.ts retries. Attempt 2 repeats both: X is shortened by dropping whole sentences, LinkedIn fails (draftErrors).",
+      "input": {
+        "post": {
+          "id": "9d2e7a3b-3c2d-4e0a-9c73-2f8b5e3b1c01",
+          "type": "project",
+          "status": "forming_team",
+          "title": "Gym-log app for creators who lift",
+          "body": "I'm building a simple workout logger for people who follow creator programs. You pick a program, log sets in two taps, and it tells you when to add weight. I have a working React Native prototype and 12 friends testing it. Looking for a designer and someone who knows HealthKit.",
+          "links": [
+            {
+              "label": "Prototype",
+              "url": "https://github.com/arjun/gymlog"
+            }
+          ],
+          "rolesNeeded": [
+            "Designer",
+            "iOS developer"
+          ],
+          "communityName": "Builders",
+          "authorName": "Arjun Mehta"
+        },
+        "team": [
+          {
+            "name": "Arjun Mehta",
+            "role": "Lead"
+          }
+        ],
+        "tasteProfile": {
+          "promote": [
+            "Tools that help people train consistently",
+            "Projects built by people in my community",
+            "Honest creator-economy tools"
+          ],
+          "never": [
+            "Crypto or trading schemes",
+            "Diet pills and supplements"
+          ],
+          "voice": [
+            "Shipped a new workout series today. Short, no fluff, 20 minutes. If you try it, tell me what broke.",
+            "Every big thing I've done started as a small, slightly embarrassing first version. Post yours.",
+            "Building in public is scary. Do it anyway."
+          ]
+        },
+        "voice": [
+          "Shipped a new workout series today. Short, no fluff, 20 minutes. If you try it, tell me what broke.",
+          "Every big thing I've done started as a small, slightly embarrassing first version. Post yours.",
+          "Building in public is scary. Do it anyway."
+        ],
+        "creatorName": "Mira Kapoor"
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "A two-tap gym log from the Builders community",
+            "drafts": {
+              "x": {
+                "text": "Arjun Mehta from my Builders community is building a gym-log app for people who follow creator programs. You pick a program, log every set in two taps, and the app tells you exactly when it is time to add weight to the bar. He already has a working prototype in testing. Now he needs a designer and an iOS developer to take it further. Want in?",
+                "hashtags": [
+                  "BuildInPublic"
+                ]
+              },
+              "instagram": {
+                "text": "Small first versions are how big things start.\n\nArjun Mehta from my Builders community is building a gym-log app for people who follow creator programs. You pick a program, log each set in two taps, and the app tells you when it's time to add weight.\n\nHe has a working prototype and 12 friends are already testing it. Now he's forming a team and needs a designer and an iOS developer who knows HealthKit.\n\nThis is exactly the kind of tool I want to exist: simple, honest, and built to help you train consistently.\n\nIf that's you, or you just want to try it, tap the link in bio and say hi.",
+                "hashtags": [
+                  "fitness"
+                ]
+              },
+              "linkedin": {
+                "text": "One of my favourite things about this community: people don't just talk about ideas, they build them.\n\nArjun Mehta, from the Builders community in my space, is making a gym-log app for people who follow creator training programs. The idea is simple. Pick a program, log a set in two taps, and the app tells you when to add weight.\n\nIt already has 10,000 downloads and a waitlist. The project is now forming a team, and two roles are open: a designer and an iOS developer, ideally someone who knows HealthKit.\n\nI back tools that help people train consistently, and this is one of them.\n\nKnow someone who should be on this team? Send them the link or tag them below.",
+                "hashtags": []
+              },
+              "youtube": {
+                "text": "Quick spotlight from the community.\n\nArjun Mehta in our Builders group is building a gym-log app for people who follow creator programs: log a set in two taps and it tells you when to add weight. He's looking for a designer and an iOS developer to join the team.\n\nWould you use this for my programs? Tell me in the comments.",
+                "hashtags": []
+              }
+            }
+          },
+          "usage": {
+            "prompt_tokens": 1900,
+            "completion_tokens": 700
+          }
+        },
+        {
+          "content": {
+            "headline": "A two-tap gym log from the Builders community",
+            "drafts": {
+              "x": {
+                "text": "Arjun Mehta from my Builders community is building a gym-log app for people who follow creator programs. You pick a program, log every set in two taps, and the app tells you exactly when it is time to add weight to the bar. He already has a working prototype in testing. Now he needs a designer and an iOS developer to take it further. Want in?",
+                "hashtags": [
+                  "BuildInPublic"
+                ]
+              },
+              "instagram": {
+                "text": "Small first versions are how big things start.\n\nArjun Mehta from my Builders community is building a gym-log app for people who follow creator programs. You pick a program, log each set in two taps, and the app tells you when it's time to add weight.\n\nHe has a working prototype and 12 friends are already testing it. Now he's forming a team and needs a designer and an iOS developer who knows HealthKit.\n\nThis is exactly the kind of tool I want to exist: simple, honest, and built to help you train consistently.\n\nIf that's you, or you just want to try it, tap the link in bio and say hi.",
+                "hashtags": [
+                  "fitness"
+                ]
+              },
+              "linkedin": {
+                "text": "One of my favourite things about this community: people don't just talk about ideas, they build them.\n\nArjun Mehta, from the Builders community in my space, is making a gym-log app for people who follow creator training programs. The idea is simple. Pick a program, log a set in two taps, and the app tells you when to add weight.\n\nIt already has 10,000 downloads and a waitlist. The project is now forming a team, and two roles are open: a designer and an iOS developer, ideally someone who knows HealthKit.\n\nI back tools that help people train consistently, and this is one of them.\n\nKnow someone who should be on this team? Send them the link or tag them below.",
+                "hashtags": []
+              },
+              "youtube": {
+                "text": "Quick spotlight from the community.\n\nArjun Mehta in our Builders group is building a gym-log app for people who follow creator programs: log a set in two taps and it tells you when to add weight. He's looking for a designer and an iOS developer to join the team.\n\nWould you use this for my programs? Tell me in the comments.",
+                "hashtags": []
+              }
+            }
+          },
+          "usage": {
+            "prompt_tokens": 2700,
+            "completion_tokens": 700
+          }
+        }
+      ],
+      "expect": {
+        "platforms": [
+          "x",
+          "instagram",
+          "youtube"
+        ],
+        "failed": [
+          "linkedin"
+        ],
+        "xMaxWeightedLength": 256,
+        "requests": 2
+      }
+    },
+    {
+      "name": "regenerate-x-with-link-and-hashtags-in-text",
+      "description": "Regenerate only X after publish: the model pastes the showcase URL, a [link] placeholder and trailing hashtags into the text; all are moved or removed.",
+      "input": {
+        "post": {
+          "id": "9d2e7a3b-3c2d-4e0a-9c73-2f8b5e3b1c01",
+          "type": "project",
+          "status": "forming_team",
+          "title": "Gym-log app for creators who lift",
+          "body": "I'm building a simple workout logger for people who follow creator programs. You pick a program, log sets in two taps, and it tells you when to add weight. I have a working React Native prototype and 12 friends testing it. Looking for a designer and someone who knows HealthKit.",
+          "links": [
+            {
+              "label": "Prototype",
+              "url": "https://github.com/arjun/gymlog"
+            }
+          ],
+          "rolesNeeded": [
+            "Designer",
+            "iOS developer"
+          ],
+          "communityName": "Builders",
+          "authorName": "Arjun Mehta"
+        },
+        "team": [
+          {
+            "name": "Arjun Mehta",
+            "role": "Lead"
+          }
+        ],
+        "tasteProfile": {
+          "promote": [
+            "Tools that help people train consistently",
+            "Projects built by people in my community",
+            "Honest creator-economy tools"
+          ],
+          "never": [
+            "Crypto or trading schemes",
+            "Diet pills and supplements"
+          ],
+          "voice": [
+            "Shipped a new workout series today. Short, no fluff, 20 minutes. If you try it, tell me what broke.",
+            "Every big thing I've done started as a small, slightly embarrassing first version. Post yours.",
+            "Building in public is scary. Do it anyway."
+          ]
+        },
+        "voice": [
+          "Shipped a new workout series today. Short, no fluff, 20 minutes. If you try it, tell me what broke.",
+          "Every big thing I've done started as a small, slightly embarrassing first version. Post yours.",
+          "Building in public is scary. Do it anyway."
+        ],
+        "creatorName": "Mira Kapoor",
+        "platforms": [
+          "x"
+        ],
+        "showcaseUrl": "http://localhost:3000/mira/s/gym-log-app-for-creators-who-lift"
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "A two-tap gym log, built in the Builders community",
+            "drafts": {
+              "x": {
+                "text": "Featured today: Arjun Mehta's gym-log app from my Builders community. Two taps per set. He's looking for a designer. http://localhost:3000/mira/s/gym-log-app-for-creators-who-lift [link] #BuildInPublic #Fitness",
+                "hashtags": []
+              }
+            }
+          },
+          "usage": {
+            "prompt_tokens": 1500,
+            "completion_tokens": 90
+          }
+        }
+      ],
+      "expect": {
+        "platforms": [
+          "x"
+        ],
+        "failed": [],
+        "xText": "Featured today: Arjun Mehta's gym-log app from my Builders community. Two taps per set. He's looking for a designer.",
+        "xHashtags": [
+          "BuildInPublic",
+          "Fitness"
+        ],
+        "requests": 1
+      }
+    }
+  ]
+}

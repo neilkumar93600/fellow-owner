@@ -88,7 +88,7 @@ function SiteFooter() {
             <Link
               href="/"
               aria-label="Fellow Owners home"
-              className="rounded-full"
+              className={styles.home}
               onClick={(event) => goTo(event, '/')}
             >
               <Logo />
@@ -99,7 +99,7 @@ function SiteFooter() {
             </p>
           </div>
 
-          <nav aria-label="Footer" className={styles.columns}>
+          <nav id="site-footer-nav" aria-label="Footer" className={styles.columns}>
             <Column title="Product" index={1}>
               {LANDING_NAV.map((item) => (
                 <li key={item.href}>

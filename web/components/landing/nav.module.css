@@ -267,6 +267,39 @@
   transform: rotate(-45deg) scale(0.8);
 }
 
+/* Without JavaScript the sheet cannot open, so the inert button gives way to the footer link. */
+.menuFallback {
+  text-decoration: none;
+}
+
+@media (scripting: none) {
+  .menuButton:not(.menuFallback) {
+    display: none;
+  }
+}
+
+/* Scrim under the open sheet (below 1024px): a light pearl wash that holds the page back. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgb(242 242 243 / 0.6);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 150ms var(--ease-out-quart),
+    visibility 0s linear 150ms;
+}
+
+.scrim[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 220ms var(--ease-out-quart),
+    visibility 0s;
+}
+
 /* Glass menu sheet (below 1024px). */
 .sheet {
   position: absolute;
@@ -392,8 +425,17 @@
   }
 
   .menuButton,
-  .sheet {
+  .sheet,
+  .scrim {
     display: none;
+  }
+}
+
+/* Touch: every control in the bar is at least 44px tall (the fine-pointer sizes stay 40 and 36). */
+@media (pointer: coarse) {
+  .action,
+  .link {
+    height: 44px;
   }
 }
 
@@ -436,47 +478,47 @@
 }
 
 /*
- * Entrance contract with the hero: it adds `intro` to <html> before first paint (only without reduced
- * motion) and `intro-play` once fonts are ready, then removes both after about 1.7s.
+ * Entrance contract with the hero (hero-intro.tsx): <html data-intro> before first paint (only without
+ * reduced motion), data-intro="play" once fonts are ready, then the attribute is removed after about 1.5s.
  */
 @media (prefers-reduced-motion: no-preference) {
-  :global(html.intro) .item {
+  :global(html[data-intro]) .item {
     opacity: 0;
   }
 
-  :global(html.intro-play) .brand {
+  :global(html[data-intro="play"]) .brand {
     animation: rise 0.62s var(--intro-ease) 0s both;
   }
 
-  :global(html.intro-play) .linkItem {
+  :global(html[data-intro="play"]) .linkItem {
     animation: rise 0.55s var(--intro-ease) 0.07s both;
   }
 
-  :global(html.intro-play) .linkItem:nth-of-type(2) {
+  :global(html[data-intro="play"]) .linkItem:nth-of-type(2) {
     animation-delay: 0.115s;
   }
 
-  :global(html.intro-play) .linkItem:nth-of-type(3) {
+  :global(html[data-intro="play"]) .linkItem:nth-of-type(3) {
     animation-delay: 0.16s;
   }
 
-  :global(html.intro-play) .linkItem:nth-of-type(4) {
+  :global(html[data-intro="play"]) .linkItem:nth-of-type(4) {
     animation-delay: 0.205s;
   }
 
-  :global(html.intro-play) .linkItem:nth-of-type(5) {
+  :global(html[data-intro="play"]) .linkItem:nth-of-type(5) {
     animation-delay: 0.25s;
   }
 
-  :global(html.intro-play) .fan {
+  :global(html[data-intro="play"]) .fan {
     animation: rise 0.55s var(--intro-ease) 0.16s both;
   }
 
-  :global(html.intro-play) .creator {
+  :global(html[data-intro="play"]) .creator {
     animation: rise 0.55s var(--intro-ease) 0.215s both;
   }
 
-  :global(html.intro-play) .menuButton {
+  :global(html[data-intro="play"]) .menuButton {
     animation: rise 0.55s var(--intro-ease) 0.25s both;
   }
 }

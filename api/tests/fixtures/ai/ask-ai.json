@@ -1,0 +1,83 @@
+{
+  "task": "askAI",
+  "description": "Recorded smart-tier answer for the P1 Ask your AI (matches referenced by key; inline [m1] becomes [1]).",
+  "cases": [
+    {
+      "name": "who-builds-fitness-tools",
+      "input": {
+        "question": "Who in my community is building fitness tools?",
+        "creatorName": "Mira Kapoor",
+        "tasteProfile": {
+          "promote": [
+            "Tools that help people train consistently",
+            "Projects built by people in my community"
+          ],
+          "never": [
+            "Crypto or trading schemes"
+          ],
+          "voice": []
+        },
+        "matches": [
+          {
+            "refType": "post",
+            "refId": "5b2c3d4e-0000-4000-8000-000000000001",
+            "title": "Gym-log app for creators who lift",
+            "summary": "A two-tap workout logger.",
+            "excerpt": "I'm building a simple workout logger for people who follow creator programs."
+          },
+          {
+            "refType": "post",
+            "refId": "5b2c3d4e-0000-4000-8000-000000000002",
+            "title": "Best protein snacks?",
+            "summary": null,
+            "excerpt": "What do you all eat after training?"
+          },
+          {
+            "refType": "post",
+            "refId": "5b2c3d4e-0000-4000-8000-000000000003",
+            "title": "Mobility timer for desk workers",
+            "summary": "Prompts 2-minute mobility breaks.",
+            "excerpt": "A timer that reminds you to move every hour."
+          }
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "answer": "Two members are building fitness tools: a two-tap gym-log app for people following creator programs [m1] and a mobility timer that prompts short breaks for desk workers [m3]. [m7]",
+            "citations": [
+              "m1",
+              "m3"
+            ]
+          },
+          "usage": {
+            "prompt_tokens": 800,
+            "completion_tokens": 70
+          }
+        },
+        {
+          "content": {
+            "answer": "Two members are building fitness tools: a two-tap gym-log app for people following creator programs [m1] and a mobility timer that prompts short breaks for desk workers [m3]. [m7]",
+            "citations": [
+              "m1",
+              "m3"
+            ]
+          },
+          "usage": {
+            "prompt_tokens": 900,
+            "completion_tokens": 70
+          }
+        }
+      ],
+      "expect": {
+        "answer": "Two members are building fitness tools: a two-tap gym-log app for people following creator programs [1] and a mobility timer that prompts short breaks for desk workers [2].",
+        "citationIds": [
+          "5b2c3d4e-0000-4000-8000-000000000001",
+          "5b2c3d4e-0000-4000-8000-000000000003"
+        ],
+        "requests": 2
+      },
+      "description": "Attempt 1 cites an unknown key [m7] inside the answer, so run.ts retries once; attempt 2 repeats it and the unknown marker is removed."
+    }
+  ]
+}

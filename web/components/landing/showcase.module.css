@@ -1,19 +1,23 @@
 /*
- * Showcase strip (landing brief v2, part 9): on the page background, a heading row, then two full-bleed
- * marquee rows of project cards running in opposite directions with soft edge masks.
+ * Showcase strip (landing brief v2, part 9): on the page background, a heading row, then one full-bleed
+ * marquee of project cards in three widths (sm, md, lg) with soft edge masks.
  *
- * Each track holds two identical lists of all eight cards and slides by one list per loop
- * (translateX(-50%)), so the seam never shows up to a 2560px viewport. Rows pause on hover and
- * focus-within, on the Pause control (data-paused) and off-screen (data-offscreen).
+ * The track holds three identical lists of the eight cards (about 2,900px each at desktop) and slides by
+ * one list per loop. The loop runs with the middle (real) list's start between 50vw and 50vw minus one
+ * list, so every real card can be centred when it takes focus, and the copies either side always fill the
+ * screen up to a 2560px viewport. The row pauses on hover and focus-within, on the Pause control
+ * (data-paused) and off-screen (data-offscreen).
  *
- * Reduced motion: no marquee. The first list's eight cards form one horizontal row that scrolls and snaps
- * (display: contents flattens the list into it); the copy and the decorative second row are hidden.
+ * Reduced motion: no marquee. The real list's eight cards form one horizontal row that scrolls and snaps
+ * (display: contents flattens the list into it); the copies are hidden.
  */
 
 .section {
   --ink-soft: #5e5e62;
   --gutter: 16px;
-  --card-w: 264px;
+  --card-sm: 240px;
+  --card-md: 272px;
+  --card-lg: 312px;
   --gap: 12px;
 
   position: relative;
@@ -25,7 +29,9 @@
 @media (min-width: 768px) {
   .section {
     --gutter: 44px;
-    --card-w: 288px;
+    --card-sm: 264px;
+    --card-md: 312px;
+    --card-lg: 372px;
     --gap: 16px;
 
     padding-block: 136px 128px;
@@ -35,10 +41,21 @@
 @media (min-width: 1200px) {
   .section {
     --gutter: 56px;
-    --card-w: 304px;
+    --card-sm: 288px;
+    --card-md: 340px;
+    --card-lg: 420px;
     --gap: 20px;
 
     padding-block: 152px 152px;
+  }
+}
+
+/* Wide screens: a little larger, so one list (about 3,020px) still outruns a 2560px viewport plus a card. */
+@media (min-width: 1800px) {
+  .section {
+    --card-sm: 300px;
+    --card-md: 360px;
+    --card-lg: 440px;
   }
 }
 
@@ -168,13 +185,10 @@
   transform: scale(0.98);
 }
 
-/* ---------- Rows ---------- */
+/* ---------- Row ---------- */
 
 .rows {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap);
-  /* Edge fades: a mask on the rows, never on text colour. */
+  /* Edge fades: a mask on the row, never on text colour. */
   mask-image: linear-gradient(
     to right,
     transparent,
@@ -182,6 +196,11 @@
     #000 calc(100% - min(12%, 160px)),
     transparent
   );
+}
+
+/* A keyboard user on a card sees it whole: the fades lift while focus is inside the row. */
+.rows:has(:focus-visible) {
+  mask-image: none;
 }
 
 .row {
@@ -192,7 +211,7 @@
 }
 
 .track {
-  --dur: 104s;
+  --dur: 112s;
 
   position: relative;
   display: flex;
@@ -200,18 +219,13 @@
   animation: marquee var(--dur) linear infinite;
 }
 
-.trackReverse {
-  --dur: 118s;
-
-  animation-direction: reverse;
-}
-
+/* One list is a third of the track. The real (middle) list starts at 50vw and ends one list further left. */
 @keyframes marquee {
   from {
-    transform: translateX(0);
+    transform: translateX(calc(50vw - 100% / 3));
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(calc(50vw - 200% / 3));
   }
 }
 
@@ -231,7 +245,15 @@
 }
 
 .item {
-  flex: 0 0 var(--card-w);
+  flex: 0 0 var(--card-md);
+}
+
+.item[data-size="sm"] {
+  flex-basis: var(--card-sm);
+}
+
+.item[data-size="lg"] {
+  flex-basis: var(--card-lg);
 }
 
 /* ---------- Card ---------- */
@@ -253,16 +275,23 @@
   }
 }
 
+/* Community chip, the project's picture, then the title at the foot of the tint. */
 .cover {
   position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 28px;
-  min-height: 176px;
-  padding: 16px;
+  gap: 14px;
+  padding: 14px 14px 16px;
   border-radius: 22px;
   background: var(--bg);
+}
+
+@media (min-width: 768px) {
+  .cover {
+    gap: 16px;
+    padding: 16px 16px 18px;
+  }
 }
 
 /* White-tint projects take the shell's grey with its soft blur instead of white on white. */
@@ -275,7 +304,6 @@
 .coverTop {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
 }
 
@@ -308,28 +336,12 @@
   background: var(--table-head);
 }
 
-.featured {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  height: 24px;
-  padding-inline: 10px;
-  border-radius: 999px;
-  background: var(--lime);
-  color: var(--ink);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.card[data-tint="lime"] .featured {
-  box-shadow: inset 0 0 0 1px rgb(45 45 48 / 0.12);
-}
-
 .cardTitle {
-  max-width: 15ch;
-  padding-right: 28px;
+  max-width: 18ch;
+  margin-top: auto;
+  padding-right: 36px;
   color: var(--ink);
-  font-size: 1.375rem;
+  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -439,6 +451,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .rows {
+    display: flex;
     flex-direction: row;
     gap: var(--gap);
     overflow-x: auto;
@@ -455,8 +468,7 @@
     display: contents;
   }
 
-  .group[data-copy],
-  .row[data-decorative] {
+  .group[data-copy] {
     display: none;
   }
 

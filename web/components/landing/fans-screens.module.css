@@ -961,7 +961,8 @@
 
 .projectBody {
   margin: 0.6em 0 1.05em;
-  color: var(--ink-muted);
+  /* It sits on the shell grey, where ink-muted fails AA (DESIGN.md): ink-soft holds 4.6:1. */
+  color: var(--ink-soft);
   font-size: 0.8em;
   line-height: 1.45;
 }

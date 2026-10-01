@@ -16,21 +16,26 @@ import { communities, creator, showcase } from './demo-data';
 import { avatarTint, initials, TINT_COLORS } from './features-data';
 import st from './showcase.module.css';
 import { ShowcaseStage } from './showcase-motion';
+import { ProjectVisual, projectSize } from './showcase-visuals';
 
 /*
  * Showcase strip (landing brief v2, part 9): on the page background, the projects Mira's community built
- * and she promoted, as two slow marquees running in opposite directions. Demo data, labelled as such.
+ * and she promoted, as one slow marquee. Demo data, labelled as such. Each card shows a small picture of
+ * the project (showcase-visuals.tsx) and has its own width, so the strip reads as eight different things.
  *
- * Each row is a CSS transform animation over two copies of its list; only the first row's first copy is
- * exposed to assistive tech and the keyboard (every echo is aria-hidden, its links out of the tab order but
- * still clickable). Rows pause on hover
- * and focus-within, and with the Pause control. Reduced motion: one static row that scrolls and snaps.
+ * One row, so no project is ever on screen twice. The track holds three copies of the list and the middle
+ * one is the real list: exposed to assistive tech and the keyboard, while the copies either side are
+ * aria-hidden echoes (links out of the tab order, still clickable). The animation keeps the middle copy's
+ * start inside the viewport, so any card can be brought to the centre when it takes focus
+ * (showcase-motion.tsx). The row pauses on hover and focus-within, and with the Pause control. Reduced
+ * motion: the middle copy alone, as a row that scrolls and snaps.
  */
 
 type Project = (typeof showcase)[number];
 
-/** Copies of each row's list: eight cards (about 2,600px) twice over covers a 2560px screen. */
-const COPIES = 2;
+/** Copies of the list in the track (about 2,900px each at desktop); the middle one is the real list. */
+const COPIES = 3;
+const REAL_COPY = 1;
 
 const ICONS: Record<string, LucideIcon> = {
   'code-2': Code2,
@@ -74,16 +79,6 @@ const TEAMS: Record<string, string[]> = {
   ],
 };
 
-/**
- * Both rows carry all eight projects so no card repeats within a row on screen. The second row starts four
- * projects in and runs the other way; it is a decorative echo, hidden from assistive tech and the keyboard,
- * so each project is announced and focused once.
- */
-const ROWS: { projects: Project[]; reverse: boolean; decorative: boolean }[] = [
-  { projects: [...showcase], reverse: false, decorative: false },
-  { projects: [...showcase.slice(4), ...showcase.slice(0, 4)], reverse: true, decorative: true },
-];
-
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -115,46 +110,43 @@ export function ShowcaseStrip() {
         }
       >
         <div className={st.rows}>
-          {ROWS.map((row) => (
-            <div
-              key={row.reverse ? 'right' : 'left'}
-              className={st.row}
-              aria-hidden={row.decorative || undefined}
-              data-decorative={row.decorative ? '' : undefined}
-            >
-              <div
-                className={cn(st.track, row.reverse && st.trackReverse)}
-                data-marquee-track
-                data-copies={COPIES}
-              >
-                {Array.from({ length: COPIES }, (_, copy) => (
+          <div className={st.row}>
+            <div className={st.track} data-marquee-track data-copies={COPIES}>
+              {Array.from({ length: COPIES }, (_, copy) => {
+                const real = copy === REAL_COPY;
+                return (
                   <ul
                     // biome-ignore lint/suspicious/noArrayIndexKey: copies are identical and fixed in number.
                     key={copy}
                     // biome-ignore lint/a11y/noRedundantRoles: keeps list semantics when reduced motion sets display: contents (Safari drops them).
                     role="list"
                     className={st.group}
-                    aria-label={copy === 0 && !row.decorative ? 'Featured projects' : undefined}
-                    aria-hidden={copy === 0 || row.decorative ? undefined : true}
-                    data-copy={copy === 0 ? undefined : ''}
+                    aria-label={real ? 'Featured projects' : undefined}
+                    aria-hidden={real ? undefined : true}
+                    data-copy={real ? undefined : ''}
                   >
-                    {row.projects.map((project) => (
-                      <li key={project.title} className={st.item} data-marquee-item>
-                        <ProjectCard project={project} echo={copy > 0 || row.decorative} />
+                    {showcase.map((project) => (
+                      <li
+                        key={project.title}
+                        className={st.item}
+                        data-size={projectSize(project.title)}
+                        data-marquee-item
+                      >
+                        <ProjectCard project={project} echo={!real} />
                       </li>
                     ))}
                   </ul>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          ))}
+          </div>
         </div>
       </ShowcaseStage>
     </section>
   );
 }
 
-/** echo: a visual copy (aria-hidden by its list or row). Still clickable, but out of the tab order. */
+/** echo: a visual copy (aria-hidden by its list). Still clickable, but out of the tab order. */
 function ProjectCard({ project, echo }: { project: Project; echo: boolean }) {
   const community = communities.find((c) => c.name === project.community);
   const Icon = (community && ICONS[community.icon]) ?? Users;
@@ -177,8 +169,8 @@ function ProjectCard({ project, echo }: { project: Project; echo: boolean }) {
             </span>
             {project.community}
           </span>
-          <span className={st.featured}>Featured</span>
         </div>
+        <ProjectVisual title={project.title} />
         <h3 className={st.cardTitle}>
           <Link
             href={`/${creator.handle}/s/${slugify(project.title)}`}

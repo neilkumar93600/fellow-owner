@@ -11,17 +11,20 @@ import { CLICKS, formatCount, PITCH } from './how-data';
 /*
  * Scene controller for "How it works".
  *
- * - Rail (desktop 1024+ wide and 740+ tall, motion allowed): the section grows to 100svh plus the
+ * - Rail (desktop 1024+ wide and 650+ tall, motion allowed): the section grows to 100svh plus the
  *   track's overflow; the stage pins and the track translates on X as you scroll, 1px for 1px. The
- *   outlined numbers drift a little slower than their panels, the progress line fills, and steps 02
- *   and 03 scrub their mini UIs as they enter from the right. Step 01 plays its join sequence once.
+ *   outlined numbers drift a little slower than their panels, the progress line fills, steps 02
+ *   and 03 scrub their mini UIs as they enter from the right, and a step dims as it leaves past the
+ *   left edge (so the resting frame reads as 03 in focus, not 02 cut mid-word). Step 01 plays its
+ *   join sequence once.
  * - Stack (phones, tablets, short windows, reduced motion, and before hydration): a vertical list.
  *   Each mini UI plays once when it comes into view; reduced motion keeps the finished state.
  *
  * Every per-frame write goes to the DOM through refs; React state only holds the mode.
  */
 
-const RAIL_QUERY = '(min-width: 1024px) and (min-height: 740px)';
+/** 650px tall takes in 1366 x 768 laptops; how.module.css scales the rail's em size to the height. */
+const RAIL_QUERY = '(min-width: 1024px) and (min-height: 650px)';
 const REDUCE_QUERY = '(prefers-reduced-motion: reduce)';
 /** Duration of each step's one-shot sequence (stack mode, and step 01 on the rail). */
 const PLAY_MS = [2400, 1700, 1900];
@@ -32,6 +35,9 @@ const NUM_DRIFT = 0.08;
  * UI's right edge reaches this share of the stage width, so the whole climb happens in view.
  */
 const SCRUB_END = 0.92;
+/** A step leaving past the left edge dims by this much per share of its width already gone, down to LEAVE_MIN. */
+const LEAVE_RATE = 1.8;
+const LEAVE_MIN = 0.32;
 
 type Mode = 'stack' | 'rail';
 
@@ -41,6 +47,8 @@ interface Step {
   apply: (t: number) => void;
   /** Last value applied, so unchanged frames write nothing. */
   last: number;
+  /** Opacity last written on the rail (panels dim as they leave past the left edge). */
+  fade: number;
   played: boolean;
   raf: number;
   /** Offset and width inside the track, measured untransformed. */
@@ -170,6 +178,7 @@ export function HowRail({
         num: li.querySelector<HTMLElement>('[data-how-num]'),
         apply: makeApply(index, li),
         last: 1,
+        fade: 1,
         played: false,
         raf: 0,
         left: 0,
@@ -218,6 +227,15 @@ export function HowRail({
         if (step.num) {
           step.num.style.transform = `translate3d(${((vw / 2 - center) * NUM_DRIFT).toFixed(1)}px, 0, 0)`;
         }
+        const hidden = Math.max(0, -left) / Math.max(1, step.width);
+        const fade = Math.round(Math.max(LEAVE_MIN, 1 - hidden * LEAVE_RATE) * 100) / 100;
+        if (fade !== step.fade) {
+          step.fade = fade;
+          // The whole step dims as one group, so the number never shows through its panel. Its
+          // one-time reveal is long over by now; its transition must not lag the scroll.
+          step.li.style.transition = 'none';
+          step.li.style.opacity = fade === 1 ? '' : String(fade);
+        }
         if (index > 0) {
           const watchLeft = step.watchLeft + x;
           const span = step.watchWidth + vw * (1 - SCRUB_END);
@@ -261,6 +279,9 @@ export function HowRail({
       track.style.transform = '';
       s.steps.forEach((step, index) => {
         if (step.num) step.num.style.transform = '';
+        step.li.style.opacity = '';
+        step.li.style.transition = '';
+        step.fade = 1;
         // 02 and 03 were scrubbed by the rail: show them finished unless they never started.
         if (index > 0 && (step.played || (step.last > 0 && step.last < 1))) {
           step.played = true;
@@ -298,6 +319,11 @@ export function HowRail({
         observer.disconnect();
         root.style.height = '';
         track.style.transform = '';
+        for (const step of s.steps) {
+          step.li.style.opacity = '';
+          step.li.style.transition = '';
+          step.fade = 1;
+        }
       });
 
       // Keyboard: focusing something inside an off-screen panel scrolls the rail to it.

@@ -1,0 +1,85 @@
+{
+  "task": "clusterImport",
+  "description": "Recorded smart-tier answer for the P1 audience import (comments referenced by key).",
+  "cases": [
+    {
+      "name": "youtube-comments",
+      "input": {
+        "creatorName": "Mira Kapoor",
+        "comments": [
+          "Would love a group for people learning to code while working full time",
+          "Your home workouts got me through winter, more of those please",
+          "Any other self-taught devs here? Let's build something together",
+          "I make beats, would be cool to collab on workout music",
+          "Started running because of your videos, now training for a half marathon",
+          "Is there a place to share side projects and get feedback?",
+          "Producer here, happy to make tracks for your next series",
+          "Can we do a running club meetup in Mumbai?",
+          "I'm a designer looking for devs to team up with",
+          "Love the fitness content, the mobility routines especially",
+          "BUY FOLLOWERS CHEAP visit my profile",
+          "Your editing style is so clean, would love tips on video editing"
+        ],
+        "existingCommunities": [
+          "Fitness Crew"
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "communities": [
+              {
+                "name": "Self-taught Builders",
+                "description": "People learning to code and building side projects together.",
+                "sampleComments": [
+                  "k1",
+                  "k3",
+                  "k6"
+                ]
+              },
+              {
+                "name": "Fitness Crew",
+                "description": "Home workouts and running.",
+                "sampleComments": [
+                  "k2"
+                ]
+              },
+              {
+                "name": "Runners",
+                "description": "Members training for races and meeting up for runs.",
+                "sampleComments": [
+                  "k5",
+                  "k8"
+                ]
+              },
+              {
+                "name": "Beatmakers & Editors",
+                "description": "Producers and video editors who want to make content together.",
+                "sampleComments": [
+                  "k4",
+                  "k7",
+                  "k12",
+                  "k99"
+                ]
+              }
+            ]
+          },
+          "usage": {
+            "prompt_tokens": 900,
+            "completion_tokens": 200
+          }
+        }
+      ],
+      "expect": {
+        "names": [
+          "Self-taught Builders",
+          "Runners",
+          "Beatmakers & Editors"
+        ],
+        "firstQuotes": 3,
+        "lastQuotes": 3,
+        "requests": 1
+      }
+    }
+  ]
+}

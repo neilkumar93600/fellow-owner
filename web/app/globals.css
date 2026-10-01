@@ -5,6 +5,15 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
+ * Performance: components/ui/button.tsx asks for `[&_svg:not([class*='size-'])]:size-{3,4}`. A selector that
+ * reads the class attribute makes every class change on <html> (Lenis toggles lenis-scrolling at the start and
+ * end of each scroll, next-themes and the hero entrance write it at boot) restyle the whole document: about
+ * 3,400 elements and 40 to 60ms each at 1x. Those two candidates are not generated; the same icon default is
+ * set in the base layer below without reading the class attribute.
+ */
+@source not inline("[&_svg:not([class*='size-'])]:size-{3,4}");
+
+/*
  * Fellow Owners design tokens, from docs/04-ui-ux-brief.md §3 (DESIGN.md mirrors them).
  * Light theme only in v1; dark mode is P2 (F26).
  */
@@ -49,6 +58,12 @@
   --radius-shell: 40px;
   --radius-card: 28px;
 
+  /*
+   * Landing chrome: the band under the fixed navbar that keyboard focus must clear (WCAG 2.4.11), read by
+   * FocusClear in app/providers.tsx. Not scroll-padding-top: Lenis subtracts that from every anchor target.
+   */
+  --nav-clear: 88px;
+
   /* Motion: state changes only, ease out, no bounce. */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
@@ -74,7 +89,8 @@
   --destructive: var(--danger);
   --border: var(--line);
   --input: var(--line);
-  --ring: rgb(124 58 237 / 0.4);
+  /* DESIGN.md correction: the ring is solid purple (40% measured 1.7 to 1.9:1, under WCAG 1.4.11's 3:1). */
+  --ring: var(--purple);
   --chart-1: var(--orange);
   --chart-2: var(--purple-chart);
   --chart-3: var(--teal);
@@ -88,7 +104,13 @@
   --sidebar-accent: var(--glass);
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--line);
-  --sidebar-ring: rgb(124 58 237 / 0.4);
+  --sidebar-ring: var(--purple);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-clear: 96px;
+  }
 }
 
 @theme inline {
@@ -228,13 +250,24 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+  /* DESIGN.md Focus Ring: solid purple, 2px, offset 2px (4.1:1 on the shell, 5.0 on lime, 5.7 on white). */
   :focus-visible {
-    outline: 2px solid rgb(124 58 237 / 0.4);
+    outline: 2px solid var(--purple);
     outline-offset: 2px;
   }
   ::selection {
     background: var(--lime);
     color: var(--ink);
+  }
+  /* Button icon default (see the @source note at the top): 16px, 12px on the xs sizes. Any size-* or w-/h-
+     utility on the icon still wins, because utilities sit in a later layer. */
+  [data-slot="button"] svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  [data-slot="button"]:is(.h-6, .size-6) svg {
+    width: 0.75rem;
+    height: 0.75rem;
   }
 }
 

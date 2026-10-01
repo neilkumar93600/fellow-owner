@@ -398,6 +398,11 @@
   background: var(--card-strong);
 }
 
+/* Pinned scene only: the card's white surface as its own layer, so it can recede without dimming the text. */
+.tableSurface {
+  display: none;
+}
+
 .tableTop {
   display: flex;
   align-items: center;
@@ -867,13 +872,73 @@
   align-items: start;
 }
 
-/* Phones: the closing line takes over the compact title's slot at the end of the scene. */
+/*
+ * Phones: the closing line takes over the compact title's slot at the end of the scene, and the Filtered
+ * tray floats over the bottom edge (it fades once the spam is in), so the picks get the full height.
+ */
 @media (max-width: 767.98px) {
+  .section[data-motion] .final {
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      "slot"
+      "board";
+  }
+
   .section[data-motion] .closing {
     grid-area: slot;
     align-self: start;
     font-size: 1.375rem;
     line-height: 1.15;
+  }
+
+  .section[data-motion] .tray {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+/* Shorter phones (most phones once the browser bars show): a tighter picks stack, same type sizes. */
+@media (max-width: 767.98px) and (max-height: 780px) {
+  .section[data-motion] .picksWrap {
+    padding: 10px;
+  }
+
+  .section[data-motion] .picksHead {
+    height: 36px;
+    margin-bottom: 6px;
+  }
+
+  .section[data-motion] .picks {
+    gap: 8px;
+  }
+
+  .section[data-motion] .pick {
+    padding: 12px 14px 13px;
+  }
+
+  .section[data-motion] .pickSum {
+    margin-top: 6px;
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+
+  .section[data-motion] .pickWhy {
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+}
+
+/* The shortest phones keep each summary to one line; the reason, the point of the scene, stays whole. */
+@media (max-width: 767.98px) and (max-height: 700px) {
+  .section[data-motion] .picks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .section[data-motion] .pickSum {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
@@ -926,6 +991,22 @@
   z-index: 0;
   grid-area: 1 / 1;
   align-self: start;
+  background: transparent;
+}
+
+.section[data-motion] .tableSurface {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: block;
+  border-radius: inherit;
+  background: var(--card-strong);
+}
+
+@media (max-width: 767.98px) {
+  .section[data-motion] .tableSurface {
+    display: none;
+  }
 }
 
 /* Fades the lifted inbox out at the bottom of the stage (a page-coloured veil, cheaper than a mask). */
@@ -980,16 +1061,20 @@
   }
 }
 
+/*
+ * From 1024 the docked column stacks under the compact title (narration, the Filtered tray, then the closing
+ * tally), top-aligned with the board, instead of splitting between the top and bottom edges.
+ */
 @media (min-width: 1024px) {
   .section[data-motion] .final {
     grid-template-columns: var(--left) minmax(0, 1fr);
-    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+    grid-template-rows: auto auto auto auto minmax(0, 1fr);
     grid-template-areas:
       "slot board"
       "narr board"
-      ". board"
+      "tray board"
       "close board"
-      "tray board";
+      ". board";
     gap: 0 56px;
   }
 
@@ -1000,8 +1085,13 @@
   }
 
   .section[data-motion] .tray {
+    align-self: start;
     justify-self: start;
-    margin-top: 28px;
+    margin-top: 32px;
+  }
+
+  .section[data-motion] .closing {
+    margin-top: 32px;
   }
 }
 

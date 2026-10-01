@@ -12,12 +12,14 @@ const SCREENS: Record<string, () => React.ReactNode> = {
 };
 
 /**
- * For creators (landing brief v2, part 5): a lavender field. On desktop the story sits in a sticky
- * column while three real dashboard screens pass through in 3D on the right, and the step for the
- * screen in focus lights up. Phones and tablets stack each step over its screen, flat.
+ * For creators (landing brief v2, part 5): a lavender field. From 1024px the story sits in a sticky
+ * column on the left. With motion allowed the right column pins too: the three real dashboard screens
+ * wait as a deck in 3D depth and swap in place as you scroll, and the step for the screen in front
+ * lights up. Phones and tablets stack each step over its screen, flat.
  *
- * Everything is server-rendered flat and complete (no JavaScript, reduced motion); the client islands in
- * creators-motion.tsx only add the tilt, the parallax, the step highlight and the reveals.
+ * Everything is server-rendered flat and complete (no JavaScript, reduced motion: the screens simply
+ * follow each other beside the sticky story); the client islands in creators-motion.tsx only add the
+ * pin, the swap, the parallax, the step highlight and the reveals.
  */
 export function CreatorsSection() {
   return (
@@ -26,7 +28,7 @@ export function CreatorsSection() {
         <CreatorsScene className={styles.inner}>
           <div className={styles.grid}>
             <div className={styles.aside}>
-              <div className={styles.asideInner}>
+              <div className={styles.asideInner} data-creators-top>
                 <p className={cn('eyebrow', styles.eyebrow)} data-creators-reveal>
                   For creators
                 </p>
@@ -68,36 +70,38 @@ export function CreatorsSection() {
             </div>
 
             <div className={styles.track}>
-              {STEPS.map((step, index) => {
-                const Screen = SCREENS[step.id]!;
-                return (
-                  <CreatorsSlot
-                    key={step.id}
-                    index={index}
-                    id={step.target}
-                    className={styles.slot}
-                    tiltClassName={styles.tilt}
-                  >
-                    <figure className={styles.figure} aria-labelledby={`${step.target}-caption`}>
-                      <figcaption id={`${step.target}-caption`} className={styles.caption}>
-                        <span className={cn(styles.stepNum, 'tabular')} aria-hidden="true">
-                          {index + 1}
-                        </span>
-                        <span className={styles.stepText}>
-                          <span className={styles.stepTitle}>
-                            {step.title}
-                            <span className="sr-only">:</span>
+              <div className={styles.deck} data-creators-deck>
+                {STEPS.map((step, index) => {
+                  const Screen = SCREENS[step.id]!;
+                  return (
+                    <CreatorsSlot
+                      key={step.id}
+                      index={index}
+                      id={step.target}
+                      className={styles.slot}
+                      tiltClassName={styles.tilt}
+                    >
+                      <figure className={styles.figure} aria-labelledby={`${step.target}-caption`}>
+                        <figcaption id={`${step.target}-caption`} className={styles.caption}>
+                          <span className={cn(styles.stepNum, 'tabular')} aria-hidden="true">
+                            {index + 1}
                           </span>
-                          <span className={styles.stepDetail}>{step.detail}</span>
-                        </span>
-                      </figcaption>
-                      <div className={styles.shell}>
-                        <Screen />
-                      </div>
-                    </figure>
-                  </CreatorsSlot>
-                );
-              })}
+                          <span className={styles.stepText}>
+                            <span className={styles.stepTitle}>
+                              {step.title}
+                              <span className="sr-only">:</span>
+                            </span>
+                            <span className={styles.stepDetail}>{step.detail}</span>
+                          </span>
+                        </figcaption>
+                        <div className={styles.shell}>
+                          <Screen />
+                        </div>
+                      </figure>
+                    </CreatorsSlot>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </CreatorsScene>
