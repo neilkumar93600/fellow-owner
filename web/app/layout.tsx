@@ -1,30 +1,46 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google"
+import type { Metadata, Viewport } from 'next';
+import { SITE } from '@/lib/constants';
+import { inter } from '@/lib/fonts';
+import { cn } from '@/lib/utils';
+import { Providers } from './providers';
+import './globals.css';
 
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
+const appUrl =
+  process.env.NEXT_PUBLIC_APP_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : 'http://localhost:3000');
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'})
+export const metadata: Metadata = {
+  metadataBase: new URL(appUrl),
+  title: {
+    default: `${SITE.name}: ${SITE.tagline}`,
+    template: `%s · ${SITE.name}`,
+  },
+  description: SITE.description,
+  applicationName: SITE.name,
+  openGraph: {
+    type: 'website',
+    siteName: SITE.name,
+    title: `${SITE.name}: ${SITE.tagline}`,
+    description: SITE.description,
+  },
+  twitter: { card: 'summary_large_image' },
+};
 
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
+export const viewport: Viewport = {
+  themeColor: '#f2f2f3',
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
-    >
+    <html lang="en" suppressHydrationWarning className={cn(inter.variable, 'antialiased')}>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
-  )
+  );
 }

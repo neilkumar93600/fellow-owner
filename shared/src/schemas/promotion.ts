@@ -18,9 +18,7 @@ const hashtagsSchema = z
 
 function draftSchemaFor(platform: PromotionPlatform) {
   return z.object({
-    text: z
-      .string()
-      .max(P.text[platform], `Up to ${P.text[platform]} characters on this platform`),
+    text: z.string().max(P.text[platform], `Up to ${P.text[platform]} characters on this platform`),
     hashtags: hashtagsSchema,
   });
 }

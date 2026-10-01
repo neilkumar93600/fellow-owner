@@ -17,7 +17,7 @@
       "!api/src/db/migrations",
       "!api/src/db/seed/data",
       "!api/tests/fixtures",
-      "!web/src/components/ui",
+      "!web/components/ui",
       "!docs"
     ]
   },
