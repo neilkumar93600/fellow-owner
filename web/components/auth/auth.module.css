@@ -187,29 +187,167 @@
   background: var(--success-ink);
 }
 
-/* Right panel: product moments float gently. Transform only; still under reduced motion. */
-@keyframes float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
+/*
+ * Right panel. Phones (under 768px) get the form only. From 768px to 1023px the panel sits under the
+ * form, compact: the line beside the lead moment, its left edge on the logo's. From 1024px it fills
+ * the grey shell beside the form. The aside belongs to SplitShell, so it is reached through the class
+ * the auth layout passes in.
+ */
+.shell > div > aside {
+  display: none;
+}
+
+.panel {
+  padding: 32px 40px;
+}
+
+.panelInner {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.7fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 32px;
+}
+
+.slot {
+  position: relative;
+  width: 100%;
+}
+
+/*
+ * Only the lead moment shows until the panel is tall enough for more (container queries below). The
+ * others are taken out of the flow and made invisible rather than display: none, so a query that
+ * re-evaluates mid-load never cancels their entrance, and a card that joins the stack on another screen
+ * slides in from a real position.
+ */
+.slot[data-slot="1"],
+.slot[data-slot="2"] {
+  position: absolute;
+  visibility: hidden;
+}
+
+/* Briefing: the second pick and its matching "+1 more" only fit in a tall panel. */
+.pickExtra,
+.moreOne {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .shell > div > aside {
+    display: block;
   }
-  50% {
-    transform: translate3d(0, -6px, 0);
+}
+
+@media (min-width: 1024px) {
+  /* Absolutely placed, so the panel never makes the page taller than the form column needs. The top
+   * padding puts the demo pill on the logo's row (logo centre 58px from the top edge). */
+  .panel {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    padding: 28px 40px 40px;
+  }
+
+  .panelInner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 640px;
+  }
+
+  /* The moments area is a size container: what shows depends on the room the panel really has, so
+   * a longer line or a shorter window drops the back card instead of pushing it past the edge. */
+  .moments {
+    container-type: size;
+    flex: 1 1 0;
+    min-height: 0;
+    margin-top: 32px;
+    overflow: hidden;
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    height: 100%;
+  }
+
+  .slot[data-slot="0"] {
+    z-index: 3;
+    align-self: flex-start;
+  }
+
+  .slot[data-slot="1"] {
+    z-index: 2;
+    margin-top: -12px;
+    align-self: flex-end;
+  }
+
+  .slot[data-slot="2"] {
+    z-index: 1;
+    margin-top: -12px;
+    margin-left: 7%;
+    align-self: flex-start;
   }
 }
 
-.float {
-  animation: float 7s ease-in-out infinite;
+@media (min-width: 1280px) {
+  .panel {
+    padding: 28px 56px 56px;
+  }
 }
 
-.float[data-slot="1"] {
-  animation-duration: 8s;
-  animation-delay: -2.6s;
+/*
+ * Thresholds come from the measured stacks (12px overlap per card, about 8px to spare). Cards run
+ * taller when the area is narrower than the 496px briefing, so the wide case needs less height.
+ * Lead and second card: 427px wide, 467px narrow. All three: 592px wide, 632px narrow. With the
+ * second pick as well: about 681px wide, 732px narrow.
+ */
+@container ((min-width: 496px) and (min-height: 436px)) or (min-height: 476px) {
+  .slot[data-slot="1"] {
+    position: relative;
+    visibility: visible;
+  }
 }
 
-.float[data-slot="2"] {
-  animation-duration: 9s;
-  animation-delay: -5.2s;
+@container ((min-width: 496px) and (min-height: 600px)) or (min-height: 640px) {
+  .slot[data-slot="2"] {
+    position: relative;
+    visibility: visible;
+  }
+}
+
+@container ((min-width: 496px) and (min-height: 690px)) or (min-height: 740px) {
+  .pickExtra {
+    display: flex;
+  }
+
+  .moreOne {
+    display: inline;
+  }
+
+  .moreTwo {
+    display: none;
+  }
+}
+
+/* One entrance for the moments when the page first loads: 8px up and in, front card first. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise var(--dur-slow) var(--ease-out-quart) both;
 }
 
 @media (min-width: 640px) {
@@ -225,7 +363,7 @@
 @media (prefers-reduced-motion: reduce) {
   .enter,
   .fade,
-  .float {
+  .rise {
     animation: none;
   }
 }

@@ -14,10 +14,17 @@ export const cx = clsx;
 // Field vocabulary for onboarding (DESIGN.md Inputs / Fields): white, radius 16, 44 high,
 // 1px Field Grey border, label above in Small Strong, helper and errors below.
 
+/**
+ * Field type: 16px on phones so iOS Safari and in-app webviews (Instagram, TikTok) never zoom the page
+ * on focus, the 15px body size from 640px up. Matches the auth fields.
+ */
+export const fieldText = 'text-[16px] leading-[22px] sm:text-body';
+
 /** Border, fill, type and states shared by every field, without height or padding. */
 export const fieldSkin = cx(
   'w-full min-w-0 rounded-lg border border-(--line-field) bg-card-strong',
-  'text-body text-ink placeholder:text-ink-muted',
+  fieldText,
+  'text-ink placeholder:text-ink-muted',
   'transition-colors duration-150 ease-(--ease-out-quart) hover:border-ink-muted',
   'aria-invalid:border-danger disabled:cursor-not-allowed disabled:opacity-50',
 );

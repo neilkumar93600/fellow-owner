@@ -46,7 +46,7 @@ export function ForgotPasswordForm() {
     if (inFlight.current) return;
     inFlight.current = true;
     setPending(true);
-    setFailure(null);
+    // An earlier failure stays up during the attempt, so its Retry keeps focus and shows the spinner.
     const result = await runAuth((fetchOptions) =>
       authClient.emailOtp.requestPasswordReset({ email, fetchOptions }),
     );
@@ -54,12 +54,14 @@ export function ForgotPasswordForm() {
       inFlight.current = false;
       setPending(false);
       if (result.failure.kind === 'invalid_email') {
+        setFailure(null);
         setError('email', { message: 'Enter a valid email' }, { shouldFocus: true });
       } else {
         setFailure(result.failure);
       }
       return;
     }
+    setFailure(null);
     writeSession(RESET_EMAIL_KEY, email);
     writeSession(RESET_SENT_AT_KEY, String(Date.now()));
     router.push('/reset-password');

@@ -92,11 +92,15 @@ export function ResetPasswordForm() {
   });
   const password = useWatch({ control, name: 'password' }) ?? '';
 
+  // Focus the first field still to fill: the code when the email came from /forgot-password, the email
+  // on a direct visit. Only for mouse and keyboard users; on phones the keyboard would cover the page.
   useEffect(() => {
     const saved = readSession(RESET_EMAIL_KEY);
     if (saved && !getValues('email')) setValue('email', saved);
-    if (window.matchMedia('(pointer: fine)').matches) otpRef.current?.focus(0);
-  }, [getValues, setValue]);
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    if (getValues('email')) otpRef.current?.focus(0);
+    else setFocus('email');
+  }, [getValues, setValue, setFocus]);
 
   useEffect(() => {
     if (done) headingRef.current?.focus();
@@ -117,8 +121,8 @@ export function ResetPasswordForm() {
     async ({ email, otp, password: newPassword }) => {
       if (inFlight.current) return;
       inFlight.current = true;
+      // An earlier failure stays up during the attempt, so its Retry keeps focus and shows the spinner.
       setPending(true);
-      setFailure(null);
       const result = await runAuth((fetchOptions) =>
         authClient.emailOtp.resetPassword({ email, otp, password: newPassword, fetchOptions }),
       );
@@ -133,6 +137,8 @@ export function ResetPasswordForm() {
       }
 
       const { failure: f } = result;
+      // Field-level answers replace the alert; only the default case below keeps one.
+      setFailure(null);
       switch (f.kind) {
         case 'invalid_otp':
         case 'user_not_found':
@@ -179,7 +185,6 @@ export function ResetPasswordForm() {
     if (!valid || resendPending || secondsLeft > 0) return;
     const email = getValues('email').trim().toLowerCase();
     setResendPending(true);
-    setResendFailure(null);
     const result = await runAuth((fetchOptions) =>
       authClient.emailOtp.requestPasswordReset({ email, fetchOptions }),
     );
@@ -188,6 +193,7 @@ export function ResetPasswordForm() {
       setResendFailure(result.failure);
       return;
     }
+    setResendFailure(null);
     writeSession(RESET_EMAIL_KEY, email);
     writeSession(RESET_SENT_AT_KEY, String(Date.now()));
     clearErrors('otp');
@@ -243,7 +249,8 @@ export function ResetPasswordForm() {
             value={digits}
             onChange={onDigits}
             labelledBy={codeLabelId}
-            describedBy={`${codeHintId} otp-error`}
+            describedBy={codeHintId}
+            inputDescribedBy="otp-error"
             invalid={Boolean(errors.otp)}
             readOnly={pending}
           />
@@ -259,7 +266,7 @@ export function ResetPasswordForm() {
           autoComplete="new-password"
           className="mt-5"
           error={errors.password?.message}
-          hint={<PasswordStrength password={password} />}
+          hint={<PasswordStrength password={password} showTip={!errors.password} />}
           {...register('password')}
         />
 
@@ -312,13 +319,14 @@ function scorePassword(value: string): 0 | 1 | 2 | 3 {
 }
 
 const STRENGTH = {
-  0: { label: '', tip: `Use at least ${PASSWORD_MIN} characters.` },
+  0: { label: '', tip: `${PASSWORD_MIN} or more characters. A short phrase works well.` },
   1: { label: 'Weak', tip: `Use at least ${PASSWORD_MIN} characters. Longer is stronger.` },
   2: { label: 'Okay', tip: 'Add a few more characters, or use a short phrase.' },
   3: { label: 'Strong', tip: 'Save it in your password manager.' },
 } as const;
 
-function PasswordStrength({ password }: { password: string }) {
+/** While the field shows an error the tip steps aside, so the same advice is never shown (or read) twice. */
+function PasswordStrength({ password, showTip }: { password: string; showTip: boolean }) {
   const score = scorePassword(password);
   const { label, tip } = STRENGTH[score];
   return (
@@ -330,7 +338,7 @@ function PasswordStrength({ password }: { password: string }) {
       </span>
       <span aria-live="polite">
         {label ? <span className="font-medium text-ink-soft">{label}. </span> : null}
-        {tip}
+        {showTip ? tip : null}
       </span>
     </div>
   );

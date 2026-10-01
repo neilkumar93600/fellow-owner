@@ -37,7 +37,8 @@ const RESEND_AFTER_MS = LIMITS.otp.resendAfterSeconds * 1000;
 type Status =
   | { kind: 'idle' }
   | { kind: 'incomplete' }
-  | { kind: 'verifying' }
+  /** `retrying` keeps the last failure's alert (and its focused Retry) on screen during the attempt. */
+  | { kind: 'verifying'; retrying?: AuthFailure }
   | { kind: 'wrong'; triesLeft: number }
   | { kind: 'expired' }
   | { kind: 'locked' }
@@ -70,6 +71,8 @@ function OtpEntry({
   const messageId = useId();
   const waitId = useId();
   const otpRef = useRef<OtpInputHandle>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const sendNewRef = useRef<HTMLButtonElement>(null);
   const busy = useRef(false);
   const succeeded = useRef(false);
 
@@ -100,6 +103,16 @@ function OtpEntry({
     [],
   );
 
+  // A used-up code disables the boxes, which drops focus to the page. Hand it to the one action left,
+  // "Send a new code" (focusable during its countdown), unless the visitor has already moved elsewhere.
+  useEffect(() => {
+    if (!needsNewCode) return;
+    const active = document.activeElement;
+    if (!active || active === document.body || formRef.current?.contains(active)) {
+      sendNewRef.current?.focus();
+    }
+  }, [needsNewCode]);
+
   async function verify(code: string) {
     if (!email || busy.current || needsNewCode || status.kind === 'success') return;
     const parsed = otpCodeSchema.safeParse(code);
@@ -110,7 +123,10 @@ function OtpEntry({
     }
 
     busy.current = true;
-    setStatus({ kind: 'verifying' });
+    setStatus({
+      kind: 'verifying',
+      retrying: status.kind === 'failed' ? status.failure : undefined,
+    });
     const result = await runAuth((fetchOptions) =>
       authClient.signIn.emailOtp({
         email,
@@ -161,8 +177,8 @@ function OtpEntry({
 
   async function resend() {
     if (!email || resendPending || secondsLeft > 0) return;
+    // An earlier failure stays up during the attempt, so its Retry keeps focus and shows the spinner.
     setResendPending(true);
-    setResendFailure(null);
     const result = await runAuth((fetchOptions) =>
       authClient.emailOtp.sendVerificationOtp({ email, type: 'sign-in', fetchOptions }),
     );
@@ -171,6 +187,7 @@ function OtpEntry({
       setResendFailure(result.failure);
       return;
     }
+    setResendFailure(null);
     writeSession(OTP_SENT_AT_KEY, String(Date.now()));
     setFailures(0);
     setDigits([...EMPTY_CODE]);
@@ -198,7 +215,12 @@ function OtpEntry({
     }
   })();
 
-  const verifyFailure = status.kind === 'failed' ? status.failure : null;
+  const verifyFailure =
+    status.kind === 'failed'
+      ? status.failure
+      : status.kind === 'verifying'
+        ? (status.retrying ?? null)
+        : null;
   const verifyAlert = (() => {
     if (!verifyFailure || verifyFailure.kind === 'rejected') return null;
     if (verifyFailure.kind === 'rate_limited') {
@@ -229,6 +251,7 @@ function OtpEntry({
       </AuthHeading>
 
       <form
+        ref={formRef}
         noValidate
         className="mt-8"
         aria-label="Enter your code"
@@ -254,7 +277,8 @@ function OtpEntry({
             }}
             onComplete={(code) => void verify(code)}
             labelledBy={labelId}
-            describedBy={`${hintId} ${messageId}`}
+            describedBy={hintId}
+            inputDescribedBy={messageId}
             invalid={fieldMessage !== null}
             disabled={needsNewCode}
             readOnly={verifying || status.kind === 'success'}
@@ -281,6 +305,7 @@ function OtpEntry({
         ) : needsNewCode ? (
           <>
             <SubmitButton
+              ref={sendNewRef}
               className="mt-6"
               pending={resendPending}
               disabled={secondsLeft > 0}
@@ -308,6 +333,7 @@ function OtpEntry({
                 ? () => void verify(digits.join(''))
                 : undefined
             }
+            retrying={verifying}
           >
             {verifyAlert}
           </AuthAlert>

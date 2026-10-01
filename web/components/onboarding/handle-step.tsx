@@ -13,6 +13,7 @@ import {
   FieldError,
   FieldLabel,
   fieldSkin,
+  fieldText,
   inputClass,
   Spinner,
   textareaClass,
@@ -26,10 +27,25 @@ import {
 
 const CHECK_DELAY_MS = 400;
 
+const HANDLE_HINT = `${LIMITS.handle.min} to ${LIMITS.handle.max} characters: lowercase letters, numbers, underscores and periods.`;
+const HANDLE_CHARACTERS = 'Use only lowercase letters, numbers, underscores and periods.';
+/** The shared schema's character rule ends in "_ and .", which reads like a typo in a sentence. */
+const SCHEMA_CHARACTERS = 'Use lowercase letters, numbers, _ and .';
+
+/** The handle message people see, with the schema's terse character rule spelled out. */
+export function friendlyHandleMessage(message: string): string {
+  return message === SCHEMA_CHARACTERS ? HANDLE_CHARACTERS : message;
+}
+
 function localProblem(handle: string): string | null {
   const parsed = handleSchema.safeParse(handle);
   if (parsed.success) return null;
-  return parsed.error.issues[0]?.message ?? 'Use lowercase letters, numbers, _ and .';
+  return friendlyHandleMessage(parsed.error.issues[0]?.message ?? HANDLE_CHARACTERS);
+}
+
+/** A handle worth asking the API about: well formed, or a reserved word the API can suggest around. */
+function checkable(handle: string): boolean {
+  return !localProblem(handle) || isReservedHandle(handle);
 }
 
 /** A few nearby handles for a reserved word, used only when the API cannot suggest any. */
@@ -41,39 +57,43 @@ function fallbackSuggestions(handle: string): string[] {
 
 /**
  * Live availability for the handle field: debounced, aborts stale requests, caches answers.
- * If the API can't be reached the status is "unavailable", which never blocks the flow:
+ * If the API can’t be reached the status is "unavailable", which never blocks the flow:
  * the server confirms the handle when the space is created.
  */
 export function useHandleAvailability(handle: string) {
   const debounced = useDebounce(handle, CHECK_DELAY_MS);
   const cache = useRef(new Map<string, HandleStatus>());
-  const [status, setStatus] = useState<HandleStatus>({ state: 'idle' });
+  // A settled verdict and the handle it belongs to, so a verdict is never shown for another handle.
+  const [verdict, setVerdict] = useState<{ for: string; status: HandleStatus }>({
+    for: '',
+    status: { state: 'idle' },
+  });
 
   useEffect(() => {
     const h = debounced;
     if (!h) {
-      setStatus({ state: 'idle' });
+      setVerdict({ for: '', status: { state: 'idle' } });
       return;
     }
+    const settle = (status: HandleStatus) => setVerdict({ for: h, status });
     const problem = localProblem(h);
     const reserved = isReservedHandle(h);
     if (problem && !reserved) {
-      setStatus({ state: 'invalid', message: problem });
+      settle({ state: 'invalid', message: problem });
       return;
     }
     const cached = cache.current.get(h);
     if (cached) {
-      setStatus(cached);
+      settle(cached);
       return;
     }
     const controller = new AbortController();
-    setStatus({ state: 'checking', handle: h });
     checkHandle(h, controller.signal)
       .then((res) => {
         const next: HandleStatus = res.available
           ? { state: 'available', handle: h }
           : res.reason === 'invalid'
-            ? { state: 'invalid', message: 'Use lowercase letters, numbers, _ and .' }
+            ? { state: 'invalid', message: HANDLE_CHARACTERS }
             : {
                 state: 'taken',
                 handle: h,
@@ -81,11 +101,11 @@ export function useHandleAvailability(handle: string) {
                 suggestions: (res.suggestions ?? []).slice(0, 3),
               };
         cache.current.set(h, next);
-        setStatus(next);
+        settle(next);
       })
       .catch(() => {
         if (controller.signal.aborted) return;
-        setStatus(
+        settle(
           reserved
             ? { state: 'taken', handle: h, reason: 'reserved', suggestions: fallbackSuggestions(h) }
             : { state: 'unavailable', handle: h },
@@ -103,16 +123,16 @@ export function useHandleAvailability(handle: string) {
       suggestions: suggestions.slice(0, 3),
     };
     cache.current.set(h, next);
-    setStatus(next);
+    setVerdict({ for: h, status: next });
   }, []);
 
-  // While the person is still typing a well-formed handle, show "checking" instead of a stale verdict.
-  const typing = handle !== debounced;
-  let current: HandleStatus = status;
+  // Until a verdict for exactly this handle lands, a well-formed handle reads "checking" (while typing,
+  // during the debounce and during the request) and anything else shows the hint, never a stale verdict.
+  let current: HandleStatus;
   if (!handle) current = { state: 'idle' };
-  else if (typing && !localProblem(handle)) current = { state: 'checking', handle };
-  else if (typing) current = { state: 'idle' };
-  else if ('handle' in status && status.handle !== handle) current = { state: 'checking', handle };
+  else if (verdict.for === handle) current = verdict.status;
+  else if (checkable(handle)) current = { state: 'checking', handle };
+  else current = { state: 'idle' };
 
   return { status: current, markTaken };
 }
@@ -131,7 +151,8 @@ export function HandleStep({
     formState: { errors },
   } = useFormContext<OnboardingValues>();
   const bio = watch('bio') ?? '';
-  const handleError = errors.handle?.message;
+  const rawHandleError = errors.handle?.message;
+  const handleError = rawHandleError ? friendlyHandleMessage(rawHandleError) : undefined;
   // A "taken" error is shown by the status line, which also carries the suggestions.
   const statusCarriesError = errors.handle?.type === 'taken' && status.state === 'taken';
   const fieldErrorText = statusCarriesError ? undefined : handleError;
@@ -161,7 +182,10 @@ export function HandleStep({
           >
             <span
               aria-hidden
-              className="flex h-full shrink-0 items-center rounded-l-[15px] border-r border-line bg-page px-3 text-body text-ink-soft select-none"
+              className={cx(
+                fieldText,
+                'flex h-full shrink-0 items-center rounded-l-[15px] border-r border-line bg-page px-3 text-ink-soft select-none',
+              )}
             >
               <span className="hidden sm:inline">{HOST}</span>/
             </span>
@@ -196,7 +220,8 @@ export function HandleStep({
               aria-describedby="ob-handle-status ob-handle-error"
               className={cx(
                 styles.bareInput,
-                'h-full min-w-0 flex-1 rounded-r-lg bg-transparent px-3 text-body text-ink outline-none placeholder:text-ink-muted',
+                fieldText,
+                'h-full min-w-0 flex-1 rounded-r-lg bg-transparent px-3 text-ink outline-none placeholder:text-ink-muted',
               )}
             />
           </div>
@@ -250,6 +275,40 @@ export function HandleStep({
   );
 }
 
+/** What the status line says in words, for the visible line and the announcement alike. */
+function takenText(status: Extract<HandleStatus, { state: 'taken' }>): [string, string] {
+  const lead = status.reason === 'reserved' ? 'Reserved.' : 'Taken.';
+  const rest =
+    status.suggestions.length > 0
+      ? 'Try one of these:'
+      : status.reason === 'reserved'
+        ? 'Pick another handle.'
+        : 'Someone already has this one. Pick another handle.';
+  return [lead, rest];
+}
+
+/**
+ * Settled verdicts only, for screen readers: nothing while the person types or the check runs, so the
+ * region never chatters keystroke by keystroke.
+ */
+function announcementFor(status: HandleStatus): string {
+  switch (status.state) {
+    case 'available':
+      return `/${status.handle} is yours.`;
+    case 'taken': {
+      const [lead, rest] = takenText(status);
+      const list = status.suggestions.map((s) => `/${s}`).join(', ');
+      return list ? `${lead} ${rest} ${list}.` : `${lead} ${rest}`;
+    }
+    case 'invalid':
+      return status.message;
+    case 'unavailable':
+      return `We’ll confirm /${status.handle} when you finish.`;
+    default:
+      return '';
+  }
+}
+
 function HandleStatusLine({
   status,
   hidden,
@@ -262,11 +321,7 @@ function HandleStatusLine({
   let body: React.ReactNode = null;
   switch (status.state) {
     case 'idle':
-      body = (
-        <span className="text-ink-muted">
-          3 to 30 characters: lowercase letters, numbers, _ and .
-        </span>
-      );
+      body = <span className="text-ink-muted">{HANDLE_HINT}</span>;
       break;
     case 'invalid':
       body = (
@@ -280,7 +335,7 @@ function HandleStatusLine({
       body = (
         <>
           <Spinner className="mt-px size-3.5 text-ink-muted" />
-          <span className="text-ink-muted">Checking /{status.handle}</span>
+          <span className="text-ink-muted">Checking availability</span>
         </>
       );
       break;
@@ -296,7 +351,8 @@ function HandleStatusLine({
         </>
       );
       break;
-    case 'taken':
+    case 'taken': {
+      const [lead, rest] = takenText(status);
       body = (
         <>
           <CircleAlert
@@ -305,23 +361,17 @@ function HandleStatusLine({
             className="mt-px size-4 shrink-0 text-danger"
           />
           <span className="text-(--danger-deep)">
-            <span className="font-medium">
-              {status.reason === 'reserved' ? 'Reserved.' : 'Taken.'}
-            </span>{' '}
-            {status.suggestions.length > 0
-              ? 'Try one of these:'
-              : status.reason === 'reserved'
-                ? 'Pick another handle.'
-                : 'Someone already has this one. Pick another handle.'}
+            <span className="font-medium">{lead}</span> {rest}
           </span>
         </>
       );
       break;
+    }
     case 'unavailable':
       body = (
         <>
           <Info aria-hidden strokeWidth={1.5} className="mt-px size-4 shrink-0 text-ink-muted" />
-          <span className="text-ink-muted">We'll confirm /{status.handle} when you finish.</span>
+          <span className="text-ink-muted">We’ll confirm /{status.handle} when you finish.</span>
         </>
       );
       break;
@@ -329,12 +379,13 @@ function HandleStatusLine({
 
   return (
     <div className={cx(hidden && 'sr-only')}>
-      <p
-        id="ob-handle-status"
-        role="status"
-        className="mt-1.5 flex min-h-[18px] items-start gap-1.5 text-small"
-      >
+      {/* Read as the field's description; not live, so it can change with every keystroke. */}
+      <p id="ob-handle-status" className="mt-1.5 flex min-h-[18px] items-start gap-1.5 text-small">
         {body}
+      </p>
+      {/* While a field error shows, that error speaks instead. */}
+      <p role="status" className="sr-only">
+        {hidden ? '' : announcementFor(status)}
       </p>
       {status.state === 'taken' && status.suggestions.length > 0 ? (
         <ul aria-label="Suggested handles" className="mt-2.5 flex flex-wrap gap-2">

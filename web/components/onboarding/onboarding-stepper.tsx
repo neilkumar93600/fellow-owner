@@ -74,7 +74,13 @@ export function OnboardingStepper() {
   const [step, setStep] = useState<StepIndex>(0);
   const [restored, setRestored] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  // Retry runs the same submit; this only decides which button shows the spinner.
+  const [retrying, setRetrying] = useState(false);
   const [problem, setProblem] = useState<SubmitProblem | null>(null);
+  // Counts failed creates in a row, so a second failure reads differently and is announced again.
+  const [failures, setFailures] = useState(0);
+  const alertActionRef = useRef<HTMLElement>(null);
+  const focusAlertAction = useRef(false);
   const [editorPreview, setEditorPreview] = useState<EditorPreview | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const handleInputRef = useRef<HTMLInputElement>(null);
@@ -169,9 +175,19 @@ export function OnboardingStepper() {
     });
   });
 
+  // After a failed create, focus lands on the alert's action (Retry, Sign in, Go to dashboard), never on
+  // the page: the submit button keeps focus while busy, and the alert stays mounted while Retry runs.
+  useEffect(() => {
+    if (!focusAlertAction.current || !problem || failures === 0) return;
+    focusAlertAction.current = false;
+    alertActionRef.current?.focus();
+  }, [problem, failures]);
+
   const goTo = useCallback((next: StepIndex, focus: 'heading' | 'handle' | 'error' = 'heading') => {
     focusAfterStep.current = focus;
     setEditorPreview(null);
+    setProblem(null);
+    setFailures(0);
     setStep(next);
   }, []);
 
@@ -241,7 +257,6 @@ export function OnboardingStepper() {
 
   async function create(data: OnboardingOutput) {
     setSubmitting(true);
-    setProblem(null);
     try {
       await createSpace({
         ...data,
@@ -252,13 +267,21 @@ export function OnboardingStepper() {
         })),
       });
       finished.current = true;
+      setProblem(null);
       clearDraft();
       toast('Your space is live', { description: `${HOST}/${data.handle}` });
       router.push('/dashboard');
     } catch (error) {
       setSubmitting(false);
+      setRetrying(false);
       onCreateError(error, data.handle);
     }
+  }
+
+  function showProblem(next: SubmitProblem) {
+    setProblem(next);
+    setFailures((n) => n + 1);
+    focusAlertAction.current = true;
   }
 
   function onCreateError(error: unknown, submittedHandle: string) {
@@ -284,23 +307,27 @@ export function OnboardingStepper() {
             first = Math.min(first, stepForPath(issue.path)) as StepIndex;
           }
           if (first !== step) goTo(first, 'error');
-          else focusFirstError();
+          else {
+            setProblem(null);
+            focusFirstError();
+          }
           return;
         }
       }
       if (error.status === 401) {
-        setProblem('session');
+        showProblem('session');
         return;
       }
       if (error.status === 409 || error.code === 'conflict') {
-        setProblem('exists');
+        showProblem('exists');
         return;
       }
     }
-    setProblem('unavailable');
+    showProblem('unavailable');
   }
 
   function onInvalid(errors: Record<string, unknown>) {
+    setRetrying(false);
     const paths = Object.keys(errors);
     const first = paths.reduce<StepIndex>(
       (min, p) => Math.min(min, stepForPath(p)) as StepIndex,
@@ -339,7 +366,8 @@ export function OnboardingStepper() {
         className={styles.root}
         aside={<OnboardingPreview values={values} step={step} editor={editorPreview} />}
         footer={
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+          // The form's width, so the footer shares the form's left edge (as the auth footer does).
+          <div className="mx-auto flex w-full max-w-[32rem] flex-wrap items-center justify-between gap-x-4 gap-y-1">
             <span className="inline-flex items-center gap-1.5">
               <Check aria-hidden strokeWidth={1.5} className="size-4" />
               Saved on this device as you go
@@ -351,7 +379,7 @@ export function OnboardingStepper() {
               <button
                 type="button"
                 onClick={onSignOut}
-                className="-mx-1 inline-flex min-h-11 items-center rounded-full px-1 font-medium text-ink underline-offset-4 hover:underline sm:min-h-0"
+                className="-mx-1 inline-flex min-h-11 items-center rounded-full px-1 font-medium text-ink underline-offset-4 hover:underline"
               >
                 Sign out
               </button>
@@ -370,15 +398,16 @@ export function OnboardingStepper() {
               if (e.key === 'Enter' && step === LAST_STEP && tag === 'INPUT') e.preventDefault();
             }}
             aria-labelledby="ob-step-title"
-            className="flex flex-col"
+            className={cx(styles.stepForm, 'flex flex-col')}
           >
-            <div className="flex items-center justify-between gap-3">
+            {/* Below 1024px the step count shares a line with the jump to the preview under the form. */}
+            <div className="flex items-center justify-between gap-3 lg:hidden">
               <p className="tabular text-small font-medium text-ink-soft">
                 Step {step + 1} of {STEPS.length}
               </p>
               <a
                 href="#onboarding-preview"
-                className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3.5 text-small font-medium text-ink hover:bg-page lg:hidden"
+                className="inline-flex h-11 items-center gap-1.5 rounded-full border border-line px-3.5 text-small font-medium text-ink hover:bg-page sm:h-9"
               >
                 <Eye aria-hidden strokeWidth={1.5} className="size-4" />
                 Preview
@@ -388,15 +417,18 @@ export function OnboardingStepper() {
               ref={headingRef}
               id="ob-step-title"
               tabIndex={-1}
-              className="mt-2 text-h1 text-ink sm:text-display sm:tracking-[-0.01em]"
+              className={cx(
+                styles.stepHeading,
+                'mt-2 text-display tracking-[-0.01em] text-balance text-ink lg:mt-0',
+              )}
             >
               {meta.title}
             </h1>
-            <p className="mt-2 max-w-[46ch] text-body text-ink-muted">{meta.helper}</p>
+            <p className="mt-2 max-w-[46ch] text-body text-pretty text-ink-soft">{meta.helper}</p>
 
             <ProgressRail step={step} onJump={(i) => goTo(i)} />
 
-            <div key={step} className={cx(styles.stepEnter, 'mt-8')}>
+            <div key={step} className={cx(styles.stepEnter, 'mt-8 lg:mt-7')}>
               {step === 0 ? (
                 <HandleStep status={handleStatus} handleInputRef={handleInputRef} />
               ) : null}
@@ -408,17 +440,27 @@ export function OnboardingStepper() {
             {problem ? (
               <SubmitAlert
                 problem={problem}
-                onRetry={() => formRef.current?.requestSubmit()}
-                retrying={submitting}
+                again={failures > 1}
+                actionRef={alertActionRef}
+                onRetry={() => {
+                  if (submitting) return;
+                  setRetrying(true);
+                  formRef.current?.requestSubmit();
+                }}
+                retrying={retrying && submitting}
               />
             ) : null}
 
+            {/* Busy and unavailable buttons stay focusable (presses are ignored), so focus never drops to
+                the page while the space is created. */}
             <div className="mt-8 flex items-center gap-3">
               {step > 0 ? (
                 <button
                   type="button"
-                  onClick={back}
-                  disabled={submitting}
+                  onClick={() => {
+                    if (!submitting) back();
+                  }}
+                  aria-disabled={submitting || undefined}
                   className="btn btn-secondary shrink-0 px-5"
                 >
                   <ArrowLeft aria-hidden strokeWidth={1.5} className="size-4" />
@@ -427,11 +469,13 @@ export function OnboardingStepper() {
               ) : null}
               <button
                 type="submit"
-                aria-busy={submitting || undefined}
-                disabled={submitting}
-                className="btn btn-primary ml-auto min-w-0 flex-1 sm:min-w-[11rem] sm:flex-none"
+                aria-busy={(submitting && !retrying) || undefined}
+                className={cx(
+                  'btn btn-primary ml-auto min-w-0 flex-1 sm:min-w-[11rem] sm:flex-none',
+                  submitting && 'cursor-progress',
+                )}
               >
-                {submitting ? <Spinner /> : null}
+                {submitting && !retrying ? <Spinner /> : null}
                 {step === LAST_STEP ? 'Create my space' : 'Continue'}
               </button>
             </div>
@@ -444,8 +488,9 @@ export function OnboardingStepper() {
 
 function ProgressRail({ step, onJump }: { step: StepIndex; onJump: (step: StepIndex) => void }) {
   return (
-    <nav aria-label="Onboarding progress" className="mt-6">
-      <ol className="flex gap-1.5">
+    <nav aria-label="Onboarding progress" className="mt-6 lg:mt-5">
+      {/* Four equal columns: the bars stay even whatever the labels say. */}
+      <ol className="grid grid-cols-4 gap-3">
         {STEPS.map((s, i) => {
           const state = i < step ? 'done' : i === step ? 'current' : 'upcoming';
           const inner = (
@@ -461,7 +506,8 @@ function ProgressRail({ step, onJump }: { step: StepIndex; onJump: (step: StepIn
               />
               <span
                 className={cx(
-                  'mt-2 flex items-center gap-1 text-caption whitespace-nowrap',
+                  styles.railLabel,
+                  'flex items-center gap-1 text-caption',
                   state === 'current' && 'font-semibold text-ink',
                   state === 'done' && 'text-ink',
                   state === 'upcoming' && 'font-normal text-ink-muted',
@@ -470,7 +516,7 @@ function ProgressRail({ step, onJump }: { step: StepIndex; onJump: (step: StepIn
                 {state === 'done' ? (
                   <Check aria-hidden strokeWidth={2} className="size-3.5 shrink-0" />
                 ) : null}
-                {s.label}
+                <span className="min-w-0 truncate">{s.label}</span>
                 <span className="sr-only">
                   {state === 'done'
                     ? ', done. Go back to this step'
@@ -485,13 +531,14 @@ function ProgressRail({ step, onJump }: { step: StepIndex; onJump: (step: StepIn
             <li
               key={s.key}
               aria-current={state === 'current' ? 'step' : undefined}
-              className="min-w-max flex-1"
+              className="min-w-0"
             >
               {state === 'done' ? (
                 <button
                   type="button"
                   onClick={() => onJump(i as StepIndex)}
-                  className="group block w-full rounded-lg py-2 text-left hover:[&>span:last-child]:underline"
+                  // The ::after keeps a 44px target when only the bar shows (narrow rails).
+                  className="relative block w-full rounded-lg py-2 text-left after:absolute after:inset-x-0 after:inset-y-[-11px] after:content-[''] hover:[&>span:last-child]:underline"
                 >
                   {inner}
                 </button>
@@ -502,22 +549,32 @@ function ProgressRail({ step, onJump }: { step: StepIndex; onJump: (step: StepIn
           );
         })}
       </ol>
+      <p className={cx(styles.railCount, 'tabular mt-3 text-small font-medium text-ink-soft')}>
+        Step {step + 1} of {STEPS.length}
+      </p>
     </nav>
   );
 }
 
 function SubmitAlert({
   problem,
+  again,
+  actionRef,
   onRetry,
   retrying,
 }: {
   problem: SubmitProblem;
+  /** A second failure in a row: the words change, so the alert is announced again. */
+  again: boolean;
+  actionRef: React.RefObject<HTMLElement | null>;
   onRetry: () => void;
   retrying: boolean;
 }) {
   const copy: Record<SubmitProblem, { title: string; body: string }> = {
     unavailable: {
-      title: "We couldn't create your space right now.",
+      title: again
+        ? 'We still couldn’t create your space.'
+        : 'We couldn’t create your space right now.',
       body: 'Your answers are saved on this device. Try again in a moment.',
     },
     session: {
@@ -530,6 +587,7 @@ function SubmitAlert({
     },
   };
   const c = copy[problem];
+  const actionClass = 'btn btn-secondary h-11 shrink-0 self-start px-4 sm:h-10 sm:self-auto';
   return (
     <div
       role="alert"
@@ -544,26 +602,29 @@ function SubmitAlert({
       </div>
       {problem === 'unavailable' ? (
         <button
+          ref={actionRef as React.RefObject<HTMLButtonElement | null>}
           type="button"
-          onClick={onRetry}
-          disabled={retrying}
+          // Busy, it stays focusable and ignores presses, so focus stays put through the retry.
+          onClick={retrying ? undefined : onRetry}
           aria-busy={retrying || undefined}
-          className="btn btn-secondary h-10 shrink-0 self-start px-4 sm:self-auto"
+          className={cx(actionClass, retrying && 'cursor-progress')}
         >
           {retrying ? <Spinner /> : null}
           Retry
         </button>
       ) : problem === 'session' ? (
         <Link
+          ref={actionRef as React.RefObject<HTMLAnchorElement | null>}
           href="/login?returnTo=%2Fonboarding"
-          className="btn btn-secondary h-10 shrink-0 self-start px-4 sm:self-auto"
+          className={actionClass}
         >
           Sign in
         </Link>
       ) : (
         <Link
+          ref={actionRef as React.RefObject<HTMLAnchorElement | null>}
           href="/dashboard"
-          className="btn btn-secondary h-10 shrink-0 self-start px-4 sm:self-auto"
+          className={actionClass}
         >
           Go to dashboard
         </Link>

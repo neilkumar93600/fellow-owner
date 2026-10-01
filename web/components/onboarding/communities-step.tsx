@@ -123,95 +123,113 @@ export function CommunitiesStep({
     });
   }
 
+  // While "add at least one" shows, every way to add a community points at it, and the first tile
+  // (where focus lands) is marked invalid, so the reason is read with the control.
+  const errorId = listError ? 'ob-communities-error' : null;
+  const describe = (...ids: (string | null | false)[]) =>
+    ids.filter(Boolean).join(' ') || undefined;
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 id="ob-templates-label" className="text-small font-medium text-ink">
-          Start from a template, or add your own
-        </h2>
-        <p className="tabular shrink-0 text-small text-ink-soft" aria-live="polite">
-          {communities.length} selected
-        </p>
+    <div className="@container flex flex-col gap-4">
+      {/* The error sits under the group label, above the options, so it is in view of the first tile. */}
+      <div>
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 id="ob-templates-label" className="text-small font-medium text-ink">
+            Pick templates or add your own
+          </h2>
+          <p className="tabular shrink-0 text-small text-ink-soft" aria-live="polite">
+            {communities.length} selected
+          </p>
+        </div>
+        <FieldError id="ob-communities-error" message={listError} />
       </div>
 
-      <ul aria-labelledby="ob-templates-label" className="grid grid-cols-2 gap-2.5 xl:grid-cols-3">
-        {COMMUNITY_TEMPLATES.map((template, i) => {
-          const index = templateIndex(template.id);
-          const selected = index >= 0;
-          const item = selected ? communities[index] : undefined;
-          return (
-            <li key={template.id} className="relative">
-              <input
-                id={`ob-template-${i}`}
-                type="checkbox"
-                checked={selected}
-                disabled={!selected && atMax}
-                onChange={() => toggleTemplate(template.id)}
-                aria-describedby={atMax && !selected ? 'ob-communities-max' : undefined}
-                className={styles.tileInput}
-              />
-              <label htmlFor={`ob-template-${i}`} className="block h-full rounded-[20px]">
-                <Tile
-                  name={item?.name ?? template.name}
-                  tint={item?.tint ?? template.tint}
-                  icon={item?.icon ?? template.icon}
-                  selected={selected}
+      <fieldset
+        aria-labelledby="ob-templates-label"
+        aria-describedby={errorId ?? undefined}
+        className="min-w-0"
+      >
+        <ul className="grid grid-cols-2 gap-2.5 @lg:grid-cols-3">
+          {COMMUNITY_TEMPLATES.map((template, i) => {
+            const index = templateIndex(template.id);
+            const selected = index >= 0;
+            const item = selected ? communities[index] : undefined;
+            return (
+              <li key={template.id} className="relative">
+                <input
+                  id={`ob-template-${i}`}
+                  type="checkbox"
+                  checked={selected}
                   disabled={!selected && atMax}
+                  onChange={() => toggleTemplate(template.id)}
+                  aria-invalid={i === 0 && errorId ? true : undefined}
+                  aria-describedby={describe(atMax && !selected && 'ob-communities-max', errorId)}
+                  className={styles.tileInput}
                 />
-              </label>
-              {selected ? (
-                <button
-                  id={`ob-edit-${template.id}`}
-                  type="button"
-                  onClick={() => openEditor({ mode: 'edit', index }, `ob-edit-${template.id}`)}
-                  aria-label={`Edit ${item?.name ?? template.name}`}
-                  className={cx(
-                    styles.press,
-                    'absolute right-1 bottom-1 grid size-11 place-items-center rounded-full text-ink-soft hover:bg-card-strong/70 hover:text-ink sm:right-1.5 sm:bottom-1.5 sm:size-9',
-                  )}
-                >
-                  <Pencil aria-hidden strokeWidth={1.5} className="size-4" />
-                </button>
-              ) : null}
-            </li>
-          );
-        })}
+                <label htmlFor={`ob-template-${i}`} className="block h-full rounded-[20px]">
+                  <Tile
+                    name={item?.name ?? template.name}
+                    tint={item?.tint ?? template.tint}
+                    icon={item?.icon ?? template.icon}
+                    selected={selected}
+                    disabled={!selected && atMax}
+                  />
+                </label>
+                {selected ? (
+                  <button
+                    id={`ob-edit-${template.id}`}
+                    type="button"
+                    onClick={() => openEditor({ mode: 'edit', index }, `ob-edit-${template.id}`)}
+                    aria-label={`Edit ${item?.name ?? template.name}`}
+                    className={cx(
+                      styles.press,
+                      'absolute right-1 bottom-1 grid size-11 place-items-center rounded-full text-ink-soft hover:bg-card-strong/70 hover:text-ink sm:right-1.5 sm:bottom-1.5 sm:size-9',
+                    )}
+                  >
+                    <Pencil aria-hidden strokeWidth={1.5} className="size-4" />
+                  </button>
+                ) : null}
+              </li>
+            );
+          })}
 
-        {custom.map(({ c, index, key }, n) => (
-          <li key={key} className="relative">
+          {custom.map(({ c, index, key }, n) => (
+            <li key={key} className="relative">
+              <button
+                id={`ob-custom-${index}`}
+                type="button"
+                onClick={() => openEditor({ mode: 'edit', index }, `ob-custom-${index}`)}
+                aria-label={`Edit ${c.name}`}
+                aria-describedby={n === 0 ? 'ob-custom-hint' : undefined}
+                className="block h-full w-full rounded-[20px] text-left"
+              >
+                <Tile name={c.name} tint={c.tint} icon={c.icon} selected custom />
+              </button>
+            </li>
+          ))}
+
+          <li>
             <button
-              id={`ob-custom-${index}`}
+              id="ob-add-community"
               type="button"
-              onClick={() => openEditor({ mode: 'edit', index }, `ob-custom-${index}`)}
-              aria-label={`Edit ${c.name}`}
-              aria-describedby={n === 0 ? 'ob-custom-hint' : undefined}
-              className="block h-full w-full rounded-[20px] text-left"
+              disabled={atMax}
+              aria-expanded={editor?.mode === 'create'}
+              aria-controls={editor ? 'ob-community-editor' : undefined}
+              aria-describedby={errorId ?? undefined}
+              onClick={() => openEditor({ mode: 'create' }, 'ob-add-community')}
+              className={cx(
+                styles.press,
+                'flex h-full min-h-[104px] w-full flex-col justify-between gap-3 rounded-[20px] border-2 border-dashed border-(--line-strong) bg-card-strong p-3 text-left hover:border-ink-muted hover:bg-card disabled:cursor-not-allowed disabled:opacity-50',
+              )}
             >
-              <Tile name={c.name} tint={c.tint} icon={c.icon} selected custom />
+              <span className="grid size-9 place-items-center rounded-[12px] bg-table-head text-ink">
+                <Plus aria-hidden strokeWidth={1.5} className="size-[18px]" />
+              </span>
+              <span className="text-body font-medium text-ink">Add your own</span>
             </button>
           </li>
-        ))}
-
-        <li>
-          <button
-            id="ob-add-community"
-            type="button"
-            disabled={atMax}
-            aria-expanded={editor?.mode === 'create'}
-            aria-controls={editor ? 'ob-community-editor' : undefined}
-            onClick={() => openEditor({ mode: 'create' }, 'ob-add-community')}
-            className={cx(
-              styles.press,
-              'flex h-full min-h-[104px] w-full flex-col justify-between gap-3 rounded-[20px] border-2 border-dashed border-(--line-strong) bg-card-strong p-3 text-left hover:border-ink-muted hover:bg-card disabled:cursor-not-allowed disabled:opacity-50',
-            )}
-          >
-            <span className="grid size-9 place-items-center rounded-[12px] bg-table-head text-ink">
-              <Plus aria-hidden strokeWidth={1.5} className="size-[18px]" />
-            </span>
-            <span className="text-body font-medium text-ink">Add your own</span>
-          </button>
-        </li>
-      </ul>
+        </ul>
+      </fieldset>
       {custom.length > 0 ? (
         <p id="ob-custom-hint" className="sr-only">
           Custom community. Opens the editor.
@@ -220,7 +238,7 @@ export function CommunitiesStep({
 
       {atMax ? (
         <p id="ob-communities-max" className="text-small text-ink-muted">
-          That's the limit of {MAX} communities for now.
+          That’s the limit of {MAX} communities for now.
         </p>
       ) : null}
 
@@ -239,8 +257,6 @@ export function CommunitiesStep({
           onRemove={editor.mode === 'edit' ? () => removeCommunity(editor.index) : undefined}
         />
       ) : null}
-
-      <FieldError id="ob-communities-error" message={listError} />
     </div>
   );
 }
@@ -390,7 +406,10 @@ function CommunityEditor({
       id="ob-community-editor"
       aria-labelledby={`${uid}-title`}
       onKeyDown={onKeyDown}
-      className={cx(styles.stepEnter, 'rounded-3xl border border-line bg-card p-4 sm:p-5')}
+      className={cx(
+        styles.stepEnter,
+        '@container rounded-3xl border border-line bg-card p-4 sm:p-5',
+      )}
     >
       <h3 id={`${uid}-title`} className="text-body font-medium text-ink">
         {editing ? `Edit ${initial?.name}` : 'New community'}
@@ -485,7 +504,7 @@ function CommunityEditor({
 
         <fieldset>
           <legend className="text-small font-medium text-ink">Icon</legend>
-          <div className="mt-1.5 grid grid-cols-[repeat(auto-fill,minmax(2.75rem,1fr))] gap-1.5">
+          <div className="mt-1.5 grid grid-cols-4 gap-1.5 @sm:grid-cols-8">
             {ICON_OPTIONS.map((name) => {
               const Icon = COMMUNITY_ICON_COMPONENTS[name];
               const on = icon === name;

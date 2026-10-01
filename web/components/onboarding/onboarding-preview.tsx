@@ -147,148 +147,154 @@ export function OnboardingPreview({
       aria-labelledby="ob-preview-title"
       className="relative h-full scroll-mt-4"
     >
+      {/* Same panel padding as the auth panel, so the pill keeps its place from /verify-otp to here. */}
       <div
         ref={stickRef}
-        className="flex flex-col gap-5 p-4 will-change-transform sm:p-8 lg:h-[calc(100svh-1.5rem)] lg:p-10"
+        className="flex flex-col p-4 will-change-transform sm:p-8 lg:h-[calc(100svh-1.5rem)] lg:p-10 xl:p-14"
       >
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <h2
-            id="ob-preview-title"
-            className="glass-pill inline-flex h-9 items-center gap-2 px-4 text-small font-medium text-ink"
-          >
-            <Eye aria-hidden strokeWidth={1.5} className="size-4" />
-            Live preview
-          </h2>
-          <p className="text-small text-ink">{CAPTIONS[step]}</p>
-        </div>
-
-        <div className="relative flex min-h-0 flex-1 flex-col items-center">
-          {step === 3 ? <TasteCard taste={taste} /> : null}
-          {/* Phone: a Pure White bezel around the fan page, which sits on the shell on phones. */}
-          <div className="w-full max-w-[22rem] rounded-[44px] bg-card-strong p-2.5 lg:max-h-[46rem] lg:min-h-0 lg:flex-1">
-            <section
-              ref={screenRef}
-              data-lenis-prevent
-              tabIndex={scrollable ? 0 : undefined}
-              aria-label={`Preview of ${HOST}/${handle || 'your handle'}`}
-              className={cx(
-                styles.screen,
-                'relative h-full rounded-[36px] bg-shell px-4 pt-3 pb-6 lg:overflow-y-auto',
-              )}
+        {/* One centred column, the phone's width: the header reads as the phone's label. */}
+        <div className="mx-auto flex min-h-0 w-full max-w-[22rem] flex-1 flex-col gap-5">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <h2
+              id="ob-preview-title"
+              className="glass-pill inline-flex h-9 items-center gap-2 px-4 text-small font-medium text-ink"
             >
-              <div className="glass-pill mx-auto flex h-8 max-w-full items-center justify-center gap-1.5 px-3 text-caption text-ink-soft">
-                <Lock aria-hidden strokeWidth={1.75} className="size-3 shrink-0" />
-                <span className="truncate">
-                  {HOST}/
-                  {handle ? (
-                    <span className="text-ink">{handle}</span>
-                  ) : (
-                    <Ghost className="ml-0.5 inline-block h-2 w-14 align-middle" />
-                  )}
-                </span>
-              </div>
+              <Eye aria-hidden strokeWidth={1.5} className="size-4" />
+              Live preview
+            </h2>
+            <p className="text-small text-ink">{CAPTIONS[step]}</p>
+          </div>
 
-              {/* Creator header */}
-              <div data-section="top" className="mt-7 flex flex-col items-center text-center">
-                {name ? (
-                  <span
-                    aria-hidden
-                    className={cx(
-                      'grid size-[76px] place-items-center rounded-full text-h2 font-medium text-ink',
-                      avatarTint(name),
-                    )}
-                  >
-                    {initials(name)}
-                  </span>
-                ) : (
-                  <Ghost className="size-[76px]" />
+          <div className="relative flex min-h-0 flex-1 flex-col">
+            {step === 3 ? <TasteCard taste={taste} /> : null}
+            {/* Phone: a Pure White bezel around the fan page, which sits on the shell on phones. */}
+            <div className="w-full rounded-[44px] bg-card-strong p-2.5 lg:max-h-[46rem] lg:min-h-0 lg:flex-1">
+              <section
+                ref={screenRef}
+                data-lenis-prevent
+                tabIndex={scrollable ? 0 : undefined}
+                aria-label={`Preview of ${HOST}/${handle || 'your handle'}`}
+                className={cx(
+                  styles.screen,
+                  'relative h-full rounded-[36px] bg-shell px-4 pt-3 pb-6 lg:overflow-y-auto',
                 )}
-                {name ? (
-                  <p className="mt-3 text-[20px] leading-7 font-medium break-words text-ink">
-                    {name}
-                  </p>
-                ) : (
-                  <Ghost className="mt-4 h-5 w-36" />
-                )}
-                {handle ? (
-                  <p className="text-small text-ink-soft">@{handle}</p>
-                ) : (
-                  <Ghost className="mt-2 h-3 w-20" />
-                )}
-                {bio ? (
-                  <p className="mt-2.5 max-w-[32ch] text-small break-words text-ink">{bio}</p>
-                ) : (
-                  <span aria-hidden className="mt-3.5 flex w-full flex-col items-center gap-1.5">
-                    <Ghost className="h-2.5 w-52" />
-                    <Ghost className="h-2.5 w-36" />
-                  </span>
-                )}
-              </div>
-
-              {/* Platforms */}
-              <div data-section="platforms" className="mt-5 flex flex-col items-center">
-                {platforms.length > 0 ? (
-                  <ul className="flex flex-wrap justify-center gap-1.5">
-                    {platforms.map((p, i) => (
-                      <li
-                        // biome-ignore lint/suspicious/noArrayIndexKey: rows have no stable id in the preview
-                        key={i}
-                        className="glass-pill inline-flex h-7 items-center gap-1.5 px-3 text-caption text-ink-soft"
-                      >
-                        {PLATFORM_LABELS[p.platform]}
-                        {Number.isFinite(p.followers) && p.followers > 0 ? (
-                          <span className="tabular font-semibold text-ink">
-                            {formatCompact(p.followers)}
-                          </span>
-                        ) : null}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <span aria-hidden className="flex gap-1.5">
-                    <Ghost className="h-7 w-[4.5rem]" />
-                    <Ghost className="h-7 w-20" />
-                    <Ghost className="h-7 w-14" />
-                  </span>
-                )}
-                {count > 1 ? (
-                  <p className="tabular mt-2 text-caption text-ink-soft">
-                    {formatCompact(total)} followers in total
-                  </p>
-                ) : null}
-              </div>
-
-              {/* Communities */}
-              <div data-section="communities" className="mt-7">
-                <p className="text-body font-medium text-ink">Join a community</p>
-                <ul className="mt-3 flex flex-col gap-2.5">
-                  {communities.length > 0 ? (
-                    communities.map((c, i) => (
-                      <CommunityPreviewCard
-                        // biome-ignore lint/suspicious/noArrayIndexKey: order is the identity here
-                        key={`${i}-${c.templateId ?? c.name}`}
-                        index={i}
-                        community={c}
-                      />
-                    ))
-                  ) : (
-                    <>
-                      <GhostCard />
-                      <GhostCard />
-                    </>
-                  )}
-                </ul>
-              </div>
-
-              <span
-                aria-hidden
-                className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-card-strong text-small font-medium text-ink"
               >
-                <Send strokeWidth={1.5} className="size-4" />
-                {first ? `Send ${first} a pitch` : 'Send a pitch'}
-              </span>
-              <p className="sr-only">The page ends with a Send {first || 'me'} a pitch button.</p>
-            </section>
+                <div className="glass-pill mx-auto flex h-8 max-w-full items-center justify-center gap-1.5 px-3 text-caption text-ink-soft">
+                  <Lock aria-hidden strokeWidth={1.75} className="size-3 shrink-0" />
+                  <span className="truncate">
+                    {HOST}/
+                    {handle ? (
+                      <span className="text-ink">{handle}</span>
+                    ) : (
+                      <Ghost className="ml-0.5 inline-block h-2 w-14 align-middle" />
+                    )}
+                  </span>
+                </div>
+
+                {/* Creator header */}
+                <div data-section="top" className="mt-7 flex flex-col items-center text-center">
+                  {name ? (
+                    <span
+                      aria-hidden
+                      className={cx(
+                        'grid size-[76px] place-items-center rounded-full text-h2 font-medium text-ink',
+                        avatarTint(name),
+                      )}
+                    >
+                      {initials(name)}
+                    </span>
+                  ) : (
+                    <Ghost className="size-[76px]" />
+                  )}
+                  {name ? (
+                    <p className="mt-3 text-[20px] leading-7 font-medium break-words text-ink">
+                      {name}
+                    </p>
+                  ) : (
+                    <Ghost className="mt-4 h-5 w-36" />
+                  )}
+                  {handle ? (
+                    <p className="text-small text-ink-soft">@{handle}</p>
+                  ) : (
+                    <Ghost className="mt-2 h-3 w-20" />
+                  )}
+                  {bio ? (
+                    <p className="mt-2.5 max-w-[32ch] text-small break-words text-ink">{bio}</p>
+                  ) : (
+                    <span aria-hidden className="mt-3.5 flex w-full flex-col items-center gap-1.5">
+                      <Ghost className="h-2.5 w-52" />
+                      <Ghost className="h-2.5 w-36" />
+                    </span>
+                  )}
+                </div>
+
+                {/* Platforms */}
+                <div data-section="platforms" className="mt-5 flex flex-col items-center">
+                  {platforms.length > 0 ? (
+                    <ul className="flex flex-wrap justify-center gap-1.5">
+                      {platforms.map((p, i) => (
+                        <li
+                          // biome-ignore lint/suspicious/noArrayIndexKey: rows have no stable id in the preview
+                          key={i}
+                          className="glass-pill inline-flex h-7 items-center gap-1.5 px-3 text-caption text-ink-soft"
+                        >
+                          {PLATFORM_LABELS[p.platform]}
+                          {Number.isFinite(p.followers) && p.followers > 0 ? (
+                            <span className="tabular font-semibold text-ink">
+                              {formatCompact(p.followers)}
+                            </span>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span aria-hidden className="flex gap-1.5">
+                      <Ghost className="h-7 w-[4.5rem]" />
+                      <Ghost className="h-7 w-20" />
+                      <Ghost className="h-7 w-14" />
+                    </span>
+                  )}
+                  {count > 1 ? (
+                    <p className="tabular mt-2 text-caption text-ink-soft">
+                      {formatCompact(total)} followers in total
+                    </p>
+                  ) : null}
+                </div>
+
+                {/* Communities */}
+                <div data-section="communities" className="mt-7">
+                  <p className="text-body font-medium text-ink">Join a community</p>
+                  <ul className="mt-3 flex flex-col gap-2.5">
+                    {communities.length > 0 ? (
+                      communities.map((c, i) => (
+                        <CommunityPreviewCard
+                          // Keyed by position only: a card being typed into (or a draft that is then
+                          // saved) keeps its node, so the settle-in plays once, not on every keystroke.
+                          // biome-ignore lint/suspicious/noArrayIndexKey: order is the identity here
+                          key={i}
+                          index={i}
+                          community={c}
+                        />
+                      ))
+                    ) : (
+                      <>
+                        <GhostCard />
+                        <GhostCard />
+                      </>
+                    )}
+                  </ul>
+                </div>
+
+                <span
+                  aria-hidden
+                  className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-card-strong text-small font-medium text-ink"
+                >
+                  <Send strokeWidth={1.5} className="size-4" />
+                  {first ? `Send ${first} a pitch` : 'Send a pitch'}
+                </span>
+                <p className="sr-only">The page ends with a Send {first || 'me'} a pitch button.</p>
+              </section>
+            </div>
           </div>
         </div>
       </div>
@@ -355,10 +361,7 @@ function TasteCard({ taste }: { taste: OnboardingValues['tasteProfile'] }) {
   return (
     <aside
       aria-label="Your taste profile, only you see this"
-      className={cx(
-        styles.fresh,
-        'mb-4 w-full max-w-[22rem] shrink-0 rounded-3xl bg-card-strong p-4',
-      )}
+      className={cx(styles.fresh, 'mb-4 w-full shrink-0 rounded-3xl bg-card-strong p-4')}
     >
       <div className="flex items-center gap-2.5">
         <span className="grid size-8 shrink-0 place-items-center rounded-full bg-table-head">

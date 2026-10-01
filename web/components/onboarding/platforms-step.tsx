@@ -81,8 +81,8 @@ export function PlatformsStep() {
                 aria-label={`Platform ${index + 1}: ${label}`}
                 className="rounded-2xl border border-line bg-card p-3 sm:p-4"
               >
-                <div className="grid grid-cols-[minmax(0,1fr)_7.5rem_auto] items-end gap-2 sm:grid-cols-[minmax(0,1fr)_8.5rem_auto] sm:gap-3">
-                  <div className="min-w-0">
+                <div className={styles.platformRow}>
+                  <div data-area="platform" className="min-w-0">
                     <FieldLabel htmlFor={`ob-platform-${index}`}>Platform</FieldLabel>
                     <div className="relative mt-1.5">
                       <select
@@ -103,7 +103,13 @@ export function PlatformsStep() {
                       />
                     </div>
                   </div>
-                  <div>
+                  {/* Phones: remove sits beside the platform, so it comes right after it in tab order. */}
+                  <RemoveButton
+                    label={label}
+                    onClick={() => removeRow(index)}
+                    className="grid sm:hidden"
+                  />
+                  <div data-area="followers" className="mt-3 sm:mt-0">
                     <FieldLabel htmlFor={`ob-followers-${index}`}>Followers</FieldLabel>
                     <Controller
                       control={control}
@@ -120,59 +126,58 @@ export function PlatformsStep() {
                       )}
                     />
                   </div>
-                  <button
-                    type="button"
+                  {/* From 640px: remove ends the platform and followers line. */}
+                  <RemoveButton
+                    label={label}
                     onClick={() => removeRow(index)}
-                    aria-label={`Remove ${label}`}
-                    className={cx(
-                      styles.press,
-                      'grid size-11 place-items-center rounded-full text-ink-soft hover:bg-page hover:text-ink',
-                    )}
-                  >
-                    <X aria-hidden strokeWidth={1.5} className="size-5" />
-                  </button>
-                </div>
-                <div className="mt-3">
-                  <FieldLabel htmlFor={`ob-url-${index}`}>Profile link</FieldLabel>
-                  <input
-                    id={`ob-url-${index}`}
-                    {...urlField}
-                    onBlur={(e) => {
-                      const fixed = withProtocol(e.target.value);
-                      if (fixed !== e.target.value) {
-                        setValue(`platforms.${index}.url`, fixed, {
-                          shouldDirty: true,
-                          shouldValidate: Boolean(rowErrors?.url),
-                        });
-                      }
-                      // Pasting a TikTok link into a row still set to YouTube fixes the row,
-                      // unless the person picked the platform themselves.
-                      const detected = detectPlatform(fixed);
-                      const picked = dirtyFields.platforms?.[index]?.platform;
-                      if (detected && detected !== platform && !picked) {
-                        setValue(`platforms.${index}.platform`, detected);
-                      }
-                      void urlField.onBlur(e);
-                    }}
-                    type="url"
-                    inputMode="url"
-                    autoComplete="url"
-                    autoCapitalize="none"
-                    spellCheck={false}
-                    placeholder={PLATFORM_URL_EXAMPLE[platform](handle)}
-                    aria-invalid={rowErrors?.url ? true : undefined}
-                    aria-describedby={`ob-url-${index}-error ob-followers-${index}-error`}
-                    className={cx(inputClass, 'mt-1.5')}
+                    className="hidden sm:grid"
                   />
-                  <FieldError id={`ob-url-${index}-error`} message={rowErrors?.url?.message} />
-                  <FieldError
-                    id={`ob-followers-${index}-error`}
-                    message={
-                      rowErrors?.followers
-                        ? 'Enter followers as a number, like 410K or 410000'
-                        : undefined
-                    }
-                  />
+                  <div data-area="followers-error">
+                    <FieldError
+                      id={`ob-followers-${index}-error`}
+                      message={
+                        rowErrors?.followers
+                          ? 'Enter followers as a number, like 410K or 410000'
+                          : undefined
+                      }
+                    />
+                  </div>
+                  <div data-area="url" className="mt-3">
+                    <FieldLabel htmlFor={`ob-url-${index}`}>Profile link</FieldLabel>
+                    <input
+                      id={`ob-url-${index}`}
+                      {...urlField}
+                      onBlur={(e) => {
+                        const fixed = withProtocol(e.target.value);
+                        if (fixed !== e.target.value) {
+                          setValue(`platforms.${index}.url`, fixed, {
+                            shouldDirty: true,
+                            shouldValidate: Boolean(rowErrors?.url),
+                          });
+                        }
+                        // Pasting a TikTok link into a row still set to YouTube fixes the row,
+                        // unless the person picked the platform themselves.
+                        const detected = detectPlatform(fixed);
+                        const picked = dirtyFields.platforms?.[index]?.platform;
+                        if (detected && detected !== platform && !picked) {
+                          setValue(`platforms.${index}.platform`, detected);
+                        }
+                        void urlField.onBlur(e);
+                      }}
+                      type="url"
+                      inputMode="url"
+                      autoComplete="url"
+                      autoCapitalize="none"
+                      spellCheck={false}
+                      placeholder={PLATFORM_URL_EXAMPLE[platform](handle)}
+                      aria-invalid={rowErrors?.url ? true : undefined}
+                      aria-describedby={`ob-url-${index}-error`}
+                      className={cx(inputClass, 'mt-1.5')}
+                    />
+                  </div>
+                  <div data-area="url-error">
+                    <FieldError id={`ob-url-${index}-error`} message={rowErrors?.url?.message} />
+                  </div>
                 </div>
               </li>
             );
@@ -203,11 +208,37 @@ export function PlatformsStep() {
       </div>
       {fields.length >= MAX ? (
         <p id="ob-platforms-max" className="text-small text-ink-muted">
-          That's the limit of {MAX} platforms.
+          That’s the limit of {MAX} platforms.
         </p>
       ) : null}
       <FieldError id="ob-platforms-error" message={listError} />
     </div>
+  );
+}
+
+function RemoveButton({
+  label,
+  onClick,
+  className,
+}: {
+  label: string;
+  onClick: () => void;
+  className: string;
+}) {
+  return (
+    <button
+      type="button"
+      data-area="remove"
+      onClick={onClick}
+      aria-label={`Remove ${label}`}
+      className={cx(
+        styles.press,
+        className,
+        'size-11 place-items-center rounded-full text-ink-soft hover:bg-page hover:text-ink',
+      )}
+    >
+      <X aria-hidden strokeWidth={1.5} className="size-5" />
+    </button>
   );
 }
 

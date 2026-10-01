@@ -24,7 +24,7 @@ export function TasteStep() {
       <LineList
         name="tasteProfile.promote"
         title="I promote"
-        hint={`What you'd put your name behind. ${T.promote.min} to ${T.promote.max} lines.`}
+        hint={`What you’d put your name behind. ${T.promote.min} to ${T.promote.max} lines.`}
         max={T.promote.max}
         itemMax={T.lineMax}
         placeholder="Fitness tools I would use myself"
@@ -34,7 +34,7 @@ export function TasteStep() {
       <LineList
         name="tasteProfile.never"
         title="I never promote"
-        hint={`Hard no's the AI should flag. Up to ${T.never.max} lines.`}
+        hint={`Things the AI should always flag. Up to ${T.never.max} lines.`}
         max={T.never.max}
         itemMax={T.lineMax}
         placeholder="Crypto, gambling"
@@ -92,9 +92,14 @@ function LineList({
   const filled = lines.filter((l) => l.trim()).length;
   const listError = errorMessage(fieldState.error);
 
+  // Focus a row after it is added, filled from an example or its neighbour is removed; caret at the end.
   useEffect(() => {
     if (focusIndex === null) return;
-    document.getElementById(`${id}-${focusIndex}`)?.focus();
+    const el = document.getElementById(`${id}-${focusIndex}`);
+    if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+      el.focus();
+      el.setSelectionRange(el.value.length, el.value.length);
+    }
     setFocusIndex(null);
   }, [focusIndex, id]);
 
@@ -105,13 +110,16 @@ function LineList({
   function add(text = '') {
     if (lines.length >= max) return;
     const empty = lines.findIndex((l) => !l.trim());
+    // An example fills the first empty line. The example chips unmount once a line is filled, so focus
+    // moves to that line rather than falling to the page.
     if (text && empty >= 0) {
       setLines(lines.map((l, i) => (i === empty ? text : l)));
+      setFocusIndex(empty);
       return;
     }
     keys.push();
     setLines([...lines, text]);
-    if (!text) setFocusIndex(lines.length);
+    setFocusIndex(lines.length);
   }
 
   function removeAt(index: number) {
@@ -232,7 +240,7 @@ function LineList({
         type="button"
         onClick={() => add()}
         disabled={lines.length >= max}
-        className="btn mt-2 h-10 px-3.5 text-small text-ink hover:bg-page"
+        className="btn mt-2 h-11 px-3.5 text-small text-ink hover:bg-page sm:h-10"
       >
         <Plus aria-hidden strokeWidth={1.5} className="size-4" />
         {addLabel}

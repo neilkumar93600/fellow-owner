@@ -26,6 +26,7 @@ export function OtpInput({
   onComplete,
   labelledBy,
   describedBy,
+  inputDescribedBy,
   invalid,
   disabled,
   readOnly,
@@ -37,7 +38,13 @@ export function OtpInput({
   onChange: (next: string[]) => void;
   onComplete?: (code: string) => void;
   labelledBy: string;
+  /** Read once when focus enters the group (the hint). */
   describedBy?: string;
+  /**
+   * Read with whichever box has focus (the error). After a wrong code focus moves inside the group, so
+   * a message tied only to the group would not be read again.
+   */
+  inputDescribedBy?: string;
   invalid?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
@@ -47,12 +54,23 @@ export function OtpInput({
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
   const skipSelect = useRef(false);
 
+  /**
+   * Select a box's digit on the next frame so the next keystroke replaces it, unless focus has moved on or
+   * a digit landed in the meantime (fast typing, paste and autofill all beat a frame).
+   */
+  function selectSoon(target: HTMLInputElement) {
+    const before = target.value;
+    requestAnimationFrame(() => {
+      if (document.activeElement === target && target.value === before) target.select();
+    });
+  }
+
   /** Focus a box. By default its digit is selected so the next keystroke replaces it. */
   function focusBox(index: number, select = true) {
     const target = inputs.current[Math.max(0, Math.min(OTP_LENGTH - 1, index))];
     if (!target) return;
     if (document.activeElement === target) {
-      if (select) requestAnimationFrame(() => target.select());
+      if (select) selectSoon(target);
       return;
     }
     skipSelect.current = !select;
@@ -206,6 +224,7 @@ export function OtpInput({
           // biome-ignore lint/a11y/noAutofocus: the code is the only thing to do on this screen.
           autoFocus={autoFocus && index === 0}
           aria-label={`Digit ${index + 1} of ${OTP_LENGTH}`}
+          aria-describedby={inputDescribedBy}
           aria-invalid={invalid || undefined}
           data-filled={digit !== '' || undefined}
           disabled={disabled}
@@ -220,7 +239,7 @@ export function OtpInput({
               skipSelect.current = false;
               return;
             }
-            requestAnimationFrame(() => target.select());
+            selectSoon(target);
           }}
           className={cx(styles.otp)}
         />

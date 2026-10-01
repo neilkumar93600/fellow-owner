@@ -16,7 +16,8 @@ interface SendInput {
 /**
  * The shared "Email me a code" step of /login and /sign-up: asks Better Auth for a sign-in code, keeps the
  * email (and name) in sessionStorage for /verify-otp, then moves on. On failure nothing typed is lost;
- * the form's Retry simply submits again.
+ * the form's Retry simply submits again. An earlier failure stays on screen while the next attempt runs,
+ * so its alert (and the Retry button that has focus) stays put and shows the retrying spinner.
  */
 export function useSendCode({ returnTo }: { returnTo: string | null }) {
   const router = useRouter();
@@ -29,7 +30,6 @@ export function useSendCode({ returnTo }: { returnTo: string | null }) {
       if (inFlight.current) return;
       inFlight.current = true;
       setPending(true);
-      setFailure(null);
 
       const result = await runAuth((fetchOptions) =>
         authClient.emailOtp.sendVerificationOtp({
@@ -46,6 +46,7 @@ export function useSendCode({ returnTo }: { returnTo: string | null }) {
         return;
       }
 
+      setFailure(null);
       writeSession(OTP_EMAIL_KEY, input.email);
       writeSession(OTP_SENT_AT_KEY, String(Date.now()));
       writeSession(SIGNUP_NAME_KEY, input.name ?? null);

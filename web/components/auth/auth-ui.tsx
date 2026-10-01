@@ -74,6 +74,7 @@ export function SubmitButton({
   done,
   onClick,
   describedBy,
+  ref,
 }: {
   pending?: boolean;
   /** Finished (for example "Signed in"): inactive but not dimmed. */
@@ -85,10 +86,12 @@ export function SubmitButton({
   disabled?: boolean;
   onClick?: () => void;
   describedBy?: string;
+  ref?: React.Ref<HTMLButtonElement>;
 }) {
   const inactive = Boolean(pending || disabled || done);
   return (
     <button
+      ref={ref}
       type={type}
       aria-busy={pending || undefined}
       aria-disabled={(disabled && !pending && !done) || undefined}

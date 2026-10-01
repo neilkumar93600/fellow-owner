@@ -117,7 +117,8 @@ export function sendCodeMessage(failure: AuthFailure): string {
     case 'rejected':
       return failure.message ?? 'We couldn’t send a code to that address. Check it and try again.';
     default:
-      return 'We couldn’t send a code right now. Check the address or try again.';
+      // The service is down or unreachable: nothing typed is wrong, so the copy does not blame it.
+      return 'We couldn’t send a code right now. Try again in a moment.';
   }
 }
 

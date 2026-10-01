@@ -34,8 +34,8 @@ function GoogleMark() {
 }
 
 /**
- * "or" + Continue with Google. Inside Instagram, TikTok and YouTube webviews Google blocks OAuth, so the
- * button is replaced by a one-line note. The server passes its user agent check as `initialInApp`, so the
+ * "or" + Continue with Google. Inside in-app browsers (Instagram, TikTok, YouTube, X, LinkedIn and others)
+ * Google blocks OAuth, so the button is replaced by a one-line note that says why and what works instead. The server passes its user agent check as `initialInApp`, so the
  * right version renders from the first paint; the client check then confirms it.
  */
 export function GoogleButton({
@@ -67,7 +67,7 @@ export function GoogleButton({
         className={cx('flex items-start justify-center gap-2 text-small text-ink-muted', className)}
       >
         <Info aria-hidden size={16} strokeWidth={1.5} className="mt-px shrink-0" />
-        <span>Using Instagram or TikTok’s browser? Email codes work here.</span>
+        <span>Google sign-in doesn’t work in this app’s browser. Use an email code.</span>
       </p>
     );
   }
