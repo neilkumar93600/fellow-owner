@@ -2,8 +2,8 @@
  * How it works (landing brief v2, part 7), on the page background.
  *
  * Every size inside the section is in em off the section's font-size, so the rail scales as one
- * rigid composition: 16px in the stack, and on the rail 16px at 1440 x 860, up to 19px on large
- * screens and down to 15px on short laptops.
+ * rigid composition: 16px in the stack, and on the rail 16px at 1440 x 900, up to 19px on large
+ * screens and down to 12px on short laptops (1366 x 768 leaves about 650px of viewport).
  *
  * Stack (default; phones, tablets, short windows, reduced motion, before hydration): a vertical list.
  * Rail ([data-mode='rail'], set by how-rail.tsx): a sticky 100svh stage whose track translates on X.
@@ -1115,9 +1115,16 @@
 
 /* ---------- Rail (desktop, motion allowed) ---------- */
 
+/*
+ * The frame: 88px under the floating navbar, then the outlined numbers (5.75em showing above the
+ * cards) and the cards (all --card-h tall, so their tops and the numbers share one line), then 88px
+ * for the progress labels. 176px + 39.75em in all; the height left over is split above and below.
+ */
 .section[data-mode="rail"] {
   --edge: max(var(--gutter), calc((100% - 1280px) / 2));
-  font-size: clamp(15px, min(1.1111vw, 1.984svh), 19px);
+  --card-h: 34em;
+  --frame: 39.75em;
+  font-size: clamp(12px, min(max(15px, 1.1111vw), (100svh - 176px) / 39.75), 19px);
 }
 
 .section[data-mode="rail"] .stage {
@@ -1126,19 +1133,29 @@
   height: 100svh;
   padding: 0;
   overflow: clip;
+  /* Panels fade over the outer gutter as they enter and leave, instead of being cut mid-word. */
+  --fade: min(var(--edge), 120px);
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 var(--fade),
+    #000 calc(100% - var(--fade)),
+    transparent
+  );
 }
 
 .section[data-mode="rail"] .track {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   width: max-content;
   max-width: none;
   height: 100%;
   margin: 0;
-  padding: 5.5em var(--edge) 6.25em;
+  padding: calc(88px + max(0px, (100svh - 176px - var(--frame)) / 2)) var(--edge) 0;
   will-change: transform;
 }
 
+/* The heading starts on the same top line as the outlined numbers. */
 .section[data-mode="rail"] .intro {
   flex: none;
   width: 27em;
@@ -1161,9 +1178,29 @@
 
 .section[data-mode="rail"] .steps {
   flex-direction: row;
-  align-items: flex-end;
-  align-self: stretch;
+  align-items: flex-start;
   gap: 6em;
+}
+
+/* One card height for all three, so the row reads as deliberate rather than ragged. */
+.section[data-mode="rail"] .panel {
+  min-height: var(--card-h);
+}
+
+/* 01's bio page fills the card's height; the code entry settles at the bottom, level with the link. */
+.section[data-mode="rail"] .bio {
+  height: 100%;
+}
+
+.section[data-mode="rail"] .tiles {
+  margin-bottom: auto;
+}
+
+.section[data-mode="rail"] .panel.p3 {
+  /* The round end stays a half circle concentric with the 21em clicks disc. */
+  height: var(--card-h);
+  padding-right: calc(var(--card-h) / 2 - 10.5em);
+  border-radius: 2.5em calc(var(--card-h) / 2) calc(var(--card-h) / 2) 2.5em;
 }
 
 .section[data-mode="rail"] .step {
@@ -1182,7 +1219,8 @@
 }
 
 .section[data-mode="rail"] .s3 {
-  width: 52em;
+  /* 1.5em wider than the stack's 52em: the card's round end grew with --card-h. */
+  width: 53.5em;
   max-width: none;
 }
 

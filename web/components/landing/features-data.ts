@@ -2,7 +2,7 @@
 // (demo-data.ts) and is shown under a "Demo" label.
 
 import type { CommunityIcon, Tint } from '@fellow-owners/shared';
-import { messages, promoteDraft } from './demo-data';
+import { creator, fan, judgePath, messages, promoteDraft } from './demo-data';
 
 /* ---------- Tile 2: triage ---------- */
 
@@ -53,6 +53,40 @@ export const TEAM = {
 export const PITCH_TYPES = ['Collab', 'Investment', 'Idea', 'Press', 'Fan note'] as const;
 export const PITCH_SELECTED = 'Collab';
 export const PITCH_DRAFT = 'Co-host our build-in-public sprint in March?';
+
+/* ---------- Tile 7: the demo picker ---------- */
+
+/** The two seats in the demo and their share of the judge path: Mira for stops 1 to 5, Arjun for 6. */
+export const DEMO_ROLES: {
+  name: string;
+  firstName: string;
+  role: string;
+  detail: string;
+  tint: Tint;
+  seconds: number;
+}[] = [
+  {
+    name: creator.name,
+    firstName: creator.firstName,
+    role: 'creator',
+    detail: 'Today to Showcase',
+    tint: 'lavender',
+    seconds: judgePath.slice(0, -1).reduce((sum, stop) => sum + stop.seconds, 0),
+  },
+  {
+    name: fan.name,
+    firstName: fan.firstName,
+    role: 'fan',
+    detail: 'Joins a community',
+    tint: 'peach',
+    seconds: judgePath[judgePath.length - 1]?.seconds ?? 0,
+  },
+];
+
+/** 150 -> "2:30". */
+export function clock(seconds: number): string {
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+}
 
 /* ---------- Tile 6: tracked link ---------- */
 

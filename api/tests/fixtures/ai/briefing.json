@@ -1,0 +1,126 @@
+{
+  "task": "briefing",
+  "description": "Recorded smart-tier answers for the daily briefing. Candidates are referenced by key (c1..); expectations list the refIds after mapping.",
+  "cases": [
+    {
+      "name": "ready-briefing",
+      "description": "Three highlights by key, two watchouts based on the counts.",
+      "input": {
+        "creatorName": "Mira Kapoor",
+        "periodDate": "2026-10-01",
+        "tasteProfile": {
+          "promote": ["Tools that help people train consistently", "Projects built by people in my community"],
+          "never": ["Crypto or trading schemes"],
+          "voice": []
+        },
+        "candidates": [
+          { "refType": "post", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a01", "title": "Gym-log app for creators who lift", "summary": "A two-tap workout logger with a working prototype.", "fitScore": 88, "signals": 14, "reason": "Matches \"Tools that help people train consistently\"." },
+          { "refType": "post", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a02", "title": "Neighbourhood run club map", "summary": "A map of free run clubs in the city.", "fitScore": 64, "signals": 9, "reason": null },
+          { "refType": "inbound", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a03", "title": "Collab with a sneaker brand on a 30-day challenge", "summary": "A brand proposes a paid 30-day training challenge.", "fitScore": 82, "reason": "Fits your training consistency line." },
+          { "refType": "membership", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a04", "title": "Priya Shah", "summary": "Product designer, joined 3 project teams this fortnight.", "fitScore": null, "signals": 21, "reason": "3 accepted team joins in 14 days" },
+          { "refType": "inbound", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a05", "title": "Invest in my supplement startup", "summary": "An investment ask for a supplement brand.", "fitScore": 12, "reason": "Touches \"Diet pills and supplements\"." }
+        ],
+        "counts": {
+          "members": 1204,
+          "newMembers7d": 87,
+          "ideas7d": 23,
+          "pitches7d": 31,
+          "opportunitiesWaiting": 4,
+          "filteredSpam7d": 6,
+          "pendingAnalysis": 2,
+          "perCommunity": [
+            { "slug": "builders", "name": "Builders", "posts7d": 9, "joins7d": 31 },
+            { "slug": "fitness-crew", "name": "Fitness Crew", "posts7d": 7, "joins7d": 24 }
+          ]
+        }
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "A gym-log app from your community leads 23 new ideas, and 4 strong pitches are waiting for you.",
+            "highlights": [
+              { "candidate": "c1", "why": "Fit 88 and 14 signals: it is exactly the kind of tool that helps people train consistently, built by your community." },
+              { "candidate": "c3", "why": "A paid 30-day challenge that fits your training consistency line; worth a reply before the brand moves on." },
+              { "candidate": "c4", "why": "Priya joined 3 project teams this fortnight; a natural person to spotlight or invite." }
+            ],
+            "watchouts": [
+              "6 pitches were filtered as spam this week; a quick look at the Filtered tab keeps good ones from slipping.",
+              "2 items are still waiting for AI review."
+            ]
+          },
+          "usage": { "prompt_tokens": 2300, "completion_tokens": 260 }
+        }
+      ],
+      "expect": {
+        "headline": "A gym-log app from your community leads 23 new ideas, and 4 strong pitches are waiting for you.",
+        "refIds": [
+          "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a01",
+          "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a03",
+          "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a04"
+        ],
+        "watchouts": 2,
+        "requests": 1
+      }
+    },
+    {
+      "name": "invented-numbers-and-too-few-highlights",
+      "description": "Attempt 1 has 2 highlights and a made-up 40%; attempt 2 has 3 highlights but keeps the 40% headline and adds an unsupported watchout. The headline falls back to the code-written one and the watchout is dropped.",
+      "input": {
+        "creatorName": "Mira Kapoor",
+        "periodDate": "2026-10-01",
+        "tasteProfile": { "promote": ["Projects built by people in my community"], "never": [], "voice": [] },
+        "candidates": [
+          { "refType": "post", "refId": "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b01", "title": "Open-source habit tracker", "summary": "A habit tracker with streaks.", "fitScore": 79, "signals": 11 },
+          { "refType": "post", "refId": "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b02", "title": "Weekly build night", "summary": "A proposal for a weekly online build night.", "fitScore": 71, "signals": 8 },
+          { "refType": "inbound", "refId": "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b03", "title": "Podcast interview", "summary": "A podcast about building in public.", "fitScore": 76 }
+        ],
+        "counts": {
+          "members": 310,
+          "newMembers7d": 12,
+          "ideas7d": 5,
+          "pitches7d": 4,
+          "opportunitiesWaiting": 1,
+          "filteredSpam7d": 0,
+          "pendingAnalysis": 0,
+          "perCommunity": []
+        }
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "Your community grew 40% this week.",
+            "highlights": [
+              { "candidate": "c1", "why": "A streak-based habit tracker with 11 signals, built by your community." },
+              { "candidate": "c1", "why": "Duplicate." }
+            ],
+            "watchouts": []
+          },
+          "usage": { "prompt_tokens": 1500, "completion_tokens": 120 }
+        },
+        {
+          "content": {
+            "headline": "Your community grew 40% this week.",
+            "highlights": [
+              { "candidate": "c1", "why": "A streak-based habit tracker with 11 signals, built by your community." },
+              { "candidate": "c3", "why": "A podcast about building in public, fit 76." },
+              { "candidate": "c2", "why": "A weekly build night could double your output to 50 projects." }
+            ],
+            "watchouts": ["15 members left this week."]
+          },
+          "usage": { "prompt_tokens": 1700, "completion_tokens": 150 }
+        }
+      ],
+      "expect": {
+        "headline": "12 new members, 5 ideas and 4 pitches this week",
+        "refIds": [
+          "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b01",
+          "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b03",
+          "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b02"
+        ],
+        "thirdWhyIsFallback": true,
+        "watchouts": 0,
+        "requests": 2
+      }
+    }
+  ]
+}

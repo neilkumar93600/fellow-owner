@@ -1,10 +1,13 @@
 /*
  * For creators (landing brief v2, part 5): a lavender field inset from the page with shell corners.
  *
- * Phones and tablets (to 1199px): one column, at most 880px wide. Heading, then each step caption
+ * Phones and tablets (to 1023px): one column, at most 880px wide. Heading, then each step caption
  * over its screen, flat.
- * Desktop (1200+): a sticky story column on the left; a tall track of three screens on the right that
- * pass through in 3D (creators-motion.tsx writes transform/opacity to .tilt and [data-depth] layers).
+ * 1024+: a sticky story column on the left and the three screens on the right.
+ *  - flow (server markup, no JS, reduced motion, short windows): the screens follow each other down a
+ *    tall track; with motion allowed they tilt in 3D as they pass (creators-motion.tsx writes .tilt).
+ *  - pin ([data-mode="pin"], 640+ tall with motion allowed): the grid pins for 200svh and the screens
+ *    stack as a deck in one sticky frame; creators-motion.tsx poses each slot and CSS animates the swap.
  * The screens' own layouts respond to their width through container queries on .figure.
  */
 
@@ -51,7 +54,7 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .field {
     padding-block: 24px;
   }
@@ -70,11 +73,18 @@
   margin-inline: auto;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .grid {
     max-width: none;
-    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     column-gap: clamp(40px, 5vw, 88px);
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    /* Wide enough for "sorted in minutes." on one line at the section title size. */
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   }
 }
 
@@ -90,7 +100,12 @@
   }
 }
 
-@media (min-width: 1200px) {
+/* The title sizes from the story column's width, so its second line always fits on one line. */
+.aside {
+  container-type: inline-size;
+}
+
+@media (min-width: 1024px) {
   .aside {
     position: sticky;
     top: 0;
@@ -101,6 +116,15 @@
     margin-bottom: 0;
     /* Clear the floating navbar at the top. */
     padding-block: 88px 24px;
+  }
+}
+
+/* Too short for the story to stay in view: it scrolls with the page instead. */
+@media (min-width: 1024px) and (max-height: 639.98px) {
+  .aside {
+    position: relative;
+    align-items: flex-start;
+    height: auto;
   }
 }
 
@@ -116,13 +140,15 @@
 
 .title {
   color: var(--ink);
-  font-size: clamp(2.75rem, 1.6rem + 3.6vw, 4.5rem);
+  /* 13cqi keeps "sorted in minutes." (about 7.3em) on one line in the story column. */
+  font-size: min(clamp(2.75rem, 1.6rem + 3.6vw, 4.5rem), 13cqi);
+  text-wrap: balance;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .title {
-    /* Never taller than the sticky column allows on short laptop screens. */
-    font-size: min(4.5rem, 5vw, 7.8vh);
+    /* The section title size, unless the story column or a short laptop screen needs less. */
+    font-size: min(clamp(2.5rem, 1.4rem + 3.6vw, 4.5rem), 13cqi, 9.5vh);
   }
 }
 
@@ -133,19 +159,19 @@
   text-wrap: pretty;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .lead {
     margin-top: clamp(16px, 2.6vh, 24px);
     font-size: min(clamp(1.125rem, 1rem + 0.4vw, 1.375rem), 2.7vh);
   }
 }
 
-/* Steps: the sticky list on desktop. Phones and tablets show the same copy as each screen's caption. */
+/* Steps: the sticky list from 1024. Phones and tablets show the same copy as each screen's caption. */
 .steps {
   display: none;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .steps {
     display: flex;
     flex-direction: column;
@@ -210,6 +236,7 @@
   color: var(--ink-soft);
   font-size: 0.9375rem;
   line-height: 1.45;
+  text-wrap: pretty;
 }
 
 /* How far the step's screen has travelled through the viewport (scaled by creators-motion.tsx). */
@@ -276,7 +303,7 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .track {
     gap: 0;
   }
@@ -288,6 +315,80 @@
     perspective: 1600px;
     perspective-origin: 50% 50%;
   }
+}
+
+/* Flow: the deck wrapper adds no box. */
+.deck {
+  display: contents;
+}
+
+/* ---------- Pin: one sticky frame, the screens stacked as a deck ---------- */
+
+.inner[data-mode="pin"] .grid {
+  /* 100svh of frame plus 200svh of scroll: about two thirds of a screen per step. */
+  height: 300svh;
+}
+
+.inner[data-mode="pin"] .track {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100svh;
+}
+
+.inner[data-mode="pin"] .deck {
+  /*
+   * Laid out at least 600px wide, so narrow columns (1024 to 1199) still get the screens' wide
+   * layouts (the inbox table, the side-by-side composer) instead of their taller phone layouts.
+   * creators-motion.tsx sets the transform: level with the top of the story, scaled to fit.
+   */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: max(100%, 600px);
+  margin-left: calc(max(100%, 600px) / -2);
+  display: grid;
+  transform-origin: 50% 0;
+  perspective: 1400px;
+  perspective-origin: 50% 0;
+}
+
+.inner[data-mode="pin"] .slot {
+  position: relative;
+  grid-area: 1 / 1;
+  align-self: start;
+  display: block;
+  min-height: 0;
+  perspective: none;
+  transform-origin: 50% 0;
+  transition:
+    transform 640ms var(--ease-out-quart),
+    opacity 420ms var(--ease-out-quart);
+  will-change: transform, opacity;
+}
+
+/* A waiting screen only shows its edge, tinted towards the field the further back it waits. */
+.inner[data-mode="pin"] .slot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: var(--lavender);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 420ms var(--ease-out-quart);
+}
+
+.inner[data-mode="pin"] .slot[data-waiting] {
+  pointer-events: none;
+}
+
+.inner[data-mode="pin"] .slot[data-waiting="1"]::after {
+  opacity: 0.4;
+}
+
+.inner[data-mode="pin"] .slot[data-waiting="2"]::after {
+  opacity: 0.68;
 }
 
 .tilt {
@@ -308,8 +409,8 @@
   margin-bottom: 20px;
 }
 
-@media (min-width: 1200px) {
-  /* The sticky list carries this copy on desktop; the caption stays for screen readers. */
+@media (min-width: 1024px) {
+  /* The sticky list carries this copy beside the screens; the caption stays for screen readers. */
   .caption {
     position: absolute;
     width: 1px;
@@ -1240,6 +1341,13 @@
     top: 70px;
     right: auto;
     left: 150px;
+  }
+}
+
+/* No mouse pointer on touch screens: there it would read as a stray mark. */
+@media (pointer: coarse), (max-width: 767.98px) {
+  .cursor {
+    display: none;
   }
 }
 

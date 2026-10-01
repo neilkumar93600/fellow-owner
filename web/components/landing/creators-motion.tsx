@@ -1,26 +1,47 @@
 'use client';
 
+import { useLenis } from 'lenis/react';
 import type * as React from 'react';
-import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useScrollScene } from '@/hooks/use-scroll-scene';
 import { formatNumber } from './creators-data';
 
 /*
  * Motion islands for "For creators". The section and its three screens are server-rendered in their
  * finished, flat state; these components only enhance them:
- *  - CreatorsScene: lights the step whose screen is closest to the viewport centre (DOM attributes, no
- *    React state), and runs the one-time reveals.
- *  - CreatorsSlot: tilts its screen in 3D as it passes through the viewport (desktop, motion allowed).
+ *  - CreatorsScene: picks the mode, lights the step whose screen is in front (DOM attributes, no React
+ *    state per frame), runs the one-time reveals and, in pin mode, drives the deck.
+ *  - CreatorsSlot: in flow mode, tilts its screen in 3D as it passes through the viewport.
  *  - CreatorsClicks: ticks the click count up once when it comes into view.
+ *
+ * Modes (data-mode on the scene root):
+ *  - flow (server markup, no JS, reduced motion, phones and tablets, short windows): the screens follow
+ *    each other down the page; from 1024px they pass beside the sticky story with a light 3D tilt.
+ *  - pin (1024+ wide, 640+ tall, motion allowed): the whole grid pins for 200svh. The screens wait as a
+ *    deck (the next ones peek out under the one in front) and swap in place on each step: the outgoing
+ *    screen tips back and fades, the next one rises to the front. The swap is a CSS transition on
+ *    transform and opacity; scroll only decides the step, so a screen is never left half-swapped.
  */
 
-const DESKTOP = '(min-width: 1200px)';
+const TWO_COLUMN = '(min-width: 1024px)';
+const PIN = '(min-width: 1024px) and (min-height: 640px)';
 const REDUCE = '(prefers-reduced-motion: reduce)';
 
+type Mode = 'flow' | 'pin';
+
+/** Deck geometry (px, before the fit scale): how far each waiting screen peeks out, and its scale. */
+const PEEK = [0, 16, 30];
+const DEPTH_SCALE = [1, 0.94, 0.88];
+/** Room kept under the deck, above the viewport bottom. */
+const DECK_BOTTOM = 20;
+/** Highest the deck may sit: just under the floating navbar (68px tall at its 12px offset). */
+const DECK_TOP = 84;
+
 interface SceneApi {
+  mode: Mode;
   /**
-   * Slot `index` reports its distance from the viewport centre (0 centred, 1 off-screen) and how far
-   * it has passed through the viewport (0..1), which fills its step's progress bar.
+   * Flow mode: slot `index` reports its distance from the viewport centre (0 centred, 1 off-screen) and
+   * how far it has passed through the viewport (0..1), which fills its step's progress bar.
    */
   report: (index: number, distance: number, progress: number) => void;
 }
@@ -40,6 +61,85 @@ function setActiveStep(steps: HTMLElement[], active: number) {
   });
 }
 
+interface Deck {
+  root: HTMLElement;
+  deck: HTMLElement;
+  top: HTMLElement | null;
+  slots: HTMLElement[];
+  layers: { el: HTMLElement; depth: number }[][];
+  heights: number[];
+  /** Step currently posed in front, or -1 before the first pose. */
+  posed: number;
+}
+
+/** Writes each screen's resting pose for `active` in front; CSS transitions animate the change. */
+function poseDeck(deck: Deck, active: number) {
+  deck.posed = active;
+  const front = deck.heights[active] ?? 0;
+  deck.slots.forEach((slot, index) => {
+    const rel = index - active;
+    let transform: string;
+    let opacity: number;
+    if (rel < 0) {
+      // Gone: tipped back, lifted and receding behind the screen that replaced it.
+      transform = 'translate3d(0, -56px, -140px) rotateX(10deg)';
+      opacity = 0;
+    } else if (rel === 0) {
+      transform = 'none';
+      opacity = 1;
+    } else {
+      // Waiting: smaller and behind, its bottom edge peeking out under the screen in front.
+      const scale = DEPTH_SCALE[rel] ?? DEPTH_SCALE[DEPTH_SCALE.length - 1]!;
+      const peek = PEEK[rel] ?? PEEK[PEEK.length - 1]!;
+      const y = front + peek - (deck.heights[index] ?? 0) * scale;
+      transform = `translate3d(0, ${y.toFixed(1)}px, 0) scale(${scale})`;
+      // Opaque, so the screens behind never show through; CSS tints it towards the field instead.
+      opacity = 1;
+    }
+    slot.style.transform = transform;
+    slot.style.opacity = String(opacity);
+    slot.style.zIndex = String(rel < 0 ? 0 : 10 - rel);
+    if (rel > 0) slot.setAttribute('data-waiting', String(Math.min(rel, 2)));
+    else slot.removeAttribute('data-waiting');
+  });
+}
+
+/** Measures the screens and places the deck: level with the top of the story, scaled to fit the height. */
+function layoutDeck(deck: Deck) {
+  deck.heights = deck.slots.map((slot) => slot.offsetHeight);
+  const tallest = Math.max(0, ...deck.heights);
+  if (tallest === 0) return;
+  const vh = window.innerHeight;
+  const aside = deck.top?.parentElement;
+  const storyTop =
+    deck.top && aside
+      ? deck.top.getBoundingClientRect().top - aside.getBoundingClientRect().top
+      : DECK_TOP;
+  const peeks = PEEK[PEEK.length - 1]!;
+  // The deck lays out at least 600px wide (creators.module.css); scale it back into its column too.
+  const column = deck.deck.parentElement?.clientWidth ?? deck.deck.offsetWidth;
+  const fit = Math.min(
+    1,
+    column / Math.max(1, deck.deck.offsetWidth),
+    (vh - DECK_TOP - DECK_BOTTOM - peeks) / tallest,
+  );
+  const top = Math.max(DECK_TOP, Math.min(storyTop, vh - DECK_BOTTOM - peeks - tallest * fit));
+  deck.deck.style.transform = `translate3d(0, ${top.toFixed(1)}px, 0) scale(${fit.toFixed(4)})`;
+  if (deck.posed >= 0) poseDeck(deck, deck.posed);
+}
+
+function clearDeck(deck: Deck) {
+  deck.deck.style.transform = '';
+  for (const slot of deck.slots) {
+    slot.style.transform = '';
+    slot.style.opacity = '';
+    slot.style.zIndex = '';
+    slot.removeAttribute('data-waiting');
+  }
+  for (const layers of deck.layers) for (const layer of layers) layer.el.style.transform = '';
+  deck.posed = -1;
+}
+
 export function CreatorsScene({
   className,
   children,
@@ -48,15 +148,24 @@ export function CreatorsScene({
   children: React.ReactNode;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const [mode, setMode] = useState<Mode>('flow');
+  const modeRef = useRef<Mode>('flow');
+  modeRef.current = mode;
+  const deckRef = useRef<Deck | null>(null);
   const store = useRef({
     distances: [] as number[],
     active: -1,
     steps: [] as HTMLElement[],
     fills: [] as (HTMLElement | null)[],
+    fillValues: [] as number[],
   });
+  const lenis = useLenis();
+  const lenisRef = useRef(lenis);
+  lenisRef.current = lenis;
 
   const api = useMemo<SceneApi>(
     () => ({
+      mode,
       report(index, distance, progress) {
         const state = store.current;
         state.distances[index] = distance;
@@ -75,8 +184,22 @@ export function CreatorsScene({
         setActiveStep(state.steps, best);
       },
     }),
-    [],
+    [mode],
   );
+
+  /* Mode: pin on roomy screens with motion allowed. */
+  useEffect(() => {
+    const pin = window.matchMedia(PIN);
+    const reduce = window.matchMedia(REDUCE);
+    const update = () => setMode(pin.matches && !reduce.matches ? 'pin' : 'flow');
+    update();
+    pin.addEventListener('change', update);
+    reduce.addEventListener('change', update);
+    return () => {
+      pin.removeEventListener('change', update);
+      reduce.removeEventListener('change', update);
+    };
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -88,11 +211,12 @@ export function CreatorsScene({
     root.setAttribute('data-scene', 'ready');
 
     // One-time reveals (fade and rise 16px). Only content still below the fold is hidden first, so
-    // nothing visible ever blinks, and without JavaScript everything simply stays shown.
+    // nothing visible ever blinks, and without JavaScript everything simply stays shown. Beside the
+    // sticky story (1024+) the screens are never hidden: the tilt or the deck owns their opacity.
     if (window.matchMedia(REDUCE).matches) return;
-    const desktop = window.matchMedia(DESKTOP).matches;
+    const twoColumn = window.matchMedia(TWO_COLUMN).matches;
     const targets = Array.from(root.querySelectorAll<HTMLElement>('[data-creators-reveal]')).filter(
-      (el) => !(desktop && el.dataset.creatorsReveal === 'mobile'),
+      (el) => !(twoColumn && el.dataset.creatorsReveal === 'mobile'),
     );
     const pending = targets.filter((el) => el.getBoundingClientRect().top > window.innerHeight);
     if (pending.length === 0) return;
@@ -111,9 +235,107 @@ export function CreatorsScene({
     return () => observer.disconnect();
   }, []);
 
+  /* Pin mode: collect the deck, keep it measured, and route the step links to their moment in the scene. */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (mode !== 'pin' || !root) return;
+    const deckEl = root.querySelector<HTMLElement>('[data-creators-deck]');
+    if (!deckEl) return;
+    const slots = Array.from(deckEl.children).filter(
+      (el): el is HTMLElement => el instanceof HTMLElement,
+    );
+    const deck: Deck = {
+      root,
+      deck: deckEl,
+      top: root.querySelector<HTMLElement>('[data-creators-top]'),
+      slots,
+      layers: slots.map((slot) =>
+        Array.from(slot.querySelectorAll<HTMLElement>('[data-depth]')).map((el) => ({
+          el,
+          depth: Number(el.dataset.depth) || 0,
+        })),
+      ),
+      heights: [],
+      posed: -1,
+    };
+    deckRef.current = deck;
+    const state = store.current;
+    state.fillValues = [];
+
+    const measure = () => layoutDeck(deck);
+    measure();
+    poseDeck(deck, Math.max(0, state.active));
+    const observer = new ResizeObserver(measure);
+    observer.observe(deckEl);
+    if (deck.top) observer.observe(deck.top);
+    window.addEventListener('resize', measure, { passive: true });
+
+    const onClick = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest?.('[data-creators-step] a');
+      if (!link || event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const index = state.steps.findIndex((step) => step.contains(link));
+      if (index < 0) return;
+      // Lenis handles in-page anchors itself (on the document); in pin mode the slots are stacked
+      // in one sticky frame, so the step's moment in the scene is the target, not the slot.
+      event.preventDefault();
+      event.stopPropagation();
+      const distance = root.offsetHeight - window.innerHeight;
+      const top = root.getBoundingClientRect().top + window.scrollY;
+      const target = top + distance * ((index + 0.12) / Math.max(1, slots.length));
+      if (lenisRef.current) lenisRef.current.scrollTo(target, { duration: 1.1 });
+      else window.scrollTo({ top: target, behavior: 'smooth' });
+    };
+    root.addEventListener('click', onClick);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+      root.removeEventListener('click', onClick);
+      clearDeck(deck);
+      deckRef.current = null;
+      state.fillValues = [];
+    };
+  }, [mode]);
+
+  /* Pin mode, per frame: the step in front, its progress bar, and the parallax inside it. */
+  useScrollScene(
+    rootRef,
+    ({ progress }) => {
+      const deck = deckRef.current;
+      if (modeRef.current !== 'pin' || !deck) return;
+      const state = store.current;
+      const count = deck.slots.length;
+      const scaled = progress * count;
+      const active = Math.min(count - 1, Math.floor(scaled));
+      // The last step fills to exactly 1 as the pin releases.
+      const local = Math.min(1, scaled - active);
+
+      if (active !== state.active) {
+        state.active = active;
+        setActiveStep(state.steps, active);
+      }
+      if (active !== deck.posed) poseDeck(deck, active);
+
+      state.fills.forEach((fill, index) => {
+        const value = index < active ? 1 : index > active ? 0 : Math.round(local * 1000) / 1000;
+        if (!fill || state.fillValues[index] === value) return;
+        state.fillValues[index] = value;
+        fill.style.transform = `scaleX(${value})`;
+      });
+
+      // Layered parallax on the screen in front: chips and cards drift 4 to 10px against it.
+      const d = 1 - 2 * local;
+      for (const layer of deck.layers[active] ?? []) {
+        layer.el.style.transform = `translate3d(0, ${(d * layer.depth).toFixed(2)}px, 0)`;
+      }
+    },
+    'pin',
+  );
+
   return (
     <SceneContext.Provider value={api}>
-      <div ref={rootRef} className={className}>
+      <div ref={rootRef} className={className} data-mode={mode}>
         {children}
       </div>
     </SceneContext.Provider>
@@ -157,6 +379,7 @@ export function CreatorsSlot({
   const slotRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
   const scene = useContext(SceneContext);
+  const pinned = scene?.mode === 'pin';
   const live = useRef({
     tilt: false,
     flat: true,
@@ -172,16 +395,17 @@ export function CreatorsSlot({
       depth: Number(el.dataset.depth) || 0,
     }));
 
-    const wide = window.matchMedia(DESKTOP);
+    const wide = window.matchMedia(TWO_COLUMN);
     const reduce = window.matchMedia(REDUCE);
     const sync = () => {
-      state.tilt = wide.matches && !reduce.matches;
+      // The deck owns the screens in pin mode; the tilt runs only in flow mode beside the story.
+      state.tilt = !pinned && wide.matches && !reduce.matches;
       if (state.tilt) return;
-      // Phones, tablets and reduced motion: flat screens, no parallax.
+      // Phones, tablets, reduced motion and the pinned deck: flat screens, no tilt parallax here.
       state.flat = true;
       tiltEl.style.transform = '';
       tiltEl.style.opacity = '';
-      for (const layer of state.layers) layer.el.style.transform = '';
+      if (!pinned) for (const layer of state.layers) layer.el.style.transform = '';
     };
     sync();
     wide.addEventListener('change', sync);
@@ -190,11 +414,12 @@ export function CreatorsSlot({
       wide.removeEventListener('change', sync);
       reduce.removeEventListener('change', sync);
     };
-  }, []);
+  }, [pinned]);
 
   useScrollScene(
     slotRef,
     ({ progress }) => {
+      if (scene?.mode === 'pin') return;
       // d: 1 entering at the bottom, 0 centred, -1 leaving at the top.
       const d = 1 - 2 * progress;
       const distance = Math.abs(d);

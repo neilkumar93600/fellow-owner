@@ -1,5 +1,6 @@
 'use client';
 
+import { useLenis } from 'lenis/react';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -19,6 +20,8 @@ const EASE_OUT_QUART = 'cubic-bezier(0.25, 1, 0.5, 1)';
 const SHEET_ID = 'site-menu';
 const DESKTOP_QUERY = '(min-width: 1024px)';
 const START_HREF = '/login?returnTo=/onboarding';
+/** The footer's section list (components/layout/footer.tsx): where the menu points without JavaScript. */
+const FOOTER_NAV_ID = 'site-footer-nav';
 
 const SECTION_IDS = LANDING_NAV.map((item) => sectionIdFrom(item.href)).filter((id): id is string =>
   Boolean(id),
@@ -44,8 +47,21 @@ function SiteNav({ onLanding }: { onLanding: boolean }) {
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const { lock, unlock } = useScrollLock();
 
-  const close = useCallback(() => setOpen(false), []);
+  // Unlocks synchronously, so a sheet link's smooth scroll (started right after) is not cancelled.
+  const close = useCallback(() => {
+    unlock();
+    setOpen(false);
+  }, [unlock]);
+  const toggle = () => {
+    if (open) {
+      close();
+      return;
+    }
+    lock();
+    setOpen(true);
+  };
   const goTo = useSectionLink(close);
 
   useMenuDismiss(open, close, menuButtonRef, sheetRef);
@@ -56,6 +72,8 @@ function SiteNav({ onLanding }: { onLanding: boolean }) {
         Skip to content
       </a>
       <header className={styles.root} data-condensed={condensed}>
+        {/* Below 1024px: dims and holds the page while the sheet is open; a tap on it closes the sheet. */}
+        <div className={styles.scrim} data-open={open} aria-hidden="true" />
         <div className={styles.bar}>
           <div ref={plateRef} className={styles.plate} aria-hidden="true" />
 
@@ -88,7 +106,7 @@ function SiteNav({ onLanding }: { onLanding: boolean }) {
               aria-label={open ? 'Close menu' : 'Menu'}
               aria-expanded={open}
               aria-controls={SHEET_ID}
-              onClick={() => setOpen((value) => !value)}
+              onClick={toggle}
             >
               <Menu
                 aria-hidden="true"
@@ -103,6 +121,13 @@ function SiteNav({ onLanding }: { onLanding: boolean }) {
                 strokeWidth={1.5}
               />
             </button>
+            {/* Without JavaScript the sheet cannot open: the menu jumps to the footer's section list. */}
+            <noscript>
+              <a href={`#${FOOTER_NAV_ID}`} className={cn(styles.menuButton, styles.menuFallback)}>
+                <Menu aria-hidden="true" size={20} strokeWidth={1.5} />
+                <span className="sr-only">Menu</span>
+              </a>
+            </noscript>
           </div>
         </div>
 
@@ -356,6 +381,42 @@ function useActiveSection(enabled: boolean): string | null {
   }, [enabled]);
 
   return active;
+}
+
+/**
+ * Holds the page still while the sheet is open: Lenis stops taking wheel input and <html> stops native
+ * (touch) scrolling, keeping the scrollbar's gutter so nothing shifts. lock/unlock are synchronous and
+ * idempotent; unmounting always unlocks.
+ */
+function useScrollLock() {
+  const lenis = useLenis();
+  const lenisRef = useRef(lenis);
+  const locked = useRef(false);
+
+  useEffect(() => {
+    lenisRef.current = lenis;
+  }, [lenis]);
+
+  const unlock = useCallback(() => {
+    if (!locked.current) return;
+    locked.current = false;
+    const root = document.documentElement;
+    root.style.removeProperty('overflow');
+    root.style.removeProperty('scrollbar-gutter');
+    lenisRef.current?.start();
+  }, []);
+
+  const lock = useCallback(() => {
+    if (locked.current) return;
+    locked.current = true;
+    const root = document.documentElement;
+    root.style.overflow = 'hidden';
+    root.style.scrollbarGutter = 'stable';
+    lenisRef.current?.stop();
+  }, []);
+
+  useEffect(() => unlock, [unlock]);
+  return { lock, unlock };
 }
 
 /** Esc, a click outside, Tab leaving the sheet, or reaching desktop width closes the menu sheet. */

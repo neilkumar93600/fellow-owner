@@ -19,6 +19,13 @@
   }
 }
 
+/* Same panel inset as the story fields and the hero (8 / 12 / 16px). */
+@media (min-width: 1024px) {
+  .footer {
+    --inset: 16px;
+  }
+}
+
 @media (min-width: 1280px) {
   .footer {
     --gutter: 40px;
@@ -187,6 +194,14 @@
   align-items: flex-start;
   gap: 16px;
   max-width: 36ch;
+}
+
+/* Home link: a 44px target around the 28px logo. */
+.home {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  border-radius: 999px;
 }
 
 .introCopy {

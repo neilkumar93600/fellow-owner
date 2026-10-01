@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "tsx watch --env-file-if-exists=.env src/local.ts",
     "start": "node --env-file-if-exists=.env dist/local.js",
-    "build": "pnpm --filter @fellow-owners/shared build && tsc -p tsconfig.json",
+    "build": "pnpm --filter @fellow-owners/shared build && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
@@ -17,7 +17,8 @@
     "db:migrate": "tsx --env-file-if-exists=.env src/db/migrate.ts",
     "db:seed": "tsx --env-file-if-exists=.env src/db/seed/seed.ts",
     "db:embed": "tsx --env-file-if-exists=.env src/db/seed/embed.ts",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:migrate:test": "tsx --env-file-if-exists=.env src/db/migrate.ts --test"
   },
   "dependencies": {
     "@fellow-owners/shared": "workspace:*",

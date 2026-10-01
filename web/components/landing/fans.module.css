@@ -2,8 +2,9 @@
  * For fans (landing brief v2, part 6): the peach field, the step list and the CSS 3D phone.
  *
  * One DOM, four modes (data-mode on .root, set by fans-stage.tsx):
- *  - static (server, no JS) and swipe (< 768px): the phone sits still with a slight tilt; under 768px its
- *    screens are a horizontal snap row and the step list is a one-at-a-time caption above it.
+ *  - static (server, no JS) and swipe (< 768px): the phone sits with a slight tilt (in swipe mode it turns a
+ *    little as it passes); under 768px its screens are a horizontal snap row, and the pager and a
+ *    one-at-a-time step caption sit right under it, so the caption changes where the thumb is.
  *  - pin (>= 768px, motion allowed): the scene is tall and the stage sticks for 100svh. The phone pose, the
  *    step hairlines and the screen beats are written per frame from refs; the screen swap is a crossfade with
  *    a 24px slide on transform and opacity only.
@@ -114,19 +115,20 @@
   flex-direction: column;
 }
 
+/* Phones: label, phone, pager, caption, callout. From 768 the grid areas below place everything. */
 .label {
   order: 1;
 }
 
-.steps {
+.device {
   order: 2;
 }
 
-.device {
+.dots {
   order: 3;
 }
 
-.dots {
+.steps {
   order: 4;
 }
 
@@ -402,11 +404,11 @@
   }
 }
 
-/* Phones: one step at a time, as a caption over the phone (stacked in one cell so nothing shifts). */
+/* Phones: one step at a time, as a caption under the phone (stacked in one cell so nothing shifts). */
 @media (max-width: 767.98px) {
   .steps {
     display: grid;
-    margin-top: 16px;
+    margin-top: 8px;
   }
 
   .steps::after,
@@ -541,8 +543,12 @@
 
 .device {
   /* Phone height drives everything else, including the screen's em size. */
+  /*
+   * Phones: the phone, its pager and the step caption under it fit together below the floating navbar
+   * (about 76px nav, 40px phone padding, 48px pager, 96px caption).
+   */
   --ph: min(
-    clamp(480px, calc(100svh - 240px), 620px),
+    clamp(360px, calc(100svh - 264px), 620px),
     calc((100vw - 2 * var(--inset) - 2 * var(--gutter) - 20px) / 0.4615)
   );
   --pw: calc(var(--ph) * 0.4615);
@@ -553,8 +559,8 @@
   position: relative;
   display: grid;
   place-items: center;
-  margin-top: 24px;
-  padding-block: 12px 28px;
+  margin-top: 20px;
+  padding-block: 12px 24px;
   perspective: 1400px;
   isolation: isolate;
 }
@@ -841,6 +847,26 @@
 /* Per-frame layers in the pinned scene stay on the compositor. */
 .root[data-mode="pin"] .disc,
 .root[data-mode="pin"] .floor,
-.root[data-mode="pin"] .glare {
+.root[data-mode="pin"] .glare,
+.root[data-mode="swipe"] .phone,
+.root[data-mode="swipe"] .glare {
   will-change: transform;
+}
+
+/* Swipe hint, once (fans-stage.tsx): the screens slide a sixth of the way to the next one and back. */
+@keyframes swipeNudge {
+  0%,
+  100% {
+    transform: none;
+  }
+
+  45% {
+    transform: translate3d(-16%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .screens[data-nudge] .slide {
+    animation: swipeNudge 1100ms var(--ease-out-quart) 200ms both;
+  }
 }

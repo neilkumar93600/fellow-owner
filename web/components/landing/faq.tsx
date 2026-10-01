@@ -10,7 +10,7 @@ import { FaqAccordion } from './faq-accordion';
  * FAQ (landing brief v2, part 11), on the page background. Desktop: the title and a way into the demo
  * hold still on the left while the accordion scrolls on the right. Questions and answers are in the
  * server HTML (crawlable, and described again as FAQPage structured data). Without JavaScript the
- * noscript style opens every answer, since the buttons cannot toggle.
+ * noscript style opens every answer; the questions stay plain headings until the accordion hydrates.
  */
 
 const FAQ_JSON_LD = JSON.stringify({
@@ -45,7 +45,7 @@ export function Faq() {
             Questions, answered.
           </h2>
           <p className={st.note}>Still curious? Enter the demo and look around.</p>
-          <DemoButton as="creator" variant="secondary" className={st.noteAction} />
+          <DemoButton as="creator" className={st.noteAction} />
         </div>
 
         <div

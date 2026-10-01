@@ -7,8 +7,9 @@ import { getIntroState, INTRO_PLAY_EVENT } from './hero-intro';
 /*
  * Hero follower field: ~400 matte clay spheres (150 on phones) in a perspective volume, depth-sorted every
  * frame. They drift in from the edges, gather into six community clusters around the headline, breathe and
- * slowly turn, lean toward a mouse pointer (max 12px), and the camera dollies through them as the hero
- * scrolls away. Spheres are pre-rendered sprites, so a frame is one sort plus drawImage calls.
+ * slowly turn, and lean toward a mouse pointer (max 12px). As the hero scrolls away the clusters draw in
+ * toward the visible centre and the camera flies through them one by one, so the shell stays populated
+ * until it leaves. Spheres are pre-rendered sprites, so a frame is one sort plus drawImage calls.
  * Decorative: the sub-line says the same thing in words.
  */
 
@@ -18,14 +19,18 @@ const TAU = Math.PI * 2;
 const INK: Rgb = [45, 45, 48];
 const WHITE: Rgb = [255, 255, 255];
 
-/** Six community palettes, in demo-data order. Strong tint first, then lighter and deeper variants. */
+/**
+ * Six community palettes, in demo-data order. Strong tint first, then lighter and deeper variants. The same
+ * clay family as the loop scene's frames (teal #6FB8C4, lavender #C9A9E8, orange #E8955A, pink #E9A0A0,
+ * sand #D8C79C, white #EDEDEA), kept a step lighter so the clusters stay pastel on the shell.
+ */
 const PALETTES: readonly (readonly string[])[] = [
-  ['#5ccfdc', '#8edde6', '#b4eaf0', '#2fbccc'], // Builders: aqua
-  ['#b79cff', '#cbb8ff', '#9f7ef6', '#ddd1ff'], // Designers: lavender
-  ['#f2a93b', '#f6bd66', '#f9d196', '#ee9b2c'], // Investors & Operators: light orange
-  ['#ffc7a3', '#ffd8bb', '#f8b58c', '#ffe6c4'], // Music & Creators: peach
-  ['#e3f77f', '#cfec66', '#b8d94a', '#effbb3'], // Fitness Crew: lime
-  ['#f8f7f3', '#ececee', '#fbf6ea', '#e2e2e6'], // Local Impact: soft white
+  ['#76c3cf', '#98d3dc', '#b9e3e8', '#5bb0bd'], // Builders: aqua
+  ['#c4a6ef', '#d4c0f4', '#b192e6', '#e2d5f8'], // Designers: lavender
+  ['#eda266', '#f2b884', '#f6cba4', '#e48f51'], // Investors & Operators: light orange
+  ['#f2b5a2', '#f7c8b8', '#eba390', '#fadccf'], // Music & Creators: peach
+  ['#d9ea8c', '#cadf78', '#b8cf66', '#e6f1b1'], // Fitness Crew: lime
+  ['#f0efeb', '#e6e4dd', '#f6f5f1', '#ddd5c2'], // Local Impact: soft white and sand
 ];
 const WHITE_PALETTE = 5;
 
@@ -44,6 +49,8 @@ interface Anchor {
   spin: 1 | -1;
   /** Horizontal position to use instead of u while the scroll cue is shown (keeps the cue clear). */
   uCue?: number;
+  /** Placed by hand in a side gutter: never pushed out of the text block. */
+  free?: boolean;
 }
 
 /** Landscape: around the headline and in the lower third. */
@@ -74,6 +81,20 @@ const TALL: Anchor[] = [
   { u: 0.5, v: 0.93, uCue: 0.63, depth: 1.15, spread: 0.17, spin: -1 },
   { u: 0.13, v: 0.865, depth: 0.95, spread: 0.2, spin: -1 },
   { u: 0.5, v: 0.13, depth: 1.6, spread: 0.14, spin: 1 },
+];
+
+/**
+ * Short phones (about 375 x 667): the copy fills most of the stage, so the clusters sit in the corners
+ * beside the eyebrow, in the side gutters at the headline and sub-line, and in the band below the CTAs.
+ * Nothing sits under the navbar.
+ */
+const SHORT: Anchor[] = [
+  { u: 0.075, v: 0.2, depth: 1.25, spread: 0.11, spin: 1, free: true },
+  { u: 0.935, v: 0.21, depth: 1.35, spread: 0.1, spin: -1, free: true },
+  { u: 1.045, v: 0.56, depth: 0.92, spread: 0.15, spin: 1, free: true },
+  { u: 0.74, v: 0.985, depth: 0.88, spread: 0.18, spin: -1 },
+  { u: -0.04, v: 0.4, depth: 1, spread: 0.15, spin: -1, free: true },
+  { u: 0.26, v: 0.975, depth: 1.05, spread: 0.16, spin: 1 },
 ];
 
 interface Sphere {
@@ -163,8 +184,12 @@ const SPRITE = 192;
 const SR = 64; // sphere radius inside the sprite
 const SC = 86; // sphere centre inside the sprite (room for the soft shadow down-right)
 
-/** Matte clay sphere: broad highlight top-left, base colour, slightly darker rim, faint bounce light. */
-function makeSprite(hex: string): HTMLCanvasElement {
+/**
+ * Matte clay sphere, lit like the loop scene's renders: one soft key light from the upper left with a broad,
+ * low-contrast falloff (no specular spot), a deeper terminator toward the lower right, a faint bounce light,
+ * a fine clay grain, and a soft contact shadow below.
+ */
+function makeSprite(hex: string, seed: number): HTMLCanvasElement {
   const canvas = document.createElement('canvas');
   canvas.width = SPRITE;
   canvas.height = SPRITE;
@@ -172,29 +197,29 @@ function makeSprite(hex: string): HTMLCanvasElement {
   if (!g) return canvas;
   const base = hexToRgb(hex);
 
-  const shx = SC + SR * 0.14;
-  const shy = SC + SR * 0.3;
-  const shadow = g.createRadialGradient(shx, shy, SR * 0.35, shx, shy, SR * 1.2);
-  shadow.addColorStop(0, 'rgba(52, 54, 70, 0.13)');
+  const shx = SC + SR * 0.06;
+  const shy = SC + SR * 0.4;
+  const shadow = g.createRadialGradient(shx, shy, SR * 0.3, shx, shy, SR * 1.18);
+  shadow.addColorStop(0, 'rgba(52, 54, 70, 0.16)');
   shadow.addColorStop(1, 'rgba(52, 54, 70, 0)');
   g.fillStyle = shadow;
   g.beginPath();
-  g.arc(shx, shy, SR * 1.2, 0, TAU);
+  g.arc(shx, shy, SR * 1.18, 0, TAU);
   g.fill();
 
   const body = g.createRadialGradient(
-    SC - SR * 0.36,
     SC - SR * 0.42,
-    SR * 0.04,
-    SC - SR * 0.12,
+    SC - SR * 0.5,
+    0,
+    SC - SR * 0.1,
     SC - SR * 0.14,
-    SR * 1.18,
+    SR * 1.2,
   );
-  body.addColorStop(0, mix(base, WHITE, 0.62));
-  body.addColorStop(0.26, mix(base, WHITE, 0.3));
-  body.addColorStop(0.6, mix(base, WHITE, 0.02));
-  body.addColorStop(0.86, mix(base, INK, 0.09));
-  body.addColorStop(1, mix(base, INK, 0.2));
+  body.addColorStop(0, mix(base, WHITE, 0.3));
+  body.addColorStop(0.3, mix(base, WHITE, 0.15));
+  body.addColorStop(0.62, mix(base, WHITE, 0.01));
+  body.addColorStop(0.84, mix(base, INK, 0.12));
+  body.addColorStop(1, mix(base, INK, 0.24));
   g.fillStyle = body;
   g.beginPath();
   g.arc(SC, SC, SR, 0, TAU);
@@ -204,14 +229,32 @@ function makeSprite(hex: string): HTMLCanvasElement {
   g.beginPath();
   g.arc(SC, SC, SR, 0, TAU);
   g.clip();
-  const bx = SC + SR * 0.6;
-  const by = SC + SR * 0.7;
-  const bounce = g.createRadialGradient(bx, by, 0, bx, by, SR * 0.7);
-  bounce.addColorStop(0, 'rgba(255, 255, 255, 0.16)');
+  const bx = SC + SR * 0.55;
+  const by = SC + SR * 0.75;
+  const bounce = g.createRadialGradient(bx, by, 0, bx, by, SR * 0.65);
+  bounce.addColorStop(0, 'rgba(255, 255, 255, 0.12)');
   bounce.addColorStop(1, 'rgba(255, 255, 255, 0)');
   g.fillStyle = bounce;
   g.fillRect(0, 0, SPRITE, SPRITE);
   g.restore();
+
+  // Clay grain: a little luminance noise inside the sphere (it only shows on the near, large spheres).
+  const image = g.getImageData(SC - SR, SC - SR, SR * 2, SR * 2);
+  const data = image.data;
+  const rand = mulberry32(seed);
+  for (let y = 0; y < SR * 2; y++) {
+    for (let x = 0; x < SR * 2; x++) {
+      const dx = x + 0.5 - SR;
+      const dy = y + 0.5 - SR;
+      if (dx * dx + dy * dy > (SR - 1) * (SR - 1)) continue;
+      const i = (y * SR * 2 + x) * 4;
+      const n = (rand() - 0.5) * 9;
+      data[i] = clamp(data[i] + n, 0, 255);
+      data[i + 1] = clamp(data[i + 1] + n, 0, 255);
+      data[i + 2] = clamp(data[i + 2] + n, 0, 255);
+    }
+  }
+  g.putImageData(image, SC - SR, SC - SR);
   return canvas;
 }
 
@@ -272,8 +315,19 @@ function buildSpheres(count: number): Sphere[] {
   return spheres;
 }
 
-/** Moves a cluster centre out of the text block (plus padding) by the shortest move that stays on stage. */
-function pushOut(sx: number, sy: number, radius: number, box: Box, w: number, h: number) {
+/**
+ * Moves a cluster centre out of the text block (plus padding) by the shortest move that stays on stage and
+ * below the navbar band (minY).
+ */
+function pushOut(
+  sx: number,
+  sy: number,
+  radius: number,
+  box: Box,
+  w: number,
+  h: number,
+  minY: number,
+) {
   const pad = 20;
   const nearestX = clamp(sx, box.l, box.r);
   const nearestY = clamp(sy, box.t, box.b);
@@ -288,7 +342,7 @@ function pushOut(sx: number, sy: number, radius: number, box: Box, w: number, h:
   for (const [dx, dy] of moves) {
     const nx = sx + dx;
     const ny = sy + dy;
-    if (nx < -0.04 * w || nx > 1.04 * w || ny < 0.04 * h || ny > 1.04 * h) continue;
+    if (nx < -0.04 * w || nx > 1.04 * w || ny < Math.max(0.04 * h, minY) || ny > 1.04 * h) continue;
     if (!best || Math.abs(dx) + Math.abs(dy) < Math.abs(best[0]) + Math.abs(best[1]))
       best = [dx, dy];
   }
@@ -311,9 +365,13 @@ export function HeroField() {
 
     const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    /** Same query as the short-phone rule in hero.module.css. */
+    const shortQuery = window.matchMedia('(max-width: 639px) and (max-height: 760px)');
     let reduced = reducedQuery.matches;
 
-    const sprites = PALETTES.flatMap((palette) => palette.map(makeSprite));
+    const sprites = PALETTES.flatMap((palette, k) =>
+      palette.map((hex, j) => makeSprite(hex, 0x51ab + k * 4 + j)),
+    );
 
     let width = 0;
     let height = 0;
@@ -335,17 +393,22 @@ export function HeroField() {
     let contentShift = 0;
     let lastProgress = -1;
     let lastTime = performance.now();
+    /** Stage y (at scroll 0) of the navbar's bottom edge plus 16px; spheres above it fade on phones. */
+    let navLine = 0;
+    let navFade = false;
+    let stageScale = 1;
 
     /** The text block's box in stage coordinates, without the scroll shift. */
     const measureBox = (): Box => {
       const stageRect = stage.getBoundingClientRect();
+      const k = stageScale || 1;
       const box: Box = { l: Number.POSITIVE_INFINITY, t: Number.POSITIVE_INFINITY, r: -1, b: -1 };
       for (const el of section.querySelectorAll<HTMLElement>('[data-hero-measure]')) {
         const rect = el.getBoundingClientRect();
-        box.l = Math.min(box.l, rect.left - stageRect.left);
-        box.r = Math.max(box.r, rect.right - stageRect.left);
-        box.t = Math.min(box.t, rect.top - stageRect.top - contentShift);
-        box.b = Math.max(box.b, rect.bottom - stageRect.top - contentShift);
+        box.l = Math.min(box.l, (rect.left - stageRect.left) / k);
+        box.r = Math.max(box.r, (rect.right - stageRect.left) / k);
+        box.t = Math.min(box.t, (rect.top - stageRect.top) / k - contentShift);
+        box.b = Math.max(box.b, (rect.bottom - stageRect.top) / k - contentShift);
       }
       if (box.r < 0) return { l: width * 0.2, r: width * 0.8, t: height * 0.25, b: height * 0.75 };
       return box;
@@ -354,7 +417,13 @@ export function HeroField() {
     const layout = () => {
       const box = measureBox();
       const aspect = width / height;
-      const anchors = aspect >= 1.2 ? WIDE : aspect >= 0.85 ? MID : TALL;
+      const navSpace =
+        Number.parseFloat(getComputedStyle(section).getPropertyValue('--nav-space')) || 72;
+      navLine = navSpace + 16 - stage.offsetTop;
+      navFade = width < 1024;
+      // Short phones: hero.module.css lifts the copy under the bar there, so the gutter layout takes over.
+      const anchors =
+        aspect >= 1.2 ? WIDE : aspect >= 0.85 ? MID : shortQuery.matches ? SHORT : TALL;
       const short = Math.min(width, height);
       const zoom = width < 640 ? 1.3 : 1;
       const cueShown = Boolean(cue && cue.offsetParent !== null);
@@ -364,14 +433,10 @@ export function HeroField() {
       clusters = anchors.map((a, i) => {
         const spread = a.spread * short * zoom;
         const u = cueShown && a.uCue !== undefined ? a.uCue : a.u;
-        const [sx, sy] = pushOut(
-          u * width,
-          a.v * height,
-          (spread * 0.5) / a.depth,
-          box,
-          width,
-          height,
-        );
+        const radius = (spread * 0.5) / a.depth;
+        const [sx, sy] = a.free
+          ? [u * width, a.v * height]
+          : pushOut(u * width, a.v * height, radius, box, width, height, navLine + radius * 0.6);
         return {
           x: (sx - width / 2) * a.depth,
           y: (sy - height / 2) * a.depth,
@@ -430,11 +495,26 @@ export function HeroField() {
       if (reduced || !running) draw(performance.now());
     };
 
-    /** Scroll progress through the hero: 0 at the top, 1 once it has fully left the viewport. */
+    /** Hero scroll state: px scrolled past its top, and that as a fraction (1 once it has left). */
+    let scrolled = 0;
     const progress = () => {
-      if (reduced) return 0;
+      if (reduced) {
+        scrolled = 0;
+        return 0;
+      }
       const rect = section.getBoundingClientRect();
-      return clamp(-rect.top / Math.max(1, rect.height), 0, 1);
+      scrolled = clamp(-rect.top, 0, rect.height);
+      return scrolled / Math.max(1, rect.height);
+    };
+
+    const resetHandOff = () => {
+      content?.style.removeProperty('opacity');
+      content?.style.removeProperty('transform');
+      stage.style.removeProperty('scale');
+      cue?.style.removeProperty('opacity');
+      cue?.removeAttribute('data-off');
+      contentShift = 0;
+      stageScale = 1;
     };
 
     const draw = (now: number) => {
@@ -444,30 +524,42 @@ export function HeroField() {
       const p = progress();
       const still = reduced;
 
-      // Hand-off: content lifts and fades, the field holds back a little while the camera pushes in.
-      if (content && p !== lastProgress) {
+      // Hand-off: the copy holds until the fly-through is under way, then lifts and fades; the shell
+      // recedes slightly (scale 1 to 0.94 about its lower edge) as it leaves.
+      if (p !== lastProgress) {
         if (p <= 0) {
-          content.style.removeProperty('opacity');
-          content.style.removeProperty('transform');
-          cue?.style.removeProperty('opacity');
-          contentShift = 0;
+          resetHandOff();
         } else {
           contentShift = -p * 56;
-          content.style.opacity = String(1 - smoothstep(0.12, 0.6, p));
-          content.style.transform = `translate3d(0, ${contentShift.toFixed(1)}px, 0)`;
-          if (cue) cue.style.opacity = String(1 - smoothstep(0, 0.12, p));
+          stageScale = 1 - 0.06 * smoothstep(0.08, 1, p);
+          stage.style.scale = stageScale.toFixed(4);
+          if (content) {
+            content.style.opacity = String(1 - smoothstep(0.35, 0.7, p));
+            content.style.transform = `translate3d(0, ${contentShift.toFixed(1)}px, 0)`;
+          }
+          if (cue) {
+            cue.style.opacity = String(1 - smoothstep(0, 0.12, p));
+            cue.toggleAttribute('data-off', p >= 0.12);
+          }
         }
         lastProgress = p;
       }
 
       ctx.clearRect(0, 0, width, height);
-      const fadeAll = 1 - smoothstep(0.3, 0.86, p);
+      const fadeAll = 1 - smoothstep(0.86, 0.99, p);
       if (fadeAll <= 0.002) return;
-      const camZ = focal * 0.95 * p ** 1.3;
-      const yShift = p * height * 0.26;
+      // Fly-through: the clusters draw in toward the centre of the visible part of the shell while the
+      // camera travels past all of them (nearest first), so spheres keep crossing the view until the end.
+      const camZ = focal * 1.32 * smoothstep(0.04, 1, p);
+      const conv = 1 - 0.9 * smoothstep(0.02, 0.55, p);
+      const yShift = scrolled * 0.5;
       const cx = width / 2;
       const cy = height / 2;
       const ease = 1 - Math.exp(-dt * 3.2);
+      const short = Math.min(width, height);
+      const bigFrom = short * 0.24;
+      const bigTo = short * 0.34;
+      const navY = navLine + scrolled;
 
       const cosA: number[] = [];
       const sinA: number[] = [];
@@ -504,8 +596,8 @@ export function HeroField() {
         const ox = s.nx * spread;
         const oy = s.ny * spread;
         const oz = s.nz * spread * 0.9;
-        let hx = c.x + ox * cosA[k] - oz * sinA[k] + c.leanX * c.depth;
-        let hy = c.y + oy + (bob[k] + c.leanY) * c.depth;
+        let hx = c.x * conv + ox * cosA[k] - oz * sinA[k] + c.leanX * c.depth;
+        let hy = c.y * conv + oy + (bob[k] + c.leanY) * c.depth;
         const hz = c.z + ox * sinA[k] + oz * cosA[k];
         if (!still) {
           hx += s.wobA * Math.sin(t * s.wobF + s.wobP);
@@ -530,7 +622,7 @@ export function HeroField() {
         }
 
         const zr = z - camZ;
-        if (zr < focal * 0.06) {
+        if (zr < focal * 0.05) {
           pa[i] = 0;
           continue;
         }
@@ -548,9 +640,13 @@ export function HeroField() {
           continue;
         }
         const depthRatio = zr / focal;
-        // Atmospheric perspective: far followers sink into the shell; near ones fade as the camera passes.
+        // Atmospheric perspective: far followers sink into the shell; the nearest fade only once they are
+        // large and about to pass the camera, so the fly-through reads.
         alpha *= clamp(1.2 - (depthRatio - 1) * 0.55, 0.5, 1);
-        alpha *= smoothstep(0.08, 0.34, depthRatio) * fadeAll;
+        alpha *= smoothstep(0.075, 0.14, depthRatio) * fadeAll;
+        if (radius > bigFrom) alpha *= 1 - smoothstep(bigFrom, bigTo, radius);
+        // Phones and tablets: keep the transparent navbar's controls clear.
+        if (navFade && sy < navY) alpha *= 0.12 + 0.88 * smoothstep(navY - 24, navY, sy);
         px[i] = sx;
         py[i] = sy;
         pr[i] = radius;
@@ -613,11 +709,7 @@ export function HeroField() {
         settled = true;
         field.setAttribute('data-static', '');
         field.setAttribute('data-ready', '');
-        if (content) {
-          content.style.removeProperty('opacity');
-          content.style.removeProperty('transform');
-        }
-        contentShift = 0;
+        resetHandOff();
         lastProgress = -1;
         draw(performance.now());
       } else {
@@ -685,11 +777,7 @@ export function HeroField() {
       window.removeEventListener(INTRO_PLAY_EVENT, onPlay);
       window.removeEventListener('pointermove', onPointerMove);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);
-      if (content) {
-        content.style.removeProperty('opacity');
-        content.style.removeProperty('transform');
-      }
-      cue?.style.removeProperty('opacity');
+      resetHandOff();
     };
   }, []);
 

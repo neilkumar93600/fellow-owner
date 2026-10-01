@@ -3,8 +3,12 @@
  * accordion right), one column below.
  *
  * Rows sit between hairlines inset to the text. An open answer, or a hovered row, turns into a white
- * card (04 §9: rows switch to card-strong); its hairlines fade so the card reads as one piece. The plus
+ * card (04 §9: rows switch to card-strong); its hairlines fade so the card reads as one piece. The card
+ * fills the column exactly (its text is inset by --pad), so its edges keep to the page gutter. The plus
  * sits in a white circle that turns lime and rotates into a cross when open.
+ *
+ * Without JavaScript every answer is open (faq.tsx noscript style) and the questions render as plain
+ * headings with no toggle icon (faq-accordion.tsx), so nothing claims to be collapsed.
  */
 
 .section {
@@ -115,16 +119,11 @@
 }
 
 .noteAction {
-  height: 44px;
-  margin-top: 20px;
-  padding-inline: 20px;
+  margin-top: 24px;
 }
 
-/* On phones and tablets the rows keep their text on the grid; from 1024px the cards bleed into the gap. */
-@media (min-width: 1024px) {
-  .main {
-    margin-inline: calc(-1 * var(--pad));
-  }
+.main {
+  min-width: 0;
 }
 
 /* ---------- Accordion ---------- */
@@ -256,6 +255,11 @@
 
 .icon svg {
   transition: transform var(--dur-slow) var(--ease-out-quart);
+}
+
+/* The slot a question holds for its icon before the accordion hydrates (and without JavaScript). */
+.iconPending {
+  visibility: hidden;
 }
 
 .item[data-open] .icon {

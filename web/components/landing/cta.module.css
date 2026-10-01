@@ -97,11 +97,17 @@
   z-index: 1;
 }
 
-/* "See it in three" is about 5.35em wide: phones fit it to the field on one line; larger screens step up to 128px. */
+/*
+ * The hero's promise stays the page's largest type: phones use the hero headline's size (its width clamp
+ * and its fit to the screen), and from 768px this title is 95% of the hero headline (its width clamp, and
+ * its 124 * --u unit, which shrinks on short screens): about 112px at 1440 x 900, 114px from 1920. The
+ * lime field and the orbs carry the climax, not a bigger size. "See it in three" is about 5.35em wide, so
+ * it stays on one line.
+ */
 .title {
   margin-top: 24px;
   color: var(--ink);
-  font-size: max(3rem, calc((100vw - 3rem) / 5.6));
+  font-size: min(clamp(3.5rem, 1.6rem + 6.4vw, 7.5rem), calc((100vw - 2.5rem) / 6.25));
   font-weight: 500;
   line-height: 0.92;
   letter-spacing: -0.04em;
@@ -109,7 +115,11 @@
 
 @media (min-width: 768px) {
   .title {
-    font-size: clamp(5.25rem, 1rem + 9vw, 8rem);
+    /* 0.95 x the hero: 124 * --u is 124 * min(100vw / 1440, 100svh / 900), floored at 0.7px. */
+    font-size: min(
+      calc(clamp(3.5rem, 1.6rem + 6.4vw, 7.5rem) * 0.95),
+      max(5.15rem, min(8.18vw, 13.09svh))
+    );
   }
 }
 

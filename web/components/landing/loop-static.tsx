@@ -1,13 +1,17 @@
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { loopFrameSrc, loopStages } from './loop-data';
+import { creator } from './demo-data';
+import styles from './loop.module.css';
+import { loopFeatured, loopFrameSrc, loopStages } from './loop-data';
+import { LoopFeatured } from './loop-featured';
 
 const pad = (value: number) => String(value).padStart(2, '0');
 
 /**
  * The loop without motion: five key frames stacked with their stage copy. Shown for
  * prefers-reduced-motion (CSS) and without JavaScript (the noscript style in loop-section.tsx).
- * Plain markup, no entrance animation, so it reads complete either way.
+ * Plain markup, no entrance animation, so it reads complete either way. The Action stage ends on the same
+ * "Featured by Mira" card the scene lands on, with its short link and click count.
  */
 export function LoopStatic() {
   return (
@@ -15,8 +19,8 @@ export function LoopStatic() {
       <div className="max-w-[40rem]">
         <p className="eyebrow">The loop</p>
         <h2 className="mt-5 text-[2.25rem] leading-[1.02] font-medium tracking-[-0.035em] text-ink md:text-section">
-          <span className="block">From followers</span>
-          <span className="block">to fellow owners.</span>
+          <span className="block">One link.</span>
+          <span className="block">Five stages.</span>
         </h2>
       </div>
 
@@ -57,6 +61,19 @@ export function LoopStatic() {
                 <p className="mt-3 max-w-[34ch] text-lead text-ink-muted text-pretty">
                   {stage.line}
                 </p>
+                {stage.id === 'action' ? (
+                  <>
+                    <p className="sr-only">
+                      Featured by {creator.firstName}: {loopFeatured.title}, a team of{' '}
+                      {loopFeatured.team} led by {loopFeatured.maker}. Its short link,{' '}
+                      {loopFeatured.shortLink}, has {loopFeatured.clicks.toLocaleString('en-US')}{' '}
+                      clicks.
+                    </p>
+                    <div aria-hidden="true" className={styles.staticFeatured}>
+                      <LoopFeatured />
+                    </div>
+                  </>
+                ) : null}
               </div>
             </li>
           );

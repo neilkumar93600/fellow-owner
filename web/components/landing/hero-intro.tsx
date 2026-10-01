@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-/** Fired on window when html.intro-play is added; the hero canvas starts its gather from this moment. */
+/** Fired on window when <html data-intro="play"> is set; the hero canvas starts its gather from this moment. */
 export const INTRO_PLAY_EVENT = 'fo:intro-play';
 
 /** 1 = waiting for fonts, 2 = playing, 0 or undefined = no entrance (reduced motion, soft nav, failsafe, done). */
@@ -21,67 +21,51 @@ export function getIntroState(): IntroState {
 }
 
 /**
- * Runs during HTML parsing, before the hero paints: hides the hero (and the navbar, which keys off the same
- * classes) unless the visitor prefers reduced motion or arrived on an anchor. A 5s failsafe always reveals.
+ * Runs during HTML parsing, before the hero paints, and owns the whole entrance so it never waits for
+ * React to hydrate (the sub-line is the LCP element):
+ * - sets <html data-intro> (the hero and the navbar hide their parts) unless the visitor prefers reduced
+ *   motion or arrived on an anchor;
+ * - once fonts are ready (700ms at most), waits two frames, then sets data-intro="play", stamps
+ *   __foIntroAt and fires INTRO_PLAY_EVENT;
+ * - removes the attribute 2.4s into the play (the timeline is about 1.5s), or after 5s if play never began.
+ * A data attribute, not a class: Lenis and next-themes rewrite the class list on <html>.
  */
-const INTRO_SCRIPT = `(function(){try{var d=document.documentElement,w=window;if(location.hash||(w.matchMedia&&w.matchMedia("(prefers-reduced-motion: reduce)").matches))return;d.classList.add("intro");w.__foIntro=1;setTimeout(function(){d.classList.remove("intro","intro-play");w.__foIntro=0},5000)}catch(e){}})();`;
+const INTRO_SCRIPT = `(function(){try{var d=document.documentElement,w=window,A="data-intro";if(location.hash||(w.matchMedia&&w.matchMedia("(prefers-reduced-motion: reduce)").matches))return;d.setAttribute(A,"");w.__foIntro=1;var go=0;function end(){if(w.__foIntro){d.removeAttribute(A);w.__foIntro=0}}function play(){if(go||w.__foIntro!==1)return;go=1;requestAnimationFrame(function(){requestAnimationFrame(function(){if(w.__foIntro!==1)return;w.__foIntro=2;w.__foIntroAt=performance.now();d.setAttribute(A,"play");w.dispatchEvent(new Event("${INTRO_PLAY_EVENT}"));setTimeout(end,2400)})})}var f=document.fonts;if(f&&f.ready)f.ready.then(play,play);setTimeout(play,700);setTimeout(function(){if(w.__foIntro===1)end()},5000)}catch(e){}})();`;
 
 /**
- * Orbit-style entrance controller. Waits for fonts (700ms fallback), then two frames, then adds
- * html.intro-play; removes both classes on the last CTA's animationend (3s fallback) so nothing keeps
- * animating or holding will-change afterwards.
+ * Client side of the entrance: ends it early on the last CTA's animationend so nothing keeps animating or
+ * holding will-change, and never leaves the page hidden after a soft navigation away from the hero.
  */
 export function HeroIntro() {
   useEffect(() => {
     const w = window as IntroWindow;
     const root = document.documentElement;
-    if (w.__foIntro !== 1) return;
-    // Dev Strict Mode can reset <html> attributes on its remount; put the class back (no-op in production).
-    root.classList.add('intro');
+    if (!w.__foIntro) return;
 
-    let cancelled = false;
-    let frame = 0;
-    let fallback = 0;
     let last: HTMLElement | null = null;
-
+    function finish() {
+      if (!w.__foIntro) return;
+      root.removeAttribute('data-intro');
+      w.__foIntro = 0;
+    }
     const onEnd = (event: AnimationEvent) => {
       if (event.target === last) finish();
     };
-    function finish() {
-      root.classList.remove('intro', 'intro-play');
-      w.__foIntro = 0;
-      window.clearTimeout(fallback);
-      last?.removeEventListener('animationend', onEnd);
-    }
-    const play = () => {
-      if (cancelled) return;
-      frame = requestAnimationFrame(() => {
-        frame = requestAnimationFrame(() => {
-          if (cancelled || w.__foIntro !== 1) return;
-          w.__foIntro = 2;
-          w.__foIntroAt = performance.now();
-          root.classList.add('intro-play');
-          window.dispatchEvent(new Event(INTRO_PLAY_EVENT));
-          last = document.querySelector<HTMLElement>('[data-hero-last]');
-          last?.addEventListener('animationend', onEnd);
-          fallback = window.setTimeout(finish, 3000);
-        });
-      });
+    const arm = () => {
+      last = document.querySelector<HTMLElement>('[data-hero-last]');
+      last?.addEventListener('animationend', onEnd);
     };
-
-    const fonts = document.fonts?.ready ?? Promise.resolve();
-    const timeout = new Promise<void>((resolve) => window.setTimeout(resolve, 700));
-    Promise.race([fonts, timeout]).then(play, play);
+    if (w.__foIntro === 2) arm();
+    else window.addEventListener(INTRO_PLAY_EVENT, arm, { once: true });
 
     return () => {
-      cancelled = true;
-      cancelAnimationFrame(frame);
+      window.removeEventListener(INTRO_PLAY_EVENT, arm);
+      last?.removeEventListener('animationend', onEnd);
       // A real unmount (soft navigation away) must never leave the page hidden. Strict Mode's simulated
-      // unmount keeps the hero in the DOM, so the check below lets it continue.
+      // unmount keeps the hero in the DOM, so the check below lets the entrance continue.
       window.setTimeout(() => {
         if (!document.querySelector('[data-hero-last]')) finish();
       }, 0);
-      if (w.__foIntro === 2) finish();
     };
   }, []);
 

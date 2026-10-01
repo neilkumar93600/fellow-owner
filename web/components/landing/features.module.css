@@ -3,6 +3,7 @@
  * small CSS 3D objects.
  *
  * Phone: one column. 640+: two columns, the bio link spanning two rows, Try it and Links full width.
+ * The Try it tile is a picture of the demo picker on aqua-tile; lime stays for the #demo field.
  * 1200+: a 12-column bento (bio 6x2, triage 3, taste 3, try 6, teams 4, pitch 4, links 4).
  *
  * Motion (features-motion.tsx sets the attributes): cells that start off-screen get data-armed, and play
@@ -258,8 +259,9 @@
   background: var(--peach);
 }
 
-.tile[data-tint="lime"] {
-  background: var(--lime);
+/* A deeper aqua: a tonal step inside the aqua field. Lime is kept for the #demo field. */
+.tile[data-tint="aqua"] {
+  background: var(--aqua-tile);
 }
 
 @media (hover: hover) {
@@ -541,7 +543,7 @@
   height: 28px;
   border-radius: 999px;
   color: var(--ink);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -859,7 +861,7 @@
 
 .featuredMeta {
   color: var(--ink-soft);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
 }
 
 .bioJoin {
@@ -926,7 +928,7 @@
 
 .communityMeta {
   color: var(--ink-soft);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
 }
 
 /* ---------- 2. Triage ---------- */
@@ -955,7 +957,7 @@
   border-radius: 999px;
   background: var(--info-bg);
   color: var(--info-ink);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
@@ -994,7 +996,7 @@
 .tasteLabel {
   padding-bottom: 2px;
   color: var(--ink-soft);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
@@ -1051,12 +1053,11 @@
   transform: translateX(0);
 }
 
-/* ---------- 7. Try it ---------- */
+/* ---------- 7. Try it: the demo picker ---------- */
 
 .tTry {
-  justify-content: space-between;
+  container-type: inline-size;
   gap: 24px;
-  min-height: 240px;
 }
 
 .tryText {
@@ -1065,74 +1066,157 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 30rem;
-  padding-right: 88px;
+  max-width: 32rem;
+  padding-right: 76px;
 }
 
 @media (min-width: 640px) {
   .tryText {
-    padding-right: 140px;
+    padding-right: 128px;
   }
 }
 
 .tryText .tileBodyLg {
-  max-width: 38ch;
-}
-
-.tryActions {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-@media (max-width: 479.98px) {
-  .tryActions > * {
-    flex: 1 1 100%;
-  }
+  max-width: 40ch;
 }
 
 .tryCube {
-  top: 28px;
-  right: 30px;
+  top: 24px;
+  right: 26px;
 }
 
 .tryCube .cube {
-  --s: 52px;
+  --s: 44px;
 }
 
 @media (min-width: 640px) {
   .tryCube {
-    top: 50%;
-    right: 64px;
-    margin-top: -64px;
+    top: 30px;
+    right: 52px;
   }
 
   .tryCube .cube {
-    --s: 76px;
+    --s: 60px;
   }
 }
 
 .tryOrb {
-  top: 70px;
+  top: 82px;
   right: 18px;
 }
 
 .tryOrb .orb {
-  --size: 26px;
+  --size: 24px;
 }
 
 @media (min-width: 640px) {
   .tryOrb {
-    top: 50%;
-    right: 40px;
-    margin-top: 22px;
+    top: 106px;
+    right: 30px;
   }
 
   .tryOrb .orb {
-    --size: 40px;
+    --size: 34px;
   }
+}
+
+.pickFrame {
+  gap: 12px;
+}
+
+.pickHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pickLabel {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* The three-minute clock, in the same ink and lime as the total in the #demo path. */
+.timer {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding-inline: 8px 10px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--lime);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.picks {
+  display: grid;
+  gap: 8px;
+}
+
+@container (min-width: 460px) {
+  .picks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.pick {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: 10px 12px 10px 10px;
+  border-radius: 16px;
+  background: var(--bg);
+  transition: box-shadow 300ms var(--ease-out-quart) 450ms;
+}
+
+/* Mira's seat is the one the picker starts on: an ink ring, drawn in when the tile arrives. */
+.pick[data-selected] {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+.cell[data-armed]:not([data-inview]) .pick[data-selected] {
+  box-shadow: inset 0 0 0 1.5px transparent;
+}
+
+.pickText {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.pickName {
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pickMeta {
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pickTime {
+  flex-shrink: 0;
+  align-self: flex-start;
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 /* ---------- 4. Teams ---------- */
@@ -1246,7 +1330,7 @@
   border-radius: 999px;
   box-shadow: inset 0 0 0 1px var(--line-strong);
   color: var(--ink);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
@@ -1258,7 +1342,7 @@
   border-radius: 999px;
   background: var(--warn-bg);
   color: var(--warn-ink);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
@@ -1339,7 +1423,7 @@
 .inputCount {
   flex-shrink: 0;
   color: var(--ink-muted);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
 }
 
 /* ---------- 6. Links ---------- */
@@ -1460,7 +1544,7 @@
   border-radius: 999px;
   background: var(--lime);
   color: var(--ink);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   white-space: nowrap;
   transform: translateX(-50%);

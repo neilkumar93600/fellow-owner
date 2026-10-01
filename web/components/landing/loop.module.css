@@ -102,17 +102,23 @@
   }
 }
 
+/*
+ * From 1024 the copy and the rail sit on the page's 1280px content column (the shell is the viewport less
+ * 16px a side, so the column edge is 50% - 640px of the shell), never closer than 40px to the shell's edge.
+ * The copy also stops short of the slab the clip ends on: the slab's face starts at 38.3% of a full-width
+ * frame, and the 400px surface plus a 16px gap must clear it, so on very wide screens it leaves the column.
+ */
 @media (min-width: 1024px) {
   .slot {
-    left: 40px;
+    left: max(40px, min(50% - 640px, 38.3% - 416px));
   }
 
   .rail {
-    right: 40px;
+    right: max(40px, 50% - 640px);
   }
 
   .loaderWrap {
-    right: 40px;
+    right: max(40px, 50% - 640px);
     bottom: 40px;
   }
 }
@@ -190,13 +196,6 @@
     width: 400px;
     padding: 28px 28px 30px;
     border-radius: 28px;
-  }
-}
-
-/* Wide screens only: below 1440 a wider surface would sit over the slab the clip ends on. */
-@media (min-width: 1440px) {
-  .surface {
-    width: 460px;
   }
 }
 
@@ -675,6 +674,13 @@
   gap: 1.8cqw;
   min-height: 10cqw;
   max-height: 40cqw;
+}
+
+/* Reduced motion and no-JS: the card sits under the Action copy at a readable width. */
+.staticFeatured {
+  container-type: inline-size;
+  width: min(100%, 360px);
+  margin-top: 24px;
 }
 
 .payoff[data-compact="true"] .featuredTeam,

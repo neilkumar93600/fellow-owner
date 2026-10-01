@@ -54,7 +54,8 @@ export function ProblemSection() {
           <div className={styles.final}>
             <div className={styles.slot} data-problem="slot" aria-hidden="true" />
 
-            <div className={styles.narr}>
+            {/* Narration for the pinned scene only; it describes the motion, so assistive tech skips it. */}
+            <div className={styles.narr} aria-hidden="true">
               <p data-problem="narr">
                 Spam and bot offers go to Filtered. Everything else lands in one inbox, summarized.
               </p>
@@ -84,7 +85,12 @@ export function ProblemSection() {
                   <p id="problem-picks" className={styles.picksLabel}>
                     Worth your time
                   </p>
-                  <span className={cn(styles.picksCount, 'tabular')} data-problem="picks-count">
+                  {/* Counts up as the picks land; the list itself tells assistive tech how many. */}
+                  <span
+                    className={cn(styles.picksCount, 'tabular')}
+                    data-problem="picks-count"
+                    aria-hidden="true"
+                  >
                     {PICK_ORDER.length}
                   </span>
                 </div>
@@ -96,6 +102,11 @@ export function ProblemSection() {
               </div>
 
               <div className={styles.tableCard} data-problem="table">
+                <span
+                  className={styles.tableSurface}
+                  data-problem="table-surface"
+                  aria-hidden="true"
+                />
                 <div className={styles.tableTop}>
                   <p className={styles.tableTitle}>Mira’s inbox</p>
                   <span className={styles.demoChip}>Demo</span>
@@ -129,8 +140,13 @@ export function ProblemSection() {
               <span className={styles.trayText}>
                 <span className={styles.trayLabel}>Filtered</span>
                 <span className={styles.traySub}>Spam, held back</span>
+                <span className="sr-only">
+                  , <Wide>{COUNTS.wide.filtered}</Wide>
+                  <Phone>{COUNTS.phone.filtered}</Phone> messages
+                </span>
               </span>
-              <span className={cn(styles.trayCount, 'tabular')}>
+              {/* Counts up as spam lands in the pinned scene; the final count is in the text above. */}
+              <span className={cn(styles.trayCount, 'tabular')} aria-hidden="true">
                 <Wide data-problem="count" data-final={COUNTS.wide.filtered}>
                   {COUNTS.wide.filtered}
                 </Wide>

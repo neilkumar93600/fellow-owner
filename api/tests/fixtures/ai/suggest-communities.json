@@ -1,0 +1,65 @@
+{
+  "task": "suggestCommunities",
+  "description": "Recorded fast-tier answers for suggestCommunities (join step 2).",
+  "cases": [
+    {
+      "name": "frontend-dev-who-lifts",
+      "description": "The demo path: Builders and Fitness Crew preselected; the weak Designers guess is dropped.",
+      "input": {
+        "intro": "frontend dev who lifts",
+        "communities": [
+          { "slug": "builders", "name": "Builders", "description": "People shipping apps, tools and side projects" },
+          { "slug": "designers", "name": "Designers", "description": "UI, brand and product design" },
+          { "slug": "investors-operators", "name": "Investors & Operators", "description": "Angels, operators and founders" },
+          { "slug": "music-creators", "name": "Music & Creators", "description": "Producers, musicians and video creators" },
+          { "slug": "fitness-crew", "name": "Fitness Crew", "description": "Training, running and healthy habits" },
+          { "slug": "local-impact", "name": "Local Impact", "description": "Volunteering and projects for our cities" }
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "suggestions": [
+              { "slug": "builders", "confidence": 0.92 },
+              { "slug": "fitness-crew", "confidence": 0.88 },
+              { "slug": "designers", "confidence": 0.2 }
+            ]
+          },
+          "usage": { "prompt_tokens": 420, "completion_tokens": 40 }
+        }
+      ],
+      "expect": {
+        "suggestions": [
+          { "slug": "builders", "confidence": 0.92 },
+          { "slug": "fitness-crew", "confidence": 0.88 }
+        ],
+        "requests": 1
+      }
+    },
+    {
+      "name": "unknown-slug-then-percent-confidence",
+      "description": "The first answer invents a slug (fails the enum, retried); the second uses a 0..100 confidence, normalized to 0..1.",
+      "input": {
+        "intro": "I run 10k every weekend and coach beginners",
+        "communities": [
+          { "slug": "builders", "name": "Builders", "description": "People shipping apps, tools and side projects" },
+          { "slug": "fitness-crew", "name": "Fitness Crew", "description": "Training, running and healthy habits" }
+        ]
+      },
+      "responses": [
+        {
+          "content": { "suggestions": [{ "slug": "runners-club", "confidence": 0.9 }] },
+          "usage": { "prompt_tokens": 300, "completion_tokens": 20 }
+        },
+        {
+          "content": { "suggestions": [{ "slug": "fitness-crew", "confidence": 85 }] },
+          "usage": { "prompt_tokens": 360, "completion_tokens": 20 }
+        }
+      ],
+      "expect": {
+        "suggestions": [{ "slug": "fitness-crew", "confidence": 0.85 }],
+        "requests": 2
+      }
+    }
+  ]
+}

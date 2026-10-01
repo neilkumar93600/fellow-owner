@@ -9,12 +9,14 @@ import { useEffect, useRef, useState } from 'react';
  * reads) without JavaScript; this adds three things:
  *
  * - a visible Pause / Play control (WCAG 2.2.2), since hover and focus pauses do not reach touch users;
- * - data-offscreen, which pauses both rows while the strip is out of view;
- * - focus that stays visible: when Tab lands on a card the moving row has carried off-screen, the row's
- *   CSS animation is moved (Web Animations currentTime) so that card sits in view. Hover and focus-within
- *   already pause the row in CSS, so it stays put while the card has focus.
+ * - data-offscreen, which pauses the row while the strip is out of view;
+ * - focus that stays visible: when Tab lands on a card that sits under an edge fade or off-screen, the
+ *   row's CSS animation is moved (Web Animations currentTime) so that card sits in the middle. The loop
+ *   keeps the real list's start between 50vw and 50vw minus one list (showcase.module.css), so every real
+ *   card, the first included, can reach the centre. Hover and focus-within already pause the row in CSS,
+ *   so it stays put while the card has focus.
  *
- * Under reduced motion the rows are one static scroll-snap row (CSS) and the control is hidden.
+ * Under reduced motion the row is a static scroll-snap row (CSS) and the control is hidden.
  */
 export function ShowcaseStage({
   className,
@@ -66,7 +68,8 @@ export function ShowcaseStage({
 
       const rowBox = row.getBoundingClientRect();
       const cardBox = card.getBoundingClientRect();
-      const margin = rowBox.width * 0.1; // keep clear of the edge fade
+      // Clear of the edge fade (min(12%, 160px) in CSS), plus a little air.
+      const margin = Math.min(rowBox.width * 0.12, 160) + 16;
       if (cardBox.left >= rowBox.left + margin && cardBox.right <= rowBox.right - margin) return;
 
       const copies = Number(track.dataset.copies) || 3;
@@ -74,10 +77,11 @@ export function ShowcaseStage({
       const duration = Number(animation.effect?.getComputedTiming().duration) || 0;
       if (!group || !duration) return;
 
-      // Translate that centres the card, kept inside one loop (0 to -group).
+      // The keyframes run translateX from 50vw - group to 50vw - 2 * group (one list per loop).
+      const start = window.innerWidth / 2 - group;
+      // The translate that puts the card's centre on the row's centre (offsetLeft is within the track).
       const centre = rowBox.width / 2 - (card.offsetLeft + card.offsetWidth / 2);
-      const translate = Math.min(0, Math.max(-group, centre));
-      const progress = -translate / group;
+      const progress = Math.min(0.9999, Math.max(0, (start - centre) / group));
       const reverse = getComputedStyle(track).animationDirection === 'reverse';
       animation.currentTime = (reverse ? 1 - progress : progress) * duration;
     };

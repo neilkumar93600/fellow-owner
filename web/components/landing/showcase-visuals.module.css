@@ -1,0 +1,541 @@
+/*
+ * Showcase card pictures (showcase-visuals.tsx). Each fills the cover's picture band (.visual, 128px; 120px
+ * on phones). Most are one white mini card on the project's tint, the One Step Rule's single bordered
+ * layer; the thumbnail kit and the map draw straight on the tint for variety. Text never drops below the
+ * 12px caption size.
+ */
+
+.visual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 120px;
+  color: var(--ink);
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+@media (min-width: 768px) {
+  .visual {
+    height: 128px;
+  }
+}
+
+.visual > * {
+  flex: 1;
+  min-height: 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: var(--card-strong);
+  box-shadow:
+    0 1px 2px rgb(45 45 48 / 0.04),
+    0 8px 20px -12px rgb(45 45 48 / 0.18);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.head b,
+.trackText b {
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--ink-soft, #5e5e62);
+  white-space: nowrap;
+}
+
+.limeChip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 3px;
+  height: 22px;
+  padding-inline: 8px;
+  border-radius: 999px;
+  background: var(--lime);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ---------- Gym log ---------- */
+
+.sets {
+  display: flex;
+  flex-direction: column;
+}
+
+.set {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 24px;
+  margin-inline: -6px;
+  padding-inline: 6px;
+  border-radius: 8px;
+}
+
+.set[data-current] {
+  background: var(--aqua);
+}
+
+.tick {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--line-row);
+  border-radius: 999px;
+}
+
+.tick[data-done] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--card-strong);
+}
+
+.setName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.setLoad {
+  flex-shrink: 0;
+  color: var(--ink-soft, #5e5e62);
+  white-space: nowrap;
+}
+
+/* ---------- Thumbnail kit ---------- */
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.thumb {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px rgb(45 45 48 / 0.06);
+}
+
+.thumbWord {
+  position: absolute;
+  top: 8px;
+  left: 9px;
+  max-width: 64%;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+/* A head and shoulders, the thumbnail's face. */
+.thumbFace {
+  position: absolute;
+  right: 10%;
+  bottom: -14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--face);
+  box-shadow: 0 -22px 0 -7px var(--face);
+}
+
+.thumbPeach {
+  --face: var(--orange);
+
+  background: var(--peach-tile);
+}
+
+.thumbInk {
+  --face: var(--lavender-tile);
+
+  background: var(--ink);
+  color: var(--lime);
+}
+
+.thumbAqua {
+  --face: var(--card-strong);
+
+  background: var(--teal);
+  color: var(--card-strong);
+}
+
+.thumbAqua .thumbWord {
+  color: var(--ink);
+}
+
+.thumbLime {
+  --face: var(--purple-chart);
+
+  background: var(--lime);
+}
+
+/* ---------- Code club ---------- */
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.day {
+  display: grid;
+  place-items: center;
+  height: 24px;
+  border-radius: 8px;
+  background: var(--table-head);
+  color: var(--ink-soft, #5e5e62);
+  font-weight: 500;
+}
+
+.day[data-on] {
+  background: var(--ink);
+  color: var(--card-strong);
+}
+
+.session {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.time {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 22px;
+  padding-inline: 7px;
+  border-radius: 999px;
+  background: var(--table-head);
+  font-weight: 600;
+}
+
+.timeLime {
+  background: var(--lime);
+}
+
+.sessionName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Player ---------- */
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.play {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--card-strong);
+}
+
+.play svg {
+  margin-left: 2px;
+}
+
+.trackText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.wave {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 2px;
+  min-height: 0;
+}
+
+.wave > span {
+  flex: 1;
+  height: calc(var(--h) * 100%);
+  min-height: 3px;
+  border-radius: 2px;
+  background: var(--lavender-tile);
+}
+
+.wave > span[data-played] {
+  background: var(--purple-chart);
+}
+
+.times {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink-soft, #5e5e62);
+}
+
+/* ---------- Strength plan ---------- */
+
+.trend {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2px;
+  color: var(--success-ink);
+  font-weight: 600;
+}
+
+.bars {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  gap: 4px;
+  min-height: 0;
+}
+
+.bar {
+  position: relative;
+  flex: 1;
+  height: calc(var(--h) * 100%);
+  border-radius: 4px 4px 2px 2px;
+  background: var(--ink);
+}
+
+.bar[data-state="now"] {
+  background: var(--purple-chart);
+}
+
+.bar[data-state="next"] {
+  background: var(--table-head);
+}
+
+/* The chart's lime tooltip (reference 01), on this week's bar. */
+.tip {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 8px;
+  border-radius: 999px;
+  background: var(--lime);
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.axis {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink-soft, #5e5e62);
+}
+
+/* ---------- Calculator ---------- */
+
+.money {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.money b {
+  font-size: 1.625rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.slider {
+  position: relative;
+  height: 6px;
+  margin-block: 4px;
+  border-radius: 999px;
+  background: var(--table-head);
+}
+
+.sliderFill {
+  position: absolute;
+  inset: 0 36% 0 0;
+  border-radius: inherit;
+  background: var(--orange);
+}
+
+.knob {
+  position: absolute;
+  top: 50%;
+  left: 64%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 999px;
+  background: var(--card-strong);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 2px 4px rgb(45 45 48 / 0.18);
+}
+
+.inputs {
+  display: flex;
+  gap: 6px;
+}
+
+.input {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding-inline: 8px;
+  border-radius: 999px;
+  background: var(--peach);
+  color: var(--ink-soft, #5e5e62);
+  white-space: nowrap;
+}
+
+.input .tabular {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- Habit widget ---------- */
+
+.widget {
+  border-radius: 20px;
+}
+
+.grid {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  min-height: 0;
+}
+
+.grid > span {
+  border-radius: 6px;
+  background: var(--table-head);
+}
+
+.grid > span[data-state="2"] {
+  background: var(--teal);
+}
+
+.grid > span[data-state="1"] {
+  background: var(--aqua-tile);
+}
+
+.grid > span[data-today] {
+  box-shadow:
+    0 0 0 2px var(--card-strong),
+    0 0 0 3.5px var(--ink);
+}
+
+/* ---------- Cleanup map ---------- */
+
+.map {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #f7f7f8;
+  box-shadow: inset 0 0 0 1px rgb(45 45 48 / 0.06);
+}
+
+.mapSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.park {
+  fill: rgb(232 250 139 / 0.7);
+}
+
+.pond {
+  fill: var(--aqua-tile);
+}
+
+.roadEdge {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 11;
+}
+
+.road {
+  fill: none;
+  stroke: var(--card-strong);
+  stroke-width: 8;
+}
+
+.pin {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 1.5px dashed var(--ink-soft, #5e5e62);
+  border-radius: 999px;
+  background: var(--card-strong);
+}
+
+.pin[data-done] {
+  border: 0;
+  background: var(--ink);
+  color: var(--lime);
+  box-shadow: 0 2px 6px rgb(45 45 48 / 0.2);
+}
+
+.mapChip {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 24px;
+  padding-inline: 9px;
+  border-radius: 999px;
+  background: var(--card-strong);
+  box-shadow: 0 2px 6px rgb(45 45 48 / 0.12);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.mapChip .tabular {
+  font-weight: 600;
+}
