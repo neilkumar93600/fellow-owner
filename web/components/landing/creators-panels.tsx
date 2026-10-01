@@ -124,7 +124,7 @@ export function BriefingScreen() {
     <div className={styles.screen}>
       <ScreenHeader
         title={`Good morning, ${creator.firstName}`}
-        subtitle="Here is what your AI found overnight."
+        subtitle="What your AI found overnight."
       />
 
       <div className={styles.brief}>
@@ -204,7 +204,7 @@ export function BriefingScreen() {
 export function InboxScreen() {
   return (
     <div className={styles.screen}>
-      <ScreenHeader title="Inbox" subtitle="Every pitch, sorted by fit, with the reason." />
+      <ScreenHeader title="Inbox" subtitle="Every pitch sorted by fit, with its reason." />
 
       <div className={styles.tabBar}>
         {INBOX_TABS.map((tab) => (

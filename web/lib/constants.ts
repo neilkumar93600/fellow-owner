@@ -11,9 +11,9 @@ export function isMarketingPath(pathname: string): boolean {
 /** In-page anchors on the landing page, in scroll order. */
 export const LANDING_NAV = [
   { href: '/#problem', label: 'The problem' },
-  { href: '/#how-it-works', label: 'How it works' },
   { href: '/#creators', label: 'For creators' },
   { href: '/#fans', label: 'For fans' },
+  { href: '/#how-it-works', label: 'How it works' },
   { href: '/#faq', label: 'FAQ' },
 ] as const;
 

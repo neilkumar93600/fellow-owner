@@ -45,7 +45,7 @@ export interface InboxRow {
 
 /** One-line AI summaries for the five best non-spam pitches in the demo inbox. */
 const SUMMARIES: Record<string, { summary: string; status: InboxStatus }> = {
-  m1: { summary: 'Gym-log app, seeks a designer', status: 'shortlisted' },
+  m1: { summary: 'Gym-log app, needs a designer', status: 'shortlisted' },
   m2: { summary: 'Paid co-host, 4 episodes', status: 'new' },
   m3: { summary: 'Angel asking about a fund', status: 'new' },
   m10: { summary: 'Thumbnails for demo day', status: 'shortlisted' },

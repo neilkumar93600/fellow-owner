@@ -14,12 +14,15 @@ import { formatNumber } from './creators-data';
  *  - CreatorsClicks: ticks the click count up once when it comes into view.
  */
 
-const DESKTOP = '(min-width: 1024px)';
+const DESKTOP = '(min-width: 1200px)';
 const REDUCE = '(prefers-reduced-motion: reduce)';
 
 interface SceneApi {
-  /** Distance of slot `index` from the viewport centre: 0 centred, 1 off-screen. */
-  report: (index: number, distance: number) => void;
+  /**
+   * Slot `index` reports its distance from the viewport centre (0 centred, 1 off-screen) and how far
+   * it has passed through the viewport (0..1), which fills its step's progress bar.
+   */
+  report: (index: number, distance: number, progress: number) => void;
 }
 
 const SceneContext = createContext<SceneApi | null>(null);
@@ -45,13 +48,20 @@ export function CreatorsScene({
   children: React.ReactNode;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const store = useRef({ distances: [] as number[], active: -1, steps: [] as HTMLElement[] });
+  const store = useRef({
+    distances: [] as number[],
+    active: -1,
+    steps: [] as HTMLElement[],
+    fills: [] as (HTMLElement | null)[],
+  });
 
   const api = useMemo<SceneApi>(
     () => ({
-      report(index, distance) {
+      report(index, distance, progress) {
         const state = store.current;
         state.distances[index] = distance;
+        const fill = state.fills[index];
+        if (fill) fill.style.transform = `scaleX(${progress.toFixed(3)})`;
         let best = -1;
         let bestDistance = Number.POSITIVE_INFINITY;
         state.distances.forEach((value, i) => {
@@ -73,6 +83,7 @@ export function CreatorsScene({
     if (!root) return;
     const state = store.current;
     state.steps = Array.from(root.querySelectorAll<HTMLElement>('[data-creators-step]'));
+    state.fills = state.steps.map((step) => step.querySelector<HTMLElement>('[data-step-fill]'));
     setActiveStep(state.steps, Math.max(0, state.active));
     root.setAttribute('data-scene', 'ready');
 
@@ -187,7 +198,7 @@ export function CreatorsSlot({
       // d: 1 entering at the bottom, 0 centred, -1 leaving at the top.
       const d = 1 - 2 * progress;
       const distance = Math.abs(d);
-      scene?.report(index, distance);
+      scene?.report(index, distance, progress);
 
       const state = live.current;
       const el = tiltRef.current;
@@ -254,7 +265,7 @@ export function CreatorsClicks({ value, className }: { value: number; className?
         };
         frame = requestAnimationFrame(tick);
       },
-      { threshold: 1, rootMargin: '0px 0px -18% 0px' },
+      { threshold: 0.5, rootMargin: '0px 0px -8% 0px' },
     );
     observer.observe(el);
     return () => {

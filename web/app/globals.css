@@ -21,6 +21,10 @@
   --ink-muted: #6e6e73;
   --ink-faint: #9a9aa0;
   --line: #e5e5e8;
+  /* Hairlines that must read on the grey page (DESIGN.md line-row). */
+  --line-row: #d4d4d8;
+  /* Secondary text that keeps AA on tints, glass and the shell (DESIGN.md Iron Grey). */
+  --ink-soft: #5e5e62;
   --table-head: #e9e9eb;
   --lime: #e8fa8b;
   --peach: #fff3e3;
@@ -40,6 +44,10 @@
   --info-bg: #ddf5f8;
   --info-ink: #0e7490;
   --danger: #ef4444;
+
+  /* Radii as runtime variables for CSS modules (the @theme inline copies are compile-time only). */
+  --radius-shell: 40px;
+  --radius-card: 28px;
 
   /* Motion: state changes only, ease out, no bounce. */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
@@ -98,6 +106,8 @@
   --color-ink-muted: var(--ink-muted);
   --color-ink-faint: var(--ink-faint);
   --color-line: var(--line);
+  --color-line-row: var(--line-row);
+  --color-ink-soft: var(--ink-soft);
   --color-table-head: var(--table-head);
   --color-lime: var(--lime);
   --color-peach: var(--peach);
@@ -318,6 +328,34 @@
   .tabular {
     font-variant-numeric: tabular-nums;
   }
+}
+
+/* Progressive reveal (components/landing/reveal.tsx). Without JavaScript nothing is ever hidden. */
+[data-reveal],
+[data-reveal-group] [data-reveal-item] {
+  transition:
+    opacity 600ms var(--ease-out-quart) var(--reveal-delay, 0s),
+    transform 600ms var(--ease-out-quart) var(--reveal-delay, 0s);
+}
+[data-reveal="pending"],
+[data-reveal-group="pending"] [data-reveal-item] {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(2) {
+  --reveal-delay: 80ms;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(3) {
+  --reveal-delay: 160ms;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(4) {
+  --reveal-delay: 240ms;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(5) {
+  --reveal-delay: 320ms;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(n + 6) {
+  --reveal-delay: 400ms;
 }
 
 @media (prefers-reduced-motion: reduce) {

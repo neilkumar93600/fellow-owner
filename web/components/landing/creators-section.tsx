@@ -56,6 +56,9 @@ export function CreatorsSection() {
                             <span className="sr-only">:</span>
                           </span>
                           <span className={styles.stepDetail}>{step.detail}</span>
+                          <span className={styles.stepBar} aria-hidden="true">
+                            <span data-step-fill />
+                          </span>
                         </span>
                       </a>
                     </li>

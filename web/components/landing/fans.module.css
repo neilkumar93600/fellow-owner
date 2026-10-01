@@ -1,0 +1,846 @@
+/*
+ * For fans (landing brief v2, part 6): the peach field, the step list and the CSS 3D phone.
+ *
+ * One DOM, four modes (data-mode on .root, set by fans-stage.tsx):
+ *  - static (server, no JS) and swipe (< 768px): the phone sits still with a slight tilt; under 768px its
+ *    screens are a horizontal snap row and the step list is a one-at-a-time caption above it.
+ *  - pin (>= 768px, motion allowed): the scene is tall and the stage sticks for 100svh. The phone pose, the
+ *    step hairlines and the screen beats are written per frame from refs; the screen swap is a crossfade with
+ *    a 24px slide on transform and opacity only.
+ *  - tabs (>= 768px, reduced motion): the same two-column layout without the pin; the steps switch screens.
+ */
+
+.section {
+  --inset: 8px;
+  --gutter: 20px;
+  --ink-soft: #5e5e62;
+  --line-strong: #bdbdc2;
+
+  position: relative;
+  padding: var(--inset);
+  background: var(--page);
+}
+
+@media (min-width: 768px) {
+  .section {
+    --inset: 12px;
+    --gutter: 32px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section {
+    --inset: 16px;
+    --gutter: 40px;
+  }
+}
+
+/* The section's color field: full bleed inside the page inset, shell corners. */
+/* overflow: clip (not hidden) keeps the disc and the phone's 3D overhang inside without breaking sticky. */
+.field {
+  position: relative;
+  overflow: clip;
+  border-radius: 32px;
+  background: var(--peach);
+  padding-block: 72px 28px;
+}
+
+@media (min-width: 768px) {
+  .field {
+    border-radius: 40px;
+    padding-block: 112px 40px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .field {
+    padding-block: 152px 48px;
+  }
+}
+
+.inner {
+  max-width: calc(1280px + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ---------- Heading ---------- */
+
+.head {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .head {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: 48px;
+    align-items: end;
+  }
+}
+
+.title {
+  margin-top: 20px;
+  color: var(--ink);
+}
+
+.titleLine {
+  display: block;
+}
+
+.lead {
+  max-width: 40ch;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+@media (min-width: 1024px) {
+  .headSide {
+    padding-bottom: 10px;
+  }
+}
+
+/* ---------- Stage ---------- */
+
+.scene {
+  position: relative;
+}
+
+.stage {
+  max-width: calc(1280px + 2 * var(--gutter));
+  margin-inline: auto;
+  padding: 40px var(--gutter) 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  order: 1;
+}
+
+.steps {
+  order: 2;
+}
+
+.device {
+  order: 3;
+}
+
+.dots {
+  order: 4;
+}
+
+.callout {
+  order: 5;
+}
+
+@media (min-width: 768px) {
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 1fr auto auto auto 1fr;
+    grid-template-areas:
+      ". device"
+      "label device"
+      "steps device"
+      "callout device"
+      ". device";
+    column-gap: 40px;
+    padding-top: 64px;
+  }
+
+  .label {
+    grid-area: label;
+  }
+
+  .steps {
+    grid-area: steps;
+  }
+
+  .callout {
+    grid-area: callout;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stage {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: 48px;
+  }
+}
+
+.root[data-mode="pin"] .scene {
+  height: 280vh;
+}
+
+@media (min-width: 1024px) {
+  .root[data-mode="pin"] .scene {
+    height: 320vh;
+  }
+}
+
+.root[data-mode="pin"] .stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  padding-block: 96px 28px;
+}
+
+@media (max-height: 780px) {
+  .root[data-mode="pin"] .stage {
+    padding-block: 84px 16px;
+  }
+}
+
+/* ---------- Demo label ---------- */
+
+.demoLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.demoChip {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: 10px;
+  border-radius: 999px;
+  background: var(--card-strong);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Steps ---------- */
+
+.steps {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  column-gap: 16px;
+  row-gap: 6px;
+  padding-block: 18px 20px;
+}
+
+.rule {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: rgb(45 45 48 / 0.12);
+}
+
+.fill {
+  position: absolute;
+  inset: -0.5px 0 auto;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.step[data-state="active"] .fill {
+  transform: scaleX(1);
+}
+
+.root[data-mode="pin"] .fill {
+  transition: none;
+}
+
+.stepHead {
+  grid-column: 1 / -1;
+  margin: 0;
+  font: inherit;
+}
+
+.stepBtn {
+  display: grid;
+  width: 100%;
+  transform-origin: left center;
+  transition: transform var(--dur-fast) var(--ease-out-quart);
+  grid-template-columns: 40px minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.stepBtn:active {
+  transform: scale(0.98);
+}
+
+/* The whole row is the target. */
+.stepBtn::after {
+  content: "";
+  position: absolute;
+  inset: 0 -12px;
+  border-radius: 20px;
+}
+
+.stepBtn:focus-visible {
+  outline: none;
+}
+
+.stepBtn:focus-visible::after {
+  outline: 2px solid var(--purple);
+  outline-offset: 0;
+}
+
+.num {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--card-strong);
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition:
+    background-color var(--dur-slow) var(--ease-out-quart),
+    color var(--dur-slow) var(--ease-out-quart);
+}
+
+.step[data-state="active"] .num {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+.stepTitle {
+  color: var(--ink-muted);
+  font-size: clamp(1.375rem, 0.9rem + 0.9vw, 1.875rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  transition: color var(--dur-slow) var(--ease-out-quart);
+}
+
+.step[data-state="active"] .stepTitle,
+.stepBtn:hover .stepTitle {
+  color: var(--ink);
+}
+
+.stepLine {
+  grid-column: 2;
+  max-width: 46ch;
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 1rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+  transition: color var(--dur-slow) var(--ease-out-quart);
+}
+
+.step[data-state="active"] .stepLine {
+  color: var(--ink-soft);
+}
+
+.steps::after {
+  content: "";
+  display: block;
+  height: 1px;
+  background: rgb(45 45 48 / 0.12);
+}
+
+/* Short laptop screens (1280 x 720, 1366 x 768): the pinned column has to fit in one viewport. */
+@media (max-height: 820px) and (min-width: 768px) {
+  .steps {
+    margin-top: 14px;
+  }
+
+  .step {
+    row-gap: 4px;
+    padding-block: 12px 14px;
+  }
+
+  .stepTitle {
+    font-size: clamp(1.25rem, 0.9rem + 0.5vw, 1.5rem);
+  }
+
+  .stepLine {
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .num {
+    width: 36px;
+    height: 36px;
+  }
+
+  .callout {
+    margin-top: 20px;
+  }
+
+  .calloutText {
+    grid-template-columns: 40px minmax(0, 1fr);
+    padding: 12px 16px 12px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+  }
+
+  .calloutTile {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+}
+
+/* Phones: one step at a time, as a caption over the phone (stacked in one cell so nothing shifts). */
+@media (max-width: 767.98px) {
+  .steps {
+    display: grid;
+    margin-top: 16px;
+  }
+
+  .steps::after,
+  .rule {
+    display: none;
+  }
+
+  .step {
+    grid-area: 1 / 1;
+    padding-block: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-slow) var(--ease-out-quart);
+  }
+
+  .step[data-state="active"] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .stepTitle {
+    color: var(--ink);
+    font-size: 1.5rem;
+  }
+
+  .stepLine {
+    color: var(--ink-soft);
+    font-size: 0.9375rem;
+  }
+
+  .stepBtn {
+    cursor: default;
+  }
+}
+
+/* ---------- Callout ---------- */
+
+.callout {
+  margin-top: 28px;
+}
+
+@media (min-width: 768px) {
+  .callout {
+    margin-top: 32px;
+  }
+}
+
+.calloutText {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: center;
+  max-width: 520px;
+  margin: 0;
+  padding: 16px 20px 16px 16px;
+  border-radius: 24px;
+  background: var(--card-strong);
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.calloutTile {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--peach-tile);
+  color: var(--orange);
+}
+
+.calloutStrong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---------- Pagination dots (phones) ---------- */
+
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+@media (min-width: 768px) {
+  .dots {
+    display: none;
+  }
+}
+
+.dot {
+  transition: transform var(--dur-fast) var(--ease-out-quart);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+}
+
+.dot::before {
+  content: "";
+  width: 24px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--line-strong);
+  transform: scaleX(0.3333);
+  transition:
+    transform var(--dur-slow) var(--ease-out-quart),
+    background-color var(--dur-slow) var(--ease-out-quart);
+}
+
+.dot:active {
+  transform: scale(0.92);
+}
+
+.dot[aria-current="step"]::before {
+  background: var(--ink);
+  transform: scaleX(1);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: -4px;
+}
+
+/* ---------- Device ---------- */
+
+.device {
+  /* Phone height drives everything else, including the screen's em size. */
+  --ph: min(
+    clamp(480px, calc(100svh - 240px), 620px),
+    calc((100vw - 2 * var(--inset) - 2 * var(--gutter) - 20px) / 0.4615)
+  );
+  --pw: calc(var(--ph) * 0.4615);
+  --pr: calc(var(--ph) * 0.066);
+  --pb: calc(var(--ph) * 0.0145);
+  --pd: 12px;
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-top: 24px;
+  padding-block: 12px 28px;
+  perspective: 1400px;
+  isolation: isolate;
+}
+
+@media (min-width: 768px) {
+  .device {
+    --ph: clamp(520px, calc(100svh - 176px), 740px);
+
+    grid-area: device;
+    align-self: center;
+    margin-top: 0;
+    padding-block: 0;
+  }
+
+  .root[data-mode="pin"] .device {
+    --ph: clamp(440px, calc(100svh - 168px), 780px);
+
+    height: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-height: 780px) {
+  .root[data-mode="pin"] .device {
+    --ph: clamp(440px, calc(100svh - 128px), 780px);
+  }
+}
+
+/* A flat Apricot Tile disc behind the phone gives the object a place to sit. */
+.disc {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -2;
+  width: min(calc(var(--ph) * 0.94), calc(100% + 48px));
+  aspect-ratio: 1;
+  margin: calc(min(calc(var(--ph) * 0.94), calc(100% + 48px)) / -2) 0 0
+    calc(min(calc(var(--ph) * 0.94), calc(100% + 48px)) / -2);
+  border-radius: 50%;
+  background: var(--peach-tile);
+}
+
+@media (max-width: 767.98px) {
+  .disc {
+    width: calc(var(--ph) * 0.86);
+    margin: calc(var(--ph) * -0.43) 0 0 calc(var(--ph) * -0.43);
+  }
+}
+
+/* Contact shadow on the field, warm so it reads as light on peach rather than grey dirt. */
+.floor {
+  position: absolute;
+  left: 50%;
+  bottom: calc(50% - var(--ph) / 2 - 22px);
+  z-index: -1;
+  width: calc(var(--pw) * 0.9);
+  height: 44px;
+  margin-left: calc(var(--pw) * -0.45);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(120 72 18 / 0.2), rgb(120 72 18 / 0));
+}
+
+@media (max-width: 767.98px) {
+  .floor {
+    bottom: 6px;
+  }
+}
+
+.phone {
+  position: relative;
+  width: var(--pw);
+  height: var(--ph);
+  transform-style: preserve-3d;
+  transform: rotateX(4deg) rotateY(-10deg) rotateZ(-1deg);
+}
+
+.root[data-mode="pin"] .phone {
+  transform: translate3d(0, 96px, 0) rotateX(15deg) rotateY(-38deg) rotateZ(-1.5deg);
+  will-change: transform;
+}
+
+.root[data-mode="tabs"] .phone {
+  transform: rotateX(3deg) rotateY(-8deg);
+}
+
+/* Reduced motion: the phone faces you square on; nothing turns, the steps just swap the screen. */
+@media (prefers-reduced-motion: reduce) {
+  .root .phone {
+    transform: none;
+  }
+}
+
+/* Side thickness: two plates behind the face, a lit rim and the dark back. */
+.phone::before,
+.phone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--pr);
+}
+
+.phone::before {
+  background: #4a4a50;
+  transform: translateZ(calc(var(--pd) * -0.5));
+}
+
+.phone::after {
+  background: #1d1d20;
+  transform: translateZ(calc(var(--pd) * -1));
+}
+
+.key {
+  position: absolute;
+  width: 4px;
+  border-radius: 2px;
+  background: #3a3a3f;
+  transform: translateZ(calc(var(--pd) * -0.5));
+}
+
+.keyAction,
+.keyUp,
+.keyDown {
+  left: -3px;
+}
+
+.keyPower {
+  right: -3px;
+  top: 25%;
+  height: 13%;
+}
+
+.keyAction {
+  top: 17%;
+  height: 4.5%;
+}
+
+.keyUp {
+  top: 25%;
+  height: 8%;
+}
+
+.keyDown {
+  top: 35%;
+  height: 8%;
+}
+
+.body {
+  position: absolute;
+  inset: 0;
+  padding: var(--pb);
+  border-radius: var(--pr);
+  background: var(--ink);
+  box-shadow:
+    inset 0 0 0 1.5px #6a6a70,
+    inset 0 0 0 3px #232326;
+}
+
+.screen {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: calc(var(--pr) - var(--pb));
+  background: var(--shell);
+  /* Screen type scale: every size inside the screens is in em of this. */
+  font-size: calc(var(--ph) / 47);
+  isolation: isolate;
+}
+
+.status {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3.3em;
+  padding: 0.35em 2.1em 0 2.4em;
+  color: var(--ink);
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  pointer-events: none;
+}
+
+.statusIcons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.statusIcons svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.statusIcons svg:last-child {
+  width: 1.45em;
+  height: 1.45em;
+}
+
+.island {
+  position: absolute;
+  top: 0.8em;
+  left: 50%;
+  z-index: 4;
+  width: 7.4em;
+  height: 2.1em;
+  margin-left: -3.7em;
+  border-radius: 999px;
+  background: #0b0b0c;
+}
+
+.home {
+  position: absolute;
+  bottom: 0.55em;
+  left: 50%;
+  z-index: 4;
+  width: 9em;
+  height: 0.32em;
+  margin-left: -4.5em;
+  border-radius: 999px;
+  background: rgb(45 45 48 / 0.9);
+}
+
+.glare {
+  position: absolute;
+  inset: 0 -60%;
+  z-index: 5;
+  background: linear-gradient(
+    112deg,
+    rgb(255 255 255 / 0) 38%,
+    rgb(255 255 255 / 0.14) 48%,
+    rgb(255 255 255 / 0) 58%
+  );
+  pointer-events: none;
+}
+
+/* Screens: a swipe row on phones, a crossfading stack from 768. */
+.screens {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+}
+
+.screens::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@media (min-width: 768px) {
+  .screens {
+    display: grid;
+    overflow: hidden;
+  }
+
+  .slide {
+    grid-area: 1 / 1;
+    transition:
+      opacity 450ms var(--ease-out-quart),
+      transform 450ms var(--ease-out-quart);
+  }
+
+  .slide[data-pos="before"] {
+    opacity: 0;
+    transform: translate3d(-24px, 0, 0);
+  }
+
+  .slide[data-pos="after"] {
+    opacity: 0;
+    transform: translate3d(24px, 0, 0);
+  }
+}
+
+/* Per-frame layers in the pinned scene stay on the compositor. */
+.root[data-mode="pin"] .disc,
+.root[data-mode="pin"] .floor,
+.root[data-mode="pin"] .glare {
+  will-change: transform;
+}

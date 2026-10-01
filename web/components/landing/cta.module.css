@@ -1,0 +1,853 @@
+/*
+ * Demo CTA (landing brief v2, part 10): the lime field, five clay orbs and the judge-path timeline.
+ *
+ * Phone: stacked; the orbs sit in a band above the eyebrow; the timeline runs down a vertical line.
+ * 768+: the orbs move beside the headline. 1024+: the timeline turns horizontal, six equal stops.
+ *
+ * Motion (cta-motion.tsx sets the attributes): blocks that start below the fold get data-armed and play
+ * when data-inview lands. Without JavaScript, or under reduced motion, nothing is armed and everything
+ * renders complete and still. The orbs' bob pauses on data-play="off"; --lx / --ly carry the cursor lean.
+ */
+
+.section {
+  /* Ink-soft tinted toward the lime: 7.7:1 on the field (ink-muted would be 4.46:1). */
+  --cta-ink-soft: #4a4c33;
+  --cta-rule: rgb(45 45 48 / 0.16);
+  --ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
+  --inset: 8px;
+  --gutter: 16px;
+  --gap: 0px;
+
+  position: relative;
+  padding: var(--inset);
+}
+
+@media (min-width: 768px) {
+  .section {
+    --inset: 12px;
+    --gutter: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    --gap: 20px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .section {
+    --inset: 16px;
+    --gutter: 40px;
+    --gap: 32px;
+  }
+}
+
+/* The lime field: full bleed inside the page inset, shell corners, a soft light from the top left. */
+.field {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: 32px;
+  padding-block: 40px 32px;
+  background:
+    radial-gradient(52% 46% at 0% 0%, rgb(255 255 255 / 0.42), transparent 72%),
+    radial-gradient(60% 55% at 100% 100%, rgb(212 238 98 / 0.55), transparent 74%), var(--lime);
+}
+
+@media (min-width: 768px) {
+  .field {
+    border-radius: 40px;
+    padding-block: 120px 56px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .field {
+    padding-block: 152px 72px;
+  }
+}
+
+.inner {
+  position: relative;
+  max-width: calc(1280px + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ---------- Heading ---------- */
+
+.head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Phone: room for the orb band above the eyebrow. */
+  padding-top: 148px;
+}
+
+@media (min-width: 768px) {
+  .head {
+    padding-top: 0;
+  }
+}
+
+.head > :not(.orbs) {
+  position: relative;
+  z-index: 1;
+}
+
+/* "See it in three" is about 5.35em wide: phones fit it to the field on one line; larger screens step up to 128px. */
+.title {
+  margin-top: 24px;
+  color: var(--ink);
+  font-size: max(3rem, calc((100vw - 3rem) / 5.6));
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: clamp(5.25rem, 1rem + 9vw, 8rem);
+  }
+}
+
+/* Each line is a mask; padding-bottom keeps descenders and the full stop inside it. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.lineInner {
+  display: block;
+}
+
+.lead {
+  margin-top: 28px;
+  max-width: 30ch;
+  color: var(--cta-ink-soft);
+  text-wrap: pretty;
+}
+
+/* The second sentence always starts a line; on desktop each sentence gets one line. */
+.leadLine {
+  display: block;
+  text-wrap: balance;
+}
+
+@media (min-width: 1024px) {
+  .lead {
+    max-width: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .lead {
+    margin-top: 36px;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 32px;
+}
+
+@media (min-width: 480px) {
+  .actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .actions {
+    margin-top: 40px;
+  }
+}
+
+.btn {
+  height: 56px;
+  padding-inline: 28px;
+  font-size: 1rem;
+}
+
+/* ---------- Orbs ---------- */
+
+.orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Each orb: --s size, --t top, --r right (all scaled by --k), --depth for the lean, and its bob timing. */
+.orb {
+  --k: 1;
+  --size: calc(var(--s) * var(--k));
+
+  position: absolute;
+  top: calc(var(--t) * var(--k));
+  right: calc(var(--r) * var(--k));
+  width: var(--size);
+  height: var(--size);
+}
+
+.lean,
+.bob,
+.ball {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.lean {
+  transform: translate3d(
+    calc(var(--lx, 0) * var(--depth) * 1px),
+    calc(var(--ly, 0) * var(--depth) * 1px),
+    0
+  );
+}
+
+.bob {
+  animation: cta-bob var(--dur) var(--ease-in-out-sine) var(--bob-delay) infinite alternate;
+}
+
+@keyframes cta-bob {
+  from {
+    transform: translate3d(0, calc(var(--amp) * -1), 0);
+  }
+  to {
+    transform: translate3d(0, var(--amp), 0);
+  }
+}
+
+.field[data-play="off"] .bob {
+  animation-play-state: paused;
+}
+
+/* Matte clay: one soft light from the top left, a shaded side, lime bounce on the rim, a soft cast shadow. */
+.ball {
+  border-radius: 50%;
+  box-shadow:
+    inset calc(var(--size) * -0.07) calc(var(--size) * -0.09) calc(var(--size) * 0.18) var(--shade),
+    inset calc(var(--size) * -0.02) calc(var(--size) * -0.025) calc(var(--size) * 0.04)
+    rgb(232 250 139 / 0.45),
+    calc(var(--size) * 0.09) calc(var(--size) * 0.15) calc(var(--size) * 0.22)
+    calc(var(--size) * -0.05) rgb(92 110 0 / 0.26);
+}
+
+/* Softer than the button purple, so the "Enter as creator" pill stays the strongest purple on the field. */
+.ballPurple {
+  --shade: rgb(76 29 149 / 0.3);
+  background: radial-gradient(
+    circle at 32% 28%,
+    #f7f3ff 0%,
+    #ddd0ff 18%,
+    #b89cfb 50%,
+    #9466f6 82%,
+    #7f4ae8 100%
+  );
+}
+
+.ballWhite {
+  --shade: rgb(45 45 48 / 0.14);
+  background: radial-gradient(
+    circle at 32% 28%,
+    #ffffff 0%,
+    #fcfcfd 28%,
+    #ebebef 62%,
+    #cfcfd6 100%
+  );
+}
+
+.ballAqua {
+  --shade: rgb(14 116 144 / 0.22);
+  background: radial-gradient(
+    circle at 32% 28%,
+    #f7feff 0%,
+    #d5f5f8 22%,
+    #95e0e8 58%,
+    #43bccb 100%
+  );
+}
+
+.ballPeach {
+  --shade: rgb(164 90 0 / 0.2);
+  background: radial-gradient(
+    circle at 32% 28%,
+    #fffaf3 0%,
+    #ffecd2 24%,
+    #ffd29a 60%,
+    #f2a93b 100%
+  );
+}
+
+/* Phone: a band above the eyebrow. */
+.oPurple {
+  --s: 140px;
+  --t: -12px;
+  --r: -44px;
+  --depth: 1;
+  --dur: 7.2s;
+  --bob-delay: -1.2s;
+  --amp: 7px;
+}
+
+.oWhite {
+  --s: 70px;
+  --t: 58px;
+  --r: 104px;
+  --depth: 0.55;
+  --dur: 6.4s;
+  --bob-delay: -3s;
+  --amp: 5px;
+}
+
+.oAqua {
+  --s: 42px;
+  --t: 10px;
+  --r: 132px;
+  --depth: 0.8;
+  --dur: 5.6s;
+  --bob-delay: -2s;
+  --amp: 5px;
+}
+
+.oPeach {
+  --s: 92px;
+  --t: 20px;
+  --r: 196px;
+  --depth: 0.9;
+  --dur: 8s;
+  --bob-delay: -4.4s;
+  --amp: 6px;
+}
+
+.oDot {
+  --s: 26px;
+  --t: 94px;
+  --r: 300px;
+  --depth: 0.4;
+  --dur: 4.8s;
+  --bob-delay: -0.6s;
+  --amp: 4px;
+}
+
+/* Tablet: down the right edge, clear of the headline, the lead and the buttons. */
+@media (min-width: 768px) {
+  .oPurple {
+    --s: 172px;
+    --t: -76px;
+    --r: -44px;
+    --amp: 8px;
+  }
+
+  .oWhite {
+    --s: 96px;
+    --t: 112px;
+    --r: 84px;
+  }
+
+  .oPeach {
+    --s: 128px;
+    --t: 196px;
+    --r: -8px;
+  }
+
+  .oAqua {
+    --s: 60px;
+    --t: 300px;
+    --r: 142px;
+  }
+
+  .oDot {
+    --s: 32px;
+    --t: 404px;
+    --r: 252px;
+  }
+}
+
+/* Desktop: a loose cluster right of the headline. Later orbs sit in front; their cast shadows fall on the
+   ones behind, which is what gives the group its depth. */
+@media (min-width: 1024px) {
+  .orb {
+    --k: 0.8;
+  }
+
+  .oPurple {
+    --s: 296px;
+    --t: -40px;
+    --r: 8px;
+    --amp: 10px;
+  }
+
+  .oWhite {
+    --s: 148px;
+    --t: 196px;
+    --r: 252px;
+    --amp: 7px;
+  }
+
+  .oPeach {
+    --s: 188px;
+    --t: 278px;
+    --r: 40px;
+    --amp: 9px;
+  }
+
+  .oAqua {
+    --s: 88px;
+    --t: 376px;
+    --r: 226px;
+    --amp: 8px;
+  }
+
+  .oDot {
+    --s: 44px;
+    --t: 4px;
+    --r: 372px;
+    --amp: 6px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .orb {
+    --k: 1;
+  }
+}
+
+/* ---------- Judge path ---------- */
+
+.path {
+  position: relative;
+  margin-top: 72px;
+}
+
+@media (min-width: 768px) {
+  .path {
+    margin-top: 104px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .path {
+    margin-top: 128px;
+  }
+}
+
+.pathHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 20px;
+  row-gap: 6px;
+  padding-top: 28px;
+  border-top: 1px solid var(--cta-rule);
+}
+
+.pathTitle {
+  color: var(--ink);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 2rem;
+  letter-spacing: -0.015em;
+}
+
+.pathNote {
+  color: var(--cta-ink-soft);
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.track {
+  margin-top: 36px;
+}
+
+.stops {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Vertical (phone, tablet): the dot on the left, its segment running down to the next stop. */
+.stop {
+  --seg-gap: 6px;
+  /* Height of a group label row (26px chip + 14px gap). */
+  --group-h: 40px;
+  --lead: 0px;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  column-gap: 16px;
+  padding-bottom: 32px;
+}
+
+.stop[data-group] {
+  --lead: var(--group-h);
+}
+
+.stop::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--lead) + 44px + var(--seg-gap));
+  bottom: var(--seg-gap);
+  left: 21px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform-origin: top;
+}
+
+/* The switch from Mira's dashboard to the fan side: dashed, and it runs past the next group label. */
+.stop[data-switch]::before {
+  bottom: calc(var(--seg-gap) - var(--group-h));
+  background: repeating-linear-gradient(to bottom, var(--ink) 0 5px, transparent 5px 10px);
+}
+
+.group {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 10px;
+  height: 26px;
+  margin-bottom: 14px;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.av {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.avLavender {
+  background: var(--lavender-tile);
+}
+
+.avPeach {
+  background: var(--peach-tile);
+}
+
+.dot {
+  display: grid;
+  grid-column: 1;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--card-strong);
+  box-shadow: 0 1px 2px rgb(92 110 0 / 0.12);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stopBody {
+  display: flex;
+  grid-column: 2;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  /* Centers the name's first line on the 44px dot. */
+  padding-top: 9px;
+}
+
+.stopName {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  color: var(--ink);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.625rem;
+  letter-spacing: -0.01em;
+}
+
+.secs {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: 9px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.62);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stopDetail {
+  max-width: 40ch;
+  color: var(--cta-ink-soft);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  text-wrap: pretty;
+}
+
+.finish {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding-inline: 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--lime);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.finishLabel {
+  color: rgb(232 250 139 / 0.72);
+  font-weight: 500;
+}
+
+/* Tablet: name and detail share a row, so the six stops read like a short schedule. */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .stopBody {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    column-gap: 24px;
+    align-items: baseline;
+  }
+
+  .stopDetail {
+    max-width: 44ch;
+  }
+}
+
+/* Horizontal (1024+): six equal stops on one line; the total moves up beside the path title. */
+@media (min-width: 1024px) {
+  .pathHead {
+    padding-right: 160px;
+  }
+
+  .finish {
+    position: absolute;
+    top: 20px;
+    right: 0;
+  }
+
+  .track {
+    /* Room for the group labels above the line. */
+    margin-top: 92px;
+  }
+
+  .stops {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    column-gap: var(--gap);
+  }
+
+  .stop {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 0;
+  }
+
+  .stop::before,
+  .stop[data-switch]::before {
+    top: 21px;
+    right: calc(var(--seg-gap) - var(--gap));
+    bottom: auto;
+    left: calc(44px + var(--seg-gap));
+    width: auto;
+    height: 2px;
+    transform-origin: left;
+  }
+
+  .stop[data-switch]::before {
+    background: repeating-linear-gradient(to right, var(--ink) 0 5px, transparent 5px 10px);
+  }
+
+  /* The last stop's line runs to the edge and ends in a small cap. */
+  .stop:last-child::before {
+    right: 4px;
+  }
+
+  .stop:last-child::after {
+    content: "";
+    position: absolute;
+    top: 18px;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--ink);
+    /* Lands as the last segment finishes drawing. */
+    transition: opacity 200ms var(--ease-out-quart) 1400ms;
+  }
+
+  .group {
+    position: absolute;
+    bottom: calc(100% + 20px);
+    left: 0;
+    width: 100%;
+    margin: 0;
+  }
+
+  .stop:first-child .group {
+    width: calc(500% + 4 * var(--gap));
+  }
+
+  /* A bracket rule from the label to the end of its stops. */
+  .group::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--cta-rule);
+  }
+
+  .stopBody {
+    padding-top: 0;
+    padding-right: 8px;
+  }
+
+  .stopDetail {
+    max-width: 26ch;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  /* Narrow stops: the seconds chip always takes its own line, so every stop reads the same. */
+  .stopName {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 1.125rem;
+  }
+
+  .stopDetail {
+    font-size: 0.9375rem;
+    line-height: 1.375rem;
+  }
+}
+
+/* ---------- Entrances (armed by cta-motion.tsx; never without JavaScript or under reduced motion) ---------- */
+
+.field [data-cta-reveal="rise"] {
+  transition:
+    opacity 600ms var(--ease-out-quart) var(--d, 0ms),
+    transform 600ms var(--ease-out-quart) var(--d, 0ms);
+}
+
+.field [data-cta-reveal="rise"][data-armed]:not([data-inview]) {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+
+.lineInner {
+  transition: transform 900ms var(--ease-out-expo);
+}
+
+.lineLate {
+  transition-delay: 90ms;
+}
+
+.title[data-armed]:not([data-inview]) .lineInner {
+  transform: translate3d(0, 110%, 0);
+}
+
+.orb {
+  transition:
+    opacity 900ms var(--ease-out-quart) var(--d, 0ms),
+    transform 1100ms var(--ease-out-expo) var(--d, 0ms);
+}
+
+.orb[data-armed]:not([data-inview]) {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0) scale(0.86);
+}
+
+.pathHead,
+.dot,
+.stopBody,
+.group,
+.finish {
+  transition:
+    opacity 500ms var(--ease-out-quart) var(--d, 0ms),
+    transform 500ms var(--ease-out-quart) var(--d, 0ms);
+}
+
+.stop::before {
+  transition: transform 520ms var(--ease-out-quart) calc(280ms + var(--i, 0) * 140ms);
+}
+
+.dot,
+.group {
+  --d: calc(120ms + var(--i, 0) * 140ms);
+}
+
+.stopBody {
+  --d: calc(180ms + var(--i, 0) * 140ms);
+}
+
+.finish {
+  --d: 980ms;
+}
+
+.path[data-armed]:not([data-inview]) :is(.pathHead, .stopBody, .group) {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+}
+
+.path[data-armed]:not([data-inview]) .dot {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.path[data-armed]:not([data-inview]) .stop::before {
+  transform: scaleY(0);
+}
+
+.path[data-armed]:not([data-inview]) .finish,
+.path[data-armed]:not([data-inview]) .stop:last-child::after {
+  opacity: 0;
+}
+
+@media (min-width: 1024px) {
+  .path[data-armed]:not([data-inview]) .stop::before {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bob {
+    animation: none;
+  }
+
+  .field [data-cta-reveal],
+  .lineInner,
+  .orb,
+  .pathHead,
+  .dot,
+  .stopBody,
+  .group,
+  .finish,
+  .stop::before,
+  .stop::after {
+    transition: none;
+  }
+}

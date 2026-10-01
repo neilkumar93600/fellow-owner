@@ -33,11 +33,11 @@ import s from './fans-screens.module.css';
 
 type CardTint = 'peach' | 'lavender' | 'aqua' | 'white';
 
-const TINT_CLASS: Record<CardTint, string> = {
-  peach: s.tPeach!,
-  lavender: s.tLavender!,
-  aqua: s.tAqua!,
-  white: s.tWhite!,
+const TINT_CLASS: Record<CardTint, string | undefined> = {
+  peach: s.tPeach,
+  lavender: s.tLavender,
+  aqua: s.tAqua,
+  white: s.tWhite,
 };
 
 const ICONS: Record<string, LucideIcon> = {
@@ -126,14 +126,14 @@ export function BioScreen() {
           const c = community(slug);
           return (
             <li key={slug} className={cn(s.ccard, TINT_CLASS[c.cardTint])}>
-              <span className={s.tile}>
-                <c.Icon strokeWidth={1.5} />
-              </span>
-              <span className={s.ccardName}>{c.name}</span>
-              <span className={s.ccardFoot}>
-                <span className={cn(s.ccardMembers, 'tabular')}>{c.members} members</span>
+              <span className={s.ccardTop}>
+                <span className={s.tile}>
+                  <c.Icon strokeWidth={1.5} />
+                </span>
                 <span className={s.joinPill}>Join</span>
               </span>
+              <span className={s.ccardName}>{c.name}</span>
+              <span className={cn(s.ccardMembers, 'tabular')}>{c.members} members</span>
             </li>
           );
         })}
@@ -172,7 +172,7 @@ const JOIN_TILES = [
 
 export function JoinScreen() {
   return (
-    <div className={s.join}>
+    <div className={s.join} data-fans-join>
       <div className={s.joinTop}>
         <span className={s.ghost}>
           <ChevronLeft strokeWidth={1.75} />
@@ -222,11 +222,9 @@ export function JoinScreen() {
           })}
         </ul>
 
-        <span className={cn(s.primary, s.confirm)}>
-          Confirm
-          <span className={s.confirmCount}>2 communities</span>
-        </span>
+        <span className={cn(s.primary, s.confirm)}>Confirm</span>
       </div>
+      <p className={s.joinNext}>Next: skills and links, if you like</p>
     </div>
   );
 }
@@ -238,7 +236,7 @@ export function JoinScreen() {
 export function FeedScreen() {
   const builders = community('builders');
   return (
-    <div className={s.feed}>
+    <div className={s.feed} data-fans-feed>
       <div className={cn(s.band, s.tAqua)}>
         <span className={cn(s.tile, s.tileAqua, s.tileLg)}>
           <builders.Icon strokeWidth={1.5} />
@@ -306,6 +304,21 @@ export function FeedScreen() {
           <span className={s.typeChip}>Idea</span>
         </div>
         <p className={s.ideaTitle}>Saturday code club for kids</p>
+        <p className={s.ideaBody}>
+          Builders teach kids to ship a small game in six weekends. Looking for two mentors.
+        </p>
+        <div className={s.signals}>
+          <span className={s.signal}>
+            <ThumbsUp strokeWidth={1.75} />
+            I’d use this
+            <span className={cn(s.signalCount, 'tabular')}>18</span>
+          </span>
+          <span className={s.signal}>
+            <Hammer strokeWidth={1.75} />
+            I’d help build
+            <span className={cn(s.signalCount, 'tabular')}>7</span>
+          </span>
+        </div>
       </article>
 
       <span className={s.fab}>
@@ -377,8 +390,19 @@ export function ProjectScreen() {
         </span>
         <span className={s.teamText}>
           <span className={s.teamName}>Team of 3</span>
-          <span className={cn(s.teamMeta, 'tabular')}>41 would use it · 12 would help</span>
+          <span className={s.teamMeta}>Arjun, Kofi and Priya</span>
         </span>
+      </div>
+
+      <div className={s.rowHead}>
+        <p className={s.label}>Comments</p>
+        <p className={cn(s.rowMeta, 'tabular')}>9</p>
+      </div>
+      <div className={s.comment}>
+        <Avatar initials="SI" tint="lavender" className={s.avatarSm} />
+        <p className={s.commentText}>
+          <span className={s.commentName}>Sana Iqbal</span> I’d test it at my gym every Sunday.
+        </p>
       </div>
     </div>
   );
