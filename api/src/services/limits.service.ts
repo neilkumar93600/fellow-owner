@@ -1,7 +1,7 @@
 import { DAILY_CAPS, HOURLY_CAPS, LIMITS } from '@fellow-owners/shared';
 import type { DbOrTx } from '../db/client.js';
 import { addDays, HOUR_MS, hoursAgo, startOfUtcDay } from '../lib/dates.js';
-import { dailyCapReached, rateLimited } from '../lib/errors.js';
+import { type AppError, dailyCapReached, rateLimited } from '../lib/errors.js';
 import type { Repos } from '../repositories/index.js';
 
 /**
@@ -67,6 +67,16 @@ export function createLimitsService(deps: { repos: Repos }) {
       case 'comments':
         return repos.comments.countByAuthorSince(spaceId, membershipId, since, tx);
     }
+  }
+
+  /** The 429 daily_cap_reached error for briefing regenerations. */
+  function regenerationCapError(used: number = LIMITS.briefing.regenerationsPerDay): AppError {
+    const limit = LIMITS.briefing.regenerationsPerDay;
+    const details: CapDetails = { limit, used, resetsAt: nextUtcMidnight().toISOString() };
+    return dailyCapReached(
+      `You've regenerated today's briefing ${limit} times. Try again tomorrow.`,
+      details,
+    );
   }
 
   return {
@@ -157,21 +167,12 @@ export function createLimitsService(deps: { repos: Repos }) {
       return remaining(LIMITS.briefing.regenerationsPerDay, regenerations ?? 0);
     },
 
+    regenerationCapError,
+
     /** 429 daily_cap_reached when today's briefing was already regenerated 5 times. */
     assertRegenerationAllowed(regenerations: number | null | undefined): void {
-      const limit = LIMITS.briefing.regenerationsPerDay;
       const used = regenerations ?? 0;
-      if (used >= limit) {
-        const details: CapDetails = {
-          limit,
-          used,
-          resetsAt: nextUtcMidnight().toISOString(),
-        };
-        throw dailyCapReached(
-          `You've regenerated today's briefing ${limit} times. Try again tomorrow.`,
-          details,
-        );
-      }
+      if (used >= LIMITS.briefing.regenerationsPerDay) throw regenerationCapError(used);
     },
   };
 }

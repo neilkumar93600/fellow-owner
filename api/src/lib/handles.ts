@@ -35,11 +35,13 @@ export function handleBase(input: string): string {
 }
 
 /**
- * Ordered suggestion candidates for a base handle, all valid and not reserved:
- * base_, base.official, base + digits, basehq, thebase, ... Candidates longer than the max are
- * built from a shortened base. The caller filters out taken ones and keeps the first three.
+ * Ordered suggestion candidates for a handle, all valid and not reserved: the cleaned-up base
+ * itself when it differs from the input ("Mira Kapoor" -> mirakapoor), then base_,
+ * base.official, base + digits, basehq, thebase, ... Candidates longer than the max are built
+ * from a shortened base. The caller filters out taken ones and keeps the first three.
  */
 export function handleCandidates(input: string): string[] {
+  const requested = input.trim().toLowerCase();
   const base = handleBase(input);
   if (!base) return [];
   const { max } = LIMITS.handle;
@@ -47,6 +49,7 @@ export function handleCandidates(input: string): string[] {
     `${prefix}${base.slice(0, Math.max(0, max - suffix.length - prefix.length))}${suffix}`;
 
   const raw = [
+    base,
     withAffix('_'),
     withAffix('.official'),
     withAffix('2'),
@@ -59,7 +62,7 @@ export function handleCandidates(input: string): string[] {
   ];
   const out: string[] = [];
   for (const candidate of raw) {
-    if (candidate === base || out.includes(candidate)) continue;
+    if (candidate === requested || out.includes(candidate)) continue;
     if (handleProblem(candidate) === null) out.push(candidate);
   }
   return out;

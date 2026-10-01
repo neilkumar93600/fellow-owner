@@ -454,8 +454,10 @@ export function createPostsService(deps: PostsServiceDeps) {
       const statusChanged = input.status !== undefined && input.status !== post.status;
       if (!contentEdited && !statusChanged) return buildDetail(ctx.space, post, ctx.membership);
 
+      // Triage reruns only when the analyzed text (title + body) changed (05: content_hash).
       const newHash = contentHash(title, body);
-      const reanalyze = newHash !== post.contentHash;
+      const reanalyze =
+        (title !== post.title || body !== post.body) && newHash !== post.contentHash;
       const updated = await db.transaction(async (tx) => {
         const row = await repos.posts.update(
           ctx.space.id,

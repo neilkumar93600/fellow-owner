@@ -430,11 +430,8 @@ export function createBriefingService(deps: BriefingServiceDeps) {
       };
       if (!cached) return present(owner, await repos.digests.upsert(values));
       const row = await repos.digests.replaceCapped(values, LIMITS.briefing.regenerationsPerDay);
-      if (!row) {
-        // Another regenerate took the last slot meanwhile.
-        limits.assertRegenerationAllowed(LIMITS.briefing.regenerationsPerDay);
-        throw notFound('Briefing');
-      }
+      // Null: a concurrent regenerate took the last slot meanwhile.
+      if (!row) throw limits.regenerationCapError();
       return present(owner, row);
     },
 
