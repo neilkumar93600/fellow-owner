@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
-import { ComingSoon } from '@/components/shared/coming-soon';
+import { readAuthRequest } from '@/components/auth/auth-server';
+import { SignUpForm } from '@/components/auth/sign-up-form';
 
-// Placeholder until this screen is built (see docs/03-app-flow.md).
 export const metadata: Metadata = { title: 'Create your account' };
 
-export default function Page() {
-  return (
-    <ComingSoon
-      title="Create your account"
-      description="Name and email, then a 6-digit code. Same step as signing in."
-    />
-  );
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const { returnTo, inAppBrowser } = await readAuthRequest(searchParams);
+  return <SignUpForm returnTo={returnTo} inAppBrowser={inAppBrowser} />;
 }

@@ -1,14 +1,12 @@
 import type { Metadata } from 'next';
-import { ComingSoon } from '@/components/shared/coming-soon';
+import { OnboardingStepper } from '@/components/onboarding/onboarding-stepper';
 
-// Placeholder until this screen is built (see docs/03-app-flow.md).
-export const metadata: Metadata = { title: 'Create your space' };
+// Create your space (03-app-flow §2, F3): handle and name, platforms, communities, taste profile.
+export const metadata: Metadata = {
+  title: 'Create your space',
+  robots: { index: false, follow: false },
+};
 
 export default function Page() {
-  return (
-    <ComingSoon
-      title="Create your space"
-      description="Handle, platforms, communities and your taste profile, in four steps."
-    />
-  );
+  return <OnboardingStepper />;
 }

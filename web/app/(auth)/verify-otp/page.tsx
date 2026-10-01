@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
-import { ComingSoon } from '@/components/shared/coming-soon';
+import { readAuthRequest } from '@/components/auth/auth-server';
+import { OtpForm } from '@/components/auth/otp-form';
 
-// Placeholder until this screen is built (see docs/03-app-flow.md).
-export const metadata: Metadata = { title: 'Enter your code' };
+export const metadata: Metadata = { title: 'Enter your code', robots: { index: false } };
 
-export default function Page() {
-  return <ComingSoon title="Enter your code" description="Type the 6-digit code we emailed you." />;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const { returnTo } = await readAuthRequest(searchParams);
+  return <OtpForm returnTo={returnTo} />;
 }

@@ -1,0 +1,116 @@
+/*
+ * Onboarding ("Create your space"). Scoped tokens from DESIGN.md that globals.css does not carry yet,
+ * plus the solid purple focus ring (DESIGN.md "Focus ring" correction: purple at 40% fails 3:1).
+ */
+.root {
+  --line-field: #8e8e94;
+  --line-strong: #bdbdc2;
+  --danger-deep: #dc2626;
+  --overlay-soft: 0 24px 64px -16px rgba(45, 45, 48, 0.22);
+}
+
+.root :focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+/* Inputs keep the ring and also turn their border purple. */
+.root :is(input, textarea, select):focus-visible {
+  border-color: var(--purple);
+}
+
+/* The handle field: a "/" prefix and a bare input inside one bordered box that takes the ring. */
+.root .bareInput:focus-visible {
+  outline: none;
+}
+.root .handleBox:has(.bareInput:focus-visible) {
+  border-color: var(--purple);
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+/* Visually hidden inputs (tiles, swatches, icon picker) hand their ring to the visible box. */
+.root :is(.tileInput, .choiceInput):focus-visible + * {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+.tileInput,
+.choiceInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* A step's fields arrive with a short fade and an 8px settle (transform and opacity only). */
+.stepEnter {
+  animation: step-enter var(--dur-base) var(--ease-out-quart) both;
+}
+
+@keyframes step-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(8px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The check in a selected tile pops in place: opacity and scale only. */
+.check {
+  transition:
+    opacity var(--dur-fast) var(--ease-out-quart),
+    transform var(--dur-fast) var(--ease-out-quart);
+}
+
+.press {
+  transition:
+    transform var(--dur-fast) var(--ease-out-quart),
+    background-color var(--dur-fast) var(--ease-out-quart),
+    border-color var(--dur-fast) var(--ease-out-quart),
+    color var(--dur-fast) var(--ease-out-quart);
+}
+.press:active {
+  transform: scale(0.98);
+}
+
+/* The phone screen in the preview scrolls on its own on large screens. Thin, quiet scrollbar. */
+.screen {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(45 45 48 / 0.18) transparent;
+  overscroll-behavior: contain;
+}
+
+/* Values that just changed in the preview settle in with a short fade. */
+.fresh {
+  animation: fresh-in var(--dur-slow) var(--ease-out-quart) both;
+}
+
+@keyframes fresh-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepEnter,
+  .fresh {
+    animation: none;
+  }
+  .press:active {
+    transform: none;
+  }
+}
