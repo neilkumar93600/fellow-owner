@@ -5,10 +5,11 @@ Status: draft v0.1 for review · Updated: 2026-10-01
 ## Conventions
 
 - **Root holds five things:** `web/`, `api/`, Docker files, `.github/`, `docs/`. Plus one small `shared/` package (see note 1).
+- **Web has no `src/` folder:** `app/`, `components/`, `hooks/`, `api/` and `lib/` sit at the root of `web/`, next to `proxy.ts`. The `@/*` alias points at `web/`.
 - **Web routes are grouped by who can see them:** `(public)` anyone, `(auth)` sign-in pages, `(legal)` policies, `(dashboard)` signed-in only. Groups never change the URL.
 - **Web components are grouped by reach:** `layout/` (navbar, footer, header, sidebar), `shared/` (used on more than one page), `landing/`, then one folder per page or feature.
 - **`hooks/`** holds the project's custom hooks. **`lib/`** holds flat files only: no subfolder for a single file.
-- **`web/src/api/`** holds one typed client file per backend route group. It is the only place the web app calls the backend.
+- **`web/api/`** holds one typed client file per backend route group. It is the only place the web app calls the backend.
 - **`api/`** is layer-based: `routes -> controllers -> services -> repositories -> db`, wired in `container.ts`. AI, auth and background work each have their own folder.
 - File names are kebab-case. React components export PascalCase names. Backend files carry their layer as a suffix: `posts.routes.ts`, `posts.controller.ts`, `posts.service.ts`, `posts.repo.ts`.
 - `(P1)` / `(P2)` marks files that wait for that priority (see 01-prd).
@@ -42,229 +43,228 @@ fellow-owners/
 
 ```
 web/
-├─ src/
-│  ├─ app/
-│  │  ├─ layout.tsx                     root: Inter, providers, toaster
-│  │  ├─ providers.tsx                  TanStack Query, theme
-│  │  ├─ globals.css                    Tailwind v4 @theme tokens from 04-ui-ux-brief
-│  │  ├─ not-found.tsx
-│  │  ├─ error.tsx
-│  │  ├─ robots.ts
-│  │  ├─ sitemap.ts
-│  │  │
-│  │  ├─ (public)/                      anyone, signed in or not
-│  │  │  ├─ layout.tsx                  navbar + footer (marketing pages only)
-│  │  │  ├─ page.tsx                    /  landing: Enter as creator / fan, Start your space
-│  │  │  ├─ about/page.tsx              (P1)
-│  │  │  ├─ contact/page.tsx            (P1)
-│  │  │  ├─ pricing/page.tsx            (P2)
-│  │  │  ├─ blog/page.tsx               (P2)
-│  │  │  ├─ blog/[slug]/page.tsx        (P2)
-│  │  │  └─ [handle]/                   creator's public pages, own layout (no marketing navbar)
-│  │  │     ├─ layout.tsx               fan shell: creator top bar
-│  │  │     ├─ page.tsx                 /{handle}  bio link page
-│  │  │     ├─ opengraph-image.tsx
-│  │  │     ├─ join/page.tsx            join stepper, sign-in is step 1 inline
-│  │  │     └─ s/[slug]/
-│  │  │        ├─ page.tsx              showcase of a promoted project
-│  │  │        └─ opengraph-image.tsx
-│  │  │
-│  │  ├─ (auth)/
-│  │  │  ├─ layout.tsx                  centered card on the grey shell
-│  │  │  ├─ login/page.tsx
-│  │  │  ├─ sign-up/page.tsx
-│  │  │  ├─ verify-otp/page.tsx         6-digit email code
-│  │  │  ├─ forgot-password/page.tsx    only if password sign-in is on (open decision, note 3)
-│  │  │  └─ reset-password/page.tsx     only if password sign-in is on (open decision, note 3)
-│  │  │
-│  │  ├─ (legal)/
-│  │  │  ├─ layout.tsx                  readable prose layout
-│  │  │  ├─ privacy-policy/page.tsx
-│  │  │  ├─ terms/page.tsx
-│  │  │  └─ cookies/page.tsx
-│  │  │
-│  │  └─ (dashboard)/                   signed-in only
-│  │     ├─ layout.tsx                  session gate, redirects to /login?returnTo=
-│  │     ├─ onboarding/page.tsx         create your space (4 steps)
-│  │     ├─ dashboard/                  creator studio, owner only
-│  │     │  ├─ layout.tsx               creator shell: sidebar + header tray
-│  │     │  ├─ page.tsx                 Today
-│  │     │  ├─ inbox/page.tsx
-│  │     │  ├─ ideas/page.tsx
-│  │     │  ├─ communities/page.tsx
-│  │     │  ├─ communities/[slug]/page.tsx
-│  │     │  ├─ people/page.tsx
-│  │     │  ├─ promote/page.tsx
-│  │     │  ├─ promote/[postId]/page.tsx
-│  │     │  ├─ asks/page.tsx            (P1)
-│  │     │  └─ settings/page.tsx
-│  │     └─ [handle]/                   fan pages that need a membership
-│  │        ├─ layout.tsx               membership check + fan shell with community pills
-│  │        ├─ c/[slug]/page.tsx        community feed
-│  │        ├─ p/[postId]/page.tsx      post detail
-│  │        ├─ new/page.tsx             new post
-│  │        ├─ pitch/page.tsx           send a pitch
-│  │        └─ me/page.tsx              my posts, teams, pitches
+├─ app/
+│  ├─ layout.tsx                        root: Inter, providers, toaster
+│  ├─ providers.tsx                     TanStack Query, theme
+│  ├─ globals.css                       Tailwind v4 @theme tokens from 04-ui-ux-brief
+│  ├─ not-found.tsx
+│  ├─ error.tsx
+│  ├─ robots.ts
+│  ├─ sitemap.ts
 │  │
-│  ├─ components/
-│  │  ├─ ui/                            shadcn primitives (generated, only re-themed)
-│  │  ├─ magicui/                       number-ticker.tsx, blur-fade.tsx
-│  │  ├─ layout/
-│  │  │  ├─ navbar.tsx                  marketing pages
-│  │  │  ├─ footer.tsx                  marketing + legal links
-│  │  │  ├─ header.tsx                  dashboard: welcome title + icon tray
-│  │  │  ├─ sidebar.tsx                 dashboard nav pills, lime active
-│  │  │  ├─ bottom-nav.tsx              dashboard on phones
-│  │  │  ├─ fan-topbar.tsx              creator avatar + community pills
-│  │  │  └─ app-shell.tsx               grey rounded shell with gradient blur
-│  │  ├─ shared/                        used on more than one page
-│  │  │  ├─ logo.tsx
-│  │  │  ├─ stat-card.tsx
-│  │  │  ├─ chart-card.tsx
-│  │  │  ├─ data-table.tsx
-│  │  │  ├─ pagination.tsx
-│  │  │  ├─ tab-bar.tsx
-│  │  │  ├─ toolbar.tsx
-│  │  │  ├─ count-chips.tsx
-│  │  │  ├─ community-card.tsx          bio page, join, dashboard communities
-│  │  │  ├─ idea-card.tsx               feed, dashboard ideas, me
-│  │  │  ├─ signal-buttons.tsx
-│  │  │  ├─ fit-pill.tsx
-│  │  │  ├─ ai-chip.tsx
-│  │  │  ├─ status-pill.tsx
-│  │  │  ├─ avatar-initials.tsx
-│  │  │  ├─ side-panel.tsx
-│  │  │  ├─ empty-state.tsx
-│  │  │  ├─ page-heading.tsx
-│  │  │  ├─ copy-button.tsx
-│  │  │  ├─ confirm-dialog.tsx
-│  │  │  └─ theme-toggle.tsx
-│  │  ├─ landing/
-│  │  │  ├─ hero.tsx
-│  │  │  ├─ loop-section.tsx            Followers -> Communities -> Ideas -> Collaboration -> Action
-│  │  │  ├─ how-it-works.tsx
-│  │  │  ├─ features-grid.tsx
-│  │  │  ├─ demo-cta.tsx
-│  │  │  └─ faq.tsx
-│  │  ├─ auth/
-│  │  │  ├─ login-form.tsx
-│  │  │  ├─ sign-up-form.tsx
-│  │  │  ├─ otp-form.tsx
-│  │  │  ├─ google-button.tsx           hidden inside in-app browsers (note 3)
-│  │  │  ├─ forgot-password-form.tsx    only if password sign-in is on
-│  │  │  └─ reset-password-form.tsx     only if password sign-in is on
-│  │  ├─ bio/
-│  │  │  ├─ creator-header.tsx
-│  │  │  ├─ community-grid.tsx
-│  │  │  ├─ pitch-cta.tsx
-│  │  │  └─ featured-projects.tsx
-│  │  ├─ join/
-│  │  │  ├─ join-stepper.tsx
-│  │  │  ├─ intro-step.tsx
-│  │  │  ├─ community-picker.tsx
-│  │  │  └─ profile-step.tsx
-│  │  ├─ community/
-│  │  │  ├─ community-header.tsx
-│  │  │  ├─ feed.tsx
-│  │  │  └─ new-post-fab.tsx
-│  │  ├─ post/
-│  │  │  ├─ post-body.tsx
-│  │  │  ├─ post-form.tsx               new + edit
-│  │  │  ├─ team-roles.tsx
-│  │  │  ├─ comment-thread.tsx
-│  │  │  └─ comment-form.tsx
-│  │  ├─ pitch/
-│  │  │  ├─ pitch-form.tsx
-│  │  │  └─ pitch-sent.tsx
-│  │  ├─ me/
-│  │  │  ├─ my-posts.tsx
-│  │  │  ├─ my-teams.tsx
-│  │  │  └─ my-pitches.tsx
-│  │  ├─ showcase/
-│  │  │  ├─ showcase-hero.tsx
-│  │  │  └─ showcase-team.tsx
-│  │  ├─ onboarding/
-│  │  │  ├─ onboarding-stepper.tsx
-│  │  │  ├─ handle-step.tsx
-│  │  │  ├─ platforms-step.tsx
-│  │  │  ├─ communities-step.tsx
-│  │  │  └─ taste-step.tsx
-│  │  └─ dashboard/
-│  │     ├─ today/
-│  │     │  ├─ overview-stats.tsx
-│  │     │  ├─ this-week-card.tsx
-│  │     │  ├─ ai-briefing.tsx
-│  │     │  ├─ inbox-mix-chart.tsx
-│  │     │  ├─ top-ideas-table.tsx
-│  │     │  ├─ activity-chart.tsx
-│  │     │  └─ setup-checklist.tsx
-│  │     ├─ inbox/
-│  │     │  ├─ inbox-table.tsx
-│  │     │  ├─ inbox-toolbar.tsx
-│  │     │  ├─ pitch-panel.tsx
-│  │     │  └─ reply-box.tsx
-│  │     ├─ ideas/
-│  │     │  ├─ ideas-grid.tsx
-│  │     │  ├─ ideas-board.tsx
-│  │     │  └─ post-panel.tsx
-│  │     ├─ communities/
-│  │     │  ├─ community-form.tsx
-│  │     │  └─ community-members.tsx
-│  │     ├─ people/
-│  │     │  ├─ rising-strip.tsx
-│  │     │  └─ people-table.tsx
-│  │     ├─ promote/
-│  │     │  ├─ promotions-table.tsx
-│  │     │  ├─ draft-editor.tsx
-│  │     │  ├─ preview-panel.tsx
-│  │     │  └─ publish-bar.tsx
-│  │     └─ settings/
-│  │        ├─ profile-form.tsx
-│  │        ├─ taste-profile-form.tsx
-│  │        └─ bio-link-card.tsx
+│  ├─ (public)/                         anyone, signed in or not
+│  │  ├─ layout.tsx                     navbar + footer (marketing pages only)
+│  │  ├─ page.tsx                       /  landing: Enter as creator / fan, Start your space
+│  │  ├─ about/page.tsx                 (P1)
+│  │  ├─ contact/page.tsx               (P1)
+│  │  ├─ pricing/page.tsx               (P2)
+│  │  ├─ blog/page.tsx                  (P2)
+│  │  ├─ blog/[slug]/page.tsx           (P2)
+│  │  └─ [handle]/                      creator's public pages, own layout (no marketing navbar)
+│  │     ├─ layout.tsx                  fan shell: creator top bar
+│  │     ├─ page.tsx                    /{handle}  bio link page
+│  │     ├─ opengraph-image.tsx
+│  │     ├─ join/page.tsx               join stepper, sign-in is step 1 inline
+│  │     └─ s/[slug]/
+│  │        ├─ page.tsx                 showcase of a promoted project
+│  │        └─ opengraph-image.tsx
 │  │
-│  ├─ hooks/
-│  │  ├─ use-session.ts                 Better Auth session
-│  │  ├─ use-space.ts                   creator's own space
-│  │  ├─ use-membership.ts              fan's membership in the current space
-│  │  ├─ use-url-state.ts               tabs, sort, filters, ?item= in the URL
-│  │  ├─ use-cursor-list.ts             infinite lists on cursor pagination
-│  │  ├─ use-optimistic-toggle.ts       signals, status changes
-│  │  ├─ use-in-app-browser.ts          detects Instagram/TikTok/FB webviews
-│  │  ├─ use-copy.ts
-│  │  ├─ use-debounce.ts
-│  │  ├─ use-media-query.ts
-│  │  └─ queries/                       one TanStack Query hook file per resource
-│  │     ├─ use-space-page.ts
-│  │     ├─ use-feed.ts
-│  │     ├─ use-post.ts
-│  │     ├─ use-pitches.ts
-│  │     ├─ use-overview.ts
-│  │     ├─ use-briefing.ts
-│  │     ├─ use-inbox.ts
-│  │     ├─ use-ideas.ts
-│  │     ├─ use-people.ts
-│  │     ├─ use-communities.ts
-│  │     └─ use-promotions.ts
+│  ├─ (auth)/
+│  │  ├─ layout.tsx                     centered card on the grey shell
+│  │  ├─ login/page.tsx
+│  │  ├─ sign-up/page.tsx
+│  │  ├─ verify-otp/page.tsx            6-digit email code
+│  │  ├─ forgot-password/page.tsx       only if password sign-in is on (open decision, note 3)
+│  │  └─ reset-password/page.tsx        only if password sign-in is on (open decision, note 3)
 │  │
-│  ├─ api/                              typed client, one file per backend route group
-│  │  ├─ demo.ts
-│  │  ├─ spaces.ts
-│  │  ├─ posts.ts
-│  │  ├─ pitches.ts
-│  │  └─ studio.ts                      everything under /api/studio
+│  ├─ (legal)/
+│  │  ├─ layout.tsx                     readable prose layout
+│  │  ├─ privacy-policy/page.tsx
+│  │  ├─ terms/page.tsx
+│  │  └─ cookies/page.tsx
 │  │
-│  └─ lib/                              flat files only
-│     ├─ utils.ts                       cn() and small helpers
-│     ├─ auth-client.ts                 Better Auth React client (emailOTP plugin)
-│     ├─ fetcher.ts                     fetch wrapper: base URL, cookie forwarding on server, error mapping
-│     ├─ query-client.ts
-│     ├─ env.ts                         zod-checked public env
-│     ├─ fonts.ts
-│     ├─ format.ts                      740K, dates, relative time
-│     ├─ routes.ts                      typed path builders
-│     ├─ seo.ts                         metadata helpers
-│     └─ constants.ts                   nav items, platform list
+│  └─ (dashboard)/                      signed-in only
+│     ├─ layout.tsx                     session gate, redirects to /login?returnTo=
+│     ├─ onboarding/page.tsx            create your space (4 steps)
+│     ├─ dashboard/                     creator studio, owner only
+│     │  ├─ layout.tsx                  creator shell: sidebar + header tray
+│     │  ├─ page.tsx                    Today
+│     │  ├─ inbox/page.tsx
+│     │  ├─ ideas/page.tsx
+│     │  ├─ communities/page.tsx
+│     │  ├─ communities/[slug]/page.tsx
+│     │  ├─ people/page.tsx
+│     │  ├─ promote/page.tsx
+│     │  ├─ promote/[postId]/page.tsx
+│     │  ├─ asks/page.tsx               (P1)
+│     │  └─ settings/page.tsx
+│     └─ [handle]/                      fan pages that need a membership
+│        ├─ layout.tsx                  membership check + fan shell with community pills
+│        ├─ c/[slug]/page.tsx           community feed
+│        ├─ p/[postId]/page.tsx         post detail
+│        ├─ new/page.tsx                new post
+│        ├─ pitch/page.tsx              send a pitch
+│        └─ me/page.tsx                 my posts, teams, pitches
+│
+├─ components/
+│  ├─ ui/                               shadcn primitives (generated, only re-themed)
+│  ├─ magicui/                          number-ticker.tsx, blur-fade.tsx
+│  ├─ layout/
+│  │  ├─ navbar.tsx                     marketing pages
+│  │  ├─ footer.tsx                     marketing + legal links
+│  │  ├─ header.tsx                     dashboard: welcome title + icon tray
+│  │  ├─ sidebar.tsx                    dashboard nav pills, lime active
+│  │  ├─ bottom-nav.tsx                 dashboard on phones
+│  │  ├─ fan-topbar.tsx                 creator avatar + community pills
+│  │  └─ app-shell.tsx                  grey rounded shell with gradient blur
+│  ├─ shared/                           used on more than one page
+│  │  ├─ logo.tsx
+│  │  ├─ stat-card.tsx
+│  │  ├─ chart-card.tsx
+│  │  ├─ data-table.tsx
+│  │  ├─ pagination.tsx
+│  │  ├─ tab-bar.tsx
+│  │  ├─ toolbar.tsx
+│  │  ├─ count-chips.tsx
+│  │  ├─ community-card.tsx             bio page, join, dashboard communities
+│  │  ├─ idea-card.tsx                  feed, dashboard ideas, me
+│  │  ├─ signal-buttons.tsx
+│  │  ├─ fit-pill.tsx
+│  │  ├─ ai-chip.tsx
+│  │  ├─ status-pill.tsx
+│  │  ├─ avatar-initials.tsx
+│  │  ├─ side-panel.tsx
+│  │  ├─ empty-state.tsx
+│  │  ├─ page-heading.tsx
+│  │  ├─ copy-button.tsx
+│  │  ├─ confirm-dialog.tsx
+│  │  └─ theme-toggle.tsx
+│  ├─ landing/
+│  │  ├─ hero.tsx
+│  │  ├─ loop-section.tsx               Followers -> Communities -> Ideas -> Collaboration -> Action
+│  │  ├─ how-it-works.tsx
+│  │  ├─ features-grid.tsx
+│  │  ├─ demo-cta.tsx
+│  │  └─ faq.tsx
+│  ├─ auth/
+│  │  ├─ login-form.tsx
+│  │  ├─ sign-up-form.tsx
+│  │  ├─ otp-form.tsx
+│  │  ├─ google-button.tsx              hidden inside in-app browsers (note 3)
+│  │  ├─ forgot-password-form.tsx       only if password sign-in is on
+│  │  └─ reset-password-form.tsx        only if password sign-in is on
+│  ├─ bio/
+│  │  ├─ creator-header.tsx
+│  │  ├─ community-grid.tsx
+│  │  ├─ pitch-cta.tsx
+│  │  └─ featured-projects.tsx
+│  ├─ join/
+│  │  ├─ join-stepper.tsx
+│  │  ├─ intro-step.tsx
+│  │  ├─ community-picker.tsx
+│  │  └─ profile-step.tsx
+│  ├─ community/
+│  │  ├─ community-header.tsx
+│  │  ├─ feed.tsx
+│  │  └─ new-post-fab.tsx
+│  ├─ post/
+│  │  ├─ post-body.tsx
+│  │  ├─ post-form.tsx                  new + edit
+│  │  ├─ team-roles.tsx
+│  │  ├─ comment-thread.tsx
+│  │  └─ comment-form.tsx
+│  ├─ pitch/
+│  │  ├─ pitch-form.tsx
+│  │  └─ pitch-sent.tsx
+│  ├─ me/
+│  │  ├─ my-posts.tsx
+│  │  ├─ my-teams.tsx
+│  │  └─ my-pitches.tsx
+│  ├─ showcase/
+│  │  ├─ showcase-hero.tsx
+│  │  └─ showcase-team.tsx
+│  ├─ onboarding/
+│  │  ├─ onboarding-stepper.tsx
+│  │  ├─ handle-step.tsx
+│  │  ├─ platforms-step.tsx
+│  │  ├─ communities-step.tsx
+│  │  └─ taste-step.tsx
+│  └─ dashboard/
+│     ├─ today/
+│     │  ├─ overview-stats.tsx
+│     │  ├─ this-week-card.tsx
+│     │  ├─ ai-briefing.tsx
+│     │  ├─ inbox-mix-chart.tsx
+│     │  ├─ top-ideas-table.tsx
+│     │  ├─ activity-chart.tsx
+│     │  └─ setup-checklist.tsx
+│     ├─ inbox/
+│     │  ├─ inbox-table.tsx
+│     │  ├─ inbox-toolbar.tsx
+│     │  ├─ pitch-panel.tsx
+│     │  └─ reply-box.tsx
+│     ├─ ideas/
+│     │  ├─ ideas-grid.tsx
+│     │  ├─ ideas-board.tsx
+│     │  └─ post-panel.tsx
+│     ├─ communities/
+│     │  ├─ community-form.tsx
+│     │  └─ community-members.tsx
+│     ├─ people/
+│     │  ├─ rising-strip.tsx
+│     │  └─ people-table.tsx
+│     ├─ promote/
+│     │  ├─ promotions-table.tsx
+│     │  ├─ draft-editor.tsx
+│     │  ├─ preview-panel.tsx
+│     │  └─ publish-bar.tsx
+│     └─ settings/
+│        ├─ profile-form.tsx
+│        ├─ taste-profile-form.tsx
+│        └─ bio-link-card.tsx
+│
+├─ hooks/
+│  ├─ use-session.ts                    Better Auth session
+│  ├─ use-space.ts                      creator's own space
+│  ├─ use-membership.ts                 fan's membership in the current space
+│  ├─ use-url-state.ts                  tabs, sort, filters, ?item= in the URL
+│  ├─ use-cursor-list.ts                infinite lists on cursor pagination
+│  ├─ use-optimistic-toggle.ts          signals, status changes
+│  ├─ use-in-app-browser.ts             detects Instagram/TikTok/FB webviews
+│  ├─ use-copy.ts
+│  ├─ use-debounce.ts
+│  ├─ use-media-query.ts
+│  └─ queries/                          one TanStack Query hook file per resource
+│     ├─ use-space-page.ts
+│     ├─ use-feed.ts
+│     ├─ use-post.ts
+│     ├─ use-pitches.ts
+│     ├─ use-overview.ts
+│     ├─ use-briefing.ts
+│     ├─ use-inbox.ts
+│     ├─ use-ideas.ts
+│     ├─ use-people.ts
+│     ├─ use-communities.ts
+│     └─ use-promotions.ts
+│
+├─ api/                                 typed client, one file per backend route group
+│  ├─ demo.ts
+│  ├─ spaces.ts
+│  ├─ posts.ts
+│  ├─ pitches.ts
+│  └─ studio.ts                         everything under /api/studio
+│
+├─ lib/                                 flat files only
+│  ├─ utils.ts                          cn() and small helpers
+│  ├─ auth-client.ts                    Better Auth React client (emailOTP plugin)
+│  ├─ fetcher.ts                        fetch wrapper: base URL, cookie forwarding on server, error mapping
+│  ├─ query-client.ts
+│  ├─ env.ts                            zod-checked public env
+│  ├─ fonts.ts
+│  ├─ format.ts                         740K, dates, relative time
+│  ├─ routes.ts                         typed path builders
+│  ├─ seo.ts                            metadata helpers
+│  └─ constants.ts                      nav items, platform list
 │
 ├─ e2e/                                 (P1) Playwright
 │  └─ judge-path.spec.ts
