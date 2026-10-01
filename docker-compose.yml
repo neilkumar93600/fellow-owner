@@ -1,0 +1,60 @@
+# Local stack: Postgres with pgvector, the Express API and the Next.js web app.
+# Production runs on Vercel; this file is for local parity only.
+#
+#   docker compose up db          # just the database, run apps with `pnpm dev`
+#   docker compose up --build     # everything in containers
+
+name: fellow-owners
+
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fellow
+      POSTGRES_PASSWORD: fellow
+      POSTGRES_DB: fellow_owners
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fellow -d fellow_owners"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - path: api/.env
+        required: false
+    environment:
+      NODE_ENV: development
+      PORT: "4000"
+      DATABASE_URL: postgres://fellow:fellow@db:5432/fellow_owners
+      WEB_ORIGIN: http://localhost:3000
+    ports:
+      - "4000:4000"
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        API_URL: http://api:4000
+        NEXT_PUBLIC_APP_URL: http://localhost:3000
+    depends_on:
+      - api
+    environment:
+      API_URL: http://api:4000
+    ports:
+      - "3000:3000"
+
+volumes:
+  db-data:
