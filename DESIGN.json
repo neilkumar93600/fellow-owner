@@ -1,0 +1,877 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-01T00:00:00Z",
+  "title": "Design System: Fellow Owners",
+  "extensions": {
+    "colorMeta": {
+      "page": {
+        "role": "neutral",
+        "displayName": "Soft Daylight Grey",
+        "canonical": "oklch(96.1% 0.001 286.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 286.4)",
+          "oklch(26.0% 0.001 286.4)",
+          "oklch(37.0% 0.001 286.4)",
+          "oklch(48.0% 0.001 286.4)",
+          "oklch(60.0% 0.001 286.4)",
+          "oklch(72.0% 0.001 286.4)",
+          "oklch(84.0% 0.001 286.4)",
+          "oklch(95.0% 0.001 286.4)"
+        ]
+      },
+      "shell": {
+        "role": "neutral",
+        "displayName": "Pewter Shell",
+        "canonical": "oklch(88.9% 0.003 286.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 286.3)",
+          "oklch(26.0% 0.003 286.3)",
+          "oklch(37.0% 0.003 286.3)",
+          "oklch(48.0% 0.003 286.3)",
+          "oklch(60.0% 0.003 286.3)",
+          "oklch(72.0% 0.003 286.3)",
+          "oklch(84.0% 0.003 286.3)",
+          "oklch(95.0% 0.003 286.3)"
+        ]
+      },
+      "blur-1": {
+        "role": "neutral",
+        "displayName": "Periwinkle Haze",
+        "canonical": "oklch(79.1% 0.066 275.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.066 275.2)",
+          "oklch(26.0% 0.066 275.2)",
+          "oklch(37.0% 0.066 275.2)",
+          "oklch(48.0% 0.066 275.2)",
+          "oklch(60.0% 0.066 275.2)",
+          "oklch(72.0% 0.066 275.2)",
+          "oklch(84.0% 0.066 275.2)",
+          "oklch(95.0% 0.023 275.2)"
+        ]
+      },
+      "blur-2": {
+        "role": "neutral",
+        "displayName": "Sea Glass Haze",
+        "canonical": "oklch(82.6% 0.052 207.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.025 207.1)",
+          "oklch(26.0% 0.044 207.1)",
+          "oklch(37.0% 0.052 207.1)",
+          "oklch(48.0% 0.052 207.1)",
+          "oklch(60.0% 0.052 207.1)",
+          "oklch(72.0% 0.052 207.1)",
+          "oklch(84.0% 0.052 207.1)",
+          "oklch(95.0% 0.047 207.1)"
+        ]
+      },
+      "blur-3": {
+        "role": "neutral",
+        "displayName": "Sand Haze",
+        "canonical": "oklch(84.8% 0.032 84.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.030 84.6)",
+          "oklch(26.0% 0.032 84.6)",
+          "oklch(37.0% 0.032 84.6)",
+          "oklch(48.0% 0.032 84.6)",
+          "oklch(60.0% 0.032 84.6)",
+          "oklch(72.0% 0.032 84.6)",
+          "oklch(84.0% 0.032 84.6)",
+          "oklch(95.0% 0.032 84.6)"
+        ]
+      },
+      "glass": {
+        "role": "neutral",
+        "displayName": "Frosted Glass",
+        "canonical": "oklch(100% 0 0 / 0.45)",
+        "tonalRamp": [
+          "oklch(15.0% 0 0)",
+          "oklch(26.0% 0 0)",
+          "oklch(37.0% 0 0)",
+          "oklch(48.0% 0 0)",
+          "oklch(60.0% 0 0)",
+          "oklch(72.0% 0 0)",
+          "oklch(84.0% 0 0)",
+          "oklch(95.0% 0 0)"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "oklch(98.2% 0.001 286.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 286.4)",
+          "oklch(26.0% 0.001 286.4)",
+          "oklch(37.0% 0.001 286.4)",
+          "oklch(48.0% 0.001 286.4)",
+          "oklch(60.0% 0.001 286.4)",
+          "oklch(72.0% 0.001 286.4)",
+          "oklch(84.0% 0.001 286.4)",
+          "oklch(95.0% 0.001 286.4)"
+        ]
+      },
+      "card-strong": {
+        "role": "neutral",
+        "displayName": "Pure White",
+        "canonical": "oklch(100.0% 0 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0 0)",
+          "oklch(26.0% 0 0)",
+          "oklch(37.0% 0 0)",
+          "oklch(48.0% 0 0)",
+          "oklch(60.0% 0 0)",
+          "oklch(72.0% 0 0)",
+          "oklch(84.0% 0 0)",
+          "oklch(95.0% 0 0)"
+        ]
+      },
+      "table-head": {
+        "role": "neutral",
+        "displayName": "Dove Grey",
+        "canonical": "oklch(93.5% 0.003 286.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 286.3)",
+          "oklch(26.0% 0.003 286.3)",
+          "oklch(37.0% 0.003 286.3)",
+          "oklch(48.0% 0.003 286.3)",
+          "oklch(60.0% 0.003 286.3)",
+          "oklch(72.0% 0.003 286.3)",
+          "oklch(84.0% 0.003 286.3)",
+          "oklch(95.0% 0.003 286.3)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Charcoal Ink",
+        "canonical": "oklch(29.8% 0.005 286.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.005 286.1)",
+          "oklch(26.0% 0.005 286.1)",
+          "oklch(37.0% 0.005 286.1)",
+          "oklch(48.0% 0.005 286.1)",
+          "oklch(60.0% 0.005 286.1)",
+          "oklch(72.0% 0.005 286.1)",
+          "oklch(84.0% 0.005 286.1)",
+          "oklch(95.0% 0.005 286.1)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Iron Grey",
+        "canonical": "oklch(48.3% 0.006 286.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.006 286.2)",
+          "oklch(26.0% 0.006 286.2)",
+          "oklch(37.0% 0.006 286.2)",
+          "oklch(48.0% 0.006 286.2)",
+          "oklch(60.0% 0.006 286.2)",
+          "oklch(72.0% 0.006 286.2)",
+          "oklch(84.0% 0.006 286.2)",
+          "oklch(95.0% 0.006 286.2)"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Graphite Grey",
+        "canonical": "oklch(54.0% 0.008 286.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.008 286.1)",
+          "oklch(26.0% 0.008 286.1)",
+          "oklch(37.0% 0.008 286.1)",
+          "oklch(48.0% 0.008 286.1)",
+          "oklch(60.0% 0.008 286.1)",
+          "oklch(72.0% 0.008 286.1)",
+          "oklch(84.0% 0.008 286.1)",
+          "oklch(95.0% 0.008 286.1)"
+        ]
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Fog Grey",
+        "canonical": "oklch(68.8% 0.009 286.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.009 286.2)",
+          "oklch(26.0% 0.009 286.2)",
+          "oklch(37.0% 0.009 286.2)",
+          "oklch(48.0% 0.009 286.2)",
+          "oklch(60.0% 0.009 286.2)",
+          "oklch(72.0% 0.009 286.2)",
+          "oklch(84.0% 0.009 286.2)",
+          "oklch(95.0% 0.009 286.2)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline Grey",
+        "canonical": "oklch(92.3% 0.004 286.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.004 286.3)",
+          "oklch(26.0% 0.004 286.3)",
+          "oklch(37.0% 0.004 286.3)",
+          "oklch(48.0% 0.004 286.3)",
+          "oklch(60.0% 0.004 286.3)",
+          "oklch(72.0% 0.004 286.3)",
+          "oklch(84.0% 0.004 286.3)",
+          "oklch(95.0% 0.004 286.3)"
+        ]
+      },
+      "line-row": {
+        "role": "neutral",
+        "displayName": "Ledger Grey",
+        "canonical": "oklch(87.1% 0.005 286.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.005 286.3)",
+          "oklch(26.0% 0.005 286.3)",
+          "oklch(37.0% 0.005 286.3)",
+          "oklch(48.0% 0.005 286.3)",
+          "oklch(60.0% 0.005 286.3)",
+          "oklch(72.0% 0.005 286.3)",
+          "oklch(84.0% 0.005 286.3)",
+          "oklch(95.0% 0.005 286.3)"
+        ]
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Ring Grey",
+        "canonical": "oklch(80.0% 0.007 286.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.007 286.2)",
+          "oklch(26.0% 0.007 286.2)",
+          "oklch(37.0% 0.007 286.2)",
+          "oklch(48.0% 0.007 286.2)",
+          "oklch(60.0% 0.007 286.2)",
+          "oklch(72.0% 0.007 286.2)",
+          "oklch(84.0% 0.007 286.2)",
+          "oklch(95.0% 0.007 286.2)"
+        ]
+      },
+      "line-field": {
+        "role": "neutral",
+        "displayName": "Field Grey",
+        "canonical": "oklch(64.9% 0.009 286.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.009 286.2)",
+          "oklch(26.0% 0.009 286.2)",
+          "oklch(37.0% 0.009 286.2)",
+          "oklch(48.0% 0.009 286.2)",
+          "oklch(60.0% 0.009 286.2)",
+          "oklch(72.0% 0.009 286.2)",
+          "oklch(84.0% 0.009 286.2)",
+          "oklch(95.0% 0.009 286.2)"
+        ]
+      },
+      "lime": {
+        "role": "secondary",
+        "displayName": "Clubhouse Lime",
+        "canonical": "oklch(94.8% 0.137 116.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.034 116.7)",
+          "oklch(26.0% 0.059 116.7)",
+          "oklch(37.0% 0.083 116.7)",
+          "oklch(48.0% 0.108 116.7)",
+          "oklch(60.0% 0.135 116.7)",
+          "oklch(72.0% 0.137 116.7)",
+          "oklch(84.0% 0.137 116.7)",
+          "oklch(95.0% 0.137 116.7)"
+        ]
+      },
+      "peach": {
+        "role": "tertiary",
+        "displayName": "Apricot Cream",
+        "canonical": "oklch(96.9% 0.025 75.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.025 75.3)",
+          "oklch(26.0% 0.025 75.3)",
+          "oklch(37.0% 0.025 75.3)",
+          "oklch(48.0% 0.025 75.3)",
+          "oklch(60.0% 0.025 75.3)",
+          "oklch(72.0% 0.025 75.3)",
+          "oklch(84.0% 0.025 75.3)",
+          "oklch(95.0% 0.025 75.3)"
+        ]
+      },
+      "peach-tile": {
+        "role": "tertiary",
+        "displayName": "Apricot Tile",
+        "canonical": "oklch(93.7% 0.052 75.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.031 75.5)",
+          "oklch(26.0% 0.052 75.5)",
+          "oklch(37.0% 0.052 75.5)",
+          "oklch(48.0% 0.052 75.5)",
+          "oklch(60.0% 0.052 75.5)",
+          "oklch(72.0% 0.052 75.5)",
+          "oklch(84.0% 0.052 75.5)",
+          "oklch(95.0% 0.040 75.5)"
+        ]
+      },
+      "orange": {
+        "role": "tertiary",
+        "displayName": "Marigold",
+        "canonical": "oklch(78.7% 0.147 73.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.031 73.0)",
+          "oklch(26.0% 0.054 73.0)",
+          "oklch(37.0% 0.077 73.0)",
+          "oklch(48.0% 0.100 73.0)",
+          "oklch(60.0% 0.125 73.0)",
+          "oklch(72.0% 0.147 73.0)",
+          "oklch(84.0% 0.131 73.0)",
+          "oklch(95.0% 0.038 73.0)"
+        ]
+      },
+      "lavender": {
+        "role": "tertiary",
+        "displayName": "Lavender Mist",
+        "canonical": "oklch(95.3% 0.026 297.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.026 297.9)",
+          "oklch(26.0% 0.026 297.9)",
+          "oklch(37.0% 0.026 297.9)",
+          "oklch(48.0% 0.026 297.9)",
+          "oklch(60.0% 0.026 297.9)",
+          "oklch(72.0% 0.026 297.9)",
+          "oklch(84.0% 0.026 297.9)",
+          "oklch(95.0% 0.026 297.9)"
+        ]
+      },
+      "lavender-tile": {
+        "role": "tertiary",
+        "displayName": "Lavender Tile",
+        "canonical": "oklch(90.5% 0.052 297.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.052 297.4)",
+          "oklch(26.0% 0.052 297.4)",
+          "oklch(37.0% 0.052 297.4)",
+          "oklch(48.0% 0.052 297.4)",
+          "oklch(60.0% 0.052 297.4)",
+          "oklch(72.0% 0.052 297.4)",
+          "oklch(84.0% 0.052 297.4)",
+          "oklch(95.0% 0.027 297.4)"
+        ]
+      },
+      "purple": {
+        "role": "primary",
+        "displayName": "Invitation Purple",
+        "canonical": "oklch(54.1% 0.247 293.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.082 293.0)",
+          "oklch(26.0% 0.142 293.0)",
+          "oklch(37.0% 0.201 293.0)",
+          "oklch(48.0% 0.247 293.0)",
+          "oklch(60.0% 0.236 293.0)",
+          "oklch(72.0% 0.157 293.0)",
+          "oklch(84.0% 0.086 293.0)",
+          "oklch(95.0% 0.026 293.0)"
+        ]
+      },
+      "purple-chart": {
+        "role": "tertiary",
+        "displayName": "Chart Violet",
+        "canonical": "oklch(60.6% 0.219 292.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.082 292.7)",
+          "oklch(26.0% 0.142 292.7)",
+          "oklch(37.0% 0.202 292.7)",
+          "oklch(48.0% 0.219 292.7)",
+          "oklch(60.0% 0.219 292.7)",
+          "oklch(72.0% 0.157 292.7)",
+          "oklch(84.0% 0.085 292.7)",
+          "oklch(95.0% 0.025 292.7)"
+        ]
+      },
+      "aqua": {
+        "role": "tertiary",
+        "displayName": "Pool Aqua",
+        "canonical": "oklch(96.1% 0.023 203.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.023 203.4)",
+          "oklch(26.0% 0.023 203.4)",
+          "oklch(37.0% 0.023 203.4)",
+          "oklch(48.0% 0.023 203.4)",
+          "oklch(60.0% 0.023 203.4)",
+          "oklch(72.0% 0.023 203.4)",
+          "oklch(84.0% 0.023 203.4)",
+          "oklch(95.0% 0.023 203.4)"
+        ]
+      },
+      "aqua-tile": {
+        "role": "tertiary",
+        "displayName": "Pool Tile",
+        "canonical": "oklch(92.9% 0.041 204.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.025 204.1)",
+          "oklch(26.0% 0.041 204.1)",
+          "oklch(37.0% 0.041 204.1)",
+          "oklch(48.0% 0.041 204.1)",
+          "oklch(60.0% 0.041 204.1)",
+          "oklch(72.0% 0.041 204.1)",
+          "oklch(84.0% 0.041 204.1)",
+          "oklch(95.0% 0.041 204.1)"
+        ]
+      },
+      "teal": {
+        "role": "tertiary",
+        "displayName": "Lagoon Teal",
+        "canonical": "oklch(73.7% 0.122 206.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.025 206.6)",
+          "oklch(26.0% 0.044 206.6)",
+          "oklch(37.0% 0.062 206.6)",
+          "oklch(48.0% 0.081 206.6)",
+          "oklch(60.0% 0.101 206.6)",
+          "oklch(72.0% 0.121 206.6)",
+          "oklch(84.0% 0.122 206.6)",
+          "oklch(95.0% 0.048 206.6)"
+        ]
+      },
+      "success": {
+        "role": "status",
+        "displayName": "Meadow Green",
+        "canonical": "oklch(62.7% 0.170 149.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.041 149.2)",
+          "oklch(26.0% 0.072 149.2)",
+          "oklch(37.0% 0.102 149.2)",
+          "oklch(48.0% 0.132 149.2)",
+          "oklch(60.0% 0.165 149.2)",
+          "oklch(72.0% 0.170 149.2)",
+          "oklch(84.0% 0.170 149.2)",
+          "oklch(95.0% 0.082 149.2)"
+        ]
+      },
+      "success-ink": {
+        "role": "status",
+        "displayName": "Deep Meadow",
+        "canonical": "oklch(52.7% 0.137 150.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.040 150.1)",
+          "oklch(26.0% 0.070 150.1)",
+          "oklch(37.0% 0.100 150.1)",
+          "oklch(48.0% 0.129 150.1)",
+          "oklch(60.0% 0.137 150.1)",
+          "oklch(72.0% 0.137 150.1)",
+          "oklch(84.0% 0.137 150.1)",
+          "oklch(95.0% 0.082 150.1)"
+        ]
+      },
+      "warn-bg": {
+        "role": "status",
+        "displayName": "Butter Wash",
+        "canonical": "oklch(96.2% 0.038 83.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.030 83.8)",
+          "oklch(26.0% 0.038 83.8)",
+          "oklch(37.0% 0.038 83.8)",
+          "oklch(48.0% 0.038 83.8)",
+          "oklch(60.0% 0.038 83.8)",
+          "oklch(72.0% 0.038 83.8)",
+          "oklch(84.0% 0.038 83.8)",
+          "oklch(95.0% 0.038 83.8)"
+        ]
+      },
+      "warn-ink": {
+        "role": "status",
+        "displayName": "Toffee",
+        "canonical": "oklch(54.3% 0.128 59.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.035 59.8)",
+          "oklch(26.0% 0.060 59.8)",
+          "oklch(37.0% 0.085 59.8)",
+          "oklch(48.0% 0.111 59.8)",
+          "oklch(60.0% 0.128 59.8)",
+          "oklch(72.0% 0.128 59.8)",
+          "oklch(84.0% 0.106 59.8)",
+          "oklch(95.0% 0.031 59.8)"
+        ]
+      },
+      "info-bg": {
+        "role": "status",
+        "displayName": "Ice Wash",
+        "canonical": "oklch(95.4% 0.025 205.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.025 205.8)",
+          "oklch(26.0% 0.025 205.8)",
+          "oklch(37.0% 0.025 205.8)",
+          "oklch(48.0% 0.025 205.8)",
+          "oklch(60.0% 0.025 205.8)",
+          "oklch(72.0% 0.025 205.8)",
+          "oklch(84.0% 0.025 205.8)",
+          "oklch(95.0% 0.025 205.8)"
+        ]
+      },
+      "info-ink": {
+        "role": "status",
+        "displayName": "Harbor Teal",
+        "canonical": "oklch(52.0% 0.094 223.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.027 223.1)",
+          "oklch(26.0% 0.048 223.1)",
+          "oklch(37.0% 0.068 223.1)",
+          "oklch(48.0% 0.088 223.1)",
+          "oklch(60.0% 0.094 223.1)",
+          "oklch(72.0% 0.094 223.1)",
+          "oklch(84.0% 0.094 223.1)",
+          "oklch(95.0% 0.032 223.1)"
+        ]
+      },
+      "danger": {
+        "role": "status",
+        "displayName": "Signal Red",
+        "canonical": "oklch(63.7% 0.208 25.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.060 25.3)",
+          "oklch(26.0% 0.103 25.3)",
+          "oklch(37.0% 0.147 25.3)",
+          "oklch(48.0% 0.191 25.3)",
+          "oklch(60.0% 0.208 25.3)",
+          "oklch(72.0% 0.171 25.3)",
+          "oklch(84.0% 0.086 25.3)",
+          "oklch(95.0% 0.024 25.3)"
+        ]
+      },
+      "danger-deep": {
+        "role": "status",
+        "displayName": "Brick Red",
+        "canonical": "oklch(57.7% 0.215 27.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.063 27.3)",
+          "oklch(26.0% 0.107 27.3)",
+          "oklch(37.0% 0.151 27.3)",
+          "oklch(48.0% 0.196 27.3)",
+          "oklch(60.0% 0.215 27.3)",
+          "oklch(72.0% 0.174 27.3)",
+          "oklch(84.0% 0.088 27.3)",
+          "oklch(95.0% 0.025 27.3)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The creator welcome line on the shell's header band (\"Welcome, Mira 🎉\"). One per screen."
+      },
+      "h1": {
+        "displayName": "H1 (headline)",
+        "purpose": "Page titles on fan pages and legal pages, community card names (in ink-soft), the creator name on the bio link."
+      },
+      "h2": {
+        "displayName": "H2 (title)",
+        "purpose": "Card titles, the \"Fanbase overview\" band title, idea card titles, side panel titles, toolbar titles, legal section heads."
+      },
+      "stat": {
+        "displayName": "Stat",
+        "purpose": "Stat card numbers only, in ink-soft. Tabular figures."
+      },
+      "count": {
+        "displayName": "Count",
+        "purpose": "Count chip numbers and the nine figures of the \"This week\" card, in ink-soft. Tabular figures."
+      },
+      "trend": {
+        "displayName": "Trend",
+        "purpose": "The signed trend figure in stat cards and the \"This week\" card (success-ink when rising, ink on lavender and when falling), and the community card members line. Tabular figures."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default reading text, inputs, inactive tabs, the header subtitle, toasts, trend descriptors, chart legend labels. Prose caps at 68ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, sidebar items, the active tab, the selected segment, the chart tooltip figure."
+      },
+      "label-strong": {
+        "displayName": "Label Strong",
+        "purpose": "The active sidebar item, the active bottom nav item, the current fan community, the wordmark, the summary well total row."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Table cells, meta lines, count chip labels, \"This week\" column heads, chart summaries and axis labels, page numbers. Tabular figures."
+      },
+      "small-strong": {
+        "displayName": "Small Strong",
+        "purpose": "Table header labels, input labels, stat card labels, \"This week\" metric names, the current page, donut label figures, avatar initials at 40px and in table avatars. Tabular figures."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Status pills, AI chips, fit pill numbers, donut descriptors, the notification badge count, character counts, initials in avatar stacks. Tabular figures."
+      }
+    },
+    "shadows": [
+      {
+        "name": "overlay-soft",
+        "value": "0 24px 64px -16px rgba(45, 45, 48, 0.22)",
+        "purpose": "The only shadow in the system: side panel (Sheet), dialog, popover, dropdown menu, fit reason tooltip. Toasts stay flat with a 1px line border. Nothing casts a shadow at rest."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 2px #FFFFFF, 0 0 0 4px #7C3AED",
+        "purpose": "Keyboard focus on every interactive element. Ship it as outline: 2px solid #7C3AED with outline-offset: 2px; this box-shadow form is the preview (the inner white ring stands in for the offset gap). 3:1 or better on every surface. Inputs also switch their border to purple."
+      }
+    ],
+    "motion": [
+      {
+        "name": "dur-fast",
+        "value": "150ms",
+        "purpose": "Hover color changes, the 0.98 press and its release, every exit. Project token --dur-fast."
+      },
+      {
+        "name": "dur-base",
+        "value": "200ms",
+        "purpose": "Tab underline growth, toggles, chip selection. Project token --dur-base."
+      },
+      {
+        "name": "dur-slow",
+        "value": "250ms",
+        "purpose": "Side panel and dialog entrances (24px translate plus fade). Project token --dur-slow."
+      },
+      {
+        "name": "dur-ticker",
+        "value": "600ms",
+        "purpose": "Stat number ticker, once on first load. Final value under reduced motion."
+      },
+      {
+        "name": "dur-shimmer",
+        "value": "1600ms",
+        "purpose": "One soft translated highlight across skeletons and the \"AI reviewing\" chip, looping. Static under reduced motion."
+      },
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "purpose": "Default easing for state changes: hover, press, tabs, chips. Project token --ease-out-quart."
+      },
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entrances and number tickers. Project token --ease-out-expo. No bounce, no elastic, no overshoot anywhere."
+      },
+      {
+        "name": "ease-out-quint",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Defined in the project (--ease-out-quint) for the brand-register landing page only; product UI does not use it."
+      },
+      {
+        "name": "press-scale",
+        "value": "scale(0.98)",
+        "purpose": "The only pressed transform, over --dur-fast. Nothing else moves on interaction."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "App Shell",
+      "kind": "nav",
+      "refersTo": "app-shell",
+      "description": "The pewter shell with its canonical haze (the only coded source of it) on the 2 by 2 grid: the logo cell beside the 88px header, then the glass pill sidebar 16px from the content, its first pill sharing a top edge with the first glass band (here the Inbox tab bar). The header carries an ink-soft subtitle and the glass tray (Brick Red count badge, avatar with online dot). Initials stand in for Mira's photo.",
+      "html": "<div class=\"ds-shell\"><div class=\"ds-logo\"><span class=\"ds-logo-mark\" aria-hidden=\"true\"></span>Fellow Owners</div><header class=\"ds-head\"><div><h1 class=\"ds-head-title\">Welcome, Mira 🎉</h1><p class=\"ds-head-sub\">Here's what needs you today.</p></div><div class=\"ds-tray\"><button class=\"ds-tray-btn\" type=\"button\" aria-label=\"Search\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg></button><button class=\"ds-tray-btn\" type=\"button\" aria-label=\"Notifications, 3 new\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9\"/><path d=\"M10.3 21a1.94 1.94 0 0 0 3.4 0\"/></svg><span class=\"ds-badge\" aria-hidden=\"true\">3</span></button><span class=\"ds-avatar\" role=\"img\" aria-label=\"Mira Kapoor, online\">MK<span class=\"ds-dot\"></span></span></div></header><nav class=\"ds-side\" aria-label=\"Main\"><a class=\"ds-side-item\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1.5\"/><rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1.5\"/><rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1.5\"/><rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1.5\"/></svg>Today</a><a class=\"ds-side-item\" href=\"#\" aria-current=\"page\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z\" fill=\"currentColor\"/></svg>Inbox</a><a class=\"ds-side-item\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5\"/><path d=\"M9 18h6\"/><path d=\"M10 22h4\"/></svg>Ideas</a><a class=\"ds-side-item\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>Communities</a><a class=\"ds-side-item\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m3 11 18-5v12L3 14v-3z\"/><path d=\"M11.6 16.8a3 3 0 1 1-5.8-1.6\"/></svg>Promote</a></nav><div class=\"ds-shell-main\"><nav class=\"ds-shell-tabs\" aria-label=\"Inbox views\"><a class=\"ds-shell-tab\" href=\"?tab=all\" aria-current=\"page\">All</a><a class=\"ds-shell-tab\" href=\"?tab=collabs\">Collabs</a><a class=\"ds-shell-tab\" href=\"?tab=investment\">Investment</a></nav></div></div>",
+      "css": ".ds-shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); grid-template-rows: 88px auto; column-gap: 16px; row-gap: 24px; align-items: start; min-height: 480px; padding: 24px; border-radius: 40px; background: radial-gradient(38% 53% at 53% 79%, rgba(174, 184, 230, 0.72), rgba(174, 184, 230, 0) 100%), radial-gradient(40% 41% at 71% 102%, rgba(159, 208, 215, 0.88), rgba(159, 208, 215, 0) 100%), radial-gradient(70% 60% at 97% 80%, rgba(215, 204, 182, 0.9), rgba(215, 204, 182, 0) 100%), var(--shell, #DADADC); color: var(--ink, #2D2D30); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; } .ds-logo { display: flex; align-items: center; gap: 12px; height: 88px; padding: 0 8px; font-size: 15px; line-height: 22px; font-weight: 600; } .ds-logo-mark { position: relative; flex: none; width: 32px; height: 20px; } .ds-logo-mark::before, .ds-logo-mark::after { content: \"\"; position: absolute; top: 0; width: 20px; height: 20px; box-sizing: border-box; border: 2px solid var(--ink, #2D2D30); border-radius: 9999px; } .ds-logo-mark::before { left: 0; background: var(--ink, #2D2D30); } .ds-logo-mark::after { left: 12px; } .ds-side { display: flex; flex-direction: column; gap: 8px; } .ds-side-item { display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 20px; border-radius: 9999px; background: var(--glass, rgba(255, 255, 255, 0.45)); color: var(--ink, #2D2D30); font-size: 15px; line-height: 22px; font-weight: 500; text-decoration: none; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-side-item svg { flex: none; } .ds-side-item:hover { background: var(--card, #F9F9FA); } .ds-side-item:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-side-item:active { transform: scale(0.98); } .ds-side-item[aria-current=\"page\"], .ds-side-item[aria-current=\"page\"]:hover { background: var(--lime, #E8FA8B); font-weight: 600; } .ds-head { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 88px; } .ds-head-title { margin: 0; font-size: 32px; line-height: 40px; font-weight: 500; letter-spacing: -0.01em; } .ds-head-sub { margin: 4px 0 0; font-size: 15px; line-height: 22px; color: var(--ink-soft, #5E5E62); } .ds-tray { display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 12px; box-sizing: border-box; border-radius: 9999px; background: var(--glass, rgba(255, 255, 255, 0.45)); } .ds-tray-btn { position: relative; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 9999px; background: transparent; color: var(--ink, #2D2D30); cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-tray-btn:hover { background: var(--card-strong, #FFFFFF); } .ds-tray-btn:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-tray-btn:active { transform: scale(0.98); } .ds-badge { position: absolute; top: 4px; right: 4px; display: grid; place-items: center; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 9999px; background: var(--danger-deep, #DC2626); color: var(--card-strong, #FFFFFF); font-size: 12px; line-height: 16px; font-weight: 500; font-variant-numeric: tabular-nums; } .ds-avatar { position: relative; display: grid; place-items: center; width: 40px; height: 40px; margin-left: 4px; border-radius: 9999px; background: var(--lavender-tile, #E3D9FF); color: var(--ink, #2D2D30); font-size: 13px; line-height: 18px; font-weight: 500; } .ds-dot { position: absolute; top: -2px; right: -2px; width: 14px; height: 14px; box-sizing: border-box; border: 2px solid var(--card-strong, #FFFFFF); border-radius: 9999px; background: var(--success, #16A34A); } .ds-shell-main { min-width: 0; } .ds-shell-tabs { display: flex; align-items: center; gap: 48px; height: 64px; padding: 0 24px; box-sizing: border-box; border-radius: 9999px; background: var(--glass, rgba(255, 255, 255, 0.45)); } .ds-shell-tab { position: relative; display: inline-flex; align-items: center; height: 48px; padding: 0 2px; border-radius: 8px; color: var(--ink-soft, #5E5E62); font-size: 15px; line-height: 22px; text-decoration: none; transition: color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-shell-tab::after { content: \"\"; position: absolute; left: 0; right: 0; bottom: 10px; height: 2px; border-radius: 2px; background: var(--ink, #2D2D30); transform: scaleX(0); transition: transform var(--dur-base, 200ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-shell-tab:hover::after { transform: scaleX(1); background: var(--line-strong, #BDBDC2); } .ds-shell-tab[aria-current=\"page\"] { color: var(--ink, #2D2D30); font-weight: 500; } .ds-shell-tab[aria-current=\"page\"]::after { transform: scaleX(1); background: var(--ink, #2D2D30); } .ds-shell-tab:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-shell-tab:active { transform: scale(0.98); } @media (prefers-reduced-motion: reduce) { .ds-side-item, .ds-tray-btn, .ds-shell-tab, .ds-shell-tab::after { transition: none; } }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one purple action per screen (Publish, Promote on creator screens, Send pitch, Join). Darkens 6% on hover, presses to 0.98; while loading a 16px spinner takes the icon slot, the label stays and the width holds.",
+      "html": "<div class=\"ds-btn-row\"><button class=\"ds-btn-primary\" type=\"button\"><span class=\"ds-btn-ico\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m3 11 18-5v12L3 14v-3z\"/><path d=\"M11.6 16.8a3 3 0 1 1-5.8-1.6\"/></svg></span>Publish</button><button class=\"ds-btn-primary\" type=\"button\" aria-busy=\"true\" aria-disabled=\"true\"><span class=\"ds-btn-ico\"><svg class=\"ds-spin\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12a9 9 0 1 1-6.219-8.56\"/></svg></span>Publish</button></div>",
+      "css": ".ds-btn-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; } .ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 24px; border: 0; border-radius: 9999px; background: var(--purple, #7C3AED); color: var(--card-strong, #FFFFFF); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; font-size: 15px; line-height: 22px; font-weight: 500; cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-btn-ico { display: grid; place-items: center; width: 20px; height: 20px; flex: none; } .ds-btn-primary:hover { background: color-mix(in oklch, var(--purple, #7C3AED) 94%, var(--ink, #2D2D30)); } .ds-btn-primary:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; } .ds-btn-primary[aria-busy=\"true\"] { cursor: progress; } .ds-btn-primary[aria-busy=\"true\"]:active { transform: none; } .ds-spin { animation: ds-spin 800ms linear infinite; } @keyframes ds-spin { to { transform: rotate(360deg); } } @media (prefers-reduced-motion: reduce) { .ds-btn-primary { transition: none; } .ds-spin { animation: none; } }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Pure White pill with a 1px hairline outline and an ink label, 48px tall; page grey on hover. A disabled pill never carries the words a person must read: the cap message sits beside it at full opacity.",
+      "html": "<div class=\"ds-sec-row\"><button class=\"ds-btn-secondary\" type=\"button\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect width=\"14\" height=\"14\" x=\"8\" y=\"8\" rx=\"2\" ry=\"2\"/><path d=\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"/></svg>Copy link</button><span class=\"ds-sec-cap\"><button class=\"ds-btn-secondary\" type=\"button\" disabled aria-describedby=\"ds-regen-cap\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\"/><path d=\"M21 3v5h-5\"/><path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\"/><path d=\"M8 16H3v5\"/></svg>Regenerate</button><span class=\"ds-sec-note\" id=\"ds-regen-cap\">5 of 5 used today</span></span></div>",
+      "css": ".ds-sec-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 24px; border-radius: 28px; background: var(--card-strong, #FFFFFF); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; } .ds-sec-cap { display: inline-flex; align-items: center; gap: 12px; } .ds-btn-secondary { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 20px; border: 1px solid var(--line, #E5E5E8); border-radius: 9999px; background: var(--card-strong, #FFFFFF); color: var(--ink, #2D2D30); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; font-size: 15px; line-height: 22px; font-weight: 500; cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-btn-secondary svg { flex: none; } .ds-btn-secondary:hover { background: var(--page, #F2F2F3); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-btn-secondary:active { transform: scale(0.98); } .ds-btn-secondary:disabled, .ds-btn-secondary:disabled:hover { opacity: 0.5; background: var(--card-strong, #FFFFFF); cursor: not-allowed; transform: none; } .ds-sec-note { font-size: 13px; line-height: 18px; color: var(--ink-muted, #6E6E73); font-variant-numeric: tabular-nums; } @media (prefers-reduced-motion: reduce) { .ds-btn-secondary { transition: none; } }"
+    },
+    {
+      "name": "Ghost Icon Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "40px round icon button with no fill and a required aria-label; row actions use ink-soft icons, and on fan pages the button grows to 44px with an ink icon.",
+      "html": "<div class=\"ds-ghost-row\"><button class=\"ds-ghost\" type=\"button\" aria-label=\"Open pitch from Arjun Rao\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></button><button class=\"ds-ghost\" type=\"button\" aria-label=\"Edit Builders\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z\"/><path d=\"m15 5 4 4\"/></svg></button><button class=\"ds-ghost\" type=\"button\" aria-label=\"More actions for Arjun Rao\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"1\"/><circle cx=\"19\" cy=\"12\" r=\"1\"/><circle cx=\"5\" cy=\"12\" r=\"1\"/></svg></button><button class=\"ds-ghost ds-ghost--fan\" type=\"button\" aria-label=\"Close\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button></div>",
+      "css": ".ds-ghost-row { display: flex; align-items: center; gap: 8px; padding: 16px 24px; border-radius: 28px; background: var(--card-strong, #FFFFFF); } .ds-ghost { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 9999px; background: transparent; color: var(--ink-soft, #5E5E62); cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-ghost:hover { background: var(--page, #F2F2F3); } .ds-ghost:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-ghost:active { transform: scale(0.98); } .ds-ghost:disabled { opacity: 0.5; cursor: not-allowed; transform: none; } .ds-ghost--fan { width: 44px; height: 44px; color: var(--ink, #2D2D30); } @media (prefers-reduced-motion: reduce) { .ds-ghost { transition: none; } }"
+    },
+    {
+      "name": "Tab Bar and Toolbar",
+      "kind": "nav",
+      "refersTo": "tab-bar",
+      "description": "64px glass tab bar of URL links (48px tabs centred in the bar so the focus ring never clips; inactive in ink-soft, the aria-current tab in ink with a 2px underline that grows in place; a thin scrollbar only under a fine pointer) over the 72px glass toolbar: a Ring Grey outlined \"+\" pill on the left, the 12px-radius search square and dropdown pair on the right.",
+      "html": "<div class=\"ds-nav-stage\"><nav class=\"ds-tabbar\" aria-label=\"Inbox views\"><a class=\"ds-tab\" href=\"?tab=all\" aria-current=\"page\">All</a><a class=\"ds-tab\" href=\"?tab=collabs\">Collabs</a><a class=\"ds-tab\" href=\"?tab=investment\">Investment</a><a class=\"ds-tab\" href=\"?tab=press\">Press</a><a class=\"ds-tab\" href=\"?tab=filtered\">Filtered</a></nav><div class=\"ds-toolbar\"><button class=\"ds-tb-pill\" type=\"button\">Add community<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg></button><div class=\"ds-tb-end\"><button class=\"ds-tb-search\" type=\"button\" aria-label=\"Search pitches\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg></button><button class=\"ds-tb-drop\" type=\"button\" aria-haspopup=\"listbox\">Sort: Fit<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button></div></div></div>",
+      "css": ".ds-nav-stage { display: flex; flex-direction: column; gap: 16px; padding: 24px; border-radius: 28px; background: var(--shell, #DADADC); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; } .ds-tabbar { display: flex; align-items: center; gap: 48px; min-height: 64px; padding: 8px 24px; box-sizing: border-box; border-radius: 9999px; background: var(--glass, rgba(255, 255, 255, 0.45)); overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--line-strong, #BDBDC2) transparent; } @media (pointer: coarse) { .ds-tabbar { scrollbar-width: none; } .ds-tabbar::-webkit-scrollbar { display: none; } } .ds-tab { position: relative; flex: none; display: inline-flex; align-items: center; height: 48px; padding: 0 2px; border-radius: 8px; color: var(--ink-soft, #5E5E62); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; font-size: 15px; line-height: 22px; font-weight: 400; text-decoration: none; transition: color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-tab::after { content: \"\"; position: absolute; left: 0; right: 0; bottom: 10px; height: 2px; border-radius: 2px; background: var(--ink, #2D2D30); transform: scaleX(0); transition: transform var(--dur-base, 200ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-tab:hover::after { transform: scaleX(1); background: var(--line-strong, #BDBDC2); } .ds-tab[aria-current=\"page\"] { color: var(--ink, #2D2D30); font-weight: 500; } .ds-tab[aria-current=\"page\"]::after, .ds-tab[aria-current=\"page\"]:hover::after { transform: scaleX(1); background: var(--ink, #2D2D30); } .ds-tab:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-tab:active { transform: scale(0.98); } .ds-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border-radius: 9999px; background: var(--glass, rgba(255, 255, 255, 0.45)); } .ds-tb-end { display: flex; align-items: center; gap: 12px; } .ds-tb-pill, .ds-tb-drop { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; background: var(--card-strong, #FFFFFF); color: var(--ink, #2D2D30); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; font-size: 15px; line-height: 22px; cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-tb-pill { border: 1px solid var(--line-strong, #BDBDC2); border-radius: 9999px; font-weight: 500; } .ds-tb-drop { border: 0; border-radius: 12px; font-weight: 400; } .ds-tb-search { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; box-sizing: border-box; border: 1px solid var(--line-strong, #BDBDC2); border-radius: 12px; background: var(--card-strong, #FFFFFF); color: var(--ink, #2D2D30); cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-tb-pill:hover, .ds-tb-drop:hover, .ds-tb-search:hover { background: var(--page, #F2F2F3); } .ds-tb-pill:focus-visible, .ds-tb-drop:focus-visible, .ds-tb-search:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-tb-pill:active, .ds-tb-drop:active, .ds-tb-search:active { transform: scale(0.98); } @media (prefers-reduced-motion: reduce) { .ds-tab, .ds-tab::after, .ds-tb-pill, .ds-tb-drop, .ds-tb-search { transition: none; } }"
+    },
+    {
+      "name": "Stat Card",
+      "kind": "card",
+      "refersTo": "stat-card-peach",
+      "description": "Today's pastel stat cards, stacked 8px apart: the 56px icon tile with the 40px tabular number in ink-soft and its Small Strong ink-soft label to its right, then a full-width trend row whose sign carries the direction (\"+18%\" in success-ink rising, \"−4%\" in ink falling). On lavender the descriptor steps to ink-soft and a rising figure to ink. Hover keeps the tint: the label steps to ink and a chevron fades in.",
+      "html": "<div class=\"ds-stat-stack\"><a class=\"ds-stat\" href=\"#\"><span class=\"ds-stat-tile\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg></span><span class=\"ds-stat-value\">12,480</span><span class=\"ds-stat-label\">Members</span><span class=\"ds-stat-trend\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><polyline points=\"22 7 13.5 15.5 8.5 10.5 2 17\"/><polyline points=\"16 7 22 7 22 13\"/></svg><b>+18%</b>vs last week</span><svg class=\"ds-stat-go\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></a><a class=\"ds-stat ds-stat--lavender\" href=\"#\"><span class=\"ds-stat-tile\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5\"/><path d=\"M9 18h6\"/><path d=\"M10 22h4\"/></svg></span><span class=\"ds-stat-value\">214</span><span class=\"ds-stat-label\">Ideas this week</span><span class=\"ds-stat-trend\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><polyline points=\"22 7 13.5 15.5 8.5 10.5 2 17\"/><polyline points=\"16 7 22 7 22 13\"/></svg><b>+9%</b>vs last week</span><svg class=\"ds-stat-go\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></a><a class=\"ds-stat ds-stat--aqua\" href=\"#\"><span class=\"ds-stat-tile\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><polyline points=\"22 12 16 12 14 15 10 15 8 12 2 12\"/><path d=\"M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z\"/></svg></span><span class=\"ds-stat-value\">27</span><span class=\"ds-stat-label\">Opportunities waiting</span><span class=\"ds-stat-trend ds-stat-trend--down\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><polyline points=\"22 17 13.5 8.5 8.5 13.5 2 7\"/><polyline points=\"16 17 22 17 22 11\"/></svg><b>−4%</b>vs last week</span><svg class=\"ds-stat-go\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></a></div>",
+      "css": ".ds-stat-stack { display: flex; flex-direction: column; gap: 8px; width: 360px; font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; } .ds-stat { position: relative; display: grid; grid-template-columns: 56px 1fr; column-gap: 16px; row-gap: 2px; align-items: center; padding: 24px; border-radius: 28px; background: var(--peach, #FFF3E3); color: var(--ink, #2D2D30); text-decoration: none; transition: transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-stat-tile { grid-row: span 2; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 14px; background: var(--peach-tile, #FFE6C4); color: var(--orange, #F2A93B); } .ds-stat-value { align-self: end; font-size: 40px; line-height: 44px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--ink-soft, #5E5E62); } .ds-stat-label { align-self: start; font-size: 13px; line-height: 18px; font-weight: 500; color: var(--ink-soft, #5E5E62); transition: color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-stat-trend { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin-top: 16px; font-size: 15px; line-height: 22px; color: var(--ink-muted, #6E6E73); } .ds-stat-trend svg { flex: none; color: var(--success-ink, #15803D); } .ds-stat-trend b { font-size: 18px; line-height: 24px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--success-ink, #15803D); } .ds-stat-trend--down svg, .ds-stat-trend--down b { color: var(--ink, #2D2D30); } .ds-stat-go { position: absolute; top: 24px; right: 24px; color: var(--ink, #2D2D30); opacity: 0; transition: opacity var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-stat:hover .ds-stat-label { color: var(--ink, #2D2D30); } .ds-stat:hover .ds-stat-go, .ds-stat:focus-visible .ds-stat-go { opacity: 1; } .ds-stat:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-stat:active { transform: scale(0.98); } .ds-stat--lavender { background: var(--lavender, #F1ECFF); } .ds-stat--lavender .ds-stat-tile { background: var(--lavender-tile, #E3D9FF); color: var(--purple-chart, #8B5CF6); } .ds-stat--lavender .ds-stat-trend { color: var(--ink-soft, #5E5E62); } .ds-stat--lavender .ds-stat-trend b { color: var(--ink, #2D2D30); } .ds-stat--aqua { background: var(--aqua, #E1F7F9); } .ds-stat--aqua .ds-stat-tile { background: var(--aqua-tile, #C9F0F4); color: var(--teal, #1FBFD0); } @media (prefers-reduced-motion: reduce) { .ds-stat, .ds-stat-label, .ds-stat-go { transition: none; } }"
+    },
+    {
+      "name": "Data Table and Pagination",
+      "kind": "custom",
+      "refersTo": "data-table",
+      "description": "Full-page table: white card, Dove Grey pill header in ink, 48px Paper White rows of ink-soft cells ruled in Ledger Grey that lift to Pure White on hover or focus, a primary-cell link as the keyboard path to the side panel, focusable fit pills, tinted status pills, an ink-soft ghost eye action; below it the 428px glass pager: 60 by 32px Ring Grey outlined pages 2px apart, a lime current page and a white next circle.",
+      "html": "<div class=\"ds-tbl-stage\"><div class=\"ds-tbl-card\"><table class=\"ds-tbl\"><thead><tr><th>Sender</th><th>Type</th><th>Fit</th><th>Status</th><th class=\"ds-tbl-act\"><span class=\"ds-tbl-sr\">Actions</span></th></tr></thead><tbody><tr><td><span class=\"ds-tbl-who\"><span class=\"ds-tbl-av\" style=\"background: var(--lavender-tile, #E3D9FF);\">AR</span><a class=\"ds-tbl-link\" href=\"?item=ar\">Arjun Rao</a></span></td><td class=\"ds-tbl-muted\">Collab</td><td><span class=\"ds-tbl-fit ds-tbl-fit--high\" tabindex=\"0\"><b>88</b><i><s style=\"width: 88%;\"></s></i></span></td><td><span class=\"ds-tbl-st ds-tbl-st--info\">Shortlisted</span></td><td class=\"ds-tbl-act\"><button class=\"ds-tbl-ghost\" type=\"button\" aria-label=\"Open pitch from Arjun Rao\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></button></td></tr><tr><td><span class=\"ds-tbl-who\"><span class=\"ds-tbl-av\" style=\"background: var(--peach-tile, #FFE6C4);\">PN</span><a class=\"ds-tbl-link\" href=\"?item=pn\">Priya Nair</a></span></td><td class=\"ds-tbl-muted\">Investment</td><td><span class=\"ds-tbl-fit ds-tbl-fit--mid\" tabindex=\"0\"><b>64</b><i><s style=\"width: 64%;\"></s></i></span></td><td><span class=\"ds-tbl-st ds-tbl-st--warn\">New</span></td><td class=\"ds-tbl-act\"><button class=\"ds-tbl-ghost\" type=\"button\" aria-label=\"Open pitch from Priya Nair\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></button></td></tr><tr><td><span class=\"ds-tbl-who\"><span class=\"ds-tbl-av\" style=\"background: var(--aqua-tile, #C9F0F4);\">SO</span><a class=\"ds-tbl-link\" href=\"?item=so\">Sam Okafor</a></span></td><td class=\"ds-tbl-muted\">Press</td><td><span class=\"ds-tbl-fit ds-tbl-fit--low\" tabindex=\"0\"><b>31</b><i><s style=\"width: 31%;\"></s></i></span></td><td><span class=\"ds-tbl-st ds-tbl-st--neutral\">Archived</span></td><td class=\"ds-tbl-act\"><button class=\"ds-tbl-ghost\" type=\"button\" aria-label=\"Open pitch from Sam Okafor\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></button></td></tr></tbody></table></div><nav class=\"ds-pager\" aria-label=\"Pagination\"><button class=\"ds-pg-prev\" type=\"button\" aria-label=\"Previous page\" disabled><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m15 18-6-6 6-6\"/></svg></button><a class=\"ds-pg\" href=\"#\" aria-current=\"page\">1</a><a class=\"ds-pg\" href=\"#\">2</a><a class=\"ds-pg\" href=\"#\">3</a><a class=\"ds-pg\" href=\"#\">4</a><a class=\"ds-pg\" href=\"#\">5</a><a class=\"ds-pg-next\" href=\"#\" aria-label=\"Next page\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></a></nav></div>",
+      "css": ".ds-tbl-stage { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px; border-radius: 28px; background: var(--shell, #DADADC); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; } .ds-tbl-card { align-self: stretch; padding: 16px; border-radius: 28px; background: var(--card-strong, #FFFFFF); } .ds-tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; line-height: 18px; color: var(--ink-soft, #5E5E62); font-variant-numeric: tabular-nums; } .ds-tbl th { height: 48px; padding: 0 24px; background: var(--table-head, #E9E9EB); color: var(--ink, #2D2D30); font-weight: 500; text-align: left; white-space: nowrap; } .ds-tbl th:first-child { border-radius: 9999px 0 0 9999px; } .ds-tbl th:last-child { border-radius: 0 9999px 9999px 0; } .ds-tbl td { height: 48px; padding: 0 24px; background: var(--card, #F9F9FA); border-bottom: 1px solid var(--line-row, #D4D4D8); white-space: nowrap; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-tbl tbody tr:first-child td { border-top: 8px solid var(--card-strong, #FFFFFF); } .ds-tbl tbody tr:hover td, .ds-tbl tbody tr:focus-within td { background: var(--card-strong, #FFFFFF); } .ds-tbl-link { color: inherit; text-decoration: none; border-radius: 4px; } .ds-tbl-link:hover { text-decoration: underline; text-underline-offset: 3px; } .ds-tbl-link:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-tbl-muted { color: var(--ink-muted, #6E6E73); } .ds-tbl-who { display: inline-flex; align-items: center; gap: 12px; } .ds-tbl-av { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 9999px; color: var(--ink, #2D2D30); font-size: 13px; line-height: 18px; font-weight: 500; } .ds-tbl-fit { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; box-sizing: border-box; border: 1px solid var(--line, #E5E5E8); border-radius: 9999px; background: var(--card-strong, #FFFFFF); } .ds-tbl-fit b { font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.01em; } .ds-tbl-fit:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-tbl-fit i { display: block; width: 24px; height: 4px; border-radius: 2px; background: var(--line, #E5E5E8); overflow: hidden; } .ds-tbl-fit s { display: block; height: 100%; background: currentColor; text-decoration: none; } .ds-tbl-fit--high { color: var(--success-ink, #15803D); } .ds-tbl-fit--mid { color: var(--warn-ink, #A45A00); } .ds-tbl-fit--low { color: var(--ink-muted, #6E6E73); } .ds-tbl-fit--low s { background: var(--ink-faint, #9A9AA0); } .ds-tbl-st { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 9999px; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.01em; } .ds-tbl-st--warn { background: var(--warn-bg, #FFF1D6); color: var(--warn-ink, #A45A00); } .ds-tbl-st--info { background: var(--info-bg, #DDF5F8); color: var(--info-ink, #0E7490); } .ds-tbl-st--neutral { background: var(--table-head, #E9E9EB); color: var(--ink, #2D2D30); } .ds-tbl-act { width: 40px; text-align: right; } .ds-tbl-ghost { display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 9999px; background: transparent; color: var(--ink-soft, #5E5E62); cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-tbl-ghost:hover { background: var(--page, #F2F2F3); } .ds-tbl-ghost:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-tbl-ghost:active { transform: scale(0.98); } .ds-tbl-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } .ds-pager { display: inline-flex; align-items: center; gap: 2px; padding: 4px 12px; border-radius: 9999px; background: var(--glass, rgba(255, 255, 255, 0.45)); } .ds-pg { display: inline-grid; place-items: center; width: 60px; height: 32px; box-sizing: border-box; border: 1px solid var(--line-strong, #BDBDC2); border-radius: 9999px; color: var(--ink-soft, #5E5E62); font-size: 13px; line-height: 18px; font-variant-numeric: tabular-nums; text-decoration: none; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-pg:hover { background: var(--card, #F9F9FA); } .ds-pg[aria-current=\"page\"], .ds-pg[aria-current=\"page\"]:hover { background: var(--lime, #E8FA8B); border-color: var(--lime, #E8FA8B); color: var(--ink, #2D2D30); font-weight: 500; } .ds-pg-prev, .ds-pg-next { display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0; box-sizing: border-box; border: 1px solid var(--line-strong, #BDBDC2); border-radius: 9999px; color: var(--ink, #2D2D30); cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-pg-prev { margin-right: 6px; background: transparent; } .ds-pg-prev:not(:disabled):hover { background: var(--card, #F9F9FA); } .ds-pg-prev:disabled { opacity: 0.5; cursor: not-allowed; } .ds-pg-next { margin-left: 6px; background: var(--card-strong, #FFFFFF); } .ds-pg-next:hover { background: color-mix(in oklch, var(--card-strong, #FFFFFF) 94%, var(--ink, #2D2D30)); } .ds-pg:focus-visible, .ds-pg-prev:focus-visible, .ds-pg-next:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-pg:active, .ds-pg-prev:not(:disabled):active, .ds-pg-next:active { transform: scale(0.98); } @media (prefers-reduced-motion: reduce) { .ds-tbl td, .ds-tbl-ghost, .ds-pg, .ds-pg-prev, .ds-pg-next { transition: none; } }"
+    },
+    {
+      "name": "Chips and Count Chips",
+      "kind": "chip",
+      "refersTo": "ai-chip",
+      "description": "Lime \"AI pick\" chip, the \"AI reviewing\" chip (Paper White with a translated Dove Grey sweep), the Dove Grey \"Not analyzed\" chip, tinted status pills with dark words, and the Ideas count chips inside their glass band (Paper White chips that step up to Pure White on hover; the active chip is ink with white text; a thin scrollbar only under a fine pointer).",
+      "html": "<div class=\"ds-chips\"><div class=\"ds-pill-strip\"><span class=\"ds-ai\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z\"/></svg>AI pick</span><span class=\"ds-ai ds-ai--reviewing\">AI reviewing</span><span class=\"ds-ai ds-ai--none\">Not analyzed</span><span class=\"ds-st ds-st--warn\">New</span><span class=\"ds-st ds-st--info\">Accepted</span><span class=\"ds-st ds-st--neutral\">Archived</span></div><div class=\"ds-chip-band\" role=\"group\" aria-label=\"Filter ideas by community\"><button class=\"ds-count\" type=\"button\" aria-pressed=\"true\"><span>All</span><b>214</b></button><button class=\"ds-count\" type=\"button\" aria-pressed=\"false\"><span>Builders</span><b>58</b></button><button class=\"ds-count\" type=\"button\" aria-pressed=\"false\"><span>Designers</span><b>41</b></button><button class=\"ds-count\" type=\"button\" aria-pressed=\"false\"><span>Fitness Crew</span><b>31</b></button><button class=\"ds-count\" type=\"button\" aria-pressed=\"false\"><span>Music &amp; Creators</span><b>27</b></button></div></div>",
+      "css": ".ds-chips { display: flex; flex-direction: column; gap: 16px; max-width: 640px; padding: 24px; border-radius: 28px; background: var(--shell, #DADADC); color: var(--ink, #2D2D30); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; } .ds-pill-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 16px; border-radius: 28px; background: var(--card-strong, #FFFFFF); } .ds-ai, .ds-st { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 9999px; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.01em; } .ds-ai { background: var(--lime, #E8FA8B); color: var(--ink, #2D2D30); } .ds-ai--reviewing { position: relative; overflow: hidden; isolation: isolate; border: 1px solid var(--line, #E5E5E8); background: var(--card, #F9F9FA); } .ds-ai--reviewing::after { content: \"\"; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(233, 233, 235, 0) 0%, var(--table-head, #E9E9EB) 50%, rgba(233, 233, 235, 0) 100%); transform: translateX(-100%); animation: ds-ai-sweep var(--dur-shimmer, 1600ms) linear infinite; } @keyframes ds-ai-sweep { to { transform: translateX(100%); } } .ds-ai--none { background: var(--table-head, #E9E9EB); } .ds-st--warn { background: var(--warn-bg, #FFF1D6); color: var(--warn-ink, #A45A00); } .ds-st--info { background: var(--info-bg, #DDF5F8); color: var(--info-ink, #0E7490); } .ds-st--neutral { background: var(--table-head, #E9E9EB); color: var(--ink, #2D2D30); } .ds-chip-band { display: flex; gap: 8px; padding: 8px; border-radius: 28px; background: var(--glass, rgba(255, 255, 255, 0.45)); overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--line-strong, #BDBDC2) transparent; } @media (pointer: coarse) { .ds-chip-band { scrollbar-width: none; } .ds-chip-band::-webkit-scrollbar { display: none; } } .ds-count { flex: none; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; width: 160px; height: 80px; padding: 12px 16px; box-sizing: border-box; border: 0; border-radius: 20px; background: var(--card, #F9F9FA); color: var(--ink-soft, #5E5E62); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; text-align: left; cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-count span { font-size: 13px; line-height: 18px; color: var(--ink-muted, #6E6E73); } .ds-count b { font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; } .ds-count:hover { background: var(--card-strong, #FFFFFF); } .ds-count[aria-pressed=\"true\"], .ds-count[aria-pressed=\"true\"]:hover { background: var(--ink, #2D2D30); color: var(--card-strong, #FFFFFF); } .ds-count[aria-pressed=\"true\"] span { color: var(--card-strong, #FFFFFF); } .ds-count:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-count:active { transform: scale(0.98); } @media (prefers-reduced-motion: reduce) { .ds-ai--reviewing::after { animation: none; opacity: 0; } .ds-count { transition: none; } }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "White field, radius 16, 44px tall, on a 1px Field Grey border (3.3:1); ink-muted placeholder with the real hint in helper text below; focus adds the solid purple ring and border; errors use a Signal Red border and icon with the message in Brick Red (4.8:1 on white).",
+      "html": "<div class=\"ds-form\"><div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-pitch-subject\">Pitch subject</label><input class=\"ds-input\" id=\"ds-pitch-subject\" type=\"text\" placeholder=\"A gym-log app for lifters\" aria-describedby=\"ds-pitch-help\" /><p class=\"ds-field-help\" id=\"ds-pitch-help\">One line on what you want to build.</p></div><div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-handle\">Handle</label><input class=\"ds-input ds-input--error\" id=\"ds-handle\" type=\"text\" value=\"mira\" aria-invalid=\"true\" aria-describedby=\"ds-handle-err\" /><p class=\"ds-field-error\" id=\"ds-handle-err\" aria-live=\"polite\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" x2=\"12\" y1=\"8\" y2=\"12\"/><line x1=\"12\" x2=\"12.01\" y1=\"16\" y2=\"16\"/></svg>Handle taken. Try mira.studio, mirakapoor or mira_k.</p></div></div>",
+      "css": ".ds-form { display: flex; flex-direction: column; gap: 20px; width: 360px; padding: 24px; border-radius: 28px; background: var(--card-strong, #FFFFFF); color: var(--ink, #2D2D30); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; } .ds-field { display: flex; flex-direction: column; gap: 6px; } .ds-field-label { font-size: 13px; line-height: 18px; font-weight: 500; } .ds-input { height: 44px; padding: 0 14px; box-sizing: border-box; border: 1px solid var(--line-field, #8E8E94); border-radius: 16px; background: var(--card-strong, #FFFFFF); color: var(--ink, #2D2D30); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; font-size: 15px; line-height: 22px; transition: border-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-input::placeholder { color: var(--ink-muted, #6E6E73); opacity: 1; } .ds-input:hover { border-color: var(--ink-muted, #6E6E73); } .ds-input:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; border-color: var(--purple, #7C3AED); } .ds-input:disabled { opacity: 0.5; cursor: not-allowed; } .ds-input--error, .ds-input--error:hover { border-color: var(--danger, #EF4444); } .ds-field-help { margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-muted, #6E6E73); } .ds-field-error { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; line-height: 18px; color: var(--danger-deep, #DC2626); } .ds-field-error svg { flex: none; color: var(--danger, #EF4444); } @media (prefers-reduced-motion: reduce) { .ds-input { transition: none; } }"
+    },
+    {
+      "name": "Community Card",
+      "kind": "card",
+      "refersTo": "community-card",
+      "description": "Pastel community card (tints rotate apricot, lavender, aqua, white): the name in ink-soft H1 beside its icon tile is the link, stretched over the card (hover steps it to ink and fades in a chevron; focus rings the card); 40px of open space; the 18px members line split into an ink-muted label, an ink-soft figure and a signed success-ink trend, then the digest, with the ghost pencil above the link at the bottom right. Lavender and white variant rules included.",
+      "html": "<article class=\"ds-comm\"><div class=\"ds-comm-top\"><span class=\"ds-comm-tile\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m18 16 4-4-4-4\"/><path d=\"m6 8-4 4 4 4\"/><path d=\"m14.5 4-5 16\"/></svg></span><h3 class=\"ds-comm-name\"><a class=\"ds-comm-link\" href=\"/dashboard/communities/builders\">Builders</a></h3></div><svg class=\"ds-comm-go\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg><div class=\"ds-comm-data\"><p class=\"ds-comm-meta\"><span>Members</span><b>1,284</b><span class=\"ds-comm-trend\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><polyline points=\"22 7 13.5 15.5 8.5 10.5 2 17\"/><polyline points=\"16 7 22 7 22 13\"/></svg>+12%</span><span>this month</span></p><p class=\"ds-comm-digest\">Three new app ideas this week; the gym-log app found its designer.</p></div><button class=\"ds-comm-edit\" type=\"button\" aria-label=\"Edit Builders\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z\"/><path d=\"m15 5 4 4\"/></svg></button></article>",
+      "css": ".ds-comm { position: relative; display: flex; flex-direction: column; gap: 40px; width: 440px; padding: 24px; box-sizing: border-box; border-radius: 28px; background: var(--peach, #FFF3E3); color: var(--ink, #2D2D30); font-family: var(--font-inter, Inter), 'Helvetica Neue', Arial, system-ui, sans-serif; transition: transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-comm-top { display: flex; align-items: center; gap: 16px; } .ds-comm-tile { flex: none; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 14px; background: var(--peach-tile, #FFE6C4); color: var(--orange, #F2A93B); } .ds-comm-name { margin: 0; font-size: 24px; line-height: 32px; font-weight: 500; letter-spacing: -0.005em; color: var(--ink-soft, #5E5E62); } .ds-comm-link { color: inherit; text-decoration: none; transition: color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-comm-link::after { content: \"\"; position: absolute; inset: 0; border-radius: 28px; } .ds-comm:hover .ds-comm-link { color: var(--ink, #2D2D30); } .ds-comm-link:focus-visible { outline: none; color: var(--ink, #2D2D30); } .ds-comm-link:focus-visible::after { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-comm:has(.ds-comm-link:active) { transform: scale(0.98); } .ds-comm-go { position: absolute; top: 24px; right: 24px; color: var(--ink, #2D2D30); opacity: 0; pointer-events: none; transition: opacity var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-comm:hover .ds-comm-go, .ds-comm:has(.ds-comm-link:focus-visible) .ds-comm-go { opacity: 1; } .ds-comm-data { display: flex; flex-direction: column; gap: 8px; padding-right: 56px; } .ds-comm-meta { margin: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; font-size: 18px; line-height: 24px; font-weight: 400; color: var(--ink-muted, #6E6E73); font-variant-numeric: tabular-nums; } .ds-comm-meta b { font-weight: 500; color: var(--ink-soft, #5E5E62); } .ds-comm-trend { display: inline-flex; align-items: center; gap: 4px; font-weight: 500; color: var(--success-ink, #15803D); } .ds-comm-trend svg { flex: none; color: var(--success-ink, #15803D); } .ds-comm-digest { margin: 0; font-size: 15px; line-height: 22px; max-width: 68ch; } .ds-comm-edit { position: absolute; right: 16px; bottom: 16px; z-index: 1; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 9999px; background: transparent; color: var(--ink, #2D2D30); cursor: pointer; transition: background-color var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)), transform var(--dur-fast, 150ms) var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)); } .ds-comm-edit:hover { background: var(--card-strong, #FFFFFF); } .ds-comm-edit:focus-visible { outline: 2px solid var(--purple, #7C3AED); outline-offset: 2px; } .ds-comm-edit:active { transform: scale(0.98); } .ds-comm--lavender { background: var(--lavender, #F1ECFF); } .ds-comm--lavender .ds-comm-tile { background: var(--lavender-tile, #E3D9FF); color: var(--purple-chart, #8B5CF6); } .ds-comm--lavender .ds-comm-meta { color: var(--ink-soft, #5E5E62); } .ds-comm--lavender .ds-comm-trend { color: var(--ink, #2D2D30); } .ds-comm--white { background: var(--card-strong, #FFFFFF); } .ds-comm--white .ds-comm-tile { background: var(--table-head, #E9E9EB); color: var(--ink, #2D2D30); } .ds-comm--white .ds-comm-edit:hover { background: var(--page, #F2F2F3); } @media (prefers-reduced-motion: reduce) { .ds-comm, .ds-comm-link, .ds-comm-go, .ds-comm-edit { transition: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Clubhouse",
+    "overview": "Fellow Owners is a warm, well-kept home where fans gather by interest and the creator drops by: friendly first, organized second. The look comes straight from the nine Starline reference screens in docs/design-reference: a pewter shell with 40px corners floating on a pale page, a strong haze of periwinkle, sea glass and sand pooling across its lower right, navigation made of frosted pills, and content on pastel and white cards with generous radii. Nothing is sharp, nothing shouts, and the single purple button on a screen is the invitation to act.\n\nDensity follows the person. The creator dashboard is a calm product surface: a fixed pill sidebar, a welcome header, then a tab bar, a toolbar and a white table or a grid of cards. Today opens on the AI briefing and three pastel stat cards, so the few things worth a decision come before any full list. Fan pages are the same clubhouse at phone scale: one centered column, 44px touch targets, pastel community cards and one obvious way in. Tabs, tables, side panels and pagination behave exactly as creators expect from the best tools; personality lives in color, radius and the shell's haze, never in invented affordances. Text speaks in two tones, as in the references: near-black ink for titles, labels and anything active, and a soft mid grey for data, figures and everything at rest.\n\nThe system rejects Discord-style noise, paid DMs, one-way link-in-bio pages and Google Forms, low-contrast status text, placeholder copy and the AI light show. The AI shows up as a small lime \"AI pick\" chip with its reason beside it, never as glow, gradient or sparkle confetti. Motion is soft and settled: 150 to 250ms ease-out color and opacity changes, a 0.98 press, and nothing that bounces, slides for show or shifts the layout. Theme is light only in v1, because the scene demands it: a creator at a laptop by a window in daylight between shoots, and a fan on a phone inside the bright white chrome of an Instagram, TikTok or YouTube in-app browser, both reading in full ambient light and both arriving from white screens. Dark mode is feature F26 and waits for P2.",
+    "keyCharacteristics": [
+      "A pewter shell (40px radius) on a pale page, with a strong haze of periwinkle, sea glass and sand pooling across its lower right.",
+      "Frosted glass pills for every piece of navigation chrome: sidebar items, header tray, tab bars, toolbars, pagination.",
+      "Lime marks where you are; purple marks the one thing to do.",
+      "Pastel apricot, lavender and aqua cards with deeper icon tiles carry stats and communities.",
+      "Two text tones: near-black ink for titles, labels and active states; a soft mid grey for data, figures and inactive tabs.",
+      "White tables with a grey pill header row, 48px rows and ruled grey dividers.",
+      "Flat tonal layers; only side panels, dialogs and popovers (menus and tooltips included) cast a shadow.",
+      "Inter everywhere, weights 400 to 600, tabular figures on anything counted; soft and settled motion, a 0.98 press, nothing jumps."
+    ],
+    "rules": [
+      {
+        "name": "The One Purple Rule",
+        "body": "Each screen has exactly one solid purple button: the action the screen exists for. On the creator Ideas grid each card is its own decision and may carry one purple Promote; nothing else on that screen is purple. Fan screens never show Promote. Purple never fills a card, a chip, a nav item or a link; outside the primary button it appears only as the focus ring.",
+        "section": "colors"
+      },
+      {
+        "name": "The Lime Means Here Rule",
+        "body": "Lime marks location or an AI pick: active nav and rail items, the current page, the active bottom nav item, the current community in the fan switcher, the \"AI pick\" and \"AI suggested\" chips, the chart tooltip. It is never a button fill, never a content background, never text, and never the only signal: active nav items are also weight 600 with a filled icon, the current page steps up to Small Strong, the current fan community to Label Strong, and every lime location marker carries aria-current.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dark Words Rule",
+        "body": "Every word a person must read clears 4.5:1. Status is a tinted pill with dark text, never bare colored words. ink-muted sets words only on white, Paper White, Apricot Cream, Pool Aqua and the page, and success-ink only on the first four; on glass, lavender, the header pill and the shell's header band, secondary text steps up to ink-soft and trend figures to ink. Brick Red sets words only on white and Paper White. Below the header, only ink sets words directly on the shell, because the haze pulls anything lighter under 4.5:1. Marigold, Lagoon Teal, Chart Violet, Meadow Green, Signal Red and Fog Grey never set words.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Inter carries everything: headings, labels, data, buttons. No second family, no display face, no italics for emphasis, no uppercase labels. Hierarchy comes from size and weight inside 400 to 600.",
+        "section": "typography"
+      },
+      {
+        "name": "The Counting Rule",
+        "body": "Every figure that can change or be compared is tabular ('tnum'): stat numbers, counts, trend figures, table cells, fit scores, pagination, chart axes and tooltips, character counts, clicks. The stat, count, trend, small, small-strong and caption tokens carry tnum, so numbers never shimmy when they update.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat At Rest Rule",
+        "body": "Cards, pills, chips, buttons, tables, toasts and the shell never carry a shadow. If something needs to look raised, it moves one step up the tonal ladder instead. If it looks like a 2014 app, there is a shadow where a tone belongs.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Still Glass Rule",
+        "body": "Glass is a flat 45% white fill with no backdrop-filter. It sits only on the shell, holds only controls and titles (the list under Frosted Glass in Colors), never sits on a card or over scrolling content, and never holds body text longer than a label. The in-app browsers fans arrive in pay for every blur.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Step Rule",
+        "body": "Glass sits only on the shell and holds controls, never content cards. Cards (pastel, Paper White or Pure White) sit on the shell, side by side or stacked under a glass title band. Inside a card only rows, inputs, tables, one bordered preview frame and one tinted summary well add a layer; table rows rest at Paper White inside the Pure White table card and lift to Pure White on hover or selection, the one deliberate inversion so the row hover shows. A card never holds a card.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Settled Press Rule",
+        "body": "On hover and press, a color change and a 0.98 press are all that happen. No lift, no glow, no slide. The only sanctioned movement is an overlay entering (the side panel's 24px translate) and the tab underline growing in place; if anything else moves more than 2px on interaction, it is wrong.",
+        "section": "components"
+      },
+      {
+        "name": "The Reason Travels Rule",
+        "body": "An AI judgment never appears alone: the fit pill carries its reason in a tooltip and the side panel, every \"AI pick\" chip sits beside a reason line, and every \"AI suggested\" Join tile carries a one-line reason drawn from the fan's own intro. Fit scores and fit reasons exist only on /dashboard screens.",
+        "section": "components"
+      },
+      {
+        "name": "The Same Shape Rule",
+        "body": "Skeletons, empty states and errors occupy the exact footprint of the content they replace, so nothing jumps when data arrives.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do open every creator screen on the decision: the AI briefing, the top picks, the highest-fit pitches. Full lists come second.",
+      "Do float the Pewter Shell (#DADADC, radius 40px, padding 24px) on the Soft Daylight Grey page (#F2F2F3) with the haze pooling across its lower right at reference strength (peak alpha 0.72 to 0.90), never as a faint tint.",
+      "Do build navigation chrome from glass pills (white at 45%): sidebar items 52px tall, header tray and tab bar 64px, toolbar, pagination.",
+      "Do mark the active sidebar item, the active bottom nav item and the current fan community in lime (#E8FA8B) with weight 600 and aria-current (nav items add a filled icon), and the current page in lime with Small Strong and aria-current.",
+      "Do keep exactly one purple (#7C3AED) primary button per screen, or one Promote per card on the creator Ideas grid.",
+      "Do limit pastel stat cards to Today, three at most, each one a link to the list it counts.",
+      "Do rotate community card tints apricot, lavender, aqua, white in creation order, give every card different live data, and never exceed two columns on Communities.",
+      "Do use pure white (#FFFFFF) only as the card-strong surface, as text and icons on purple, ink and Brick Red, and as the 2px rings around the online dot and stacked avatars.",
+      "Do use a card only for one object or one dataset (a stat, a chart, a table, a community, an idea), and keep layout chrome on glass or the bare shell.",
+      "Do show every status as a tinted pill with dark text: Butter Wash with Toffee for New, Requested and Pending; Ice Wash with Harbor Teal for Shortlisted, Accepted, Replied and Live; Dove Grey with ink for Archived, Filtered, Draft and Unpublished.",
+      "Do set data, figures and inactive tabs in ink-soft (#5E5E62), titles, labels and active states in ink (#2D2D30), and step secondary text up to ink-soft on glass, lavender cards, the header pill and the shell's header band.",
+      "Do put every full-page table in a Pure White card (radius 28px) with a Dove Grey (#E9E9EB) pill header, 48px rows, 13px cells and 1px Ledger Grey (#D4D4D8) dividers, with the hovered row lifting to Pure White; tables inside Today cards use the compact variant.",
+      "Do set every number that can change in tabular figures, and carry a trend's direction in its sign (\"+18%\", \"−4%\"), never in color or the arrow alone.",
+      "Do set error and destructive words in Brick Red (#DC2626) on Pure White or Paper White only, with the icon and the error border in Signal Red.",
+      "Do pair every fit pill with its one-line reason, and keep fit scores off fan pages.",
+      "Do give every chart a one-line text summary and a \"Show data\" table toggle.",
+      "Do keep touch targets at 44px or more on fan pages, and make fan pages work from 360px wide inside in-app browsers.",
+      "Do use skeletons in the exact shape of the final card, a spinner inside the button for mutations, and the shimmering \"AI reviewing\" chip for AI work.",
+      "Do honor prefers-reduced-motion: tickers show the final value, fades and shimmer are off.",
+      "Do write plain, specific, short copy with real demo data (Mira Kapoor, Arjun, Builders, Designers, Investors & Operators, Music & Creators, Fitness Crew, Local Impact).",
+      "Do use initials on Apricot, Lavender or Pool tiles for avatars (Mira's one licensed photo is the exception), and two overlapping ink circles as the logo placeholder."
+    ],
+    "donts": [
+      "Don't recreate Discord-style noise: no endless channel lists, no unread badges on sidebar items, community cards or tabs. The bell's count badge is the only count badge in the creator shell.",
+      "Don't design anything that looks like paid DMs: no prices, tip jars, paywalls or \"priority\" upsells on the pitch form or inbox rows. Pitches are ranked by fit, never by payment.",
+      "Don't ship a one-way link-in-bio page or a Google Form: the bio link always shows communities with member counts and Join, and the pitch form ends on a confirmation that says where the reply will appear.",
+      "Don't show low-contrast status text: no light orange or teal words on white (Marigold is 2.0:1, Lagoon Teal 2.2:1). Status is a tinted pill with dark text, every time.",
+      "Don't ship placeholder copy: no lorem ipsum, no \"Lorem dashboard\", no \"Name Goes Here\", no \"Product full name goes here\", in any shipped or demo screen.",
+      "Don't stage the AI light show: no sparkles outside the AI chip, no glowing gradients, no hype words, and no AI action on fan content without a creator click.",
+      "Don't reproduce the dense POS keypad or the Starline asterisk logo from the reference screens.",
+      "Don't use ink-muted (#6E6E73) or success-ink (#15803D) on the shell, glass, lavender or the header pill, and never set words in Fog Grey (#9A9AA0), Meadow Green (#16A34A), Signal Red (#EF4444), Marigold, Lagoon Teal or Chart Violet.",
+      "Don't set any words but ink directly on the hazed part of the shell.",
+      "Don't use lime as a button fill, a content background or a text color.",
+      "Don't add shadows to cards, pills, chips, buttons, tables or toasts; only side panels, dialogs and popovers (menus and tooltips included) take Overlay Soft.",
+      "Don't put glass on content cards or over scrolling content, and never add backdrop-filter to it.",
+      "Don't nest a card inside a card; glass holds only controls and titles, and a card never holds a card.",
+      "Don't use border-left or border-right greater than 1px as a colored stripe on cards, rows, callouts or alerts.",
+      "Don't use gradient text (background-clip: text over a gradient). Emphasis comes from weight or size.",
+      "Don't reach for a modal first: side panels and inline edits come first, dialogs only confirm destructive actions.",
+      "Don't animate width, height, top, left, margins or background-position, and never use bounce or elastic easing.",
+      "Don't add a second typeface, a display font in labels or buttons, uppercase labels, or pure black (#000) text.",
+      "Don't use em dashes or a double hyphen as a dash in UI copy; use commas, colons, periods or parentheses."
+    ]
+  }
+}
