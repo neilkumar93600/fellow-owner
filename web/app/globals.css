@@ -1,0 +1,332 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Fellow Owners design tokens, from docs/04-ui-ux-brief.md §3 (DESIGN.md mirrors them).
+ * Light theme only in v1; dark mode is P2 (F26).
+ */
+:root {
+  --page: #f2f2f3;
+  --shell: #dadadc;
+  --blur-1: #aeb8e6;
+  --blur-2: #9fd0d7;
+  --blur-3: #d7ccb6;
+  --glass: rgba(255, 255, 255, 0.45);
+  --card: #f9f9fa;
+  --card-strong: #ffffff;
+  --ink: #2d2d30;
+  --ink-muted: #6e6e73;
+  --ink-faint: #9a9aa0;
+  --line: #e5e5e8;
+  --table-head: #e9e9eb;
+  --lime: #e8fa8b;
+  --peach: #fff3e3;
+  --peach-tile: #ffe6c4;
+  --orange: #f2a93b;
+  --lavender: #f1ecff;
+  --lavender-tile: #e3d9ff;
+  --purple: #7c3aed;
+  --purple-chart: #8b5cf6;
+  --aqua: #e1f7f9;
+  --aqua-tile: #c9f0f4;
+  --teal: #1fbfd0;
+  --success: #16a34a;
+  --success-ink: #15803d;
+  --warn-bg: #fff1d6;
+  --warn-ink: #a45a00;
+  --info-bg: #ddf5f8;
+  --info-ink: #0e7490;
+  --danger: #ef4444;
+
+  /* Motion: state changes only, ease out, no bounce. */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-base: 200ms;
+  --dur-slow: 250ms;
+
+  /* shadcn variables mapped onto the brief's tokens. */
+  --background: var(--page);
+  --foreground: var(--ink);
+  --card-foreground: var(--ink);
+  --popover: var(--card-strong);
+  --popover-foreground: var(--ink);
+  --primary: var(--purple);
+  --primary-foreground: #ffffff;
+  --secondary: var(--card-strong);
+  --secondary-foreground: var(--ink);
+  --muted: var(--table-head);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--lime);
+  --accent-foreground: var(--ink);
+  --destructive: var(--danger);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: rgb(124 58 237 / 0.4);
+  --chart-1: var(--orange);
+  --chart-2: var(--purple-chart);
+  --chart-3: var(--teal);
+  --chart-4: var(--lime);
+  --chart-5: var(--ink-faint);
+  --radius: 1rem;
+  --sidebar: var(--shell);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--lime);
+  --sidebar-primary-foreground: var(--ink);
+  --sidebar-accent: var(--glass);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--line);
+  --sidebar-ring: rgb(124 58 237 / 0.4);
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  --color-page: var(--page);
+  --color-shell: var(--shell);
+  --color-blur-1: var(--blur-1);
+  --color-blur-2: var(--blur-2);
+  --color-blur-3: var(--blur-3);
+  --color-glass: var(--glass);
+  --color-card-strong: var(--card-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-table-head: var(--table-head);
+  --color-lime: var(--lime);
+  --color-peach: var(--peach);
+  --color-peach-tile: var(--peach-tile);
+  --color-orange: var(--orange);
+  --color-lavender: var(--lavender);
+  --color-lavender-tile: var(--lavender-tile);
+  --color-purple: var(--purple);
+  --color-purple-chart: var(--purple-chart);
+  --color-aqua: var(--aqua);
+  --color-aqua-tile: var(--aqua-tile);
+  --color-teal: var(--teal);
+  --color-success: var(--success);
+  --color-success-ink: var(--success-ink);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-ink: var(--warn-ink);
+  --color-info-bg: var(--info-bg);
+  --color-info-ink: var(--info-ink);
+  --color-danger: var(--danger);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  /* Radius scale from the brief: 12 search, 14 icon tile, 16 input, 20 chip, 24 idea card, 28 card, 32 fan shell, 40 app shell. */
+  --radius-sm: 0.75rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 1.75rem;
+  --radius-4xl: 2rem;
+  --radius-shell: 2.5rem;
+
+  /* App type scale (04 §4). */
+  --text-display: 2rem;
+  --text-display--line-height: 2.5rem;
+  --text-display--font-weight: 500;
+  --text-h1: 1.5rem;
+  --text-h1--line-height: 2rem;
+  --text-h1--font-weight: 500;
+  --text-h2: 1.25rem;
+  --text-h2--line-height: 1.75rem;
+  --text-h2--font-weight: 500;
+  --text-stat: 2.5rem;
+  --text-stat--line-height: 2.75rem;
+  --text-stat--font-weight: 600;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.375rem;
+  --text-small: 0.8125rem;
+  --text-small--line-height: 1.125rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --text-caption--font-weight: 500;
+
+  /* Landing scale (brand register override in the landing brief). */
+  --text-hero: clamp(3.5rem, 1.6rem + 6.4vw, 7.5rem);
+  --text-hero--line-height: 0.93;
+  --text-hero--letter-spacing: -0.035em;
+  --text-hero--font-weight: 500;
+  --text-section: clamp(2.5rem, 1.4rem + 3.6vw, 4.5rem);
+  --text-section--line-height: 1.05;
+  --text-section--letter-spacing: -0.03em;
+  --text-section--font-weight: 500;
+  --text-lead: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+  --text-lead--line-height: 1.45;
+  --text-lead--letter-spacing: -0.01em;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "kern" 1,
+      "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid rgb(124 58 237 / 0.4);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--lime);
+    color: var(--ink);
+  }
+}
+
+@layer components {
+  /* Buttons (04 §5): primary purple pill 48 high, secondary white outlined pill, ghost 40 round. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 3rem;
+    padding-inline: 1.5rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition:
+      background-color var(--dur-base) var(--ease-out-quart),
+      color var(--dur-base) var(--ease-out-quart),
+      border-color var(--dur-base) var(--ease-out-quart),
+      transform var(--dur-fast) var(--ease-out-quart),
+      filter var(--dur-base) var(--ease-out-quart);
+  }
+  .btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .btn-primary {
+    background: var(--purple);
+    color: #ffffff;
+  }
+  .btn-primary:hover {
+    filter: brightness(0.94);
+  }
+  .btn-secondary {
+    background: var(--card-strong);
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  .btn-secondary:hover {
+    border-color: #d4d4d9;
+    background: #fbfbfc;
+  }
+  .btn-lime {
+    background: var(--lime);
+    color: var(--ink);
+  }
+  .btn-lime:hover {
+    filter: brightness(0.96);
+  }
+  .btn-ghost {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn-ghost:hover {
+    background: var(--glass);
+  }
+
+  /* Glass pill: tab bars, toolbars, header tray, nav on the shell (04 §5). */
+  .glass-pill {
+    background: var(--glass);
+    border-radius: 999px;
+  }
+
+  /* Small eyebrow chip used above section titles. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2rem;
+    padding-inline: 0.875rem;
+    border-radius: 999px;
+    background: var(--card-strong);
+    color: var(--ink);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

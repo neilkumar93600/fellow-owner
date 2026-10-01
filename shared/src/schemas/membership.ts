@@ -4,10 +4,7 @@ import { cursorQuerySchema, idSchema, linkSchema } from './space.js';
 
 const M = LIMITS.membership;
 
-export const introSchema = z
-  .string()
-  .trim()
-  .max(M.intro.max, `Up to ${M.intro.max} characters`);
+export const introSchema = z.string().trim().max(M.intro.max, `Up to ${M.intro.max} characters`);
 
 export const headlineSchema = z
   .string()
@@ -55,10 +52,7 @@ export const updateMembershipSchema = z
     headline: headlineSchema.nullable().optional(),
     intro: introSchema.nullable().optional(),
     skills: skillsSchema.optional(),
-    links: z
-      .array(linkSchema)
-      .max(M.links.max, `Up to ${M.links.max} links`)
-      .optional(),
+    links: z.array(linkSchema).max(M.links.max, `Up to ${M.links.max} links`).optional(),
     communityIds: z.array(idSchema).min(1).max(LIMITS.community.perSpace.max).optional(),
   })
   .refine((value) => Object.values(value).some((v) => v !== undefined), {
