@@ -1,6 +1,6 @@
 import type { FeedPage, LockedPostPreview, PostType } from '@fellow-owners/shared';
-import { getFeed } from '@/api/spaces';
 import { useInfiniteCursor } from '@/hooks/use-cursor-list';
+import { getFeed } from '@/lib/api/spaces';
 
 export const feedKeys = {
   all: ['feed'] as const,

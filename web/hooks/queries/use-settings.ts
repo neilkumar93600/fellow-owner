@@ -1,7 +1,7 @@
 import type { UpdateSettingsInput } from '@fellow-owners/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateSettings } from '@/api/studio';
 import { studioKeys } from '@/hooks/use-space';
+import { updateSettings } from '@/lib/api/studio';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError, toastSuccess } from '@/lib/toast';
 

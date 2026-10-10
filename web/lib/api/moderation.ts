@@ -6,7 +6,7 @@ import type {
   ReportsPage,
   ReportsQuery,
 } from '@fellow-owners/shared';
-import { type Params, query } from '@/api/studio';
+import { type Params, query } from '@/lib/api/studio';
 import { apiFetch } from '@/lib/fetcher';
 
 // Typed client for reports, comment moderation and leaving a space (F25).

@@ -3,10 +3,10 @@
 import { emailSchema } from '@fellow-owners/shared';
 import { Send } from 'lucide-react';
 import { type FormEvent, useRef, useState } from 'react';
-import { submitSupportRequest } from '@/api/support';
 import { CopyButton } from '@/components/shared/copy-button';
 import { Button } from '@/components/ui/button';
 import { Field, TextField } from '@/components/ui/field';
+import { submitSupportRequest } from '@/lib/api/support';
 import { ApiError } from '@/lib/fetcher';
 import { CONTACT, MIN_AGE } from '@/lib/legal';
 import { toastSuccess } from '@/lib/toast';

@@ -4,7 +4,7 @@ import type {
   NotificationsQuery,
   UnreadCount,
 } from '@fellow-owners/shared';
-import { type Params, query } from '@/api/studio';
+import { type Params, query } from '@/lib/api/studio';
 import { apiFetch } from '@/lib/fetcher';
 
 // Typed client for /api/notifications (any signed-in user): the bell (F21).

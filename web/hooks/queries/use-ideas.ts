@@ -7,11 +7,11 @@ import type {
   StudioPostDetail,
 } from '@fellow-owners/shared';
 import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { moderateComment } from '@/api/moderation';
-import { addComment } from '@/api/posts';
-import { actOnPost, getIdeas, getStudioPost, sendFeedback } from '@/api/studio';
 import { useCursorPages } from '@/hooks/use-cursor-list';
 import { studioKeys } from '@/hooks/use-space';
+import { moderateComment } from '@/lib/api/moderation';
+import { addComment } from '@/lib/api/posts';
+import { actOnPost, getIdeas, getStudioPost, sendFeedback } from '@/lib/api/studio';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 

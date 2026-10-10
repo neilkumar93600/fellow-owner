@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getPublicConfig } from '@/api/config';
+import { getPublicConfig } from '@/lib/api/config';
 
 export const publicConfigKeys = { all: ['public-config'] as const };
 

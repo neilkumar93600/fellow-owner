@@ -1,6 +1,6 @@
 import type { MetricsQuery } from '@fellow-owners/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { getStudioMetrics } from '@/api/metrics';
+import { getStudioMetrics } from '@/lib/api/metrics';
 
 // Under the 'studio' prefix so every studio invalidation (studioKeys.all) refreshes it.
 export const metricsKeys = {

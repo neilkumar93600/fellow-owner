@@ -1,5 +1,7 @@
 import type { FollowersPage, UpdateFollowerInput } from '@fellow-owners/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCursorPages } from '@/hooks/use-cursor-list';
+import { studioKeys } from '@/hooks/use-space';
 import {
   autoTagFollowers,
   createFollower,
@@ -9,9 +11,7 @@ import {
   importYoutube,
   tagFollowers,
   updateFollower,
-} from '@/api/followers';
-import { useCursorPages } from '@/hooks/use-cursor-list';
-import { studioKeys } from '@/hooks/use-space';
+} from '@/lib/api/followers';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 

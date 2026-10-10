@@ -8,9 +8,9 @@ import {
 } from '@fellow-owners/shared';
 import { ImagePlus, Trash2 } from 'lucide-react';
 import { useId, useRef, useState } from 'react';
-import { presignUpload, uploadFile } from '@/api/uploads';
 import { AvatarInitials } from '@/components/shared/avatar-initials';
 import { Button } from '@/components/ui/button';
+import { presignUpload, uploadFile } from '@/lib/api/uploads';
 import { ApiError } from '@/lib/fetcher';
 
 export interface ImageUploadProps {

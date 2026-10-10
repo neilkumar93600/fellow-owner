@@ -2,9 +2,9 @@
 
 import { emailSchema, LIMITS } from '@fellow-owners/shared';
 import { type FormEvent, useState } from 'react';
-import { submitSupportRequest } from '@/api/support';
 import { Button } from '@/components/ui/button';
 import { Field, TextArea, TextField } from '@/components/ui/field';
+import { submitSupportRequest } from '@/lib/api/support';
 import { ApiError } from '@/lib/fetcher';
 
 const S = LIMITS.support;

@@ -5,12 +5,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { getSpacePage } from '@/api/spaces';
 import { SidePanel } from '@/components/shared/side-panel';
 import { Button } from '@/components/ui/button';
 import { Field, TextArea } from '@/components/ui/field';
 import { spacePageKeys } from '@/hooks/queries/use-space-page';
 import { studioKeys, useStudioSpace } from '@/hooks/use-space';
+import { getSpacePage } from '@/lib/api/spaces';
 import { ApiError, apiFetch } from '@/lib/fetcher';
 import { toastError, toastSuccess } from '@/lib/toast';
 

@@ -13,9 +13,14 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { actOnPromotion, createPromotion, getPromotionComposer, getPromotions } from '@/api/studio';
 import { useCursorPages } from '@/hooks/use-cursor-list';
 import { studioKeys } from '@/hooks/use-space';
+import {
+  actOnPromotion,
+  createPromotion,
+  getPromotionComposer,
+  getPromotions,
+} from '@/lib/api/studio';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 

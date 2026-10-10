@@ -1,6 +1,6 @@
 import type { NotificationPrefs, NotificationPrefsInput } from '@fellow-owners/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getNotificationPrefs, updateNotificationPrefs } from '@/api/notification-prefs';
+import { getNotificationPrefs, updateNotificationPrefs } from '@/lib/api/notification-prefs';
 import { toastError } from '@/lib/toast';
 
 export const notificationPrefsKeys = { all: ['notification-prefs'] as const };

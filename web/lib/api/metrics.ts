@@ -1,5 +1,5 @@
 import type { MetricsQuery, StudioMetrics } from '@fellow-owners/shared';
-import { type Params, query } from '@/api/studio';
+import { type Params, query } from '@/lib/api/studio';
 import { apiFetch } from '@/lib/fetcher';
 
 /** GET /api/studio/metrics?days=7|30 (creator only). */

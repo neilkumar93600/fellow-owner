@@ -3,10 +3,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Check, Circle } from 'lucide-react';
 import Link from 'next/link';
-import { markChecklistStep } from '@/api/snoozes';
 import { CopyButton } from '@/components/shared/copy-button';
 import { buttonVariants } from '@/components/ui/button';
 import { studioKeys, useStudioSpace } from '@/hooks/use-space';
+import { markChecklistStep } from '@/lib/api/snoozes';
 import { routes } from '@/lib/routes';
 
 export interface SetupChecklistProps {

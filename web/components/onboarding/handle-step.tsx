@@ -4,8 +4,8 @@ import { handleSchema, isReservedHandle, LIMITS } from '@fellow-owners/shared';
 import { CircleAlert, CircleCheck, Info, Link2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { checkHandle } from '@/api/studio';
 import { useDebounce } from '@/hooks/use-debounce';
+import { checkHandle } from '@/lib/api/studio';
 import styles from './onboarding.module.css';
 import {
   CharCount,

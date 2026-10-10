@@ -1,6 +1,6 @@
 import type { CoachRequestInput } from '@fellow-owners/shared';
 import { useMutation } from '@tanstack/react-query';
-import { checkWithCoach } from '@/api/coach';
+import { checkWithCoach } from '@/lib/api/coach';
 
 /**
  * Idea Coach (F30): clarity checks on a pitch or post draft. A mutation, not a query: each press of

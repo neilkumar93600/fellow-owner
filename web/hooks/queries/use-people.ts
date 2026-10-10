@@ -1,8 +1,8 @@
 import type { PeoplePage } from '@fellow-owners/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { getPeople, removePerson, setPersonCommunities } from '@/api/studio';
 import { useCursorPages } from '@/hooks/use-cursor-list';
 import { studioKeys } from '@/hooks/use-space';
+import { getPeople, removePerson, setPersonCommunities } from '@/lib/api/studio';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getSimilar, getStudioSimilar } from '@/api/similar';
+import { getSimilar, getStudioSimilar } from '@/lib/api/similar';
 
 // Studio keys sit under 'studio' so every studio invalidation refreshes them.
 export const similarKeys = {

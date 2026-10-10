@@ -3,9 +3,9 @@
 import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { leaveSpace } from '@/api/moderation';
 import { ConfirmDialog } from '@/components/shared/confirm-dialog';
 import { Button } from '@/components/ui/button';
+import { leaveSpace } from '@/lib/api/moderation';
 import { routes } from '@/lib/routes';
 import { toastError, toastSuccess } from '@/lib/toast';
 

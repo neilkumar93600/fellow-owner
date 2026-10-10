@@ -1,9 +1,9 @@
 import type { ExportKind } from '@fellow-owners/shared';
 import { Download, Ellipsis } from 'lucide-react';
-import { exportUrl } from '@/api/insights';
 import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { Menu, MenuContent, MenuLinkItem, MenuTrigger } from '@/components/ui/menu';
+import { exportUrl } from '@/lib/api/insights';
 
 /** The toolbar "Export CSV" download for one list (the API names the file and sends the BOM). */
 export function ExportCsvLink({ kind }: { kind: ExportKind }) {

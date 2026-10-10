@@ -12,7 +12,7 @@ import type {
   UpdateFollowerInput,
   YoutubeImportInput,
 } from '@fellow-owners/shared';
-import { type Params, query } from '@/api/studio';
+import { type Params, query } from '@/lib/api/studio';
 import { apiFetch } from '@/lib/fetcher';
 
 // Typed client for /api/studio/followers (creator only): the follower roster (F23).

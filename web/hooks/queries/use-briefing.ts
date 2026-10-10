@@ -1,6 +1,6 @@
 import type { Briefing, FeedbackVerdict } from '@fellow-owners/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getBriefing, regenerateBriefing, sendFeedback } from '@/api/studio';
+import { getBriefing, regenerateBriefing, sendFeedback } from '@/lib/api/studio';
 import { ApiError } from '@/lib/fetcher';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';

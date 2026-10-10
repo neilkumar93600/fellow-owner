@@ -6,7 +6,7 @@ import {
   getChallenge,
   getChallenges,
   pickChallengeWinner,
-} from '@/api/challenges';
+} from '@/lib/api/challenges';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 

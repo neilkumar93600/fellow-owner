@@ -7,13 +7,13 @@ import type {
 } from '@fellow-owners/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { useInfiniteCursor } from '@/hooks/use-cursor-list';
 import {
   getNotifications,
   getUnreadCount,
   markNotificationsRead,
   unreadStreamUrl,
-} from '@/api/notifications';
-import { useInfiniteCursor } from '@/hooks/use-cursor-list';
+} from '@/lib/api/notifications';
 
 export const notificationsKeys = {
   all: ['notifications'] as const,

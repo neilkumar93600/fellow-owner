@@ -5,11 +5,11 @@ Status: draft v0.2 for review · Updated: 2026-10-10
 ## Conventions
 
 - **Root holds five things:** `web/`, `api/`, Docker files, `.github/`, `docs/`. Plus one small `shared/` package (see note 1).
-- **Web has no `src/` folder:** `app/`, `components/`, `hooks/`, `api/` and `lib/` sit at the root of `web/`, next to `proxy.ts`. The `@/*` alias points at `web/`.
+- **Web has no `src/` folder:** `app/`, `components/`, `hooks/` and `lib/` sit at the root of `web/`, next to `proxy.ts`. The `@/*` alias points at `web/`.
 - **Web routes are grouped by who can see them:** `(public)` anyone, `(auth)` sign-in pages, `(legal)` policies, `(dashboard)` signed-in only. Groups never change the URL.
 - **Web components are grouped by reach:** `layout/` (navbar, footer, header, sidebar), `shared/` (used on more than one page), `landing/`, then one folder per page or feature.
 - **`hooks/`** holds the project's custom hooks. **`lib/`** holds flat files only: no subfolder for a single file.
-- **`web/api/`** holds one typed client file per backend route group. It is the only place the web app calls the backend.
+- **`web/lib/api/`** holds one typed client file per backend route group. It is the only place the web app calls the backend. Never put it at `web/api/`: Vercel deploys every file in that folder as a Serverless Function (the Hobby plan allows 12 per deployment).
 - **`api/`** is layer-based: `routes -> controllers -> services -> repositories -> db`, wired in `container.ts`. AI, auth and background work each have their own folder.
 - File names are kebab-case. React components export PascalCase names. Backend files carry their layer as a suffix: `posts.routes.ts`, `posts.controller.ts`, `posts.service.ts`, `posts.repo.ts`.
 - Every file listed below exists. Web components are listed by folder, not file by file, because that tree changes often.
@@ -134,12 +134,11 @@ web/
 │  ├─ use-space, use-membership, use-url-state, use-cursor-list, use-debounce, use-media-query, use-in-app-browser, use-sign-out, use-scroll-scene
 │  └─ queries/                          one TanStack Query hook file per resource (feed, post, pitches, overview, briefing, inbox, ideas, people, followers, notifications, insights, communities, promotions, challenges, question-groups, reports, similar, coach, ask, me, metrics, join, settings, notification-prefs, public-config, space-page)
 │
-├─ api/                                 typed client, one file per backend route group
-│  ├─ account.ts, ask.ts, challenges.ts, coach.ts, config.ts, demo.ts, followers.ts, insights.ts
-│  ├─ metrics.ts, moderation.ts, notification-prefs.ts, notifications.ts, pitches.ts, posts.ts
-│  └─ question-groups.ts, similar.ts, snoozes.ts, spaces.ts, studio.ts, support.ts, uploads.ts
-│
-├─ lib/                                 flat files only (plus fixtures/)
+├─ lib/                                 flat files, plus api/ and fixtures/
+│  ├─ api/                              typed client, one file per backend route group (not web/api/: Vercel deploys that folder as Functions)
+│  │  ├─ account.ts, ask.ts, challenges.ts, coach.ts, config.ts, demo.ts, followers.ts, insights.ts
+│  │  ├─ metrics.ts, moderation.ts, notification-prefs.ts, notifications.ts, pitches.ts, posts.ts
+│  │  └─ question-groups.ts, similar.ts, snoozes.ts, spaces.ts, studio.ts, support.ts, uploads.ts
 │  ├─ utils.ts, format.ts, fonts.ts, toast.ts, constants.ts, routes.ts (typed path builders), seo.ts
 │  ├─ auth-client.ts                    Better Auth React client (emailOTP, username, inferAdditionalFields for the social profile)
 │  ├─ fetcher.ts                        fetch wrapper: base URL, cookie forwarding on server, error mapping

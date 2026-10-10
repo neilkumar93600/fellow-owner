@@ -4,11 +4,11 @@ import type {
   ViewerMembership,
 } from '@fellow-owners/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { joinSpace, suggestCommunities } from '@/api/spaces';
 import { feedKeys } from '@/hooks/queries/use-feed';
 import { meKeys } from '@/hooks/queries/use-me';
 import { spacePageKeys } from '@/hooks/queries/use-space-page';
 import { membershipKeys } from '@/hooks/use-membership';
+import { joinSpace, suggestCommunities } from '@/lib/api/spaces';
 import { toastSuccess } from '@/lib/toast';
 
 /** Mutation keys, for useIsMutating. */

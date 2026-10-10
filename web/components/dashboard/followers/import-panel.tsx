@@ -9,7 +9,6 @@ import {
 import { Check, ClipboardPaste, FileText, Link2, Plus, Sparkles, Upload } from 'lucide-react';
 import type * as React from 'react';
 import { useId, useState } from 'react';
-import type { YoutubeImportResult } from '@/api/followers';
 import { SegmentedPill } from '@/components/shared/segmented-pill';
 import { SidePanel } from '@/components/shared/side-panel';
 import { TINT_ROTATION } from '@/components/shared/tint';
@@ -17,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldError, TextArea, TextField } from '@/components/ui/field';
 import { useCreateCommunity } from '@/hooks/queries/use-communities';
 import { useImportFollowers, useImportYoutube } from '@/hooks/queries/use-followers';
+import type { YoutubeImportResult } from '@/lib/api/followers';
 import { formatNumber, pluralize } from '@/lib/format';
 import { errorMessage, toastSuccess } from '@/lib/toast';
 

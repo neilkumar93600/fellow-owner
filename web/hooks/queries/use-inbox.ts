@@ -16,8 +16,8 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { actOnInboxItem, getInbox, getInboxItem, sendFeedback } from '@/api/studio';
 import { useCursorPages } from '@/hooks/use-cursor-list';
+import { actOnInboxItem, getInbox, getInboxItem, sendFeedback } from '@/lib/api/studio';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 import { overviewKeys } from './use-overview';

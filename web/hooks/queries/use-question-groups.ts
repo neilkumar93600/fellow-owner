@@ -10,7 +10,7 @@ import {
   listQuestionGroups,
   redraftQuestionGroup,
   removeQuestionGroupAsker,
-} from '@/api/question-groups';
+} from '@/lib/api/question-groups';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 import { inboxKeys } from './use-inbox';

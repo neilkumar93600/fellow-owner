@@ -2,8 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { unsubscribeWithToken } from '@/api/notification-prefs';
 import { Button } from '@/components/ui/button';
+import { unsubscribeWithToken } from '@/lib/api/notification-prefs';
 import { routes } from '@/lib/routes';
 
 /**

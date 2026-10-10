@@ -1,6 +1,6 @@
 import type { ReportItem, ReportStatus, ReportsPage } from '@fellow-owners/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { actOnReport, listReports, reportComment, reportPost } from '@/api/moderation';
+import { actOnReport, listReports, reportComment, reportPost } from '@/lib/api/moderation';
 import { toastError, toastSuccess } from '@/lib/toast';
 
 export const reportKeys = {
