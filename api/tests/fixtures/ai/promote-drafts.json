@@ -1,0 +1,339 @@
+{
+  "task": "promoteDrafts",
+  "description": "Recorded smart-tier answers for promoteDrafts (Spotlight composer). Lengths count hashtags and the short link (X: 23).",
+  "cases": [
+    {
+      "name": "four-platform-drafts",
+      "description": "Drafts for all four platforms in the creator's voice; hashtags normalized (the # is dropped).",
+      "input": {
+        "post": {
+          "id": "9d2e7a3b-3c2d-4e0a-9c73-2f8b5e3b1c01",
+          "type": "project",
+          "status": "forming_team",
+          "title": "Lisbon on $60 a day",
+          "body": "I'm putting together a simple Lisbon budget guide for people who follow Mira's trips. You pick a day, and it lists where to sleep, eat and walk for under $60. I have a working draft of every day and 12 friends checking the prices. Looking for a photographer and someone who lives in Lisbon.",
+          "links": [
+            {
+              "label": "Draft",
+              "url": "https://example.com/lisbon-on-60-a-day"
+            }
+          ],
+          "rolesNeeded": [
+            "Photographer",
+            "Local guide"
+          ],
+          "communityName": "Budget Travel",
+          "authorName": "Ana Costa"
+        },
+        "team": [
+          {
+            "name": "Ana Costa",
+            "role": "Lead"
+          }
+        ],
+        "tasteProfile": {
+          "promote": [
+            "Budget-honest travel with real prices",
+            "Guides made by people in my community",
+            "Local guides written by people who live there"
+          ],
+          "never": [
+            "Crypto or prize scams",
+            "Paid reviews of places she has not been"
+          ],
+          "voice": [
+            "Posted a new Lisbon guide today. Short, no fluff, every price dated. If you try it, tell me what I got wrong.",
+            "Every trip I love started as a small, slightly embarrassing first plan. Post yours.",
+            "Going alone is scary. Do it anyway."
+          ]
+        },
+        "voice": [
+          "Posted a new Lisbon guide today. Short, no fluff, every price dated. If you try it, tell me what I got wrong.",
+          "Every trip I love started as a small, slightly embarrassing first plan. Post yours.",
+          "Going alone is scary. Do it anyway."
+        ],
+        "creatorName": "Mira Lane"
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "A Lisbon budget guide, made in the Budget Travel community",
+            "drafts": {
+              "x": {
+                "text": "Ana Costa from my Budget Travel community is putting together a Lisbon budget guide: pick a day and see where to sleep, eat and walk for under $60. She needs a photographer and a local. Want in?",
+                "hashtags": [
+                  "LisbonTravel",
+                  "#budgettravel"
+                ]
+              },
+              "instagram": {
+                "text": "Small first plans are how big trips start.\n\nAna Costa from my Budget Travel community is putting together a Lisbon budget guide for people who follow my trips. You pick a day, and it lists where to sleep, eat and walk for under $60.\n\nShe has a working draft of every day and 12 friends are already checking the prices. Now she's forming a team and needs a photographer and someone who lives in Lisbon.\n\nThis is exactly the kind of guide I want to exist: simple, honest, and made by people who have actually been there.\n\nIf that's you, or you just want to read it, tap the link in bio and say hi.",
+                "hashtags": [
+                  "lisbon",
+                  "budgettravel",
+                  "travel guide",
+                  "creators",
+                  "local tips"
+                ]
+              },
+              "linkedin": {
+                "text": "One of my favorite things about this community: people don't just talk about trips, they plan them for each other.\n\nAna Costa, from the Budget Travel community in my space, is putting together a Lisbon budget guide for people who follow my trips. The idea is simple. Pick a day, and the guide lists where to sleep, eat and walk for under $60.\n\nShe already has a working draft of every day, and 12 friends are checking the prices. The project is now forming a team, and two roles are open: a photographer and someone who lives in Lisbon.\n\nI love budget-honest travel with real prices, and this is one of them.\n\nKnow someone who should be on this team? Send them the link or tag them below.",
+                "hashtags": [
+                  "LisbonTravel",
+                  "BudgetTravel"
+                ]
+              },
+              "youtube": {
+                "text": "Quick spotlight from the community.\n\nAna Costa in our Budget Travel group is putting together a Lisbon budget guide: pick a day and it lists where to sleep, eat and walk for under $60. She's looking for a photographer and someone who lives in Lisbon to join the team.\n\nWould you use this for your own trip? Tell me in the comments.",
+                "hashtags": [
+                  "community"
+                ]
+              }
+            }
+          },
+          "usage": {
+            "prompt_tokens": 1900,
+            "completion_tokens": 720
+          }
+        }
+      ],
+      "expect": {
+        "platforms": [
+          "x",
+          "instagram",
+          "linkedin",
+          "youtube"
+        ],
+        "failed": [],
+        "headline": "A Lisbon budget guide, made in the Budget Travel community",
+        "xHashtags": [
+          "LisbonTravel",
+          "budgettravel"
+        ],
+        "instagramHashtags": [
+          "lisbon",
+          "budgettravel",
+          "TravelGuide",
+          "creators",
+          "LocalTips"
+        ],
+        "requests": 1
+      }
+    },
+    {
+      "name": "x-too-long-and-invented-claim",
+      "description": "Attempt 1: the X draft is too long and LinkedIn invents 10,000 readers, so run.ts retries. Attempt 2 repeats both: X is shortened by dropping whole sentences, LinkedIn fails (draftErrors).",
+      "input": {
+        "post": {
+          "id": "9d2e7a3b-3c2d-4e0a-9c73-2f8b5e3b1c01",
+          "type": "project",
+          "status": "forming_team",
+          "title": "Lisbon on $60 a day",
+          "body": "I'm putting together a simple Lisbon budget guide for people who follow Mira's trips. You pick a day, and it lists where to sleep, eat and walk for under $60. I have a working draft of every day and 12 friends checking the prices. Looking for a photographer and someone who lives in Lisbon.",
+          "links": [
+            {
+              "label": "Draft",
+              "url": "https://example.com/lisbon-on-60-a-day"
+            }
+          ],
+          "rolesNeeded": [
+            "Photographer",
+            "Local guide"
+          ],
+          "communityName": "Budget Travel",
+          "authorName": "Ana Costa"
+        },
+        "team": [
+          {
+            "name": "Ana Costa",
+            "role": "Lead"
+          }
+        ],
+        "tasteProfile": {
+          "promote": [
+            "Budget-honest travel with real prices",
+            "Guides made by people in my community",
+            "Local guides written by people who live there"
+          ],
+          "never": [
+            "Crypto or prize scams",
+            "Paid reviews of places she has not been"
+          ],
+          "voice": [
+            "Posted a new Lisbon guide today. Short, no fluff, every price dated. If you try it, tell me what I got wrong.",
+            "Every trip I love started as a small, slightly embarrassing first plan. Post yours.",
+            "Going alone is scary. Do it anyway."
+          ]
+        },
+        "voice": [
+          "Posted a new Lisbon guide today. Short, no fluff, every price dated. If you try it, tell me what I got wrong.",
+          "Every trip I love started as a small, slightly embarrassing first plan. Post yours.",
+          "Going alone is scary. Do it anyway."
+        ],
+        "creatorName": "Mira Lane"
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "A Lisbon budget guide from the Budget Travel community",
+            "drafts": {
+              "x": {
+                "text": "Ana Costa from my Budget Travel community is putting together a Lisbon budget guide for people who follow my trips. You pick a day, and it lists exactly where to sleep, eat and walk for under $60, with every price checked. She already has a working draft of every day in testing. Now she needs a photographer and someone who lives in Lisbon to take it further. Want in?",
+                "hashtags": [
+                  "LisbonTravel"
+                ]
+              },
+              "instagram": {
+                "text": "Small first plans are how big trips start.\n\nAna Costa from my Budget Travel community is putting together a Lisbon budget guide for people who follow my trips. You pick a day, and it lists where to sleep, eat and walk for under $60.\n\nShe has a working draft of every day and 12 friends are already checking the prices. Now she's forming a team and needs a photographer and someone who lives in Lisbon.\n\nThis is exactly the kind of guide I want to exist: simple, honest, and made by people who have actually been there.\n\nIf that's you, or you just want to read it, tap the link in bio and say hi.",
+                "hashtags": [
+                  "budgettravel"
+                ]
+              },
+              "linkedin": {
+                "text": "One of my favorite things about this community: people don't just talk about trips, they plan them for each other.\n\nAna Costa, from the Budget Travel community in my space, is putting together a Lisbon budget guide for people who follow my trips. The idea is simple. Pick a day, and the guide lists where to sleep, eat and walk for under $60.\n\nIt already has 10,000 readers and a waitlist. The project is now forming a team, and two roles are open: a photographer and someone who lives in Lisbon.\n\nI love budget-honest travel with real prices, and this is one of them.\n\nKnow someone who should be on this team? Send them the link or tag them below.",
+                "hashtags": []
+              },
+              "youtube": {
+                "text": "Quick spotlight from the community.\n\nAna Costa in our Budget Travel group is putting together a Lisbon budget guide: pick a day and it lists where to sleep, eat and walk for under $60. She's looking for a photographer and someone who lives in Lisbon to join the team.\n\nWould you use this for your own trip? Tell me in the comments.",
+                "hashtags": []
+              }
+            }
+          },
+          "usage": {
+            "prompt_tokens": 1900,
+            "completion_tokens": 700
+          }
+        },
+        {
+          "content": {
+            "headline": "A Lisbon budget guide from the Budget Travel community",
+            "drafts": {
+              "x": {
+                "text": "Ana Costa from my Budget Travel community is putting together a Lisbon budget guide for people who follow my trips. You pick a day, and it lists exactly where to sleep, eat and walk for under $60, with every price checked. She already has a working draft of every day in testing. Now she needs a photographer and someone who lives in Lisbon to take it further. Want in?",
+                "hashtags": [
+                  "LisbonTravel"
+                ]
+              },
+              "instagram": {
+                "text": "Small first plans are how big trips start.\n\nAna Costa from my Budget Travel community is putting together a Lisbon budget guide for people who follow my trips. You pick a day, and it lists where to sleep, eat and walk for under $60.\n\nShe has a working draft of every day and 12 friends are already checking the prices. Now she's forming a team and needs a photographer and someone who lives in Lisbon.\n\nThis is exactly the kind of guide I want to exist: simple, honest, and made by people who have actually been there.\n\nIf that's you, or you just want to read it, tap the link in bio and say hi.",
+                "hashtags": [
+                  "budgettravel"
+                ]
+              },
+              "linkedin": {
+                "text": "One of my favorite things about this community: people don't just talk about trips, they plan them for each other.\n\nAna Costa, from the Budget Travel community in my space, is putting together a Lisbon budget guide for people who follow my trips. The idea is simple. Pick a day, and the guide lists where to sleep, eat and walk for under $60.\n\nIt already has 10,000 readers and a waitlist. The project is now forming a team, and two roles are open: a photographer and someone who lives in Lisbon.\n\nI love budget-honest travel with real prices, and this is one of them.\n\nKnow someone who should be on this team? Send them the link or tag them below.",
+                "hashtags": []
+              },
+              "youtube": {
+                "text": "Quick spotlight from the community.\n\nAna Costa in our Budget Travel group is putting together a Lisbon budget guide: pick a day and it lists where to sleep, eat and walk for under $60. She's looking for a photographer and someone who lives in Lisbon to join the team.\n\nWould you use this for your own trip? Tell me in the comments.",
+                "hashtags": []
+              }
+            }
+          },
+          "usage": {
+            "prompt_tokens": 2700,
+            "completion_tokens": 700
+          }
+        }
+      ],
+      "expect": {
+        "platforms": [
+          "x",
+          "instagram",
+          "youtube"
+        ],
+        "failed": [
+          "linkedin"
+        ],
+        "xMaxWeightedLength": 256,
+        "requests": 2
+      }
+    },
+    {
+      "name": "regenerate-x-with-link-and-hashtags-in-text",
+      "description": "Regenerate only X after publish: the model pastes the showcase URL, a [link] placeholder and trailing hashtags into the text; all are moved or removed.",
+      "input": {
+        "post": {
+          "id": "9d2e7a3b-3c2d-4e0a-9c73-2f8b5e3b1c01",
+          "type": "project",
+          "status": "forming_team",
+          "title": "Lisbon on $60 a day",
+          "body": "I'm putting together a simple Lisbon budget guide for people who follow Mira's trips. You pick a day, and it lists where to sleep, eat and walk for under $60. I have a working draft of every day and 12 friends checking the prices. Looking for a photographer and someone who lives in Lisbon.",
+          "links": [
+            {
+              "label": "Draft",
+              "url": "https://example.com/lisbon-on-60-a-day"
+            }
+          ],
+          "rolesNeeded": [
+            "Photographer",
+            "Local guide"
+          ],
+          "communityName": "Budget Travel",
+          "authorName": "Ana Costa"
+        },
+        "team": [
+          {
+            "name": "Ana Costa",
+            "role": "Lead"
+          }
+        ],
+        "tasteProfile": {
+          "promote": [
+            "Budget-honest travel with real prices",
+            "Guides made by people in my community",
+            "Local guides written by people who live there"
+          ],
+          "never": [
+            "Crypto or prize scams",
+            "Paid reviews of places she has not been"
+          ],
+          "voice": [
+            "Posted a new Lisbon guide today. Short, no fluff, every price dated. If you try it, tell me what I got wrong.",
+            "Every trip I love started as a small, slightly embarrassing first plan. Post yours.",
+            "Going alone is scary. Do it anyway."
+          ]
+        },
+        "voice": [
+          "Posted a new Lisbon guide today. Short, no fluff, every price dated. If you try it, tell me what I got wrong.",
+          "Every trip I love started as a small, slightly embarrassing first plan. Post yours.",
+          "Going alone is scary. Do it anyway."
+        ],
+        "creatorName": "Mira Lane",
+        "platforms": [
+          "x"
+        ],
+        "showcaseUrl": "http://localhost:3000/mira/s/lisbon-on-60-a-day"
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "A Lisbon budget guide, made in the Budget Travel community",
+            "drafts": {
+              "x": {
+                "text": "Featured today: Ana Costa's Lisbon budget guide from my Budget Travel community. Every day under $60. She's looking for a photographer. http://localhost:3000/mira/s/lisbon-on-60-a-day [link] #LisbonTravel #BudgetTravel",
+                "hashtags": []
+              }
+            }
+          },
+          "usage": {
+            "prompt_tokens": 1500,
+            "completion_tokens": 90
+          }
+        }
+      ],
+      "expect": {
+        "platforms": [
+          "x"
+        ],
+        "failed": [],
+        "xText": "Featured today: Ana Costa's Lisbon budget guide from my Budget Travel community. Every day under $60. She's looking for a photographer.",
+        "xHashtags": [
+          "LisbonTravel",
+          "BudgetTravel"
+        ],
+        "requests": 1
+      }
+    }
+  ]
+}

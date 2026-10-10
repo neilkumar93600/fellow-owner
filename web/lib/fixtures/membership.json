@@ -1,0 +1,23 @@
+{
+  "signedIn": true,
+  "isOwner": false,
+  "membership": {
+    "id": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+    "role": "member",
+    "name": "Priya Shah",
+    "headline": "Austin solo traveler who plans every trip around food",
+    "intro": "Long-time viewer, first time posting. Austin-based, eleven countries so far, mostly alone and mostly for the food. Happy to help plan someone else’s trip too.",
+    "skills": ["itinerary planning", "budgeting", "food writing"],
+    "links": [
+      {
+        "url": "https://instagram.com/priyashah.eats",
+        "label": "Instagram"
+      }
+    ],
+    "communityIds": [
+      "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+      "96fa6957-4867-46f2-810c-ea84ea97a1ec"
+    ],
+    "joinedAt": "2026-08-09T12:33:21.679Z"
+  }
+}

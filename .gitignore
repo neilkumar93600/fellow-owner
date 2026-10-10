@@ -1,0 +1,44 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# turbo, vercel
+.turbo/
+.vercel/
+
+# env
+.env
+.env.*
+!.env.example
+
+# tests
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# logs and os
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+# local agent / QA artefacts
+.playwright-mcp/
+typecheck-output.txt
+/r4-*.png
+.claude/settings.local.json
+
+# editors
+.idea/
+.vscode/*
+!.vscode/extensions.json

@@ -1,0 +1,851 @@
+/*
+ * The three studio screens of "For creators" (creators-panels.tsx), in the Golden Hour Frost look.
+ * Every screen sits in a frosted shell (creators.module.css) and responds to its width through container
+ * queries on the figure: a phone-width column first, side-by-side from 480 and 560px.
+ */
+
+/* ---------- Atoms ---------- */
+
+.avatar {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.avatarLg {
+  width: 40px;
+  height: 40px;
+  font-size: 0.8125rem;
+}
+
+.miraFace {
+  position: relative;
+  display: block;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.whoName {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.whoMeta {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.25;
+}
+
+.typePill {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 9px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.8);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Buttons drawn as part of the picture. The one filled action per screen is ink; no coral in the mock-ups. */
+.btnPrimary,
+.btnPrimaryWide,
+.btnGlass,
+.btnGhost,
+.btnGhostSm,
+.btnMini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding-inline: 16px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.btnPrimary,
+.btnPrimaryWide {
+  background: var(--ink);
+  color: #fff;
+}
+
+.btnPrimaryWide {
+  width: 100%;
+  height: 44px;
+  font-size: 0.875rem;
+}
+
+.btnGlass {
+  background: rgb(255 255 255 / 0.85);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+  color: var(--ink);
+}
+
+.btnGhost {
+  color: var(--ink-soft);
+}
+
+.btnGhostSm {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--ink);
+}
+
+.btnMini {
+  height: 32px;
+  padding-inline: 12px;
+  background: rgb(255 255 255 / 0.9);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+  color: var(--ink);
+  font-size: 0.75rem;
+}
+
+/* ---------- (a) Today ---------- */
+
+.today {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+@container (min-width: 560px) {
+  .today {
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+/* The next card peeks 12px below the top one, at 96% scale. */
+.stack {
+  position: relative;
+  padding-bottom: 14px;
+}
+
+.peek {
+  position: absolute;
+  inset: 12px 4% 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+  padding: 0 18px 8px;
+  border-radius: 24px;
+  background: rgb(255 255 255 / 0.55);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+  overflow: hidden;
+}
+
+.peekName {
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.decision {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  background: rgb(255 255 255 / 0.92);
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.9),
+    0 18px 40px -22px rgb(40 30 60 / 0.3);
+}
+
+@container (min-width: 480px) {
+  .decision {
+    gap: 14px;
+    padding: 20px;
+    border-radius: 28px;
+  }
+}
+
+.decisionTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.facePhoto {
+  position: relative;
+  display: block;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.who {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.quote {
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+@container (min-width: 480px) {
+  .quote {
+    font-size: 1.25rem;
+  }
+}
+
+.why {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.why svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--ink);
+}
+
+.why em {
+  color: var(--ink);
+  font-style: italic;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.side {
+  display: grid;
+  gap: 10px;
+}
+
+.pulse {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.7);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.pulse svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--success);
+}
+
+.thanks {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.7);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+.thanksLabel {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.thanksRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.thanksRow .btnMini {
+  grid-column: 1 / -1;
+}
+
+.thanksText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ---------- Tabs, toolbar (fan mail, spotlight) ---------- */
+
+.tabBar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 48px;
+  padding-inline: 6px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.6);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+  overflow: hidden;
+}
+
+.tabBarTight {
+  height: 44px;
+}
+
+.tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding-inline: 14px;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tabActive {
+  background: rgb(255 255 255 / 0.95);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Active tab: a 3px coral dot, as in the rail. */
+.tabActive::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 3px;
+  height: 3px;
+  margin-left: -1.5px;
+  border-radius: 999px;
+  background: var(--color-sunset);
+}
+
+.tabWide {
+  display: none;
+}
+
+@container (min-width: 480px) {
+  .tabWide {
+    display: inline-flex;
+  }
+}
+
+.tabFiltered {
+  margin-left: auto;
+}
+
+.tabCount {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding-inline: 6px;
+  border-radius: 999px;
+  background: var(--color-aurora-peach);
+  color: var(--ink);
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-inline: 8px 0;
+}
+
+.toolbarText {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+}
+
+.searchSquare {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.8);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+  color: var(--ink);
+}
+
+/* ---------- (b) Fan mail ---------- */
+
+.mailList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mail {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 12px;
+  align-items: start;
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.78);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+.mailHover {
+  background: rgb(255 255 255 / 0.96);
+  box-shadow:
+    inset 0 0 0 1px var(--glass-edge),
+    0 12px 28px -18px rgb(40 30 60 / 0.35);
+}
+
+.mailBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.mailTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mailTop .whoName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mailQuote {
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.mailWhy {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+/* On phones the label sits under the text, in the text column; from 480 it moves to the right edge. */
+.mailMatch {
+  grid-column: 2;
+  justify-self: start;
+  margin-top: 4px;
+}
+
+@container (min-width: 480px) {
+  .mail {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .mailMatch {
+    grid-column: 3;
+    margin-top: 0;
+  }
+}
+
+/* Phones show three of the four cards. */
+.mailList > li:nth-child(4) {
+  display: none;
+}
+
+@container (min-width: 480px) {
+  .mailList > li:nth-child(4) {
+    display: grid;
+  }
+}
+
+/* ---------- (c) Spotlight ---------- */
+
+.composer {
+  display: grid;
+  gap: 12px;
+}
+
+@container (min-width: 560px) {
+  .composer {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.compose,
+.order {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+
+.draft {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgb(255 255 255 / 0.85);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+.draftTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.draftTitle {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.draftVoice {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding-inline: 9px;
+  border-radius: 999px;
+  background: var(--color-aurora-peach);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.draftField {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.draftLink,
+.draftTags {
+  color: var(--sky, #2b6ca8);
+}
+
+.draftLink {
+  font-weight: 500;
+}
+
+.caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--ink);
+  animation: panel-caret 1.1s steps(1) 6;
+}
+
+@keyframes panel-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+}
+
+.draftFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+}
+
+.saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--success);
+  font-weight: 500;
+}
+
+.charCount {
+  font-weight: 500;
+}
+
+.showcaseRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px 10px 10px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.78);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+.showcaseTile {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--color-aurora-sky);
+  color: var(--ink);
+}
+
+.showcaseBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.showcaseTitle {
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.showcasePath {
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.livePill {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: 10px;
+  border-radius: 999px;
+  background: #dff3e6;
+  color: #0f6a31;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.orderLabel {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.85);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+.previewThumb {
+  position: relative;
+  display: block;
+  width: 64px;
+  height: 48px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.previewBody {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.previewTitle {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.previewMeta {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+}
+
+.credits {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.7);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+.creditList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.credit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.creditText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.creditName {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.creditRole {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.linkField {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 44px;
+  padding-inline: 14px 6px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.linkText {
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.clicks {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.7);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+.clicksText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.clicksValue {
+  color: var(--ink);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.clicksTrend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--success);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 44px;
+}
+
+.bar {
+  width: 8px;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--color-aurora-lilac);
+  transform-origin: 50% 100%;
+}
+
+.barToday {
+  background: var(--ink);
+}
+
+.orderRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.orderRow .btnGlass {
+  flex: 1 1 0;
+  height: 36px;
+  padding-inline: 10px;
+  font-size: 0.75rem;
+}

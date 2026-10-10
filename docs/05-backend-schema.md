@@ -55,6 +55,15 @@ AI fields (present on `posts` and `inbound`, written only by the AI module):
 | `ai_is_spam` | boolean | no | | |
 | `embedding` | vector(1536) | no | | |
 
+### user (Better Auth)
+Better Auth's generated columns (`id`, `name`, `email` unique, `email_verified`, `image`, `created_at`, `updated_at`) plus the `username` plugin and the optional social profile (`user.additionalFields` in `api/src/auth/index.ts`):
+
+| Field | Type | Required | Default | Notes |
+|-------|------|----------|---------|-------|
+| username | text | no | | unique; trimmed and lowercased; the space-handle rules (3..30, `^[a-z0-9_.]+$`, not reserved when chosen, so a word reserved later can still log in; shared `usernameSchema`); null on accounts made without one (social, demo) |
+| social_platform | text | no | | `instagram`, `tiktok`, `youtube`, `x` or `linkedin` (shared `SOCIAL_PLATFORMS`) |
+| social_handle | text | no | | <= 100, `^[A-Za-z0-9._-]+$`, stored without the leading @ |
+
 ### spaces
 | Field | Type | Required | Default | Notes |
 |-------|------|----------|---------|-------|
@@ -265,10 +274,25 @@ Indexes: (space_id, created_at), (user_id, task, created_at).
 
 Unique (ref_type, ref_id, created_by_user_id).
 
+### followers and follower_communities (built in MVP pass)
+
+**followers:** id, space_id (fk spaces cascade), name (1..80), handle (null, <= 60), platform (null, CHECK in shared `PLATFORMS`), email (null, lowercased, <= 254), note (null, <= 500), source (manual|csv|paste, default manual), import_id (fk imports, set null), membership_id (fk memberships, set null, unique), created_at.
+- unique `(space_id, email) where email is not null`
+- unique `(space_id, coalesce(platform,''), lower(handle)) where handle is not null`
+- unique `membership_id where not null`
+- index `(space_id, created_at desc)`
+
+**follower_communities:** (follower_id fk cascade, community_id fk cascade) pk, tagged_by (creator|ai, default creator), created_at. Index on community_id.
+
+Both tables created by migration 0003_followers_notifications.sql. Row types: `FollowerRow`, `FollowersPage`, `FollowerCommunityRow`.
+
+### notifications and imports (used by the MVP pass)
+**notifications:** kinds now include idea_posted, pitch_received and comment_received besides reply_received, project_featured, team_request, team_decision and ask_posted (reserved for Asks); migration 0003 replaces the `notifications_kind` CHECK. Columns: id, user_id, space_id, kind, payload jsonb, read_at, created_at. Index (user_id, read_at, created_at desc).
+
+**imports:** id, space_id, source (paste, csv, youtube), status (pending, done, failed), item_count, result jsonb, created_at. The follower import writes one row per import (source paste or csv, result with created, duplicates and skipped); `followers.import_id` points at it.
+
 ### P1 tables
 - **asks:** id, space_id, community_id (null = all communities), title 5..120, body <= 2000, due_at, status (open, closed), response_summary jsonb, created_at.
-- **notifications:** id, user_id, space_id, kind (reply_received, project_featured, team_request, team_decision, ask_posted), payload jsonb, read_at, created_at. Index (user_id, read_at, created_at desc).
-- **imports:** id, space_id, source (paste, csv, youtube), status (pending, done, failed), item_count, result jsonb, created_at.
 
 ## 3. Relationships
 
@@ -287,9 +311,11 @@ Unique (ref_type, ref_id, created_by_user_id).
 
 ## 5. Authentication flow
 
-- **Sign up and sign in** are the same step: a 6-digit email code (Better Auth `emailOTP`; 10-minute expiry, 5 attempts) or Google. The first successful sign-in creates `user`.
+- **Create account:** name, email, username, password and an optional social profile (Better Auth `emailAndPassword` + `username`), or Google, Apple or Facebook. An email sign-up creates `user` with `email_verified = false` and emails a 6-digit `email-verification` code (Better Auth `emailOTP`; 10-minute expiry, 5 attempts, stored hashed in `verification`). Confirming the code sets `email_verified` but opens no session: the web then logs in with the password just typed. An email that already has an account gets the same answer and no email. The first social sign-in creates `user` + `account` directly.
+- **Log in:** email or username + password (`account.password` holds the salted scrypt hash, `provider_id = 'credential'`), or Google, Apple, Facebook. Logging in to an unconfirmed account answers 403 `EMAIL_NOT_VERIFIED` and emails a fresh code.
+- **Password reset:** a 6-digit `forget-password` code (`/email-otp/request-password-reset`, then `/email-otp/reset-password`) sets the new hash and deletes every session of the user. No reset links; `/change-password` is disabled.
 - **Session:** Better Auth `session` row + httpOnly cookie, 7 days, refreshed daily. Sign out deletes the session.
-- **No passwords** for real users, so no reset flow. Two demo accounts (emails and password from env: `DEMO_CREATOR_EMAIL`, `DEMO_FAN_EMAIL`, `DEMO_PASSWORD`) are created during seed and are only reachable through `POST /api/demo/session`.
+- **Demo accounts:** two ordinary, already confirmed password accounts (emails and password from env: `DEMO_CREATOR_EMAIL`, `DEMO_FAN_EMAIL`, `DEMO_PASSWORD`), created or repaired by `ensureDemoUsers()` during seed and the demo reset. The demo buttons sign into them through `POST /api/demo/session`.
 - **Becoming an owner:** completing onboarding creates `spaces` + an `owner` membership in one transaction.
 - **Becoming a member:** confirming Join, or sending a first pitch, creates a `member` membership.
 - **Account deletion:** deletes the user's memberships and profile; their posts and comments keep `author_membership_id = null`.
@@ -340,7 +366,7 @@ A daily job (same Vercel cron as the demo reset) purges expired rows.
 
 ## 9. Migration and seed data
 
-- `drizzle-kit generate` produces SQL migrations committed under `api/src/db/migrations`. The first migration enables `vector` and creates enums. Migrations are additive in v1; any destructive change ships as two migrations.
+- `drizzle-kit generate` produces SQL migrations committed under `api/src/db/migrations`. The first migration enables `vector` and creates enums. Migration 0003_followers_notifications creates the followers and follower_communities tables and replaces the notifications_kind CHECK with the expanded kind list. Migrations are additive in v1; any destructive change ships as two migrations.
 - `pnpm db:migrate` runs before each API deploy.
 - `pnpm db:seed` loads `api/src/db/seed/data/*.json` into a demo space:
   - Creator Mira Kapoor (`/mira`), 740K followers across YouTube 410K, Instagram 260K, X 70K; taste profile and three voice samples.
@@ -348,6 +374,7 @@ A daily job (same Vercel cron as the demo reset) purges expired rows.
   - About 1,200 members generated with a fixed random seed (names, headlines, skills, join dates over 12 weeks).
   - About 140 posts, 400 comments, signals and teams; about 180 pitches with realistic noise (spam, fan mail, real collab and investment offers).
   - 2 published promotions with click history.
+  - About 30 followers with notes, some tagged by creator and AI, a few linked to demo members including Arjun.
   - AI fields (summary, category, fit score, reason, tags, skills, spam flag) prefilled in the JSON, so every P0 screen works with no API key. `pnpm db:seed --reanalyze` reruns live triage.
   - Embeddings are not committed (about 1,500 vectors of 1,536 floats would bloat the repo). `pnpm db:embed` backfills them when an API key is set. Only P1 features (similar ideas, people who could help, Ask your AI) need them; P0 people search uses skills and text search.
 - Seed text is written once by `api/src/db/seed/generate-content.ts` (uses the LLM) and committed. Seeding itself never calls the LLM.

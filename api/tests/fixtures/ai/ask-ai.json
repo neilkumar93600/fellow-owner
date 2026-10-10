@@ -1,0 +1,83 @@
+{
+  "task": "askAI",
+  "description": "Recorded smart-tier answer for the P1 Ask your AI (matches referenced by key; inline [m1] becomes [1]).",
+  "cases": [
+    {
+      "name": "who-has-japan-guides",
+      "input": {
+        "question": "Who in my community has written a Japan budget guide?",
+        "creatorName": "Mira Lane",
+        "tasteProfile": {
+          "promote": [
+            "Budget-honest travel guides",
+            "Guides made by people in my community"
+          ],
+          "never": [
+            "Crypto or prize scams"
+          ],
+          "voice": []
+        },
+        "matches": [
+          {
+            "refType": "post",
+            "refId": "5b2c3d4e-0000-4000-8000-000000000001",
+            "title": "Tokyo on $80 a day, a fan guide",
+            "summary": "A day-by-day Tokyo budget with real prices.",
+            "excerpt": "I'm putting together a simple Tokyo budget for people who follow Mira's trips."
+          },
+          {
+            "refType": "post",
+            "refId": "5b2c3d4e-0000-4000-8000-000000000002",
+            "title": "Best convenience-store breakfast in Tokyo?",
+            "summary": null,
+            "excerpt": "What do you all grab on the way to the station?"
+          },
+          {
+            "refType": "post",
+            "refId": "5b2c3d4e-0000-4000-8000-000000000003",
+            "title": "Japan rail pass calculator",
+            "summary": "Checks if a rail pass beats single tickets.",
+            "excerpt": "A tiny calculator that adds up your actual train rides."
+          }
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "answer": "Two fans have written Japan budget guides: a day-by-day Tokyo budget with real prices [m1] and a rail pass calculator that adds up your actual rides [m3]. [m7]",
+            "citations": [
+              "m1",
+              "m3"
+            ]
+          },
+          "usage": {
+            "prompt_tokens": 800,
+            "completion_tokens": 70
+          }
+        },
+        {
+          "content": {
+            "answer": "Two fans have written Japan budget guides: a day-by-day Tokyo budget with real prices [m1] and a rail pass calculator that adds up your actual rides [m3]. [m7]",
+            "citations": [
+              "m1",
+              "m3"
+            ]
+          },
+          "usage": {
+            "prompt_tokens": 900,
+            "completion_tokens": 70
+          }
+        }
+      ],
+      "expect": {
+        "answer": "Two fans have written Japan budget guides: a day-by-day Tokyo budget with real prices [1] and a rail pass calculator that adds up your actual rides [2].",
+        "citationIds": [
+          "5b2c3d4e-0000-4000-8000-000000000001",
+          "5b2c3d4e-0000-4000-8000-000000000003"
+        ],
+        "requests": 2
+      },
+      "description": "Attempt 1 cites an unknown key [m7] inside the answer, so run.ts retries once; attempt 2 repeats it and the unknown marker is removed."
+    }
+  ]
+}

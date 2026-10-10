@@ -1,0 +1,343 @@
+[
+  {
+    "name": "Priya Shah",
+    "handle": "priya.eats",
+    "platform": "instagram",
+    "email": null,
+    "note": "Austin solo traveler. Plans every trip around food and keeps a spreadsheet of tacos.",
+    "communities": [
+      "solo-travelers",
+      "food-finds"
+    ],
+    "taggedBy": "creator",
+    "memberIndex": 0,
+    "createdDaysAgo": 40
+  },
+  {
+    "name": "Elena Marchetti",
+    "handle": "elena.slowly",
+    "platform": "instagram",
+    "email": null,
+    "note": "Spent a month in Sicily after your slow-travel video. Wants to do it again in Portugal.",
+    "communities": [
+      "slow-living",
+      "budget-travel"
+    ],
+    "taggedBy": "creator",
+    "createdDaysAgo": 38
+  },
+  {
+    "name": "Hana Watanabe",
+    "handle": "hana.in.osaka",
+    "platform": "youtube",
+    "email": null,
+    "note": "Local guide in Osaka. Happy to check any Japan budget numbers you put out.",
+    "communities": [
+      "budget-travel",
+      "food-finds"
+    ],
+    "taggedBy": "creator",
+    "createdDaysAgo": 36
+  },
+  {
+    "name": "Marcus Bell",
+    "handle": "marcus.vanlife",
+    "platform": "instagram",
+    "email": "marcus.bell@example.com",
+    "note": "Converted a Sprinter van last year. Does the Pacific Coast Highway every spring.",
+    "communities": [
+      "road-trips"
+    ],
+    "taggedBy": "creator",
+    "createdDaysAgo": 33
+  },
+  {
+    "name": "Sofia Ribeiro",
+    "handle": "sofia.lisboa",
+    "platform": "tiktok",
+    "email": null,
+    "note": "Translator in Porto. Offered to put the Lisbon guide into Portuguese.",
+    "communities": [
+      "budget-travel",
+      "solo-travelers"
+    ],
+    "taggedBy": "creator",
+    "createdDaysAgo": 31
+  },
+  {
+    "name": "Owen Brooks",
+    "handle": "owenwanders",
+    "platform": "youtube",
+    "email": "owen.brooks@example.com",
+    "note": "Teacher saving for his first trip to Europe. Wants a realistic two-week budget.",
+    "communities": [
+      "budget-travel"
+    ],
+    "taggedBy": "creator",
+    "createdDaysAgo": 29
+  },
+  {
+    "name": "Lucia Moreno",
+    "handle": "lucia.runs.abroad",
+    "platform": "instagram",
+    "email": null,
+    "note": "Marathon runner who picks races by city. Asks for running routes in every video.",
+    "communities": [
+      "slow-living",
+      "solo-travelers"
+    ],
+    "taggedBy": "creator",
+    "createdDaysAgo": 27
+  },
+  {
+    "name": "Jordan Ellis",
+    "handle": "jordan.shoots",
+    "platform": "tiktok",
+    "email": null,
+    "note": "Wedding photographer who shoots street scenes on trips. Wants to swap editing tips.",
+    "communities": [
+      "travel-photography"
+    ],
+    "taggedBy": "creator",
+    "createdDaysAgo": 25
+  },
+  {
+    "name": "Grace Mensah",
+    "handle": "grace.eats",
+    "platform": "youtube",
+    "email": null,
+    "note": "Food writer. Keeps a list of family-run kitchens in Accra and Lagos.",
+    "communities": [
+      "food-finds"
+    ],
+    "taggedBy": "creator",
+    "createdDaysAgo": 23
+  },
+  {
+    "name": "Sven Larsen",
+    "handle": "svenroadtrip",
+    "platform": "instagram",
+    "email": null,
+    "note": "Drives from Minnesota to Utah every June with two kids and a roof box.",
+    "communities": [
+      "road-trips"
+    ],
+    "taggedBy": "creator",
+    "createdDaysAgo": 22
+  },
+  {
+    "name": "Maya Cohen",
+    "handle": "maya.sketches",
+    "platform": "x",
+    "email": null,
+    "note": "Illustrator who sketches every trip in a small notebook. Would draw a map for any guide.",
+    "communities": [
+      "travel-photography",
+      "slow-living"
+    ],
+    "taggedBy": "ai",
+    "createdDaysAgo": 21
+  },
+  {
+    "name": "Tomas Silva",
+    "handle": "tomas.guides",
+    "platform": "youtube",
+    "email": "tomas.silva@example.com",
+    "note": "Walking-tour guide in Lisbon. Offers free tours to fans who bring a notebook.",
+    "communities": [
+      "budget-travel"
+    ],
+    "taggedBy": "ai",
+    "createdDaysAgo": 20
+  },
+  {
+    "name": "Amara Obi",
+    "handle": "amara.nomad",
+    "platform": "instagram",
+    "email": null,
+    "note": "Digital nomad, a new city every month. Wants a safety check-in group for late arrivals.",
+    "communities": [
+      "solo-travelers"
+    ],
+    "taggedBy": "ai",
+    "createdDaysAgo": 19
+  },
+  {
+    "name": "Felix Wagner",
+    "handle": "felix.nightrain",
+    "platform": "linkedin",
+    "email": null,
+    "note": "Rail fan. Has ridden eleven night trains and wants to write the Europe guide.",
+    "communities": [
+      "budget-travel"
+    ],
+    "taggedBy": "ai",
+    "createdDaysAgo": 18
+  },
+  {
+    "name": "Zara Ali",
+    "handle": "zara.coffee",
+    "platform": "tiktok",
+    "email": null,
+    "note": "Barista who visits one independent café in every city. Made a passport for it.",
+    "communities": [
+      "food-finds",
+      "slow-living"
+    ],
+    "taggedBy": "ai",
+    "createdDaysAgo": 17
+  },
+  {
+    "name": "Ben Carter",
+    "handle": "bencarter.hikes",
+    "platform": "x",
+    "email": "ben.carter@example.com",
+    "note": "Hiker who prefers empty trails. Asks about permits and campsite booking dates.",
+    "communities": [
+      "road-trips"
+    ],
+    "taggedBy": "ai",
+    "createdDaysAgo": 16
+  },
+  {
+    "name": "Isla Murphy",
+    "handle": "isla.retreats",
+    "platform": "instagram",
+    "email": null,
+    "note": "Yoga teacher on the retreat circuit. Would host a slow morning at any meetup.",
+    "communities": [
+      "slow-living"
+    ],
+    "taggedBy": "ai",
+    "createdDaysAgo": 15
+  },
+  {
+    "name": "Kenji Tanaka",
+    "handle": "kenji.frames",
+    "platform": "instagram",
+    "email": null,
+    "note": "Street photographer in Tokyo. Offered to lead a night photo walk for fans.",
+    "communities": [
+      "travel-photography"
+    ],
+    "taggedBy": "ai",
+    "createdDaysAgo": 14
+  },
+  {
+    "name": "Mei Lin",
+    "handle": "mei.dayone",
+    "platform": "instagram",
+    "email": "mei.lin@example.com",
+    "note": "Planning her first solo trip to Seoul and has a hundred questions about eating alone.",
+    "communities": [],
+    "createdDaysAgo": 13
+  },
+  {
+    "name": "Daniel Okoro",
+    "handle": "dan.edits",
+    "platform": "youtube",
+    "email": null,
+    "note": "Video editor, offered to cut highlight clips from the Sunday vlogs.",
+    "communities": [],
+    "createdDaysAgo": 12
+  },
+  {
+    "name": "Sophie Rossi",
+    "handle": "sophie.packs.light",
+    "platform": "instagram",
+    "email": null,
+    "note": "Flight attendant who knows which budget airlines hide fees. Happy to share.",
+    "communities": [],
+    "createdDaysAgo": 11
+  },
+  {
+    "name": "Noah Fischer",
+    "handle": "noah.vanbuild",
+    "platform": "x",
+    "email": null,
+    "note": "Mechanic building a camper van. Wants a maintenance checklist for first-time van lifers.",
+    "communities": [],
+    "createdDaysAgo": 10
+  },
+  {
+    "name": "Aisha Bello",
+    "handle": "aisha.abroad",
+    "platform": "linkedin",
+    "email": "aisha.bello@example.com",
+    "note": "Travel nurse, a new city every thirteen weeks. Looking for local food tips.",
+    "communities": [],
+    "createdDaysAgo": 9
+  },
+  {
+    "name": "Rafael Costa",
+    "handle": "rafa.cycles",
+    "platform": "instagram",
+    "email": null,
+    "note": "Cycling coast to coast next summer. Asked for a free-camping map.",
+    "communities": [],
+    "createdDaysAgo": 8
+  },
+  {
+    "name": "Chloe Evans",
+    "handle": "chloe.small.towns",
+    "platform": "tiktok",
+    "email": null,
+    "note": "Likes small towns and slow mornings. Asked if there will be a village-stay guide.",
+    "communities": [],
+    "createdDaysAgo": 7
+  },
+  {
+    "name": "Ethan Park",
+    "handle": "ethan.points",
+    "platform": "x",
+    "email": null,
+    "note": "Points-and-miles nerd. Booked a free flight to Tokyo and wants to explain how.",
+    "communities": [],
+    "createdDaysAgo": 6
+  },
+  {
+    "name": "Hannah Weber",
+    "handle": "hannah.sings.abroad",
+    "platform": "tiktok",
+    "email": null,
+    "note": "Sings in a choir that tours. Looking for budget stays near concert halls.",
+    "communities": [],
+    "createdDaysAgo": 5
+  },
+  {
+    "name": "Leo Dubois",
+    "handle": "leo.walks",
+    "platform": "youtube",
+    "email": null,
+    "note": "Retired and finally traveling. Wants a calm itinerary for three weeks in Italy.",
+    "communities": [],
+    "createdDaysAgo": 4
+  },
+  {
+    "name": "Ruby Nguyen",
+    "handle": "ruby.eats.hanoi",
+    "platform": "instagram",
+    "email": null,
+    "note": "Hanoi native who now lives in Seattle. Wants to guide a week in Vietnam.",
+    "communities": [],
+    "createdDaysAgo": 3
+  },
+  {
+    "name": "Marco Bianchi",
+    "handle": "marco.b",
+    "platform": "instagram",
+    "email": null,
+    "note": null,
+    "communities": [],
+    "createdDaysAgo": 2
+  },
+  {
+    "name": "Julia Novak",
+    "handle": null,
+    "platform": null,
+    "email": "julia.novak@example.com",
+    "note": "Loved the last video!",
+    "communities": [],
+    "createdDaysAgo": 1
+  }
+]

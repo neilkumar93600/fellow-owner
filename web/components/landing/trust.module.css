@@ -1,0 +1,180 @@
+/* You stay in charge (trust-section.tsx): three frosted statements on the aurora. */
+
+.section {
+  --gutter: 16px;
+
+  position: relative;
+  padding: 72px var(--gutter);
+}
+
+@media (min-width: 768px) {
+  .section {
+    --gutter: 32px;
+    padding-block: 104px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section {
+    --gutter: 40px;
+    padding-block: 128px;
+  }
+}
+
+.inner {
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+  margin: 40px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 56px;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+  border-radius: 16px;
+  background: var(--color-aurora-peach);
+  color: var(--ink);
+}
+
+.card:nth-child(2) .icon {
+  background: var(--color-aurora-lilac);
+}
+
+.card:nth-child(3) .icon {
+  background: var(--color-aurora-mint);
+}
+
+.title {
+  color: var(--ink);
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.line {
+  max-width: 36ch;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* The picture of the product: a white card at the foot of the tile. */
+.snippet {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-height: 144px;
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.82);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+.snippet p {
+  margin: 0;
+}
+
+.snipLabel {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.snipTitle {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.muted {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.draft {
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--color-aurora-peach);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+/* The send button waits: a plain pill, not yet pressed. */
+.sendBtn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding-inline: 16px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--line-row);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.hearts {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink);
+  font-size: 0.8125rem;
+}
+
+.hearts svg {
+  color: var(--color-coral);
+}
+
+.hearts b {
+  font-weight: 600;
+}
+
+.why {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.why b {
+  color: var(--ink);
+  font-weight: 600;
+}

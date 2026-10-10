@@ -1,0 +1,33 @@
+/* Golden-hour landscape: full-bleed generated art that fades up from the cream page at its top edge. */
+
+.landscape {
+  position: relative;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 38%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 38%);
+}
+
+/* Natural aspect on phones (1200x702); the wide crop (2400x760) from 768px up, capped so it never towers. */
+.art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* From 768px up the footer caps at one screen (footer.module.css): the art takes what is left, between
+   96px and its natural height, cover-cropped from the bottom. */
+@media (min-width: 768px) {
+  .landscape {
+    flex: 1 1 min(520px, 31.67vw);
+    min-height: 96px;
+  }
+
+  .art {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+  }
+}

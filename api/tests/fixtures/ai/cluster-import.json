@@ -1,0 +1,85 @@
+{
+  "task": "clusterImport",
+  "description": "Recorded smart-tier answer for the P1 audience import (comments referenced by key).",
+  "cases": [
+    {
+      "name": "youtube-comments",
+      "input": {
+        "creatorName": "Mira Lane",
+        "comments": [
+          "Would love a group for people planning their first trip abroad while working full time",
+          "Your cheap-flight tips got me through winter, more of those please",
+          "Any other first-timers here? Let's plan a trip together",
+          "I take photos, would be cool to collab on a golden-hour guide",
+          "Started traveling solo because of your videos, now planning my sixth trip",
+          "Is there a place to share trip plans and get feedback?",
+          "Photographer here, happy to shoot for your next series",
+          "Can we do a solo traveler meetup in Mumbai?",
+          "I'm a translator looking for travelers to team up with",
+          "Love the budget content, the packing routines especially",
+          "BUY FOLLOWERS CHEAP visit my profile",
+          "Your editing style is so clean, would love tips on video editing"
+        ],
+        "existingCommunities": [
+          "Budget Travel"
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "communities": [
+              {
+                "name": "First-Trip Planners",
+                "description": "People planning their first big trip and swapping plans.",
+                "sampleComments": [
+                  "k1",
+                  "k3",
+                  "k6"
+                ]
+              },
+              {
+                "name": "Budget Travel",
+                "description": "Cheap flights and real prices.",
+                "sampleComments": [
+                  "k2"
+                ]
+              },
+              {
+                "name": "Solo Travelers",
+                "description": "Members traveling alone and meeting up in new cities.",
+                "sampleComments": [
+                  "k5",
+                  "k8"
+                ]
+              },
+              {
+                "name": "Photographers & Editors",
+                "description": "Photographers and video editors who want to make travel content together.",
+                "sampleComments": [
+                  "k4",
+                  "k7",
+                  "k12",
+                  "k99"
+                ]
+              }
+            ]
+          },
+          "usage": {
+            "prompt_tokens": 900,
+            "completion_tokens": 200
+          }
+        }
+      ],
+      "expect": {
+        "names": [
+          "First-Trip Planners",
+          "Solo Travelers",
+          "Photographers & Editors"
+        ],
+        "firstQuotes": 3,
+        "lastQuotes": 3,
+        "requests": 1
+      }
+    }
+  ]
+}

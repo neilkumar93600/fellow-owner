@@ -1,0 +1,263 @@
+/*
+ * Auth screens: fields, the 6‑digit code boxes and the password strength meter.
+ * Tokens come from app/globals.css; the contrast corrections in DESIGN.md apply:
+ * Field Grey borders (3.3:1), a solid ink focus ring, Brick Red words for errors.
+ */
+
+/* Text inputs (04 §5 Inputs, DESIGN.md Inputs / Fields). */
+.input {
+  display: block;
+  width: 100%;
+  height: 44px;
+  padding-inline: 14px;
+  border: 1px solid var(--line-field);
+  border-radius: 16px;
+  background: var(--card-strong);
+  color: var(--ink);
+  /* 16px on phones stops iOS and in-app webviews from zooming the page on focus. */
+  font-size: 16px;
+  line-height: 22px;
+  transition: border-color var(--dur-fast) var(--ease-out-quart);
+}
+
+.input::placeholder {
+  color: var(--ink-muted);
+  opacity: 1;
+}
+
+.input:hover:not(:disabled, :focus, [aria-invalid="true"]) {
+  border-color: var(--ink-muted);
+}
+
+.input:focus-visible {
+  border-color: var(--color-ink);
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Keep autofilled fields white instead of the browser's tint. */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink);
+  box-shadow: 0 0 0 100px var(--card-strong) inset;
+}
+
+.withToggle {
+  padding-right: 52px;
+}
+
+/* The 6‑digit code boxes. */
+.otpGroup {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.otp {
+  width: 100%;
+  min-width: 0;
+  height: 56px;
+  padding: 0;
+  border: 1px solid var(--line-field);
+  border-radius: 16px;
+  background: var(--card-strong);
+  color: var(--ink);
+  caret-color: var(--color-ink);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  transition: border-color var(--dur-fast) var(--ease-out-quart);
+}
+
+.otp:hover:not(:disabled, :focus, [aria-invalid="true"]) {
+  border-color: var(--ink-muted);
+}
+
+.otp[data-filled="true"] {
+  border-color: var(--ink-soft);
+}
+
+.otp:focus-visible {
+  border-color: var(--color-ink);
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+.otp[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.otp:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.otp:read-only {
+  cursor: progress;
+}
+
+/* Field error words: Brick Red on white (4.8:1); the icon stays Signal Red. */
+.errorText {
+  color: var(--danger-deep);
+}
+
+/* A short fade for messages that appear after an action. Opacity and transform only. */
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.enter {
+  animation: enter var(--dur-base) var(--ease-out-quart) both;
+}
+
+/* Password strength meter: four segments, color is never the only cue (the label names it). */
+.meter {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.meter > span {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line);
+  transition: background-color var(--dur-base) var(--ease-out-quart);
+}
+
+.meter[data-score="1"] > span:nth-child(-n + 1) {
+  background: var(--danger);
+}
+
+.meter[data-score="2"] > span:nth-child(-n + 2) {
+  background: var(--warn-ink);
+}
+
+.meter[data-score="3"] > span:nth-child(-n + 3),
+.meter[data-score="4"] > span {
+  background: var(--success-ink);
+}
+
+/*
+ * A field with a fixed segment inside it (the "@" before a username, the platform picker before a
+ * handle): the outer box draws the border and takes the focus ring, the input inside stays bare.
+ */
+.box {
+  display: flex;
+  align-items: stretch;
+  height: 44px;
+  border: 1px solid var(--line-field);
+  border-radius: 16px;
+  background: var(--card-strong);
+  transition: border-color var(--dur-fast) var(--ease-out-quart);
+}
+
+.box:hover:not(:has(:focus-visible), [data-invalid="true"]) {
+  border-color: var(--ink-muted);
+}
+
+.box:has(:focus-visible) {
+  border-color: var(--color-ink);
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+.box[data-invalid="true"] {
+  border-color: var(--danger);
+}
+
+/* Only the input goes bare: the platform trigger keeps its own inset ring, so it is clear which has focus. */
+.box input:focus-visible {
+  outline: none;
+}
+
+.prefix {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding-inline: 12px;
+  border-right: 1px solid var(--line);
+  border-radius: 15px 0 0 15px;
+  background: var(--page);
+  color: var(--ink-soft);
+  font-size: 16px;
+  user-select: none;
+}
+
+/* A bare "@" before the handle, after the platform picker: same tone, no segment of its own. */
+.at {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding-left: 12px;
+  color: var(--ink-soft);
+  font-size: 16px;
+  user-select: none;
+}
+
+.bareInput {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  padding-inline: 12px 14px;
+  border: 0;
+  border-radius: 0 15px 15px 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.at + .bareInput {
+  padding-left: 2px;
+}
+
+.bareInput::placeholder {
+  color: var(--ink-muted);
+  opacity: 1;
+}
+
+.bareInput:-webkit-autofill,
+.bareInput:-webkit-autofill:hover,
+.bareInput:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink);
+  box-shadow: 0 0 0 100px var(--card-strong) inset;
+}
+
+@media (min-width: 640px) {
+  .input,
+  .bareInput,
+  .prefix,
+  .at {
+    font-size: 15px;
+  }
+
+  .otpGroup {
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}

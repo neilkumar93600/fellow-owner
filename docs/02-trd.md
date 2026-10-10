@@ -59,8 +59,8 @@ Web routes live under `/dashboard`; the matching creator API lives under `/api/s
 ## 4. Authentication and roles
 
 - Better Auth mounted in Express at `/api/auth/*splat`, registered before `express.json()`. Drizzle adapter on the same database.
-- Sign-in methods: 6-digit email code (Better Auth `emailOTP`, sent with Resend) and Google OAuth. Codes, not magic links, because fans arrive inside Instagram, TikTok and YouTube in-app browsers: a magic link opens in a different browser and the session lands there. Google blocks OAuth inside those in-app browsers, so the web app hides the Google button when it detects one.
-- Email and password: enabled for seeded demo accounts only and never shown in the UI, unless the open decision in 01 (Q8) turns password sign-in on for everyone, which adds the forgot and reset pages.
+- Sign-in methods (01, Q8, decided 2026-10-02): email or username + password (Better Auth `emailAndPassword` + `username`), or Google, Apple and Facebook OAuth, each on only when its env pair is set (Facebook stands in for Instagram, which has no login for personal accounts). A new email account gets no session until it confirms its email with a 6-digit code (`emailOTP` with `overrideDefaultEmailVerification`, sent with Resend), and a forgotten password is reset with a code too. Codes, not magic links, because fans arrive inside Instagram, TikTok and YouTube in-app browsers: a magic link opens in a different browser and the session lands there. Google blocks OAuth inside those in-app browsers, so the web app hides the Google button when it detects one; Apple and Facebook stay.
+- Passwords: 8 to 128 characters, stored as Better Auth's salted scrypt hash in `account.password`. A reset ends every session (`revokeSessionsOnPasswordReset`); the link-based reset and `/change-password` are disabled. Usernames follow the space-handle rules (shared `usernameSchema`). Codes: 6 digits, 10 minutes, 5 attempts, stored hashed. `/sign-in/email-otp` stays on for the planned Join step, API clients and the test helpers. Rate limits are Better Auth's defaults per client IP and path, on in production only: sign-in and sign-up 3 per 10 seconds, the email-code endpoints 3 per minute. With `REDIS_URL` set the counters live in Redis (shared by replicas, kept across deploys, each key expiring with its window; fails open if Redis is unreachable); without it they stay in process memory. Sessions stay in Postgres.
 - Demo mode: `POST /api/demo/session { "as": "creator" | "fan" }` signs into the seeded demo accounts on the server and sets the session cookie. Off when `DEMO_ENABLED=false`.
 - Sessions: httpOnly, secure, `sameSite=lax` cookies; 7-day expiry, refreshed daily. `baseURL` is the web origin; `trustedOrigins` lists production, preview and localhost web origins.
 - Roles are per space: `owner` (the creator) and `member`. Platform `admin` is an email allowlist in env (demo reset, support). In the MVP a user owns at most one space and can be a member of many.
@@ -73,8 +73,10 @@ Web routes live under `/dashboard`; the matching creator API lives under `/api/s
 | Embeddings (default OpenAI `text-embedding-3-small`, 1536 dims) | Similar ideas, people matching, semantic search | Dimension is fixed in the schema; changing it needs a migration | Nilesh |
 | Supabase | Postgres + pgvector, backups | Free projects pause after a week idle; use a paid project for the pilot | Nilesh |
 | Vercel | Hosting, cron, logs, firewall | Hobby cron runs at most daily, which is enough for the demo reset | Nilesh |
-| Resend | Sign-in codes and notification email | Needs a verified sending domain | Nilesh |
+| Resend | Email confirmation and password reset codes, and notification email | Needs a verified sending domain | Nilesh |
 | Google Cloud OAuth client | Google sign-in | In testing mode only listed test users can sign in until the app is verified | Nilesh |
+| Apple Developer: Sign in with Apple | Apple sign-in | Needs a paid developer account, a Services ID and a key. The client secret is a JWT signed with that key and lives 6 months at most: rotate it before it expires. Apple sends the name only on the first sign-in, and email reaches a hidden (private relay) address only once the sending domain is registered with Apple | Nilesh |
+| Meta for Developers app | Facebook sign-in | In development mode only people with a role on the app can log in. Going live needs a privacy policy URL and data deletion instructions (`/privacy-policy#deletion`) | Nilesh |
 | YouTube Data API v3 (P2) | Comment import | Daily quota; check before building F24 | Nilesh |
 
 ## 6. Architecture
@@ -124,6 +126,8 @@ The full tree and naming rules are in 07-file-structure.
 
 Local development has no `waitUntil`; the AI module falls back to fire-and-forget promises with error logging.
 
+6. **Notifications (built MVP).** Seven emit points (new post, pitch received, reply sent, project featured, team request, team decision, comment posted) call `deps.notifications.notify(...)` after their transaction commits, logging errors and never throwing. Creator and fan bells get their unread count live from `GET /api/notifications/stream` (Server-Sent Events: the count on connect and after every change, a heartbeat every 25 seconds, at most 5 streams per user per instance). `notify()` and mark-read publish `{ userId, spaceId }` on a pub/sub: Redis pub/sub across replicas when `REDIS_URL` is set (one subscription per instance), in process otherwise. While the stream is down the bell polls `GET /api/notifications/unread` every 30 seconds (TanStack Query pauses it in a background tab and refetches on focus); with Redis unreachable the stream sends the count and closes with a 30-second retry. The list loads when the popover opens, 20 per page with Load more, each item with an href and a plain-text sentence. `POST /api/notifications/read` marks the given ids, or all unread, as read. Read notifications older than 90 days are purged daily.
+
 ### AI tasks
 
 | Task | Tier | Input | Output (zod-validated) | Budget |
@@ -133,9 +137,10 @@ Local development has no `waitUntil`; the AI module falls back to fire-and-forge
 | `suggestCommunities` | fast | member intro, community list | `[{ slug, confidence }]` | 10 per user per hour |
 | `briefing` | smart | candidates (ids, summaries, scores), counts | `{ headline, highlights[3..5]{ refType, refId, why }, watchouts[0..2] }` | 1 per space per day, plus up to 5 regenerations |
 | `promoteDrafts` | smart | post, team, voice samples, taste profile | `{ x, instagram, linkedin, youtube }`, each `{ text, hashtags }` within platform length limits | 10 per space per day |
+| `tagFollowers` (built MVP) | fast | follower names and notes (up to 100 per call), active community names and descriptions | `{ tags: [{ follower, communities[1..2] }] }`, keys resolved back to ids; followers with no clear fit are left out | 50 model calls per space per day |
 | `communityDigest` (P1) | smart | last 7 days of one community | `{ summary, themes, standouts }` | 1 per community per day |
 | `suggestReply` (P1) | fast | pitch + taste profile | `{ reply }` | On demand |
-| `clusterImport` (P1) | smart | up to 500 comments | `{ communities[{ name, description, sampleQuotes }] }` | Per import |
+| `clusterImport` (built MVP) | smart | up to 500 follower notes | `{ communities[{ name, description, sampleQuotes }] }` | 5 model calls per space per day |
 | `askAI` (P1) | smart | question + top 20 semantic matches | answer citing item ids | 30 per space per day |
 
 Every call writes a row to `ai_runs` (task, model, tokens, latency, status). Budget checks read from it.

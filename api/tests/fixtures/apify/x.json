@@ -1,0 +1,38 @@
+[
+  {
+    "type": "user",
+    "userName": "NatGeo",
+    "url": "https://x.com/NatGeo",
+    "id": "17471979",
+    "name": "National Geographic",
+    "isVerified": true,
+    "profilePicture": "https://pbs.twimg.com/profile_images/2050149546685022208/72MxNUv-_normal.jpg",
+    "description": "Step into wonder and find your inner explorer with National Geographic 🌎",
+    "followers": 28086382,
+    "protected": false
+  },
+  {
+    "type": "user",
+    "userName": "NatGeoPhotos",
+    "url": "https://x.com/NatGeoPhotos",
+    "id": "117662694",
+    "name": "Nat Geo Photography",
+    "isVerified": true,
+    "profilePicture": "https://pbs.twimg.com/profile_images/798176802325794816/25mLqDKA_normal.jpg",
+    "description": "All things photography from National Geographic.",
+    "followers": 4627507,
+    "protected": false
+  },
+  {
+    "type": "user",
+    "userName": "NatGeoTravel",
+    "url": "https://x.com/NatGeoTravel",
+    "id": "36184220",
+    "name": "Nat Geo Travel",
+    "isVerified": true,
+    "profilePicture": "https://pbs.twimg.com/profile_images/2050144645619871744/nhLlJFiC_normal.jpg",
+    "description": "Journey across our big, wondrous world with National Geographic.",
+    "followers": 9066923,
+    "protected": false
+  }
+]

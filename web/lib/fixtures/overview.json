@@ -1,0 +1,137 @@
+{
+  "stats": {
+    "members": {
+      "value": 1200,
+      "previous": 810,
+      "changePct": 48.1
+    },
+    "ideasThisWeek": {
+      "value": 50,
+      "previous": 10,
+      "changePct": 400
+    },
+    "opportunitiesWaiting": {
+      "value": 24,
+      "previous": 10,
+      "changePct": 140
+    }
+  },
+  "thisWeek": {
+    "joins": {
+      "total": 1200,
+      "month": 437,
+      "today": 144
+    },
+    "ideas": {
+      "total": 140,
+      "month": 57,
+      "today": 19
+    },
+    "asks": {
+      "total": 180,
+      "month": 67,
+      "today": 20
+    }
+  },
+  "inboxMix": [
+    {
+      "key": "fan_note",
+      "label": "Fan note",
+      "count": 35
+    },
+    {
+      "key": "collab",
+      "label": "Collab",
+      "count": 26
+    },
+    {
+      "key": "brand_deal",
+      "label": "Brand deal",
+      "count": 16
+    },
+    {
+      "key": "idea",
+      "label": "Idea",
+      "count": 15
+    },
+    {
+      "key": "spam",
+      "label": "Spam",
+      "count": 11
+    },
+    {
+      "key": "press",
+      "label": "Press",
+      "count": 7
+    },
+    {
+      "key": "other",
+      "label": "Other",
+      "count": 3
+    }
+  ],
+  "activity": [
+    {
+      "weekStart": "2026-07-20T00:00:00.000Z",
+      "joins": 53,
+      "ideas": 2
+    },
+    {
+      "weekStart": "2026-07-27T00:00:00.000Z",
+      "joins": 57,
+      "ideas": 10
+    },
+    {
+      "weekStart": "2026-08-03T00:00:00.000Z",
+      "joins": 63,
+      "ideas": 2
+    },
+    {
+      "weekStart": "2026-08-10T00:00:00.000Z",
+      "joins": 51,
+      "ideas": 7
+    },
+    {
+      "weekStart": "2026-08-17T00:00:00.000Z",
+      "joins": 47,
+      "ideas": 8
+    },
+    {
+      "weekStart": "2026-08-24T00:00:00.000Z",
+      "joins": 56,
+      "ideas": 5
+    },
+    {
+      "weekStart": "2026-08-31T00:00:00.000Z",
+      "joins": 76,
+      "ideas": 8
+    },
+    {
+      "weekStart": "2026-09-07T00:00:00.000Z",
+      "joins": 85,
+      "ideas": 10
+    },
+    {
+      "weekStart": "2026-09-14T00:00:00.000Z",
+      "joins": 99,
+      "ideas": 14
+    },
+    {
+      "weekStart": "2026-09-21T00:00:00.000Z",
+      "joins": 93,
+      "ideas": 13
+    },
+    {
+      "weekStart": "2026-09-28T00:00:00.000Z",
+      "joins": 167,
+      "ideas": 16
+    },
+    {
+      "weekStart": "2026-10-05T00:00:00.000Z",
+      "joins": 334,
+      "ideas": 42
+    }
+  ],
+  "pendingAnalysis": 0,
+  "aiPaused": false
+}

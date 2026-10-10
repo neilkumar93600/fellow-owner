@@ -1,0 +1,117 @@
+{
+  "items": [
+    {
+      "id": "a3fdc193-8bb6-4298-a89b-299a585f5e59",
+      "postId": "c741f4f6-727e-4329-a34d-e98534add70f",
+      "post": {
+        "title": "Ten family kitchens in Oaxaca",
+        "excerpt": "A fan-made food guide to ten family-run kitchens in Oaxaca, with the one dish to order at each, the price in pesos and dollars, and a photo taken that day. A local guide checks…",
+        "type": "project",
+        "community": {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        },
+        "author": {
+          "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+          "name": "Felix Garcia",
+          "headline": "Food writer, mostly street food",
+          "image": null
+        }
+      },
+      "headline": "Featured: Ten family kitchens in Oaxaca",
+      "drafts": {
+        "x": {
+          "text": "Ten family kitchens in Oaxaca, found and checked by my Food Finds fans. One dish to order at each, the price in pesos and dollars, and a photo from that day. Guide below.",
+          "hashtags": ["OaxacaFood"]
+        },
+        "youtube": {
+          "text": "Ten family kitchens in Oaxaca, a fan-made guide from our Food Finds room. Every address checked by a local. Credits and the full guide are in the link below.",
+          "hashtags": []
+        },
+        "linkedin": {
+          "text": "Ten family kitchens in Oaxaca, made by fans in Food Finds.\n\nA local guide checked every address, a translator wrote the menu cards and a photographer shot the plates in daylight. Most meals are $4 to $9. Link in bio.",
+          "hashtags": ["OaxacaFood", "FoodFinds"]
+        }
+      },
+      "draftErrors": [],
+      "state": "live",
+      "showcaseSlug": "ten-family-kitchens-in-oaxaca",
+      "shortCode": "Rb4Xs9Tn",
+      "shortPath": "/r/Rb4Xs9Tn",
+      "showcasePath": "/mira/s/ten-family-kitchens-in-oaxaca",
+      "clickCount": 54,
+      "clicksByPlatform": {
+        "x": 2,
+        "instagram": 18,
+        "linkedin": 4,
+        "youtube": 26,
+        "other": 4
+      },
+      "publishedAt": "2026-10-04T12:33:21.679Z",
+      "unpublishedAt": null,
+      "createdAt": "2026-10-04T12:33:21.679Z",
+      "updatedAt": "2026-10-09T12:33:23.007Z"
+    },
+    {
+      "id": "16eeefab-9533-42a6-b00c-7a7b67eee602",
+      "postId": "36a4b99d-494d-41b8-8243-de2d88ef688a",
+      "post": {
+        "title": "Lisbon on $60 a day",
+        "excerpt": "Seven days in Lisbon for $420 all in, built by fans in Budget Travel. A local guide checks every price against what a local actually pays, a photographer shoots the golden-hour…",
+        "type": "project",
+        "community": {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        "author": {
+          "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+          "name": "Priya Shah",
+          "headline": "Austin solo traveler who plans every trip around food",
+          "image": null
+        }
+      },
+      "headline": "Featured: Lisbon on $60 a day",
+      "drafts": {
+        "x": {
+          "text": "Lisbon on $60 a day, made by my fans: a local guide, a photographer, an editor and a planner. Every price checked, every spot real. The whole guide is below.",
+          "hashtags": ["LisbonTravel"]
+        },
+        "youtube": {
+          "text": "Lisbon on $60 a day: the fan-made guide. Built in Budget Travel by four people who had never met. Every price is dated and checked by a local. Credits and the full guide are in the link below.",
+          "hashtags": []
+        },
+        "linkedin": {
+          "text": "Lisbon on $60 a day, made by fans in Budget Travel.\n\nA local guide checked every price. A photographer found the golden-hour spots. An editor cut it into twelve minutes and a planner laid out each day. Link in bio.",
+          "hashtags": ["LisbonTravel", "BudgetTravel"]
+        }
+      },
+      "draftErrors": [],
+      "state": "live",
+      "showcaseSlug": "lisbon-on-60-a-day",
+      "shortCode": "Mk7Qd2Lp",
+      "shortPath": "/r/Mk7Qd2Lp",
+      "showcasePath": "/mira/s/lisbon-on-60-a-day",
+      "clickCount": 102,
+      "clicksByPlatform": {
+        "x": 9,
+        "instagram": 46,
+        "linkedin": 3,
+        "youtube": 33,
+        "other": 11
+      },
+      "publishedAt": "2026-09-29T12:33:21.679Z",
+      "unpublishedAt": null,
+      "createdAt": "2026-09-29T12:33:21.679Z",
+      "updatedAt": "2026-10-09T12:33:23.007Z"
+    }
+  ],
+  "nextCursor": null,
+  "counts": {
+    "draft": 0,
+    "live": 2,
+    "unpublished": 0
+  },
+  "totalClicks": 156
+}

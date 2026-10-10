@@ -1,0 +1,4996 @@
+[
+  {
+    "senderIndex": 842,
+    "type": "other",
+    "subject": "Make $5,000/week from home",
+    "body": "Work from home opportunity! Start your own dropshipping travel-gear store with our members, who make $5,000 per week with just 2 hours a day. No experience needed. Join 40,000 others. Click the link to claim your spot before registration closes.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 84,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 4,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 5,
+    "type": "brand_deal",
+    "subject": "Six months with our travel eSIM, $1,800 a month",
+    "body": "We sell travel eSIMs and want an ongoing partner rather than a one-off. $1,800 a month for a mention in the description and one dedicated segment a quarter. We will send you a plan so you can test the coverage on a real trip first.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 82,
+    "ai": {
+      "summary": "Six months with our travel eSIM, $1,800 a month",
+      "category": "brand_deal",
+      "fitScore": 74,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "video editing",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 325,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is a yes from me. One condition: you keep your edit and I keep mine, and nobody approves anybody’s words.",
+    "createdDaysAgo": 81,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 67,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting",
+        "translation",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 579,
+    "type": "brand_deal",
+    "subject": "Creator trip to northern Portugal in September",
+    "body": "On behalf of a regional tourism board we are putting together a creator trip to northern Portugal. Flights and hotels are covered, plus a $3,000 production fee. We ask for two videos and a few stories; the edit is yours.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 79,
+    "ai": {
+      "summary": "Creator trip to northern Portugal in September",
+      "category": "brand_deal",
+      "fitScore": 60,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "photography",
+        "editing",
+        "golden hour"
+      ],
+      "skills": [
+        "photo editing",
+        "lightroom",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 349,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 79,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 21,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "photography",
+        "golden hour"
+      ],
+      "skills": [
+        "photo editing",
+        "lightroom",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 229,
+    "type": "brand_deal",
+    "subject": "Two sponsored videos, $4,500, creative control is yours",
+    "body": "We make carry-on luggage and would like to sponsor two of your videos this spring. $4,500 for the pair, you keep creative control, and the bag only appears where it fits the trip. I am happy to send one first so you can say no if it is not right.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 78,
+    "ai": {
+      "summary": "Two sponsored videos, $4,500, creative control is yours",
+      "category": "brand_deal",
+      "fitScore": 50,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "budget",
+        "flights"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 543,
+    "type": "brand_deal",
+    "subject": "Night-train passes for you and a friend, $5,000",
+    "body": "We are a rail pass company and we would like your Budget Travel fans to see how a night-train trip works. $5,000 and two free passes for you and a friend. We will not ask for approval on the video.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 77,
+    "ai": {
+      "summary": "Night-train passes for you and a friend, $5,000",
+      "category": "brand_deal",
+      "fitScore": 63,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 269,
+    "type": "idea",
+    "subject": "A packing-list teardown video",
+    "body": "Fans send in their packing lists and you cut the weight in half, live. People love watching someone else’s suitcase get edited. I would send you mine and it is, frankly, a mess.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 77,
+    "ai": {
+      "summary": "A packing-list teardown video",
+      "category": "idea",
+      "fitScore": 57,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "van life",
+        "camping",
+        "budget"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 169,
+    "type": "press",
+    "subject": "Profile for our Sunday travel section",
+    "body": "I write the Sunday profile for a small publication, about 2,000 words. I would need two conversations and permission to speak to three people from your communities. You would see the piece before it ran.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Thank you for asking. I can do twenty minutes on a Thursday.",
+    "createdDaysAgo": 76,
+    "ai": {
+      "summary": "Profile for our Sunday travel section",
+      "category": "press",
+      "fitScore": 92,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 516,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Notes like this are the reason I read every message. Thank you.",
+    "createdDaysAgo": 75,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 36,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "safety",
+        "first trip"
+      ],
+      "skills": [
+        "hosting",
+        "translation",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 68,
+    "type": "collab",
+    "subject": "A fan-made Tokyo food map, filmed by us",
+    "body": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for free, if you would feature it. No logo on anything.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 72,
+    "ai": {
+      "summary": "A fan-made Tokyo food map, filmed by us",
+      "category": "collab",
+      "fitScore": 64,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 610,
+    "type": "fan_note",
+    "subject": "The stall owner in Taipei remembered your viewers",
+    "body": "I ate at the night-market stall you mentioned and the owner told me another of your viewers had been the week before. She asked if you were coming. I said not yet. Wanted you to know that people remember.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 71,
+    "ai": {
+      "summary": "The stall owner in Taipei remembered your viewers",
+      "category": "fan_note",
+      "fitScore": 42,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "photography",
+        "golden hour",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "photo editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 151,
+    "type": "other",
+    "subject": "We can rank you #1 on Google",
+    "body": "Hi, I noticed your website is not ranking for your main keywords. Our team can guarantee page one on Google in 60 days using 5,000 high authority backlinks. First month is half price. Let me know a good time to call.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 70,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 7,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 768,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 69,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 74,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "food",
+        "local",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 690,
+    "type": "brand_deal",
+    "subject": "Night-train passes for you and a friend, $5,000",
+    "body": "We are a rail pass company and we would like your Budget Travel fans to see how a night-train trip works. $5,000 and two free passes for you and a friend. We will not ask for approval on the video.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 68,
+    "ai": {
+      "summary": "Night-train passes for you and a friend, $5,000",
+      "category": "brand_deal",
+      "fitScore": 83,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "food",
+        "local",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "hosting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 64,
+    "type": "brand_deal",
+    "subject": "Six months with our travel eSIM, $1,800 a month",
+    "body": "We sell travel eSIMs and want an ongoing partner rather than a one-off. $1,800 a month for a mention in the description and one dedicated segment a quarter. We will send you a plan so you can test the coverage on a real trip first.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 67,
+    "ai": {
+      "summary": "Six months with our travel eSIM, $1,800 a month",
+      "category": "brand_deal",
+      "fitScore": 66,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "road trip",
+        "van life",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 219,
+    "type": "other",
+    "subject": "Question about the Solo Travelers rules",
+    "body": "Quick question rather than a pitch: are the Solo Travelers check-in threads open to people who travel with a partner part of the time? I do not want to clutter it if it is not meant for me.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Yes, please do. Send me the file and I will say thanks properly.",
+    "createdDaysAgo": 66,
+    "ai": {
+      "summary": "Question about the Solo Travelers rules",
+      "category": "other",
+      "fitScore": 86,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "local",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1156,
+    "type": "press",
+    "subject": "Podcast invitation, 40 minutes",
+    "body": "Our podcast does 40-minute conversations, no pre-interview, lightly edited. I would want to spend most of it on the six-rooms decision rather than the usual growth questions. We record Tuesdays and Thursdays.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 66,
+    "ai": {
+      "summary": "Podcast invitation, 40 minutes",
+      "category": "press",
+      "fitScore": 53,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "food",
+        "street food",
+        "local",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 737,
+    "type": "other",
+    "subject": "Free cruise giveaway, claim in 24h",
+    "body": "CONGRATULATIONS! You have been selected for a FREE 7-night Caribbean cruise for two. Claim within 24 hours or it goes to the next creator. Click here and enter your passport number to confirm your booking.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 62,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 7,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 865,
+    "type": "idea",
+    "subject": "A \"my first solo trip\" starter series",
+    "body": "A lot of the Solo Travelers posts are people asking if they are ready. What if you made a short series that follows one nervous first-timer from booking to landing? Not a perfect trip, a real one. I would volunteer and so would at least four others.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 61,
+    "ai": {
+      "summary": "A \"my first solo trip\" starter series",
+      "category": "idea",
+      "fitScore": 63,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "solo travel",
+        "first trip"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 357,
+    "type": "other",
+    "subject": "Can I add Spanish subtitles to one of your videos",
+    "body": "Would you mind if I added Spanish subtitles to one of your videos for a small group I teach? Credited and linked back, and I would send you the file first.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 61,
+    "ai": {
+      "summary": "Can I add Spanish subtitles to one of your videos",
+      "category": "other",
+      "fitScore": 90,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 137,
+    "type": "other",
+    "subject": "Paid five-star review for our resort, no visit needed",
+    "body": "We will pay $600 for a five-star video review of our resort. No need to visit, we send you photos and talking points. Payment in gift cards. Reply today, we only have three slots left.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 61,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 2,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 762,
+    "type": "idea",
+    "subject": "Let fans vote on your next destination",
+    "body": "What if the next big trip was chosen by a vote in Solo Travelers, and the winning plan was built by fans in the room? Small change, but it would turn the whole room into a crew. I would organize the vote if nobody else wants to.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 60,
+    "ai": {
+      "summary": "Let fans vote on your next destination",
+      "category": "idea",
+      "fitScore": 88,
+      "fitReason": "Matches \"solo-travel safety that is practical, not scary\". The ask is specific and small.",
+      "tags": [
+        "food",
+        "local"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 676,
+    "type": "collab",
+    "subject": "Translating the fan-made Lisbon guide into Portuguese",
+    "body": "I am a translator in Porto. I would like to translate the fan-made Lisbon guide into Portuguese so locals can correct it too. Credited, linked back, and I will send you the draft first. No fee.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Not right now, and the reason is my calendar rather than the idea. Ask me again after the summer.",
+    "createdDaysAgo": 60,
+    "ai": {
+      "summary": "Translating the fan-made Lisbon guide into Portuguese",
+      "category": "collab",
+      "fitScore": 57,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "photography",
+        "golden hour",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 460,
+    "type": "brand_deal",
+    "subject": "Two sponsored videos, $4,500, creative control is yours",
+    "body": "We make carry-on luggage and would like to sponsor two of your videos this spring. $4,500 for the pair, you keep creative control, and the bag only appears where it fits the trip. I am happy to send one first so you can say no if it is not right.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Thank you for writing. I only take deals where I have used the thing first, so please send it over and I will tell you honestly if it fits.",
+    "createdDaysAgo": 59,
+    "ai": {
+      "summary": "Two sponsored videos, $4,500, creative control is yours",
+      "category": "brand_deal",
+      "fitScore": 60,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "budget",
+        "hostels",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 224,
+    "type": "collab",
+    "subject": "Guest spot at our spring van-life weekend",
+    "body": "We host a van-life weekend in Joshua Tree each spring, around 80 people, mostly beginners. Would you drop in for a Saturday talk? We cover your gas and a campsite, nothing else, and you can leave the minute it stops being fun.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 59,
+    "ai": {
+      "summary": "Guest spot at our spring van-life weekend",
+      "category": "collab",
+      "fitScore": 79,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "first trip"
+      ],
+      "skills": [
+        "translation",
+        "local knowledge",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1049,
+    "type": "other",
+    "subject": "Join our engagement pod: 500 travel creators",
+    "body": "Join our engagement pod. 500 travel creators like and comment on every post within 10 minutes. Guaranteed reach boost for $25 a month. Everyone is doing it, so you will fall behind if you do not.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 58,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 2,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 207,
+    "type": "fan_note",
+    "subject": "No ask, just thanks",
+    "body": "I joined Budget Travel in February, helped two people with their Lisbon budgets, and that is the most useful I have felt online in years. Just saying thanks.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 56,
+    "ai": {
+      "summary": "No ask, just thanks",
+      "category": "fan_note",
+      "fitScore": 21,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "budget",
+        "flights"
+      ],
+      "skills": [
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 551,
+    "type": "brand_deal",
+    "subject": "Six months with our travel eSIM, $1,800 a month",
+    "body": "We sell travel eSIMs and want an ongoing partner rather than a one-off. $1,800 a month for a mention in the description and one dedicated segment a quarter. We will send you a plan so you can test the coverage on a real trip first.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 55,
+    "ai": {
+      "summary": "Six months with our travel eSIM, $1,800 a month",
+      "category": "brand_deal",
+      "fitScore": 64,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 250,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 55,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 25,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "flights",
+        "hostels"
+      ],
+      "skills": [
+        "budgeting",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 528,
+    "type": "collab",
+    "subject": "A free online cooking class for Food Finds",
+    "body": "I teach home-style Oaxacan cooking in a small kitchen. I would like to run one free online class for your Food Finds fans, and if you want to film it, it is yours. All I ask is a link to my class list at the end.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is a yes from me. One condition: you keep your edit and I keep mine, and nobody approves anybody’s words.",
+    "createdDaysAgo": 55,
+    "ai": {
+      "summary": "A free online cooking class for Food Finds",
+      "category": "collab",
+      "fitScore": 82,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "van life",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1059,
+    "type": "collab",
+    "subject": "A free online cooking class for Food Finds",
+    "body": "I teach home-style Oaxacan cooking in a small kitchen. I would like to run one free online class for your Food Finds fans, and if you want to film it, it is yours. All I ask is a link to my class list at the end.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "I would rather do the small version first. One walk, filmed, and we decide afterwards.",
+    "createdDaysAgo": 53,
+    "ai": {
+      "summary": "A free online cooking class for Food Finds",
+      "category": "collab",
+      "fitScore": 48,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Has a date and a named owner.",
+      "tags": [
+        "safety",
+        "hostels"
+      ],
+      "skills": [
+        "translation",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1140,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 53,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 61,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "food",
+        "markets"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 677,
+    "type": "collab",
+    "subject": "A free online cooking class for Food Finds",
+    "body": "I teach home-style Oaxacan cooking in a small kitchen. I would like to run one free online class for your Food Finds fans, and if you want to film it, it is yours. All I ask is a link to my class list at the end.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 53,
+    "ai": {
+      "summary": "A free online cooking class for Food Finds",
+      "category": "collab",
+      "fitScore": 92,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". The ask is specific and small.",
+      "tags": [
+        "editing",
+        "golden hour",
+        "presets"
+      ],
+      "skills": [
+        "video editing",
+        "lightroom"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1199,
+    "type": "other",
+    "subject": "We can rank you #1 on Google",
+    "body": "Hi, I noticed your website is not ranking for your main keywords. Our team can guarantee page one on Google in 60 days using 5,000 high authority backlinks. First month is half price. Let me know a good time to call.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 52,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 6,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 860,
+    "type": "idea",
+    "subject": "A week in Vietnam on $50 a day",
+    "body": "Three of us in Budget Travel keep describing the same trip: a week in Vietnam on fifty dollars a day, Hanoi to Hoi An. If you did it with a few of us following along, I think it would be the most useful thing on your channel. I would help plan the route.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 52,
+    "ai": {
+      "summary": "A week in Vietnam on $50 a day",
+      "category": "idea",
+      "fitScore": 78,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "local",
+        "vegetarian"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 777,
+    "type": "fan_note",
+    "subject": "Here for the Sunday vlogs",
+    "body": "Found you through a friend and stayed for the Sunday vlogs. I have no trip planned and no plan to plan one, and I still get something out of every upload.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Reading this on a train. Thank you, truly.",
+    "createdDaysAgo": 52,
+    "ai": {
+      "summary": "Here for the Sunday vlogs",
+      "category": "fan_note",
+      "fitScore": 25,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "safety",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "translation",
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 236,
+    "type": "idea",
+    "subject": "A live Q&A from a night train",
+    "body": "This is an odd one, but a live Q&A from a night train from Vienna to Venice sounds amazing. Bad wifi, a tiny cabin and a thousand questions. I would join in from my seat in Austin.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 51,
+    "ai": {
+      "summary": "A live Q&A from a night train",
+      "category": "idea",
+      "fitScore": 80,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "editing",
+        "phone photos"
+      ],
+      "skills": [
+        "photo editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 381,
+    "type": "brand_deal",
+    "subject": "Six months with our travel eSIM, $1,800 a month",
+    "body": "We sell travel eSIMs and want an ongoing partner rather than a one-off. $1,800 a month for a mention in the description and one dedicated segment a quarter. We will send you a plan so you can test the coverage on a real trip first.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is not the right fit for the channel right now, but I appreciate the clear numbers. I will keep your name for when that changes.",
+    "createdDaysAgo": 49,
+    "ai": {
+      "summary": "Six months with our travel eSIM, $1,800 a month",
+      "category": "brand_deal",
+      "fitScore": 60,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "solo travel",
+        "first trip"
+      ],
+      "skills": [
+        "hosting",
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 428,
+    "type": "idea",
+    "subject": "A packing-list teardown video",
+    "body": "Fans send in their packing lists and you cut the weight in half, live. People love watching someone else’s suitcase get edited. I would send you mine and it is, frankly, a mess.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 49,
+    "ai": {
+      "summary": "A packing-list teardown video",
+      "category": "idea",
+      "fitScore": 92,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "camping",
+        "national parks"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 594,
+    "type": "idea",
+    "subject": "A packing-list teardown video",
+    "body": "Fans send in their packing lists and you cut the weight in half, live. People love watching someone else’s suitcase get edited. I would send you mine and it is, frankly, a mess.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is exactly what the rooms are for. Post it as a crew call and I will point people to it.",
+    "createdDaysAgo": 48,
+    "ai": {
+      "summary": "A packing-list teardown video",
+      "category": "idea",
+      "fitScore": 82,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "solo travel",
+        "meeting people"
+      ],
+      "skills": [
+        "local knowledge",
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 212,
+    "type": "fan_note",
+    "subject": "The stall owner in Taipei remembered your viewers",
+    "body": "I ate at the night-market stall you mentioned and the owner told me another of your viewers had been the week before. She asked if you were coming. I said not yet. Wanted you to know that people remember.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 47,
+    "ai": {
+      "summary": "The stall owner in Taipei remembered your viewers",
+      "category": "fan_note",
+      "fitScore": 33,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 228,
+    "type": "other",
+    "subject": "Free cruise giveaway, claim in 24h",
+    "body": "CONGRATULATIONS! You have been selected for a FREE 7-night Caribbean cruise for two. Claim within 24 hours or it goes to the next creator. Click here and enter your passport number to confirm your booking.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 46,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 2,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 644,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 46,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 33,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "road trip",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1020,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 45,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 31,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "flights",
+        "hostels",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 881,
+    "type": "fan_note",
+    "subject": "My mum finally came with me",
+    "body": "I used your slow-travel itinerary for a week in Sicily with my mum. We did one thing a day and she said it was the best trip of her life. That is all. Thank you.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 45,
+    "ai": {
+      "summary": "My mum finally came with me",
+      "category": "fan_note",
+      "fitScore": 30,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "photography",
+        "presets"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1132,
+    "type": "collab",
+    "subject": "A sunrise photo walk in Mexico City",
+    "body": "I am a photographer in Mexico City and I run a monthly sunrise photo walk. Your Travel Photography room would be a perfect fit. I would like to host a walk for ten of your fans, free, with you joining by video if you cannot make it in person.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "I would rather do the small version first. One walk, filmed, and we decide afterwards.",
+    "createdDaysAgo": 44,
+    "ai": {
+      "summary": "A sunrise photo walk in Mexico City",
+      "category": "collab",
+      "fitScore": 69,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "local knowledge",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1059,
+    "type": "brand_deal",
+    "subject": "Four nights at our Lisbon hotel, no script",
+    "body": "We run a 14-room boutique hotel in Lisbon. We would host you for four nights with no script, and you tell the truth about the stay, including what you do not like. Nothing in writing about what you must say.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "I would like to do this, with one change: no script, and I say what I really think. If that works, send the details.",
+    "createdDaysAgo": 43,
+    "ai": {
+      "summary": "Four nights at our Lisbon hotel, no script",
+      "category": "brand_deal",
+      "fitScore": 49,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "slow travel",
+        "long stays",
+        "wellbeing",
+        "village stays"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1118,
+    "type": "collab",
+    "subject": "A free online cooking class for Food Finds",
+    "body": "I teach home-style Oaxacan cooking in a small kitchen. I would like to run one free online class for your Food Finds fans, and if you want to film it, it is yours. All I ask is a link to my class list at the end.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 42,
+    "ai": {
+      "summary": "A free online cooking class for Food Finds",
+      "category": "collab",
+      "fitScore": 58,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "photography",
+        "editing",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "lightroom",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 408,
+    "type": "other",
+    "subject": "Accessibility problem on the join page",
+    "body": "Not a pitch: the join page is hard to use with a screen reader, specifically the community picker. I am happy to write up exactly what I hit if that is useful to whoever looks after the site.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 42,
+    "ai": {
+      "summary": "Accessibility problem on the join page",
+      "category": "other",
+      "fitScore": 60,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "van life",
+        "national parks"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 648,
+    "type": "press",
+    "subject": "Profile for our Sunday travel section",
+    "body": "I write the Sunday profile for a small publication, about 2,000 words. I would need two conversations and permission to speak to three people from your communities. You would see the piece before it ran.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Happy to talk. Email is easiest, and please send quotes back before anything goes out.",
+    "createdDaysAgo": 40,
+    "ai": {
+      "summary": "Profile for our Sunday travel section",
+      "category": "press",
+      "fitScore": 91,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 360,
+    "type": "idea",
+    "subject": "A live Q&A from a night train",
+    "body": "This is an odd one, but a live Q&A from a night train from Vienna to Venice sounds amazing. Bad wifi, a tiny cabin and a thousand questions. I would join in from my seat in Austin.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 40,
+    "ai": {
+      "summary": "A live Q&A from a night train",
+      "category": "idea",
+      "fitScore": 90,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "photography",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 920,
+    "type": "collab",
+    "subject": "A fan-made Tokyo food map, filmed by us",
+    "body": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for free, if you would feature it. No logo on anything.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 39,
+    "ai": {
+      "summary": "A fan-made Tokyo food map, filmed by us",
+      "category": "collab",
+      "fitScore": 55,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 728,
+    "type": "press",
+    "subject": "Podcast invitation, 40 minutes",
+    "body": "Our podcast does 40-minute conversations, no pre-interview, lightly edited. I would want to spend most of it on the six-rooms decision rather than the usual growth questions. We record Tuesdays and Thursdays.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Happy to talk. Email is easiest, and please send quotes back before anything goes out.",
+    "createdDaysAgo": 39,
+    "ai": {
+      "summary": "Podcast invitation, 40 minutes",
+      "category": "press",
+      "fitScore": 52,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "food",
+        "local",
+        "markets"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 482,
+    "type": "fan_note",
+    "subject": "The stall owner in Taipei remembered your viewers",
+    "body": "I ate at the night-market stall you mentioned and the owner told me another of your viewers had been the week before. She asked if you were coming. I said not yet. Wanted you to know that people remember.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 38,
+    "ai": {
+      "summary": "The stall owner in Taipei remembered your viewers",
+      "category": "fan_note",
+      "fitScore": 22,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "food",
+        "street food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 641,
+    "type": "fan_note",
+    "subject": "Your laundry tip saved me $200",
+    "body": "I just wanted to say your note about checking the laundry fees saved me about $200 across a month in Southeast Asia. Tiny detail, big difference.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Reading this on a train. Thank you, truly.",
+    "createdDaysAgo": 38,
+    "ai": {
+      "summary": "Your laundry tip saved me $200",
+      "category": "fan_note",
+      "fitScore": 28,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "slow travel",
+        "journaling"
+      ],
+      "skills": [
+        "hosting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 746,
+    "type": "collab",
+    "subject": "A sunrise photo walk in Mexico City",
+    "body": "I am a photographer in Mexico City and I run a monthly sunrise photo walk. Your Travel Photography room would be a perfect fit. I would like to host a walk for ten of your fans, free, with you joining by video if you cannot make it in person.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 37,
+    "ai": {
+      "summary": "A sunrise photo walk in Mexico City",
+      "category": "collab",
+      "fitScore": 64,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Real prices, which Mira always asks for.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "hostels",
+        "first trip"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 499,
+    "type": "other",
+    "subject": "Your account qualifies for verification",
+    "body": "URGENT: Your account has been selected for verified status. To complete the process please confirm your login details at the secure link below within 24 hours or the opportunity will be passed to another creator.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 36,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 0,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 571,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 35,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 29,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "food",
+        "markets"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1131,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 34,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 29,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "golden hour",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 609,
+    "type": "other",
+    "subject": "Accessibility problem on the join page",
+    "body": "Not a pitch: the join page is hard to use with a screen reader, specifically the community picker. I am happy to write up exactly what I hit if that is useful to whoever looks after the site.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 33,
+    "ai": {
+      "summary": "Accessibility problem on the join page",
+      "category": "other",
+      "fitScore": 67,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "safety",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 237,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 33,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 29,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting",
+        "translation",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 349,
+    "type": "collab",
+    "subject": "A fan-made Tokyo food map, filmed by us",
+    "body": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for free, if you would feature it. No logo on anything.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is a yes from me. One condition: you keep your edit and I keep mine, and nobody approves anybody’s words.",
+    "createdDaysAgo": 33,
+    "ai": {
+      "summary": "A fan-made Tokyo food map, filmed by us",
+      "category": "collab",
+      "fitScore": 85,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "slow travel",
+        "journaling",
+        "wellbeing",
+        "village stays"
+      ],
+      "skills": [
+        "illustration",
+        "writing",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 451,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Notes like this are the reason I read every message. Thank you.",
+    "createdDaysAgo": 32,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 38,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "road trip",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 492,
+    "type": "other",
+    "subject": "We can rank you #1 on Google",
+    "body": "Hi, I noticed your website is not ranking for your main keywords. Our team can guarantee page one on Google in 60 days using 5,000 high authority backlinks. First month is half price. Let me know a good time to call.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 28,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 3,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 1052,
+    "type": "fan_note",
+    "subject": "Here for the Sunday vlogs",
+    "body": "Found you through a friend and stayed for the Sunday vlogs. I have no trip planned and no plan to plan one, and I still get something out of every upload.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 27,
+    "ai": {
+      "summary": "Here for the Sunday vlogs",
+      "category": "fan_note",
+      "fitScore": 19,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "food",
+        "street food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 76,
+    "type": "collab",
+    "subject": "Meet us for one leg of the Pacific Coast Highway",
+    "body": "Two of us are driving the Pacific Coast Highway in May and filming it. We would love you to meet us for one leg, and your fans can choose the stops. We will split the filming and hand you the raw clips either way.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Thank you for this. Yes to the meetup, but let us start with ten people and see who turns up.",
+    "createdDaysAgo": 26,
+    "ai": {
+      "summary": "Meet us for one leg of the Pacific Coast Highway",
+      "category": "collab",
+      "fitScore": 73,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "road trip",
+        "van life",
+        "national parks"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1137,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 26,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 71,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "road trip",
+        "van life",
+        "camping"
+      ],
+      "skills": [
+        "itinerary planning",
+        "video editing",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 505,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 26,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 74,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "road trip",
+        "van life",
+        "camping",
+        "national parks"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 862,
+    "type": "brand_deal",
+    "subject": "Four nights at our Lisbon hotel, no script",
+    "body": "We run a 14-room boutique hotel in Lisbon. We would host you for four nights with no script, and you tell the truth about the stay, including what you do not like. Nothing in writing about what you must say.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 23,
+    "ai": {
+      "summary": "Four nights at our Lisbon hotel, no script",
+      "category": "brand_deal",
+      "fitScore": 47,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "road trip",
+        "van life",
+        "camping"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1014,
+    "type": "collab",
+    "subject": "A free walking tour in Lisbon this October",
+    "body": "I run a small walking-tour company in Lisbon and your Budget Travel room keeps asking for exactly what we do. Would you be up for a free walking tour with a few of your fans in October? I would cover the guide, the pastel de nata stop and the filming permit. You keep full say on what goes out.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 23,
+    "ai": {
+      "summary": "A free walking tour in Lisbon this October",
+      "category": "collab",
+      "fitScore": 79,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 294,
+    "type": "collab",
+    "subject": "Translating the fan-made Lisbon guide into Portuguese",
+    "body": "I am a translator in Porto. I would like to translate the fan-made Lisbon guide into Portuguese so locals can correct it too. Credited, linked back, and I will send you the draft first. No fee.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Thank you for this. Yes to the meetup, but let us start with ten people and see who turns up.",
+    "createdDaysAgo": 23,
+    "ai": {
+      "summary": "Translating the fan-made Lisbon guide into Portuguese",
+      "category": "collab",
+      "fitScore": 76,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "long stays",
+        "wellbeing"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 514,
+    "type": "collab",
+    "subject": "Guest spot at our spring van-life weekend",
+    "body": "We host a van-life weekend in Joshua Tree each spring, around 80 people, mostly beginners. Would you drop in for a Saturday talk? We cover your gas and a campsite, nothing else, and you can leave the minute it stops being fun.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 22,
+    "ai": {
+      "summary": "Guest spot at our spring van-life weekend",
+      "category": "collab",
+      "fitScore": 79,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "safety",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 663,
+    "type": "collab",
+    "subject": "A fan-made Tokyo food map, filmed by us",
+    "body": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for free, if you would feature it. No logo on anything.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "I would rather do the small version first. One walk, filmed, and we decide afterwards.",
+    "createdDaysAgo": 22,
+    "ai": {
+      "summary": "A fan-made Tokyo food map, filmed by us",
+      "category": "collab",
+      "fitScore": 56,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "van life",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "photography",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 209,
+    "type": "other",
+    "subject": "Accessibility problem on the join page",
+    "body": "Not a pitch: the join page is hard to use with a screen reader, specifically the community picker. I am happy to write up exactly what I hit if that is useful to whoever looks after the site.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 21,
+    "ai": {
+      "summary": "Accessibility problem on the join page",
+      "category": "other",
+      "fitScore": 77,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe"
+      ],
+      "skills": [
+        "budgeting",
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 813,
+    "type": "other",
+    "subject": "Your account qualifies for verification",
+    "body": "URGENT: Your account has been selected for verified status. To complete the process please confirm your login details at the secure link below within 24 hours or the opportunity will be passed to another creator.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 21,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 3,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 115,
+    "type": "press",
+    "subject": "Podcast invitation, 40 minutes",
+    "body": "Our podcast does 40-minute conversations, no pre-interview, lightly edited. I would want to spend most of it on the six-rooms decision rather than the usual growth questions. We record Tuesdays and Thursdays.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 20,
+    "ai": {
+      "summary": "Podcast invitation, 40 minutes",
+      "category": "press",
+      "fitScore": 66,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "photography",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1181,
+    "type": "other",
+    "subject": "Free cruise giveaway, claim in 24h",
+    "body": "CONGRATULATIONS! You have been selected for a FREE 7-night Caribbean cruise for two. Claim within 24 hours or it goes to the next creator. Click here and enter your passport number to confirm your booking.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 20,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 5,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 796,
+    "type": "collab",
+    "subject": "Meet us for one leg of the Pacific Coast Highway",
+    "body": "Two of us are driving the Pacific Coast Highway in May and filming it. We would love you to meet us for one leg, and your fans can choose the stops. We will split the filming and hand you the raw clips either way.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is a yes from me. One condition: you keep your edit and I keep mine, and nobody approves anybody’s words.",
+    "createdDaysAgo": 19,
+    "ai": {
+      "summary": "Meet us for one leg of the Pacific Coast Highway",
+      "category": "collab",
+      "fitScore": 56,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 193,
+    "type": "idea",
+    "subject": "A \"my first solo trip\" starter series",
+    "body": "A lot of the Solo Travelers posts are people asking if they are ready. What if you made a short series that follows one nervous first-timer from booking to landing? Not a perfect trip, a real one. I would volunteer and so would at least four others.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 19,
+    "ai": {
+      "summary": "A \"my first solo trip\" starter series",
+      "category": "idea",
+      "fitScore": 72,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "van life",
+        "budget"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 440,
+    "type": "fan_note",
+    "subject": "The stall owner in Taipei remembered your viewers",
+    "body": "I ate at the night-market stall you mentioned and the owner told me another of your viewers had been the week before. She asked if you were coming. I said not yet. Wanted you to know that people remember.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 18,
+    "ai": {
+      "summary": "The stall owner in Taipei remembered your viewers",
+      "category": "fan_note",
+      "fitScore": 24,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 292,
+    "type": "fan_note",
+    "subject": "The stall owner in Taipei remembered your viewers",
+    "body": "I ate at the night-market stall you mentioned and the owner told me another of your viewers had been the week before. She asked if you were coming. I said not yet. Wanted you to know that people remember.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 18,
+    "ai": {
+      "summary": "The stall owner in Taipei remembered your viewers",
+      "category": "fan_note",
+      "fitScore": 18,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 971,
+    "type": "idea",
+    "subject": "Visit the places your fans recommend, one per month",
+    "body": "Pick one fan recommendation every month and go there, with the fan as your local guide for the day. It makes the community the star and it solves the problem of deciding where to go.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 18,
+    "ai": {
+      "summary": "Visit the places your fans recommend, one per month",
+      "category": "idea",
+      "fitScore": 94,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 820,
+    "type": "other",
+    "subject": "Buy 10K followers today",
+    "body": "Hello Creator! Buy 10K followers for just $49. Real-looking accounts, delivered in 24 hours, no password needed. Limited slots this week. Reply YES and we will send the payment link right away.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 17,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 5,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 754,
+    "type": "brand_deal",
+    "subject": "Night-train passes for you and a friend, $5,000",
+    "body": "We are a rail pass company and we would like your Budget Travel fans to see how a night-train trip works. $5,000 and two free passes for you and a friend. We will not ask for approval on the video.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is not the right fit for the channel right now, but I appreciate the clear numbers. I will keep your name for when that changes.",
+    "createdDaysAgo": 17,
+    "ai": {
+      "summary": "Night-train passes for you and a friend, $5,000",
+      "category": "brand_deal",
+      "fitScore": 80,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "budgeting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1006,
+    "type": "brand_deal",
+    "subject": "Affiliate link for our travel insurance comparison",
+    "body": "We run a travel insurance comparison site. We would like to give your viewers a custom link and pay you 12 percent of each policy. We do not ask you to say anything you do not believe, and you can see our claims record before you decide.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 16,
+    "ai": {
+      "summary": "Affiliate link for our travel insurance comparison",
+      "category": "brand_deal",
+      "fitScore": 61,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "solo travel",
+        "safety"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1003,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This made my day. Thank you for writing, and please send photos from the trip.",
+    "createdDaysAgo": 16,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 26,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "budget",
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 862,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 15,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 34,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "slow travel",
+        "long stays",
+        "wellbeing"
+      ],
+      "skills": [
+        "illustration",
+        "photography",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 642,
+    "type": "fan_note",
+    "subject": "No ask, just thanks",
+    "body": "I joined Budget Travel in February, helped two people with their Lisbon budgets, and that is the most useful I have felt online in years. Just saying thanks.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Reading this on a train. Thank you, truly.",
+    "createdDaysAgo": 15,
+    "ai": {
+      "summary": "No ask, just thanks",
+      "category": "fan_note",
+      "fitScore": 33,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "safety",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 281,
+    "type": "press",
+    "subject": "Interview for a piece on slow travel",
+    "body": "I am writing a piece on creators who build communities rather than audiences, and yours comes up a lot. Twenty minutes on a call, or over email if you prefer. I will send quotes back before anything is published.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 15,
+    "ai": {
+      "summary": "Interview for a piece on slow travel",
+      "category": "press",
+      "fitScore": 60,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "editing",
+        "golden hour",
+        "phone photos"
+      ],
+      "skills": [
+        "photography",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 791,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 15,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 21,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "road trip",
+        "van life",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 741,
+    "type": "fan_note",
+    "subject": "No ask, just thanks",
+    "body": "I joined Budget Travel in February, helped two people with their Lisbon budgets, and that is the most useful I have felt online in years. Just saying thanks.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 14,
+    "ai": {
+      "summary": "No ask, just thanks",
+      "category": "fan_note",
+      "fitScore": 18,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "solo travel",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting",
+        "translation",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 583,
+    "type": "other",
+    "subject": "Free cruise giveaway, claim in 24h",
+    "body": "CONGRATULATIONS! You have been selected for a FREE 7-night Caribbean cruise for two. Claim within 24 hours or it goes to the next creator. Click here and enter your passport number to confirm your booking.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 14,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 6,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 155,
+    "type": "other",
+    "subject": "Join our engagement pod: 500 travel creators",
+    "body": "Join our engagement pod. 500 travel creators like and comment on every post within 10 minutes. Guaranteed reach boost for $25 a month. Everyone is doing it, so you will fall behind if you do not.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 14,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 2,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 825,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 14,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 33,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "editing",
+        "phone photos"
+      ],
+      "skills": [
+        "photo editing",
+        "video editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1018,
+    "type": "fan_note",
+    "subject": "No ask, just thanks",
+    "body": "I joined Budget Travel in February, helped two people with their Lisbon budgets, and that is the most useful I have felt online in years. Just saying thanks.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Notes like this are the reason I read every message. Thank you.",
+    "createdDaysAgo": 14,
+    "ai": {
+      "summary": "No ask, just thanks",
+      "category": "fan_note",
+      "fitScore": 31,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "photography",
+        "editing",
+        "phone photos"
+      ],
+      "skills": [
+        "video editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 906,
+    "type": "fan_note",
+    "subject": "Stayed for the honest days",
+    "body": "I started watching for the pretty shots and stayed for the day you admitted you were lonely in Seoul. I told my sister, and she said she feels exactly the same on trips. We are going together in March.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Notes like this are the reason I read every message. Thank you.",
+    "createdDaysAgo": 14,
+    "ai": {
+      "summary": "Stayed for the honest days",
+      "category": "fan_note",
+      "fitScore": 26,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "video editing",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 518,
+    "type": "collab",
+    "subject": "Meet us for one leg of the Pacific Coast Highway",
+    "body": "Two of us are driving the Pacific Coast Highway in May and filming it. We would love you to meet us for one leg, and your fans can choose the stops. We will split the filming and hand you the raw clips either way.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 14,
+    "ai": {
+      "summary": "Meet us for one leg of the Pacific Coast Highway",
+      "category": "collab",
+      "fitScore": 86,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "food",
+        "markets"
+      ],
+      "skills": [
+        "local knowledge",
+        "hosting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1144,
+    "type": "collab",
+    "subject": "A free walking tour in Lisbon this October",
+    "body": "I run a small walking-tour company in Lisbon and your Budget Travel room keeps asking for exactly what we do. Would you be up for a free walking tour with a few of your fans in October? I would cover the guide, the pastel de nata stop and the filming permit. You keep full say on what goes out.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 13,
+    "ai": {
+      "summary": "A free walking tour in Lisbon this October",
+      "category": "collab",
+      "fitScore": 68,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "slow travel",
+        "wellbeing",
+        "village stays"
+      ],
+      "skills": [
+        "writing",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 387,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is a yes from me. One condition: you keep your edit and I keep mine, and nobody approves anybody’s words.",
+    "createdDaysAgo": 13,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 76,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 117,
+    "type": "collab",
+    "subject": "A sunrise photo walk in Mexico City",
+    "body": "I am a photographer in Mexico City and I run a monthly sunrise photo walk. Your Travel Photography room would be a perfect fit. I would like to host a walk for ten of your fans, free, with you joining by video if you cannot make it in person.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 13,
+    "ai": {
+      "summary": "A sunrise photo walk in Mexico City",
+      "category": "collab",
+      "fitScore": 84,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Real prices, which Mira always asks for.",
+      "tags": [
+        "van life",
+        "camping",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "video editing",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1000,
+    "type": "fan_note",
+    "subject": "My mum finally came with me",
+    "body": "I used your slow-travel itinerary for a week in Sicily with my mum. We did one thing a day and she said it was the best trip of her life. That is all. Thank you.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 13,
+    "ai": {
+      "summary": "My mum finally came with me",
+      "category": "fan_note",
+      "fitScore": 42,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "safety",
+        "first trip"
+      ],
+      "skills": [
+        "translation",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 7,
+    "type": "collab",
+    "subject": "Meet us for one leg of the Pacific Coast Highway",
+    "body": "Two of us are driving the Pacific Coast Highway in May and filming it. We would love you to meet us for one leg, and your fans can choose the stops. We will split the filming and hand you the raw clips either way.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "I would rather do the small version first. One walk, filmed, and we decide afterwards.",
+    "createdDaysAgo": 13,
+    "ai": {
+      "summary": "Meet us for one leg of the Pacific Coast Highway",
+      "category": "collab",
+      "fitScore": 49,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "photography",
+        "golden hour"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 0,
+    "type": "idea",
+    "subject": "A Tokyo food map for people on $30 a day",
+    "body": "I am in Food Finds and I keep seeing the same request: nobody has made a proper Tokyo food map for people on $30 a day. I have eleven places from my trip in March, with prices and the one dish to order. Would you feature it if the fans filled it in?",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "I love this, Priya. Yes: start the Tokyo map in Food Finds and invite people to add their places. When it has twenty, send it back to me and I will feature it with your name on it.",
+    "createdDaysAgo": 12,
+    "ai": {
+      "summary": "A Tokyo food map for people on $30 a day",
+      "category": "idea",
+      "fitScore": 65,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "street food",
+        "markets"
+      ],
+      "skills": [
+        "local knowledge",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 946,
+    "type": "fan_note",
+    "subject": "No ask, just thanks",
+    "body": "I joined Budget Travel in February, helped two people with their Lisbon budgets, and that is the most useful I have felt online in years. Just saying thanks.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Reading this on a train. Thank you, truly.",
+    "createdDaysAgo": 11,
+    "ai": {
+      "summary": "No ask, just thanks",
+      "category": "fan_note",
+      "fitScore": 19,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "journaling",
+        "long stays",
+        "village stays"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 775,
+    "type": "collab",
+    "subject": "A fan-made Tokyo food map, filmed by us",
+    "body": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for free, if you would feature it. No logo on anything.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 10,
+    "ai": {
+      "summary": "A fan-made Tokyo food map, filmed by us",
+      "category": "collab",
+      "fitScore": 53,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 589,
+    "type": "press",
+    "subject": "Profile for our Sunday travel section",
+    "body": "I write the Sunday profile for a small publication, about 2,000 words. I would need two conversations and permission to speak to three people from your communities. You would see the piece before it ran.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 9,
+    "ai": {
+      "summary": "Profile for our Sunday travel section",
+      "category": "press",
+      "fitScore": 52,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "editing",
+        "golden hour",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "photo editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 497,
+    "type": "other",
+    "subject": "Make $5,000/week from home",
+    "body": "Work from home opportunity! Start your own dropshipping travel-gear store with our members, who make $5,000 per week with just 2 hours a day. No experience needed. Join 40,000 others. Click the link to claim your spot before registration closes.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 9,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 7,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 502,
+    "type": "brand_deal",
+    "subject": "A year as one of six camera ambassadors",
+    "body": "Our mirrorless camera brand is looking for six creators for a year-long ambassador program. You would get a body and two lenses and $2,500 for content across the year. We need you to actually like the camera, which is why we send it ahead.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is not the right fit for the channel right now, but I appreciate the clear numbers. I will keep your name for when that changes.",
+    "createdDaysAgo": 9,
+    "ai": {
+      "summary": "A year as one of six camera ambassadors",
+      "category": "brand_deal",
+      "fitScore": 91,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "safety",
+        "hostels",
+        "first trip"
+      ],
+      "skills": [
+        "translation",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 341,
+    "type": "other",
+    "subject": "We can rank you #1 on Google",
+    "body": "Hi, I noticed your website is not ranking for your main keywords. Our team can guarantee page one on Google in 60 days using 5,000 high authority backlinks. First month is half price. Let me know a good time to call.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 7,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 1,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 929,
+    "type": "fan_note",
+    "subject": "Stayed for the honest days",
+    "body": "I started watching for the pretty shots and stayed for the day you admitted you were lonely in Seoul. I told my sister, and she said she feels exactly the same on trips. We are going together in March.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 7,
+    "ai": {
+      "summary": "Stayed for the honest days",
+      "category": "fan_note",
+      "fitScore": 43,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "hostels",
+        "first trip"
+      ],
+      "skills": [
+        "hosting",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 9,
+    "type": "idea",
+    "subject": "Visit the places your fans recommend, one per month",
+    "body": "Pick one fan recommendation every month and go there, with the fan as your local guide for the day. It makes the community the star and it solves the problem of deciding where to go.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 7,
+    "ai": {
+      "summary": "Visit the places your fans recommend, one per month",
+      "category": "idea",
+      "fitScore": 58,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "slow travel",
+        "village stays"
+      ],
+      "skills": [
+        "hosting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 466,
+    "type": "collab",
+    "subject": "Guest spot at our spring van-life weekend",
+    "body": "We host a van-life weekend in Joshua Tree each spring, around 80 people, mostly beginners. Would you drop in for a Saturday talk? We cover your gas and a campsite, nothing else, and you can leave the minute it stops being fun.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Not right now, and the reason is my calendar rather than the idea. Ask me again after the summer.",
+    "createdDaysAgo": 7,
+    "ai": {
+      "summary": "Guest spot at our spring van-life weekend",
+      "category": "collab",
+      "fitScore": 67,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "slow travel",
+        "journaling",
+        "long stays",
+        "village stays"
+      ],
+      "skills": [
+        "writing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 566,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 6,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 26,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1100,
+    "type": "fan_note",
+    "subject": "Here for the Sunday vlogs",
+    "body": "Found you through a friend and stayed for the Sunday vlogs. I have no trip planned and no plan to plan one, and I still get something out of every upload.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Reading this on a train. Thank you, truly.",
+    "createdDaysAgo": 6,
+    "ai": {
+      "summary": "Here for the Sunday vlogs",
+      "category": "fan_note",
+      "fitScore": 22,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation",
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 92,
+    "type": "idea",
+    "subject": "A \"my first solo trip\" starter series",
+    "body": "A lot of the Solo Travelers posts are people asking if they are ready. What if you made a short series that follows one nervous first-timer from booking to landing? Not a perfect trip, a real one. I would volunteer and so would at least four others.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 6,
+    "ai": {
+      "summary": "A \"my first solo trip\" starter series",
+      "category": "idea",
+      "fitScore": 68,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 209,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 6,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 46,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "food",
+        "street food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 0,
+    "type": "collab",
+    "subject": "An Austin meetup for Solo Travelers",
+    "body": "I would like to host a small Solo Travelers meetup in Austin this fall: one table, a taco trailer, ten people who have all been the one eating alone. I can book the spot and write the invite. Would you send a note to the room?",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 5,
+    "ai": {
+      "summary": "An Austin meetup for Solo Travelers",
+      "category": "collab",
+      "fitScore": 94,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Real prices, which Mira always asks for.",
+      "tags": [
+        "food",
+        "local",
+        "markets"
+      ],
+      "skills": [
+        "local knowledge",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 801,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 5,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 28,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "budget",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "photography",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 649,
+    "type": "fan_note",
+    "subject": "No ask, just thanks",
+    "body": "I joined Budget Travel in February, helped two people with their Lisbon budgets, and that is the most useful I have felt online in years. Just saying thanks.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 5,
+    "ai": {
+      "summary": "No ask, just thanks",
+      "category": "fan_note",
+      "fitScore": 28,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "hostels"
+      ],
+      "skills": [
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 216,
+    "type": "other",
+    "subject": "We can rank you #1 on Google",
+    "body": "Hi, I noticed your website is not ranking for your main keywords. Our team can guarantee page one on Google in 60 days using 5,000 high authority backlinks. First month is half price. Let me know a good time to call.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 5,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 3,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 483,
+    "type": "brand_deal",
+    "subject": "Affiliate link for our travel insurance comparison",
+    "body": "We run a travel insurance comparison site. We would like to give your viewers a custom link and pay you 12 percent of each policy. We do not ask you to say anything you do not believe, and you can see our claims record before you decide.",
+    "links": [],
+    "status": "shortlisted",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 5,
+    "ai": {
+      "summary": "Affiliate link for our travel insurance comparison",
+      "category": "brand_deal",
+      "fitScore": 59,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "budgeting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 253,
+    "type": "collab",
+    "subject": "Meet us for one leg of the Pacific Coast Highway",
+    "body": "Two of us are driving the Pacific Coast Highway in May and filming it. We would love you to meet us for one leg, and your fans can choose the stops. We will split the filming and hand you the raw clips either way.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "I would rather do the small version first. One walk, filmed, and we decide afterwards.",
+    "createdDaysAgo": 5,
+    "ai": {
+      "summary": "Meet us for one leg of the Pacific Coast Highway",
+      "category": "collab",
+      "fitScore": 54,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "slow travel",
+        "journaling"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 521,
+    "type": "fan_note",
+    "subject": "No ask, just thanks",
+    "body": "I joined Budget Travel in February, helped two people with their Lisbon budgets, and that is the most useful I have felt online in years. Just saying thanks.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 5,
+    "ai": {
+      "summary": "No ask, just thanks",
+      "category": "fan_note",
+      "fitScore": 30,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "road trip",
+        "national parks"
+      ],
+      "skills": [
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 925,
+    "type": "press",
+    "subject": "Interview for a piece on slow travel",
+    "body": "I am writing a piece on creators who build communities rather than audiences, and yours comes up a lot. Twenty minutes on a call, or over email if you prefer. I will send quotes back before anything is published.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Thank you for asking. I can do twenty minutes on a Thursday.",
+    "createdDaysAgo": 5,
+    "ai": {
+      "summary": "Interview for a piece on slow travel",
+      "category": "press",
+      "fitScore": 64,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 765,
+    "type": "idea",
+    "subject": "A \"my first solo trip\" starter series",
+    "body": "A lot of the Solo Travelers posts are people asking if they are ready. What if you made a short series that follows one nervous first-timer from booking to landing? Not a perfect trip, a real one. I would volunteer and so would at least four others.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "I love this. Start it in the room and I will pin it as soon as a few people have joined in.",
+    "createdDaysAgo": 5,
+    "ai": {
+      "summary": "A \"my first solo trip\" starter series",
+      "category": "idea",
+      "fitScore": 81,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "street food",
+        "local",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "hosting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 237,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Reading this on a train. Thank you, truly.",
+    "createdDaysAgo": 4,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 22,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "solo travel",
+        "first trip"
+      ],
+      "skills": [
+        "local knowledge",
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 824,
+    "type": "other",
+    "subject": "We can rank you #1 on Google",
+    "body": "Hi, I noticed your website is not ranking for your main keywords. Our team can guarantee page one on Google in 60 days using 5,000 high authority backlinks. First month is half price. Let me know a good time to call.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 4,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 2,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 804,
+    "type": "fan_note",
+    "subject": "Stayed for the honest days",
+    "body": "I started watching for the pretty shots and stayed for the day you admitted you were lonely in Seoul. I told my sister, and she said she feels exactly the same on trips. We are going together in March.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 4,
+    "ai": {
+      "summary": "Stayed for the honest days",
+      "category": "fan_note",
+      "fitScore": 24,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "itinerary planning",
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 341,
+    "type": "brand_deal",
+    "subject": "Creator trip to northern Portugal in September",
+    "body": "On behalf of a regional tourism board we are putting together a creator trip to northern Portugal. Flights and hotels are covered, plus a $3,000 production fee. We ask for two videos and a few stories; the edit is yours.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "This is not the right fit for the channel right now, but I appreciate the clear numbers. I will keep your name for when that changes.",
+    "createdDaysAgo": 4,
+    "ai": {
+      "summary": "Creator trip to northern Portugal in September",
+      "category": "brand_deal",
+      "fitScore": 58,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "solo travel",
+        "meeting people"
+      ],
+      "skills": [
+        "local knowledge",
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 984,
+    "type": "collab",
+    "subject": "A fan-made Tokyo food map, filmed by us",
+    "body": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for free, if you would feature it. No logo on anything.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "replied",
+    "isFiltered": false,
+    "creatorReply": "Not right now, and the reason is my calendar rather than the idea. Ask me again after the summer.",
+    "createdDaysAgo": 4,
+    "ai": {
+      "summary": "A fan-made Tokyo food map, filmed by us",
+      "category": "collab",
+      "fitScore": 88,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "flights",
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1077,
+    "type": "collab",
+    "subject": "Meet us for one leg of the Pacific Coast Highway",
+    "body": "Two of us are driving the Pacific Coast Highway in May and filming it. We would love you to meet us for one leg, and your fans can choose the stops. We will split the filming and hand you the raw clips either way.",
+    "links": [],
+    "status": "archived",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 4,
+    "ai": {
+      "summary": "Meet us for one leg of the Pacific Coast Highway",
+      "category": "collab",
+      "fitScore": 64,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "budget",
+        "europe"
+      ],
+      "skills": [
+        "budgeting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 342,
+    "type": "fan_note",
+    "subject": "Here for the Sunday vlogs",
+    "body": "Found you through a friend and stayed for the Sunday vlogs. I have no trip planned and no plan to plan one, and I still get something out of every upload.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 3,
+    "ai": {
+      "summary": "Here for the Sunday vlogs",
+      "category": "fan_note",
+      "fitScore": 21,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "photography",
+        "editing",
+        "golden hour",
+        "phone photos"
+      ],
+      "skills": [
+        "photography",
+        "photo editing",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 112,
+    "type": "brand_deal",
+    "subject": "Budget national-parks series, $9,000 for three videos",
+    "body": "Our outdoor retailer would like to fund a three-part series on budget national park trips. $9,000 for three videos, and your audience gets a free park-pass guide at the end. You pick the parks.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 3,
+    "ai": {
+      "summary": "Budget national-parks series, $9,000 for three videos",
+      "category": "brand_deal",
+      "fitScore": 93,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "safety",
+        "hostels"
+      ],
+      "skills": [
+        "local knowledge",
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1109,
+    "type": "fan_note",
+    "subject": "My mum finally came with me",
+    "body": "I used your slow-travel itinerary for a week in Sicily with my mum. We did one thing a day and she said it was the best trip of her life. That is all. Thank you.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 3,
+    "ai": {
+      "summary": "My mum finally came with me",
+      "category": "fan_note",
+      "fitScore": 37,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "golden hour",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "photography",
+        "photo editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 232,
+    "type": "fan_note",
+    "subject": "Stayed for the honest days",
+    "body": "I started watching for the pretty shots and stayed for the day you admitted you were lonely in Seoul. I told my sister, and she said she feels exactly the same on trips. We are going together in March.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 3,
+    "ai": {
+      "summary": "Stayed for the honest days",
+      "category": "fan_note",
+      "fitScore": 33,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "translation",
+        "local knowledge",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 945,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 3,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 75,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "van life",
+        "national parks"
+      ],
+      "skills": [
+        "video editing",
+        "mechanics",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1192,
+    "type": "collab",
+    "subject": "A free walking tour in Lisbon this October",
+    "body": "I run a small walking-tour company in Lisbon and your Budget Travel room keeps asking for exactly what we do. Would you be up for a free walking tour with a few of your fans in October? I would cover the guide, the pastel de nata stop and the filming permit. You keep full say on what goes out.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 2,
+    "ai": {
+      "summary": "A free walking tour in Lisbon this October",
+      "category": "collab",
+      "fitScore": 86,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1191,
+    "type": "collab",
+    "subject": "A fan-made Tokyo food map, filmed by us",
+    "body": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for free, if you would feature it. No logo on anything.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 2,
+    "ai": {
+      "summary": "A fan-made Tokyo food map, filmed by us",
+      "category": "collab",
+      "fitScore": 81,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "slow travel",
+        "journaling",
+        "wellbeing"
+      ],
+      "skills": [
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 193,
+    "type": "other",
+    "subject": "Free cruise giveaway, claim in 24h",
+    "body": "CONGRATULATIONS! You have been selected for a FREE 7-night Caribbean cruise for two. Claim within 24 hours or it goes to the next creator. Click here and enter your passport number to confirm your booking.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 2,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 4,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 177,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 2,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 35,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "food",
+        "street food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "photography",
+        "hosting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 324,
+    "type": "fan_note",
+    "subject": "Stayed for the honest days",
+    "body": "I started watching for the pretty shots and stayed for the day you admitted you were lonely in Seoul. I told my sister, and she said she feels exactly the same on trips. We are going together in March.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 2,
+    "ai": {
+      "summary": "Stayed for the honest days",
+      "category": "fan_note",
+      "fitScore": 37,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "van life",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "video editing",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 154,
+    "type": "collab",
+    "subject": "A fan-made Tokyo food map, filmed by us",
+    "body": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for free, if you would feature it. No logo on anything.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 2,
+    "ai": {
+      "summary": "A fan-made Tokyo food map, filmed by us",
+      "category": "collab",
+      "fitScore": 89,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "food",
+        "street food",
+        "local",
+        "markets"
+      ],
+      "skills": [
+        "translation",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 607,
+    "type": "other",
+    "subject": "Can I add Spanish subtitles to one of your videos",
+    "body": "Would you mind if I added Spanish subtitles to one of your videos for a small group I teach? Credited and linked back, and I would send you the file first.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 2,
+    "ai": {
+      "summary": "Can I add Spanish subtitles to one of your videos",
+      "category": "other",
+      "fitScore": 65,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "flights",
+        "hostels"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 594,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 2,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 38,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 186,
+    "type": "press",
+    "subject": "A quote for a story on budget travel this summer",
+    "body": "We are running a story on what travel really costs this summer. I would like a quote from someone who has been publishing real prices for years. Happy to work entirely over email, and I will not use anything you have not seen.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 2,
+    "ai": {
+      "summary": "A quote for a story on budget travel this summer",
+      "category": "press",
+      "fitScore": 92,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 564,
+    "type": "brand_deal",
+    "subject": "Four nights at our Lisbon hotel, no script",
+    "body": "We run a 14-room boutique hotel in Lisbon. We would host you for four nights with no script, and you tell the truth about the stay, including what you do not like. Nothing in writing about what you must say.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "Four nights at our Lisbon hotel, no script",
+      "category": "brand_deal",
+      "fitScore": 60,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "journaling",
+        "long stays",
+        "wellbeing"
+      ],
+      "skills": [
+        "photography",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1030,
+    "type": "collab",
+    "subject": "A sunrise photo walk in Mexico City",
+    "body": "I am a photographer in Mexico City and I run a monthly sunrise photo walk. Your Travel Photography room would be a perfect fit. I would like to host a walk for ten of your fans, free, with you joining by video if you cannot make it in person.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "A sunrise photo walk in Mexico City",
+      "category": "collab",
+      "fitScore": 62,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 568,
+    "type": "collab",
+    "subject": "A sunrise photo walk in Mexico City",
+    "body": "I am a photographer in Mexico City and I run a monthly sunrise photo walk. Your Travel Photography room would be a perfect fit. I would like to host a walk for ten of your fans, free, with you joining by video if you cannot make it in person.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "A sunrise photo walk in Mexico City",
+      "category": "collab",
+      "fitScore": 70,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Has a date and a named owner.",
+      "tags": [
+        "photography",
+        "editing",
+        "golden hour"
+      ],
+      "skills": [
+        "photo editing",
+        "video editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 634,
+    "type": "collab",
+    "subject": "Meet us for one leg of the Pacific Coast Highway",
+    "body": "Two of us are driving the Pacific Coast Highway in May and filming it. We would love you to meet us for one leg, and your fans can choose the stops. We will split the filming and hand you the raw clips either way.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "Meet us for one leg of the Pacific Coast Highway",
+      "category": "collab",
+      "fitScore": 63,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "journaling",
+        "long stays",
+        "village stays"
+      ],
+      "skills": [
+        "illustration",
+        "photography",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1052,
+    "type": "idea",
+    "subject": "A packing-list teardown video",
+    "body": "Fans send in their packing lists and you cut the weight in half, live. People love watching someone else’s suitcase get edited. I would send you mine and it is, frankly, a mess.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "A packing-list teardown video",
+      "category": "idea",
+      "fitScore": 47,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "van life",
+        "camping"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 552,
+    "type": "fan_note",
+    "subject": "No ask, just thanks",
+    "body": "I joined Budget Travel in February, helped two people with their Lisbon budgets, and that is the most useful I have felt online in years. Just saying thanks.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "No ask, just thanks",
+      "category": "fan_note",
+      "fitScore": 33,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "road trip",
+        "van life",
+        "camping",
+        "national parks"
+      ],
+      "skills": [
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 735,
+    "type": "fan_note",
+    "subject": "The stall owner in Taipei remembered your viewers",
+    "body": "I ate at the night-market stall you mentioned and the owner told me another of your viewers had been the week before. She asked if you were coming. I said not yet. Wanted you to know that people remember.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "The stall owner in Taipei remembered your viewers",
+      "category": "fan_note",
+      "fitScore": 26,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "road trip",
+        "van life",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 872,
+    "type": "press",
+    "subject": "Podcast invitation, 40 minutes",
+    "body": "Our podcast does 40-minute conversations, no pre-interview, lightly edited. I would want to spend most of it on the six-rooms decision rather than the usual growth questions. We record Tuesdays and Thursdays.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "Podcast invitation, 40 minutes",
+      "category": "press",
+      "fitScore": 66,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "slow travel",
+        "journaling",
+        "wellbeing"
+      ],
+      "skills": [
+        "hosting",
+        "illustration",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 663,
+    "type": "brand_deal",
+    "subject": "A year as one of six camera ambassadors",
+    "body": "Our mirrorless camera brand is looking for six creators for a year-long ambassador program. You would get a body and two lenses and $2,500 for content across the year. We need you to actually like the camera, which is why we send it ahead.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "A year as one of six camera ambassadors",
+      "category": "brand_deal",
+      "fitScore": 66,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "camping",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "mechanics",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 588,
+    "type": "collab",
+    "subject": "Meet us for one leg of the Pacific Coast Highway",
+    "body": "Two of us are driving the Pacific Coast Highway in May and filming it. We would love you to meet us for one leg, and your fans can choose the stops. We will split the filming and hand you the raw clips either way.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "Meet us for one leg of the Pacific Coast Highway",
+      "category": "collab",
+      "fitScore": 67,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "flights",
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 430,
+    "type": "collab",
+    "subject": "A fan-made Tokyo food map, filmed by us",
+    "body": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for free, if you would feature it. No logo on anything.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "A fan-made Tokyo food map, filmed by us",
+      "category": "collab",
+      "fitScore": 63,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "food",
+        "street food",
+        "vegetarian"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 867,
+    "type": "fan_note",
+    "subject": "Stayed for the honest days",
+    "body": "I started watching for the pretty shots and stayed for the day you admitted you were lonely in Seoul. I told my sister, and she said she feels exactly the same on trips. We are going together in March.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "Stayed for the honest days",
+      "category": "fan_note",
+      "fitScore": 24,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "road trip",
+        "van life"
+      ],
+      "skills": [
+        "itinerary planning",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 99,
+    "type": "other",
+    "subject": "Paid five-star review for our resort, no visit needed",
+    "body": "We will pay $600 for a five-star video review of our resort. No need to visit, we send you photos and talking points. Payment in gift cards. Reply today, we only have three slots left.",
+    "links": [],
+    "status": "new",
+    "isFiltered": true,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "Unsolicited growth, giveaway or paid-review offer; the usual template.",
+      "category": "other",
+      "fitScore": 5,
+      "fitReason": "Named in \"never\": bought followers, giveaways, presales and paid reviews. Nothing here matches what Mira promotes.",
+      "tags": [
+        "spam",
+        "unsolicited"
+      ],
+      "skills": [],
+      "isSpam": true
+    }
+  },
+  {
+    "senderIndex": 93,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 32,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "slow travel",
+        "journaling",
+        "long stays",
+        "wellbeing"
+      ],
+      "skills": [
+        "illustration",
+        "writing",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 851,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 1,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 19,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "slow travel",
+        "journaling"
+      ],
+      "skills": [
+        "photography",
+        "writing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 439,
+    "type": "fan_note",
+    "subject": "No ask, just thanks",
+    "body": "I joined Budget Travel in February, helped two people with their Lisbon budgets, and that is the most useful I have felt online in years. Just saying thanks.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "No ask, just thanks",
+      "category": "fan_note",
+      "fitScore": 34,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "safety",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 407,
+    "type": "fan_note",
+    "subject": "Stayed for the honest days",
+    "body": "I started watching for the pretty shots and stayed for the day you admitted you were lonely in Seoul. I told my sister, and she said she feels exactly the same on trips. We are going together in March.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Stayed for the honest days",
+      "category": "fan_note",
+      "fitScore": 20,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 884,
+    "type": "brand_deal",
+    "subject": "Affiliate link for our travel insurance comparison",
+    "body": "We run a travel insurance comparison site. We would like to give your viewers a custom link and pay you 12 percent of each policy. We do not ask you to say anything you do not believe, and you can see our claims record before you decide.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Affiliate link for our travel insurance comparison",
+      "category": "brand_deal",
+      "fitScore": 85,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "budget",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 653,
+    "type": "fan_note",
+    "subject": "Stayed for the honest days",
+    "body": "I started watching for the pretty shots and stayed for the day you admitted you were lonely in Seoul. I told my sister, and she said she feels exactly the same on trips. We are going together in March.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Stayed for the honest days",
+      "category": "fan_note",
+      "fitScore": 39,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "budget",
+        "flights"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 631,
+    "type": "other",
+    "subject": "Accessibility problem on the join page",
+    "body": "Not a pitch: the join page is hard to use with a screen reader, specifically the community picker. I am happy to write up exactly what I hit if that is useful to whoever looks after the site.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Accessibility problem on the join page",
+      "category": "other",
+      "fitScore": 80,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "van life",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "photography",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1187,
+    "type": "fan_note",
+    "subject": "The carry-on list worked",
+    "body": "Eleven days, one carry-on, zero checked-bag fees. I used your list almost exactly. Thought you would want to know it landed with a real person.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "The carry-on list worked",
+      "category": "fan_note",
+      "fitScore": 32,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "local",
+        "vegetarian"
+      ],
+      "skills": [
+        "photography",
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1100,
+    "type": "collab",
+    "subject": "A free walking tour in Lisbon this October",
+    "body": "I run a small walking-tour company in Lisbon and your Budget Travel room keeps asking for exactly what we do. Would you be up for a free walking tour with a few of your fans in October? I would cover the guide, the pastel de nata stop and the filming permit. You keep full say on what goes out.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "A free walking tour in Lisbon this October",
+      "category": "collab",
+      "fitScore": 66,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1163,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 58,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "local",
+        "vegetarian"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 157,
+    "type": "fan_note",
+    "subject": "Here for the Sunday vlogs",
+    "body": "Found you through a friend and stayed for the Sunday vlogs. I have no trip planned and no plan to plan one, and I still get something out of every upload.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Here for the Sunday vlogs",
+      "category": "fan_note",
+      "fitScore": 20,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks"
+      ],
+      "skills": [
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 518,
+    "type": "idea",
+    "subject": "Visit the places your fans recommend, one per month",
+    "body": "Pick one fan recommendation every month and go there, with the fan as your local guide for the day. It makes the community the star and it solves the problem of deciding where to go.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Visit the places your fans recommend, one per month",
+      "category": "idea",
+      "fitScore": 48,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "photography",
+        "presets"
+      ],
+      "skills": [
+        "photography",
+        "lightroom"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 134,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 81,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 822,
+    "type": "idea",
+    "subject": "A live Q&A from a night train",
+    "body": "This is an odd one, but a live Q&A from a night train from Vienna to Venice sounds amazing. Bad wifi, a tiny cabin and a thousand questions. I would join in from my seat in Austin.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "A live Q&A from a night train",
+      "category": "idea",
+      "fitScore": 56,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "photography",
+        "phone photos"
+      ],
+      "skills": [
+        "photo editing",
+        "lightroom"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 1118,
+    "type": "press",
+    "subject": "Profile for our Sunday travel section",
+    "body": "I write the Sunday profile for a small publication, about 2,000 words. I would need two conversations and permission to speak to three people from your communities. You would see the piece before it ran.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Profile for our Sunday travel section",
+      "category": "press",
+      "fitScore": 49,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "lightroom",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 90,
+    "type": "brand_deal",
+    "subject": "Budget national-parks series, $9,000 for three videos",
+    "body": "Our outdoor retailer would like to fund a three-part series on budget national park trips. $9,000 for three videos, and your audience gets a free park-pass guide at the end. You pick the parks.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Budget national-parks series, $9,000 for three videos",
+      "category": "brand_deal",
+      "fitScore": 52,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "slow travel",
+        "journaling",
+        "long stays"
+      ],
+      "skills": [
+        "hosting",
+        "writing",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 243,
+    "type": "collab",
+    "subject": "Swap a video with my slow-travel channel",
+    "body": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before and one clearly worked better than the other, so I will be honest about what to expect.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Swap a video with my slow-travel channel",
+      "category": "collab",
+      "fitScore": 55,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "food",
+        "street food",
+        "local",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 136,
+    "type": "brand_deal",
+    "subject": "Six months with our travel eSIM, $1,800 a month",
+    "body": "We sell travel eSIMs and want an ongoing partner rather than a one-off. $1,800 a month for a mention in the description and one dedicated segment a quarter. We will send you a plan so you can test the coverage on a real trip first.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "Six months with our travel eSIM, $1,800 a month",
+      "category": "brand_deal",
+      "fitScore": 56,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "street food",
+        "vegetarian"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 450,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 39,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "flights",
+        "hostels",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 64,
+    "type": "fan_note",
+    "subject": "I booked my first solo trip",
+    "body": "No ask here. I watched your Lisbon episode six times, and last month I booked my first solo trip: ten days in Portugal, $1,400 all in. I am terrified and very excited. Thank you for making it feel possible.",
+    "links": [
+      {
+        "label": "Our work",
+        "url": "https://example.com/work"
+      }
+    ],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "I booked my first solo trip",
+      "category": "fan_note",
+      "fitScore": 43,
+      "fitReason": "Warm note with no ask. Nothing to act on, worth reading.",
+      "tags": [
+        "editing",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "lightroom",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "senderIndex": 874,
+    "type": "press",
+    "subject": "A quote for a story on budget travel this summer",
+    "body": "We are running a story on what travel really costs this summer. I would like a quote from someone who has been publishing real prices for years. Happy to work entirely over email, and I will not use anything you have not seen.",
+    "links": [],
+    "status": "new",
+    "isFiltered": false,
+    "creatorReply": null,
+    "createdDaysAgo": 0,
+    "ai": {
+      "summary": "A quote for a story on budget travel this summer",
+      "category": "press",
+      "fitScore": 48,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "meeting people"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  }
+]

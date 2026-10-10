@@ -1,0 +1,494 @@
+/*
+ * Closing CTA, "Fans orbit + sunrise": the landing's last section, directly above the footer.
+ *
+ * Layers, back to front: the sunrise (a coral to peach glow, a horizon arc and a little grain, faded out
+ * toward the bottom edge so it melts into the footer), the orbit (two elliptical rings of fans, 1280px up;
+ * a static avatar cluster below), then the centered content. The orbit is transform-only and pauses
+ * while the section is off screen (cta-motion.tsx sets data-play). Nothing is hidden without JavaScript,
+ * and reduced motion renders it all still (the entrances only arm when motion is allowed).
+ */
+
+.section {
+  position: relative;
+}
+
+.stage {
+  --sy: 0.62;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 20px 232px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .stage {
+    padding: 80px 32px 280px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stage {
+    justify-content: center;
+    min-height: clamp(700px, 92svh, 900px);
+    padding: 80px 40px 244px;
+  }
+}
+
+/* ---------- Sunrise ---------- */
+
+.sun {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 0;
+  height: min(78%, 680px);
+  pointer-events: none;
+  /* Strong through the arc, gone at the bottom edge so the footer's cream takes over. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      52% 70% at 50% 92%,
+      rgb(240 96 58 / 0.34),
+      rgb(255 168 128 / 0.3) 38%,
+      rgb(255 217 194 / 0.34) 66%,
+      transparent 86%
+    ),
+    radial-gradient(90% 60% at 50% 100%, rgb(255 217 194 / 0.55), transparent 78%),
+    radial-gradient(40% 50% at 12% 100%, rgb(220 207 247 / 0.45), transparent 80%),
+    radial-gradient(40% 50% at 88% 100%, rgb(191 221 247 / 0.4), transparent 80%);
+  filter: blur(6px);
+}
+
+/* The horizon: the top of a huge circle, lit from its rim, with a hairline of light along the arc. */
+.horizon {
+  --size: max(1500px, 170vw);
+  --rise: 190px;
+
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--rise) - var(--size));
+  width: var(--size);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      50% 36% at 50% 0%,
+      rgb(255 244 232 / 0.95),
+      rgb(255 196 156 / 0.85) 30%,
+      rgb(240 96 58 / 0.42) 62%,
+      transparent 100%
+    ),
+    linear-gradient(to bottom, rgb(255 217 194 / 0.55), transparent 40%);
+  box-shadow:
+    inset 0 2px 0 rgb(255 255 255 / 0.95),
+    inset 0 14px 36px -12px rgb(255 255 255 / 0.7),
+    0 -18px 70px rgb(240 96 58 / 0.3),
+    0 -2px 24px rgb(255 196 156 / 0.7);
+}
+
+@media (min-width: 768px) {
+  .horizon {
+    --rise: 232px;
+  }
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ---------- Orbit ---------- */
+
+.orbit {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .orbit {
+    --w: clamp(1000px, 86vw, 1500px);
+
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    pointer-events: none;
+  }
+}
+
+.rings {
+  position: absolute;
+  top: 43%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+/* A circle squashed into an ellipse; the dashed path shows where the fans travel. */
+.frame {
+  --k: 1;
+
+  position: absolute;
+  top: calc(var(--w) * var(--k) / -2);
+  left: calc(var(--w) * var(--k) / -2);
+  width: calc(var(--w) * var(--k));
+  aspect-ratio: 1;
+  border: 1px solid rgb(30 27 38 / 0.08);
+  border-radius: 50%;
+  transform: scaleY(var(--sy));
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  will-change: transform;
+  animation: spin var(--dur) linear infinite;
+}
+
+.slot {
+  position: absolute;
+  top: calc(50% + 50% * sin(var(--a)));
+  left: calc(50% + 50% * cos(var(--a)));
+  translate: -50% -50%;
+}
+
+/* Undo the ring's rotation and the squash, so every item stays upright and round. */
+.counter {
+  display: grid;
+  place-items: center;
+  transform: scaleY(calc(1 / var(--sy)));
+  animation: unspin var(--dur) linear infinite;
+}
+
+.reverse .ring,
+.reverse .counter {
+  animation-direction: reverse;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes unspin {
+  from {
+    transform: rotate(0deg) scaleY(calc(1 / var(--sy)));
+  }
+  to {
+    transform: rotate(-360deg) scaleY(calc(1 / var(--sy)));
+  }
+}
+
+/* Off screen: park the loops. */
+.stage[data-play="off"] .ring,
+.stage[data-play="off"] .counter {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring,
+  .counter {
+    animation: none;
+  }
+}
+
+.face {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 2px solid rgb(255 255 255 / 0.9);
+  border-radius: 50%;
+  background: var(--glass-chip);
+  box-shadow: 0 10px 28px -10px rgb(40 30 60 / 0.35);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.small .face {
+  width: 52px;
+}
+
+.initials.tonePeach {
+  background: #ffd9c2;
+}
+
+.initials.toneSky {
+  background: #bfddf7;
+}
+
+.initials.toneLilac {
+  background: #dccff7;
+}
+
+.initials.toneMint {
+  background: #cfefe3;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding-inline: 14px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.72);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    var(--glass-highlight),
+    0 12px 30px -14px rgb(40 30 60 / 0.3);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chip svg {
+  color: var(--color-coral);
+}
+
+/* Below 1280px: a still cluster above the headline instead of the rings. */
+.cluster {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+  z-index: 1;
+}
+
+.cluster .face {
+  width: 44px;
+  margin-left: -10px;
+  border-width: 2px;
+}
+
+.cluster .face:first-child {
+  margin-left: 0;
+}
+
+@media (min-width: 768px) {
+  .cluster .face {
+    width: 52px;
+    margin-left: -12px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .cluster {
+    display: none;
+  }
+}
+
+/* ---------- Content ---------- */
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 920px;
+}
+
+/* A soft cream pool behind the text calms any face drifting past it. */
+.content::before {
+  content: "";
+  position: absolute;
+  inset: -40px -140px;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgb(251 247 242 / 0.88), rgb(251 247 242 / 0));
+  pointer-events: none;
+}
+
+@media (max-width: 1279px) {
+  .content::before {
+    display: none;
+  }
+}
+
+.title {
+  margin-top: 20px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 1.2rem + 4.4vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.ln {
+  display: block;
+}
+
+.title em {
+  padding-right: 0.06em;
+  background: linear-gradient(100deg, var(--color-coral), #d84b2b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-style: italic;
+}
+
+.lead {
+  margin-top: 20px;
+  max-width: 34ch;
+  color: var(--color-ink-soft);
+  text-wrap: balance;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+  max-width: 340px;
+  margin-top: 32px;
+}
+
+@media (min-width: 480px) {
+  .actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    max-width: none;
+  }
+}
+
+.demoBtn {
+  height: 48px;
+  padding-inline: 28px;
+  font-size: 1rem;
+}
+
+.statsWrap {
+  margin-top: 36px;
+  padding: 18px 12px 14px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 28px;
+  background: rgb(255 255 255 / 0.5);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    var(--glass-highlight),
+    0 20px 50px -28px rgb(40 30 60 / 0.25);
+}
+
+@media (min-width: 480px) {
+  .statsWrap {
+    padding-inline: 20px;
+  }
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-inline: 18px;
+}
+
+.stat + .stat {
+  border-left: 1px solid rgb(30 27 38 / 0.14);
+}
+
+@media (min-width: 480px) {
+  .stat {
+    padding-inline: 28px;
+  }
+}
+
+.statValue {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.statLabel {
+  color: var(--color-ink-soft);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.note {
+  margin-top: 10px;
+  color: var(--color-ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+}
+
+/* ---------- Entrances (cta-motion.tsx arms blocks that start below the fold) ---------- */
+
+.rise[data-armed] {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.rise[data-armed][data-inview] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.8s ease-out var(--d, 0ms),
+    transform 0.9s var(--ease-out) var(--d, 0ms);
+}
+
+.orbit[data-armed] {
+  opacity: 0;
+  scale: 0.94;
+}
+
+.orbit[data-armed][data-inview] {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity 1.2s ease-out 0.2s,
+    scale 1.6s var(--ease-out) 0.2s;
+}
+
+.sun[data-armed] {
+  opacity: 0;
+  translate: 0 8%;
+}
+
+.sun[data-armed][data-inview] {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 1.4s ease-out,
+    translate 1.8s var(--ease-out);
+}

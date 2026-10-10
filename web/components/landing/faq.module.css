@@ -1,0 +1,351 @@
+/*
+ * FAQ (landing brief v2, part 11): page background, two columns from 1024px (title left and sticky,
+ * accordion right), one column below.
+ *
+ * Rows sit between hairlines inset to the text. An open answer, or a hovered row, turns into a white
+ * card (04 §9: rows switch to card-strong); its hairlines fade so the card reads as one piece. The card
+ * fills the column exactly (its text is inset by --pad), so its edges keep to the page gutter. The plus
+ * sits in a white circle that turns peach and rotates into a cross when open.
+ *
+ * Without JavaScript every answer is open (faq.tsx noscript style) and the questions render as plain
+ * headings with no toggle icon (faq-accordion.tsx), so nothing claims to be collapsed.
+ */
+
+.section {
+  /* DESIGN.md ink-soft: 5.8:1 on the page background. */
+  --ink-soft: var(--color-ink-soft);
+  /* DESIGN.md line-row: line (#E5E5E8) all but vanishes on the page grey; this one still reads as a hairline. */
+  --faq-line: #d4d4d8;
+  --gutter: 16px;
+  --pad: 18px;
+
+  position: relative;
+  padding-block: 104px 112px;
+}
+
+@media (min-width: 768px) {
+  .section {
+    --gutter: 32px;
+    --pad: 24px;
+
+    padding-block: 144px 136px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .section {
+    --gutter: 40px;
+    --pad: 28px;
+
+    padding-block: 176px 168px;
+  }
+}
+
+.inner {
+  display: grid;
+  row-gap: 48px;
+  max-width: calc(1280px + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 48px;
+    align-items: start;
+  }
+}
+
+@media (min-width: 1200px) {
+  .inner {
+    column-gap: 96px;
+  }
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Tablet: the title on the left, the way into the demo on the right, bottoms aligned. */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .aside {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 1fr auto;
+    column-gap: 32px;
+    align-items: end;
+  }
+
+  .title {
+    grid-row: 1 / span 2;
+  }
+
+  .note {
+    grid-column: 2;
+    margin-top: 0;
+    max-width: 24ch;
+  }
+
+  .noteAction {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .aside {
+    position: sticky;
+    /* Clears the floating navbar. */
+    top: 120px;
+  }
+}
+
+.title {
+  max-width: 10ch;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+.note {
+  max-width: 30ch;
+  margin-top: 28px;
+  color: var(--ink-soft);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.noteAction {
+  margin-top: 24px;
+}
+
+.main {
+  min-width: 0;
+}
+
+/* ---------- Accordion ---------- */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item {
+  position: relative;
+  border-radius: 24px;
+  transition: background-color var(--dur-slow) var(--ease-out-quart);
+}
+
+/* Hairlines inset to the text: one above every row, one below the last. */
+.item::before,
+.item:last-child::after {
+  content: "";
+  position: absolute;
+  right: var(--pad);
+  left: var(--pad);
+  height: 1px;
+  background: var(--faq-line);
+  transition: opacity var(--dur-base) var(--ease-out-quart);
+}
+
+.item::before {
+  top: -2px;
+}
+
+.item:last-child::after {
+  bottom: -2px;
+}
+
+.item[data-open] {
+  background: var(--card-strong);
+}
+
+.item[data-open]::before,
+.item[data-open]:last-child::after,
+.item[data-open] + .item::before {
+  opacity: 0;
+}
+
+@media (hover: hover) {
+  .item:not([data-open]):hover {
+    background: rgb(255 255 255 / 0.6);
+  }
+
+  .item:hover::before,
+  .item:hover:last-child::after,
+  .item:hover + .item::before {
+    opacity: 0;
+  }
+}
+
+.q {
+  margin: 0;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  min-height: 56px;
+  padding: 20px var(--pad);
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.625rem;
+  letter-spacing: -0.01em;
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .trigger {
+    padding-block: 22px;
+  }
+}
+
+.trigger:focus-visible {
+  outline: 2px solid rgb(124 58 237 / 0.4);
+  outline-offset: 2px;
+}
+
+/* Where :has works, the focus ring wraps the whole row or card, not just the question. */
+@supports selector(:has(*)) {
+  .trigger:focus-visible {
+    outline: none;
+  }
+
+  .item:has(.trigger:focus-visible) {
+    outline: 2px solid rgb(124 58 237 / 0.4);
+    outline-offset: 2px;
+  }
+
+  .item:has(.trigger:focus-visible)::before,
+  .item:has(.trigger:focus-visible):last-child::after,
+  .item:has(.trigger:focus-visible) + .item::before {
+    opacity: 0;
+  }
+}
+
+.qText {
+  text-wrap: pretty;
+}
+
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--card-strong);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+  transition:
+    background-color var(--dur-slow) var(--ease-out-quart),
+    box-shadow var(--dur-slow) var(--ease-out-quart);
+}
+
+.icon svg {
+  transition: transform var(--dur-slow) var(--ease-out-quart);
+}
+
+/* The slot a question holds for its icon before the accordion hydrates (and without JavaScript). */
+.iconPending {
+  visibility: hidden;
+}
+
+.item[data-open] .icon {
+  background: var(--color-aurora-peach);
+  box-shadow: inset 0 0 0 1px transparent;
+}
+
+.item[data-open] .icon svg {
+  transform: rotate(45deg);
+}
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease-out-quart),
+    visibility 0s linear var(--dur-slow);
+}
+
+.item[data-open] .panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease-out-quart),
+    visibility 0s linear 0s;
+}
+
+.panelInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.answer {
+  max-width: calc(62ch + 2 * var(--pad));
+  margin: 0;
+  padding: 0 var(--pad) 26px;
+  color: var(--ink-muted);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+  opacity: 0;
+  transform: translate3d(0, -6px, 0);
+  transition:
+    opacity var(--dur-base) var(--ease-out-quart),
+    transform var(--dur-slow) var(--ease-out-quart);
+}
+
+@media (min-width: 768px) {
+  .answer {
+    padding-bottom: 30px;
+  }
+}
+
+.item[data-open] .answer {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 40ms;
+}
+
+/* ---------- Entrances (armed by cta-motion.tsx) ---------- */
+
+.inner [data-cta-reveal="rise"] {
+  transition:
+    opacity 600ms var(--ease-out-quart) var(--d, 0ms),
+    transform 600ms var(--ease-out-quart) var(--d, 0ms);
+}
+
+.inner [data-cta-reveal="rise"][data-armed]:not([data-inview]) {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .item::before,
+  .item:last-child::after,
+  .icon,
+  .icon svg,
+  .panel,
+  .item[data-open] .panel,
+  .answer,
+  .inner [data-cta-reveal] {
+    transition: none;
+  }
+}

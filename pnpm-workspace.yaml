@@ -1,0 +1,10 @@
+packages:
+  - web
+  - api
+  - shared
+
+onlyBuiltDependencies:
+  - "@biomejs/biome"
+  - esbuild
+  - sharp
+  - unrs-resolver

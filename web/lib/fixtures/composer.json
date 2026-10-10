@@ -1,0 +1,257 @@
+{
+  "post": {
+    "id": "c741f4f6-727e-4329-a34d-e98534add70f",
+    "type": "project",
+    "status": "launched",
+    "title": "Ten family kitchens in Oaxaca",
+    "excerpt": "A fan-made food guide to ten family-run kitchens in Oaxaca, with the one dish to order at each, the price in pesos and dollars, and a photo taken that day. A local guide checks…",
+    "rolesNeeded": ["Local guide", "Translator", "Photographer"],
+    "openRoles": [],
+    "community": {
+      "id": "d2262f11-d852-4e43-b5b9-da284c1f8e10",
+      "slug": "food-finds",
+      "name": "Food Finds",
+      "tint": "peach",
+      "icon": "utensils"
+    },
+    "author": {
+      "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+      "name": "Felix Garcia",
+      "headline": "Food writer, mostly street food",
+      "image": null
+    },
+    "useCount": 40,
+    "buildCount": 14,
+    "commentCount": 6,
+    "teamPreview": [
+      {
+        "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+        "name": "Felix Garcia",
+        "headline": "Food writer, mostly street food",
+        "image": null
+      }
+    ],
+    "teamSize": 4,
+    "featured": true,
+    "createdAt": "2026-09-06T12:33:21.679Z",
+    "viewerSignals": [],
+    "isAuthor": false,
+    "ai": {
+      "status": "done",
+      "attempts": 1,
+      "error": null,
+      "summary": "Ten family kitchens in Oaxaca",
+      "category": "project",
+      "fitScore": 91,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Three roles filled and every address checked by a local.",
+      "tags": ["street food", "local", "markets"],
+      "skills": ["video editing"],
+      "isSpam": false,
+      "scoredTasteVersion": 1,
+      "stale": false
+    },
+    "score": 0.7551,
+    "hidden": false,
+    "promotion": {
+      "id": "a3fdc193-8bb6-4298-a89b-299a585f5e59",
+      "state": "live"
+    },
+    "body": "A fan-made food guide to ten family-run kitchens in Oaxaca, with the one dish to order at each, the price in pesos and dollars, and a photo taken that day. A local guide checks every address, a translator writes the menu cards and a photographer shoots the plates in daylight. Most meals are $4 to $9. The goal is a guide you can follow on foot in four days.",
+    "links": [],
+    "roles": [
+      {
+        "role": "Local guide",
+        "filled": true,
+        "filledBy": {
+          "membershipId": "268e4e54-81dc-470e-bcfb-64ba1b189904",
+          "name": "Kemi Okafor",
+          "headline": "Hostel host in Mexico City",
+          "image": null
+        },
+        "requestCount": 0
+      },
+      {
+        "role": "Translator",
+        "filled": true,
+        "filledBy": {
+          "membershipId": "40165da2-368c-46e2-9430-6618b952c47e",
+          "name": "Jorge Sen",
+          "headline": "Translator, Spanish and Portuguese",
+          "image": null
+        },
+        "requestCount": 0
+      },
+      {
+        "role": "Photographer",
+        "filled": true,
+        "filledBy": {
+          "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+          "name": "Priya Shah",
+          "headline": "Austin solo traveler who plans every trip around food",
+          "image": null
+        },
+        "requestCount": 0
+      }
+    ],
+    "team": [
+      {
+        "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+        "name": "Felix Garcia",
+        "headline": "Food writer, mostly street food",
+        "image": null,
+        "role": "Lead",
+        "status": "accepted",
+        "isLead": true,
+        "createdAt": "2026-09-06T12:33:21.679Z"
+      },
+      {
+        "membershipId": "268e4e54-81dc-470e-bcfb-64ba1b189904",
+        "name": "Kemi Okafor",
+        "headline": "Hostel host in Mexico City",
+        "image": null,
+        "role": "Local guide",
+        "status": "accepted",
+        "isLead": false,
+        "createdAt": "2026-09-06T12:33:21.679Z"
+      },
+      {
+        "membershipId": "40165da2-368c-46e2-9430-6618b952c47e",
+        "name": "Jorge Sen",
+        "headline": "Translator, Spanish and Portuguese",
+        "image": null,
+        "role": "Translator",
+        "status": "accepted",
+        "isLead": false,
+        "createdAt": "2026-09-06T12:33:21.679Z"
+      }
+    ],
+    "comments": [
+      {
+        "id": "7216fe38-2f50-46bb-9a9e-b8983e5ff47f",
+        "body": "Pushing back slightly: I was there last month and the opening hours have changed. Happy to send photos.",
+        "author": {
+          "membershipId": "e3d51b91-86e4-4763-899c-597176da9070",
+          "name": "Jorge Wright",
+          "headline": "Backpacker, three countries and counting",
+          "image": null
+        },
+        "createdAt": "2026-09-16T12:33:21.679Z",
+        "isOwn": false
+      },
+      {
+        "id": "c0430ff3-b5e0-4082-95d1-e9c42047155b",
+        "body": "This would have saved me a weekend: if nobody owns the first draft it will stay a thread forever.",
+        "author": {
+          "membershipId": "b20db7a4-8d55-4418-9648-538ec217e0c5",
+          "name": "Leo Torres",
+          "headline": "Family of four, road trips every June",
+          "image": null
+        },
+        "createdAt": "2026-09-17T12:33:21.679Z",
+        "isOwn": false
+      },
+      {
+        "id": "111a1c41-0934-4d13-944f-78ca4dec1e54",
+        "body": "Pushing back slightly: I would cut the second half and publish the first. The second half is a different guide.",
+        "author": {
+          "membershipId": "7cf2b81b-fdfb-4ed4-b896-1662c9cfc805",
+          "name": "Uma Schmidt",
+          "headline": "Copywriter for outdoor brands",
+          "image": null
+        },
+        "createdAt": "2026-09-19T12:33:21.679Z",
+        "isOwn": false
+      },
+      {
+        "id": "0926afd4-dafb-4ba3-980d-d08785e1e3fe",
+        "body": "Worth saying the quiet part: put the honest downsides near the top. That is what people come back for.",
+        "author": {
+          "membershipId": "55aae4b6-a2c4-4edc-8571-38ff1d8185b6",
+          "name": "Shreya Lopez",
+          "headline": "Remote worker, a new city every month",
+          "image": null
+        },
+        "createdAt": "2026-09-20T12:33:21.679Z",
+        "isOwn": false
+      },
+      {
+        "id": "473ef9e6-01c3-42b8-814c-d4aea0be5e7d",
+        "body": "One worry: put the honest downsides near the top. That is what people come back for.",
+        "author": {
+          "membershipId": "6b54b64a-b2ff-4793-95ac-4d88deef6fc6",
+          "name": "Nadia Torres",
+          "headline": "Learning Italian this year",
+          "image": null
+        },
+        "createdAt": "2026-09-29T12:33:21.679Z",
+        "isOwn": false
+      },
+      {
+        "id": "51f5ec43-0acd-4bc9-bbc2-a7510ca56931",
+        "body": "Happy to help with this: late arrivals are the real risk here. Add a plan for after midnight.",
+        "author": {
+          "membershipId": "1019d58e-98aa-4b7f-8485-76692aff94ba",
+          "name": "Ben Bell",
+          "headline": "Photographer, mostly weddings, travels for fun",
+          "image": null
+        },
+        "createdAt": "2026-09-29T12:33:21.679Z",
+        "isOwn": false
+      }
+    ],
+    "feedback": null
+  },
+  "promotion": {
+    "id": "a3fdc193-8bb6-4298-a89b-299a585f5e59",
+    "postId": "c741f4f6-727e-4329-a34d-e98534add70f",
+    "post": {
+      "title": "Ten family kitchens in Oaxaca",
+      "excerpt": "A fan-made food guide to ten family-run kitchens in Oaxaca, with the one dish to order at each, the price in pesos and dollars, and a photo taken that day. A local guide checks…",
+      "type": "project",
+      "community": {
+        "slug": "food-finds",
+        "name": "Food Finds",
+        "tint": "peach"
+      },
+      "author": {
+        "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+        "name": "Felix Garcia",
+        "headline": "Food writer, mostly street food",
+        "image": null
+      }
+    },
+    "headline": "Featured: Ten family kitchens in Oaxaca",
+    "drafts": {
+      "x": {
+        "text": "Ten family kitchens in Oaxaca, found and checked by my Food Finds fans. One dish to order at each, the price in pesos and dollars, and a photo from that day. Guide below.",
+        "hashtags": ["OaxacaFood"]
+      },
+      "youtube": {
+        "text": "Ten family kitchens in Oaxaca, a fan-made guide from our Food Finds room. Every address checked by a local. Credits and the full guide are in the link below.",
+        "hashtags": []
+      },
+      "linkedin": {
+        "text": "Ten family kitchens in Oaxaca, made by fans in Food Finds.\n\nA local guide checked every address, a translator wrote the menu cards and a photographer shot the plates in daylight. Most meals are $4 to $9. Link in bio.",
+        "hashtags": ["OaxacaFood", "FoodFinds"]
+      }
+    },
+    "draftErrors": [],
+    "state": "live",
+    "showcaseSlug": "ten-family-kitchens-in-oaxaca",
+    "shortCode": "Rb4Xs9Tn",
+    "shortPath": "/r/Rb4Xs9Tn",
+    "showcasePath": "/mira/s/ten-family-kitchens-in-oaxaca",
+    "clickCount": 54,
+    "clicksByPlatform": {
+      "x": 2,
+      "instagram": 18,
+      "linkedin": 4,
+      "youtube": 26,
+      "other": 4
+    },
+    "publishedAt": "2026-10-04T12:33:21.679Z",
+    "unpublishedAt": null,
+    "createdAt": "2026-10-04T12:33:21.679Z",
+    "updatedAt": "2026-10-09T12:33:23.007Z"
+  }
+}

@@ -1,0 +1,621 @@
+/*
+ * New ways to connect (connect-section.tsx): two rows of three frosted tiles, each with a tiny picture of
+ * the real UI. The page aurora shows through; text sits on 55% glass, so ink-soft stays above 6.9:1.
+ */
+
+.section {
+  --gutter: 16px;
+
+  position: relative;
+  padding: 88px var(--gutter);
+}
+
+@media (min-width: 768px) {
+  .section {
+    --gutter: 32px;
+    padding-block: 120px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section {
+    --gutter: 40px;
+    padding-block: 144px;
+  }
+}
+
+.inner {
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+.groupLabel {
+  margin: 48px 0 16px;
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .gridTwo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.demoNote {
+  margin: 20px 0 0;
+  color: var(--ink-muted);
+  font-size: 0.8125rem;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+}
+
+.tileTitle {
+  color: var(--ink);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.tileLine {
+  max-width: 34ch;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* The picture of the product: a white card inside the tile. */
+.snippet {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-height: 168px;
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.82);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+.snippet p {
+  margin: 0;
+}
+
+.snipTitle {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.snipMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+}
+
+.snipRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding-inline: 9px;
+  border-radius: 999px;
+  background: var(--color-aurora-peach);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pillBtn {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  height: 32px;
+  padding-inline: 14px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--line-row);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+/* Reply in my voice: a DM, a draft and three dots that type for a few seconds, then rest. */
+.bubble {
+  max-width: 92%;
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.bubble b {
+  margin-right: 4px;
+  font-weight: 600;
+}
+
+.bubbleIn {
+  background: var(--color-aurora-lilac);
+  color: var(--ink);
+}
+
+.bubbleOut {
+  align-self: flex-end;
+  background: var(--color-aurora-peach);
+  color: var(--ink);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--ink-soft);
+  animation: connect-dot 1.2s ease-in-out 4 both;
+}
+
+.dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes connect-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* A small caption on a picture, e.g. what the AI did. */
+.snipLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Faces (generated fan photos) */
+.faces {
+  display: inline-flex;
+}
+
+.face {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.faces .face + .face {
+  margin-left: -8px;
+}
+
+.shortlist {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+/* What fans want */
+.wantRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 0.875rem;
+}
+
+.wantName {
+  font-weight: 500;
+}
+
+.wantRow b {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.bar {
+  display: block;
+  height: 6px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-aurora-lilac);
+}
+
+.bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ink);
+}
+
+/* A heart from you */
+.loved {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  height: 28px;
+  padding-inline: 12px;
+  border-radius: 999px;
+  background: var(--color-aurora-peach);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.loved svg {
+  color: var(--color-coral);
+}
+
+/* Your idea made it */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.notice b {
+  font-weight: 600;
+}
+
+.noticeIcon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--color-aurora-sky);
+}
+
+.credits {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.credits li {
+  display: flex;
+  gap: 8px;
+}
+
+.credits span {
+  min-width: 6.5em;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+/* Fan spotlight */
+.shout {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* ---------- Challenges: its own block (brief, entries, AI shortlist) ---------- */
+
+.challenge {
+  margin-top: 20px;
+}
+
+.challengePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+}
+
+@media (min-width: 768px) {
+  .challenge {
+    margin-top: 24px;
+  }
+
+  .challengePanel {
+    gap: 28px;
+    padding: 32px;
+  }
+}
+
+.challengeHead {
+  display: grid;
+  gap: 8px;
+}
+
+.challengeTitle {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.challengeLine {
+  max-width: 62ch;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.challengeBody {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .challengeBody {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.05fr) minmax(0, 1.25fr);
+    gap: 24px;
+  }
+}
+
+.step {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.stepLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.stepLabel span {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.6875rem;
+}
+
+/* Each step's picture is a white card, like the tile pictures. */
+.step > .snippet {
+  flex: 1;
+  margin-top: 10px;
+}
+
+.brief {
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.briefTitle {
+  color: var(--ink);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.briefBody {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.brief .pillBtn {
+  margin-top: auto;
+}
+
+/* The entry grid: six flat tinted cards, each a fan's entry. */
+.entries {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+}
+
+@media (min-width: 480px) {
+  .entries {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.entry {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 14px;
+  color: var(--ink);
+}
+
+.tint_peach {
+  background: var(--color-aurora-peach);
+}
+
+.tint_lilac {
+  background: var(--color-aurora-lilac);
+}
+
+.tint_sky {
+  background: var(--color-aurora-sky);
+}
+
+.tint_mint {
+  background: var(--color-aurora-mint);
+}
+
+.entryTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.faceSm {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.9);
+}
+
+.entryTitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.entryPrice {
+  margin-top: auto;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* The AI shortlist: three picks, each with its reason. */
+.picks {
+  justify-content: flex-start;
+  gap: 0;
+  margin: 0;
+  padding: 6px 14px;
+  list-style: none;
+}
+
+.pick {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.pick + .pick {
+  border-top: 1px solid var(--line-row);
+}
+
+.rank {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--color-aurora-peach);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pickBody {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pickTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.pickTop b {
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.why {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.why b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dots i {
+    animation: none;
+    opacity: 0.7;
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "task": "suggestReply",
+  "description": "Recorded fast-tier answers for the P1 reply draft.",
+  "cases": [
+    {
+      "name": "collab-reply",
+      "input": {
+        "pitch": {
+          "type": "collab",
+          "subject": "A packing challenge with our carry-on bags",
+          "body": "Hi Mira, we make carry-on bags for budget travelers and would love to co-create a 30-day packing challenge with your community. We can cover prizes and production.",
+          "senderName": "Lena from Carryon Co"
+        },
+        "tasteProfile": {
+          "promote": [
+            "Budget-honest travel guides",
+            "Guides made by people in my community"
+          ],
+          "never": [
+            "Crypto or prize scams"
+          ],
+          "voice": []
+        },
+        "voice": [
+          "Posted a new Lisbon guide today. Short, no fluff, every price dated. If you try it, tell me what I got wrong.",
+          "Going alone is scary. Do it anyway."
+        ],
+        "creatorName": "Mira Lane"
+      },
+      "responses": [
+        {
+          "content": {
+            "reply": "Hi Lena, thanks for this. A beginner-friendly challenge is close to what I care about, as long as it helps people pack lighter rather than just sell bags. Could you share what the 30 days would look like and how my fans would be involved? Then I'll get back to you."
+          },
+          "usage": {
+            "prompt_tokens": 650,
+            "completion_tokens": 80
+          }
+        }
+      ],
+      "expect": {
+        "contains": "Hi Lena",
+        "requests": 1
+      }
+    },
+    {
+      "name": "email-in-reply-retried",
+      "input": {
+        "pitch": {
+          "type": "press",
+          "subject": "Interview for Slow Roads",
+          "body": "Hi Mira, I host Slow Roads, a podcast for slow travelers. Would you join us for a remote interview in November?",
+          "senderName": "Sam"
+        },
+        "tasteProfile": {
+          "promote": [
+            "Budget-honest travel guides",
+            "Guides made by people in my community"
+          ],
+          "never": [
+            "Crypto or prize scams"
+          ],
+          "voice": []
+        },
+        "voice": [
+          "Posted a new Lisbon guide today. Short, no fluff, every price dated. If you try it, tell me what I got wrong.",
+          "Going alone is scary. Do it anyway."
+        ],
+        "creatorName": "Mira Lane"
+      },
+      "responses": [
+        {
+          "content": {
+            "reply": "Hi Sam, I'd love to. Email me at mira@example.com and we'll sort out a date."
+          },
+          "usage": {
+            "prompt_tokens": 600,
+            "completion_tokens": 40
+          }
+        },
+        {
+          "content": {
+            "reply": "Hi Sam, thanks for the invite. Slow travel is something I talk about a lot, so this could be a good fit. Could you share the format and a few example episodes here? Then I'll confirm."
+          },
+          "usage": {
+            "prompt_tokens": 700,
+            "completion_tokens": 60
+          }
+        }
+      ],
+      "expect": {
+        "contains": "Hi Sam, thanks for the invite",
+        "requests": 2
+      }
+    }
+  ]
+}

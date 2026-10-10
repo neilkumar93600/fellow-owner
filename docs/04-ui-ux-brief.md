@@ -1,56 +1,50 @@
 # 04 · UI and UX Design Brief
 
-Status: draft v0.1 for review · Updated: 2026-10-01
-Style source: the nine screens in `design-reference/` ("Starline" dashboard set). We copy the visual language, not the brand.
+Status: Active v1.0 · Updated: 2026-10-06  
+Design System: **Fellow Prism** — Bespoke Frosted Glassmorphism Architecture.
 
 ## 1. Audience and tone
 
 - **Creators** are busy and judge a tool by how fast it gets to the point. They use the dashboard on a laptop.
 - **Fans** arrive on a phone from a bio link and decide in seconds whether to join.
-- Three adjectives: **calm, warm, credible.** The AI should feel like a sharp assistant, not a light show.
+- Three adjectives: **calm, luminous, credible.** The interface feels like an airy frosted glass atelier suspended over an ethereal aurora light mesh.
 
-## 2. Reference products
+## 2. Design Foundation: Frosted Glassmorphism ("Fellow Prism")
 
-| Reference | Borrow | Avoid |
-|-----------|--------|-------|
-| Starline set, `design-reference/01` to `09` | Grey app shell with a soft gradient blur; pill nav, tab bars, toolbars and pagination; lime active state; pastel stat cards with icon tiles; white table cards with a pill header row; count chips from the POS screen; one purple primary action per screen; Inter; dark grey text instead of black | Status text in light orange or teal that fails contrast; placeholder copy; the dense POS keypad; the Starline asterisk logo |
+Our interface is built entirely from physical glass optics and fluid light refraction:
 
-| Reference file | Pattern | Our screen |
-|----------------|---------|------------|
-| `01`, `02`, `07` dashboard | Stat stack, line chart, donut, Top Products, bottom analytics | Today |
-| `04` orders with tabs | Tab bar, toolbar, status table | Inbox |
-| `05` POS | Count chips, product grid, right-side order panel, purple Payment | Ideas (chips + grid), Promote composer (panel + purple Publish) |
-| `08` POS machine cards | Pastel cards with icon tile and edit pencil | Communities |
-| `06` customers | Table with eye and pencil actions | People |
-| `03`, `09` tables | Status text, row menu, pagination | Promote list, community detail |
+| Material Tier | Optics & Physics | Product Application |
+|---|---|---|
+| **Tier 1: Ultra-Frost Chrome** | `backdrop-filter: blur(20px) saturate(180%)`, specular white border (`rgba(255,255,255,0.7)`), dual inner rim reflections | Floating navigation docks, search capsule, command tray, tab bars, toolbars |
+| **Tier 2: Frosted Panels** | `backdrop-filter: blur(24px) saturate(160%)`, 36px-40px radii, ambient drop shadow + specular rim | App workspace shell, fan shell container, onboarding split panels |
+| **Tier 3: Crystalline Cards** | `backdrop-filter: blur(14px)`, translucent refraction tints, frosted icon badges, hover specular glow | Stat cards, community tiles, idea cards, top ideas table |
+| **Tier 4: Frosted Badges** | `backdrop-filter: blur(10px)`, soft luminous sheen, dark legible text | AI pick chips, category filters, status pills, count chips |
 
-## 3. Color palette
+## 3. Color palette & Luminous Materials
 
 All colors are CSS variables in Tailwind v4 `@theme`, with shadcn variables mapped onto them.
 
-| Token | Hex | Use |
-|-------|-----|-----|
-| `--page` | `#F2F2F3` | Outside the shell |
-| `--shell` | `#DADADC` | App shell background |
-| `--blur-1` / `--blur-2` / `--blur-3` | `#AEB8E6` / `#9FD0D7` / `#D7CCB6` | Radial blurs in the shell's bottom right, 35 to 45% opacity |
-| `--glass` | `rgba(255,255,255,0.45)` | Pills, tab bars, toolbars on the shell |
-| `--card` | `#F9F9FA` | Default card |
-| `--card-strong` | `#FFFFFF` | Tables, inputs, hovered rows |
-| `--ink` | `#2D2D30` | Primary text |
-| `--ink-muted` | `#6E6E73` | Secondary text (about 5:1 on white) |
-| `--ink-faint` | `#9A9AA0` | Placeholders, disabled. Never body text |
-| `--line` | `#E5E5E8` | Dividers |
-| `--lime` | `#E8FA8B` | Active nav, current page, "AI pick" chip, chart tooltip |
-| `--peach` / `--peach-tile` / `--orange` | `#FFF3E3` / `#FFE6C4` / `#F2A93B` | Stat card, icon tile, accent |
-| `--lavender` / `--lavender-tile` | `#F1ECFF` / `#E3D9FF` | Stat card, icon tile |
-| `--purple` | `#7C3AED` | Primary button background (white text passes AA) |
-| `--purple-chart` | `#8B5CF6` | Chart series, icons |
-| `--aqua` / `--aqua-tile` / `--teal` | `#E1F7F9` / `#C9F0F4` / `#1FBFD0` | Stat card, icon tile, accent |
-| `--success` | `#16A34A` | Trend text at 18px and above |
-| `--success-ink` | `#15803D` | Trend text below 18px |
-| `--warn-bg` / `--warn-ink` | `#FFF1D6` / `#A45A00` | "New", "Requested" pills |
-| `--info-bg` / `--info-ink` | `#DDF5F8` / `#0E7490` | "Shortlisted", "Accepted" pills |
-| `--danger` | `#EF4444` | Notification badge, destructive actions |
+| Token | Hex / Value | Role in Frosted Glassmorphism |
+|---|---|---|
+| `--page` | `#F8FAFC` | Luminous, clean outer ambient canvas |
+| `--shell` | `#EBF0F7` | Translucent crystal shell foundation |
+| `--blur-1` to `--blur-4` | Indigo `#C7D2FE`, Glacier `#BAE6FD`, Amethyst `#DDD6FE`, Amber `#FEF3C7` | Multi-phase Aurora light mesh creating spectral backlighting |
+| `--glass` | `rgba(255, 255, 255, 0.65)` | Base frosted glass surface with blur & specular borders |
+| `--card` | `#F9F9FA` | Standard card base |
+| `--card-strong` | `#FFFFFF` | Pure white tables, inputs, active overlays |
+| `--ink` | `#1E293B` | High-contrast obsidian primary text |
+| `--ink-muted` | `#64748B` | Secondary text (clears WCAG AA 5.2:1) |
+| `--ink-faint` | `#94A3B8` | Placeholders and inactive glyphs |
+| `--line` | `#E2E8F0` | Structural dividers |
+| `--lime` | `#CCFBF1` / `#D9F99D` | Luminous frosted crystal active indicator and AI pick badge |
+| `--peach` / `--peach-tile` | `#FFF7ED` / `#FED7AA` | Solstice Amber crystalline tint & frosted badge |
+| `--lavender` / `--lavender-tile` | `#F5F3FF` / `#EDE9FE` | Nebula Iris crystalline tint & frosted badge |
+| `--purple` | `linear-gradient(135deg, #4F46E5, #7C3AED)` | Luminous Aurora Violet primary action with specular rim |
+| `--purple-chart` | `#8B5CF6` | Vibrant secondary series and icon accents |
+| `--aqua` / `--aqua-tile` | `#F0FDFA` / `#CCFBF1` | Glacier Cyan crystalline tint & frosted badge |
+| `--success` / `--success-ink` | `#16A34A` / `#15803D` | Positive trend indicator with AA contrast |
+| `--warn-bg` / `--warn-ink` | `#FFFBEB` / `#B45309` | Warning / New status pills |
+| `--danger` | `#EF4444` | Notification badges and destructive actions |
 
 - Chart series order: orange, purple-chart, teal. Lime only for the tooltip.
 - Fit score pill: 0 to 39 in `--ink-faint`, 40 to 69 in `--warn-ink`, 70 to 100 in `--success-ink`.

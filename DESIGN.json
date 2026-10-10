@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-09T00:00:00Z",
+  "title": "Design System: Fellow Owners (Golden Hour Frost)",
+  "extensions": {
+    "colorMeta": {
+      "cream": {
+        "role": "neutral",
+        "displayName": "Golden Cream",
+        "hex": "#FBF7F2",
+        "canonical": "oklch(97.8% 0.008 73.7)",
+        "purpose": "The page under the aurora and <body>.",
+        "tonalRamp": [
+          "oklch(15.0% 0.008 73.7)",
+          "oklch(26.0% 0.008 73.7)",
+          "oklch(37.0% 0.008 73.7)",
+          "oklch(48.0% 0.008 73.7)",
+          "oklch(60.0% 0.008 73.7)",
+          "oklch(72.0% 0.008 73.7)",
+          "oklch(84.0% 0.008 73.7)",
+          "oklch(95.0% 0.008 73.7)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Night Ink",
+        "hex": "#1E1B26",
+        "canonical": "oklch(23.1% 0.021 297.2)",
+        "purpose": "Titles, labels, body words and the focus ring.",
+        "tonalRamp": [
+          "oklch(15.0% 0.021 297.2)",
+          "oklch(26.0% 0.021 297.2)",
+          "oklch(37.0% 0.021 297.2)",
+          "oklch(48.0% 0.021 297.2)",
+          "oklch(60.0% 0.021 297.2)",
+          "oklch(72.0% 0.021 297.2)",
+          "oklch(84.0% 0.021 297.2)",
+          "oklch(95.0% 0.021 297.2)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Dusk Ink",
+        "hex": "#55506A",
+        "canonical": "oklch(44.6% 0.042 293.4)",
+        "purpose": "Secondary words, figures, inactive tabs.",
+        "tonalRamp": [
+          "oklch(15.0% 0.042 293.4)",
+          "oklch(26.0% 0.042 293.4)",
+          "oklch(37.0% 0.042 293.4)",
+          "oklch(48.0% 0.042 293.4)",
+          "oklch(60.0% 0.042 293.4)",
+          "oklch(72.0% 0.042 293.4)",
+          "oklch(84.0% 0.042 293.4)",
+          "oklch(95.0% 0.042 293.4)"
+        ]
+      },
+      "coral": {
+        "role": "primary",
+        "displayName": "Ember Coral",
+        "hex": "#C8432A",
+        "canonical": "oklch(56.8% 0.174 32.8)",
+        "purpose": "The one primary action per screen; white words 4.89:1. Darkened from the brief #F0603A (3.26:1).",
+        "tonalRamp": [
+          "oklch(15.0% 0.174 32.8)",
+          "oklch(26.0% 0.174 32.8)",
+          "oklch(37.0% 0.174 32.8)",
+          "oklch(48.0% 0.174 32.8)",
+          "oklch(60.0% 0.174 32.8)",
+          "oklch(72.0% 0.174 32.8)",
+          "oklch(84.0% 0.174 32.8)",
+          "oklch(95.0% 0.174 32.8)"
+        ]
+      },
+      "coral-hover": {
+        "role": "primary",
+        "displayName": "Deep Ember",
+        "hex": "#A9361F",
+        "canonical": "oklch(49.9% 0.155 33.2)",
+        "purpose": "Primary hover.",
+        "tonalRamp": [
+          "oklch(15.0% 0.155 33.2)",
+          "oklch(26.0% 0.155 33.2)",
+          "oklch(37.0% 0.155 33.2)",
+          "oklch(48.0% 0.155 33.2)",
+          "oklch(60.0% 0.155 33.2)",
+          "oklch(72.0% 0.155 33.2)",
+          "oklch(84.0% 0.155 33.2)",
+          "oklch(95.0% 0.155 33.2)"
+        ]
+      },
+      "sunset": {
+        "role": "accent",
+        "displayName": "Sunset",
+        "hex": "#F0603A",
+        "canonical": "oklch(66.8% 0.186 35.7)",
+        "purpose": "Decoration only: active nav dot, glows. Never text, never under text.",
+        "tonalRamp": [
+          "oklch(15.0% 0.186 35.7)",
+          "oklch(26.0% 0.186 35.7)",
+          "oklch(37.0% 0.186 35.7)",
+          "oklch(48.0% 0.186 35.7)",
+          "oklch(60.0% 0.186 35.7)",
+          "oklch(72.0% 0.186 35.7)",
+          "oklch(84.0% 0.186 35.7)",
+          "oklch(95.0% 0.186 35.7)"
+        ]
+      },
+      "sky": {
+        "role": "secondary",
+        "displayName": "Harbour Sky",
+        "hex": "#2B6CA8",
+        "canonical": "oklch(51.9% 0.116 249.6)",
+        "purpose": "Links and info; 5.51:1 on white. Darkened from the brief #3B82C4 (4.06:1).",
+        "tonalRamp": [
+          "oklch(15.0% 0.116 249.6)",
+          "oklch(26.0% 0.116 249.6)",
+          "oklch(37.0% 0.116 249.6)",
+          "oklch(48.0% 0.116 249.6)",
+          "oklch(60.0% 0.116 249.6)",
+          "oklch(72.0% 0.116 249.6)",
+          "oklch(84.0% 0.116 249.6)",
+          "oklch(95.0% 0.116 249.6)"
+        ]
+      },
+      "success": {
+        "role": "status",
+        "displayName": "Pine",
+        "hex": "#15803D",
+        "canonical": "oklch(52.7% 0.137 150.1)",
+        "purpose": "Rising trends and done states.",
+        "tonalRamp": [
+          "oklch(15.0% 0.137 150.1)",
+          "oklch(26.0% 0.137 150.1)",
+          "oklch(37.0% 0.137 150.1)",
+          "oklch(48.0% 0.137 150.1)",
+          "oklch(60.0% 0.137 150.1)",
+          "oklch(72.0% 0.137 150.1)",
+          "oklch(84.0% 0.137 150.1)",
+          "oklch(95.0% 0.137 150.1)"
+        ]
+      },
+      "warn-ink": {
+        "role": "status",
+        "displayName": "Amber Ink",
+        "hex": "#A45A00",
+        "canonical": "oklch(54.3% 0.128 59.8)",
+        "purpose": "Warnings on a light warm fill.",
+        "tonalRamp": [
+          "oklch(15.0% 0.128 59.8)",
+          "oklch(26.0% 0.128 59.8)",
+          "oklch(37.0% 0.128 59.8)",
+          "oklch(48.0% 0.128 59.8)",
+          "oklch(60.0% 0.128 59.8)",
+          "oklch(72.0% 0.128 59.8)",
+          "oklch(84.0% 0.128 59.8)",
+          "oklch(95.0% 0.128 59.8)"
+        ]
+      },
+      "aurora-peach": {
+        "role": "backdrop",
+        "displayName": "Low Sun Peach",
+        "hex": "#FFD9C2",
+        "canonical": "oklch(91.1% 0.053 53.0)",
+        "purpose": "Aurora pool (top left); peach tiles, warm status pills, AI chips.",
+        "tonalRamp": [
+          "oklch(15.0% 0.053 53.0)",
+          "oklch(26.0% 0.053 53.0)",
+          "oklch(37.0% 0.053 53.0)",
+          "oklch(48.0% 0.053 53.0)",
+          "oklch(60.0% 0.053 53.0)",
+          "oklch(72.0% 0.053 53.0)",
+          "oklch(84.0% 0.053 53.0)",
+          "oklch(95.0% 0.053 53.0)"
+        ]
+      },
+      "aurora-sky": {
+        "role": "backdrop",
+        "displayName": "Haze Sky",
+        "hex": "#BFDDF7",
+        "canonical": "oklch(88.4% 0.048 244.5)",
+        "purpose": "Aurora pool (top right); cool status pills.",
+        "tonalRamp": [
+          "oklch(15.0% 0.048 244.5)",
+          "oklch(26.0% 0.048 244.5)",
+          "oklch(37.0% 0.048 244.5)",
+          "oklch(48.0% 0.048 244.5)",
+          "oklch(60.0% 0.048 244.5)",
+          "oklch(72.0% 0.048 244.5)",
+          "oklch(84.0% 0.048 244.5)",
+          "oklch(95.0% 0.048 244.5)"
+        ]
+      },
+      "aurora-lilac": {
+        "role": "backdrop",
+        "displayName": "Dusk Lilac",
+        "hex": "#DCCFF7",
+        "canonical": "oklch(87.8% 0.056 300.1)",
+        "purpose": "Aurora pool (lower right); lavender tiles.",
+        "tonalRamp": [
+          "oklch(15.0% 0.056 300.1)",
+          "oklch(26.0% 0.056 300.1)",
+          "oklch(37.0% 0.056 300.1)",
+          "oklch(48.0% 0.056 300.1)",
+          "oklch(60.0% 0.056 300.1)",
+          "oklch(72.0% 0.056 300.1)",
+          "oklch(84.0% 0.056 300.1)",
+          "oklch(95.0% 0.056 300.1)"
+        ]
+      },
+      "aurora-mint": {
+        "role": "backdrop",
+        "displayName": "Sea Mint",
+        "hex": "#CFEFE3",
+        "canonical": "oklch(92.6% 0.037 170.9)",
+        "purpose": "Aurora pool (foot); aqua tiles.",
+        "tonalRamp": [
+          "oklch(15.0% 0.037 170.9)",
+          "oklch(26.0% 0.037 170.9)",
+          "oklch(37.0% 0.037 170.9)",
+          "oklch(48.0% 0.037 170.9)",
+          "oklch(60.0% 0.037 170.9)",
+          "oklch(72.0% 0.037 170.9)",
+          "oklch(84.0% 0.037 170.9)",
+          "oklch(95.0% 0.037 170.9)"
+        ]
+      }
+    },
+    "glass": {
+      "blur": "blur(24px) saturate(160%)",
+      "edge": "1px rgba(255,255,255,.6)",
+      "highlight": "inset 1px 1px 0 rgba(255,255,255,.7)",
+      "fills": {
+        "glass": "rgba(255,255,255,.55): short text, cards, toolbars, tab bars",
+        "glass-strong": "rgba(255,255,255,.72): long text, lists, forms, side panels, dialogs, tables, the icon rail",
+        "glass-chip": "rgba(255,255,255,.62), full pill: secondary buttons, match labels, nav chips",
+        "fallback": "rgba(255,255,255,.92) where backdrop-filter is unsupported"
+      },
+      "radius": {
+        "panel": "28px",
+        "chip": "999px"
+      }
+    },
+    "typographyMeta": {
+      "display-xl": {
+        "family": "Instrument Serif",
+        "purpose": "Landing hero and section headlines. 400, optional italic accent word."
+      },
+      "display": {
+        "family": "Instrument Serif",
+        "purpose": "Page titles (PageHeading level 1, 36px) and the top-bar title. 28px and up only."
+      },
+      "h1": {
+        "family": "Inter",
+        "purpose": "24px/500 card and section titles."
+      },
+      "h2": {
+        "family": "Inter",
+        "purpose": "20px/500 section heads, panel titles."
+      },
+      "body": {
+        "family": "Inter",
+        "purpose": "15px/400 running text."
+      },
+      "label": {
+        "family": "Inter",
+        "purpose": "15px/500 buttons and controls."
+      },
+      "small": {
+        "family": "Inter",
+        "purpose": "13px/400 tabular secondary text."
+      },
+      "caption": {
+        "family": "Inter",
+        "purpose": "12px/500 chips and pills."
+      }
+    },
+    "shadows": [
+      {
+        "name": "glass",
+        "value": "0 20px 60px -20px rgba(40,30,60,.18)",
+        "purpose": "Every glass panel, with the inset highlight."
+      },
+      {
+        "name": "overlay",
+        "value": "0 24px 64px -16px rgba(45,45,48,.22)",
+        "purpose": "Side panels, dialogs, popovers, menus, tooltips."
+      }
+    ],
+    "motion": [
+      {
+        "name": "dur-fast",
+        "value": "150ms",
+        "purpose": "Hover colour changes, the 0.98 press, exits."
+      },
+      {
+        "name": "dur-base",
+        "value": "200ms",
+        "purpose": "State changes."
+      },
+      {
+        "name": "dur-slow",
+        "value": "250ms",
+        "purpose": "Panel and dialog entrances."
+      },
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "purpose": "Default easing."
+      },
+      {
+        "name": "aurora-drift",
+        "value": "40s ease-in-out, 6 alternate passes, then rest",
+        "purpose": "The backdrop; none under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      }
+    ],
+    "contrast": [
+      {
+        "fg": "#1E1B26",
+        "bg": "#FFF0E7",
+        "ratio": 15.22,
+        "note": "white 55% glass over the peach pool"
+      },
+      {
+        "fg": "#55506A",
+        "bg": "#FFF0E7",
+        "ratio": 6.88,
+        "note": "white 55% glass over the peach pool"
+      },
+      {
+        "fg": "#FFFFFF",
+        "bg": "#C8432A",
+        "ratio": 4.89,
+        "note": ""
+      },
+      {
+        "fg": "#C8432A",
+        "bg": "#FBF7F2",
+        "ratio": 4.59,
+        "note": ""
+      },
+      {
+        "fg": "#2B6CA8",
+        "bg": "#FFFFFF",
+        "ratio": 5.51,
+        "note": ""
+      },
+      {
+        "fg": "#15803D",
+        "bg": "#FFF0E7",
+        "ratio": 4.51,
+        "note": "white 55% glass over the peach pool"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one coral action per screen: 48px pill, white Label, coral-hover on hover, 0.98 press, 2px ink focus ring.",
+      "html": "<button class=\"ds-primary\" type=\"button\">Send Mira an idea</button>",
+      "css": ".ds-primary{height:48px;padding:0 24px;border:0;border-radius:999px;background:#C8432A;color:#fff;font:500 15px/1 Inter,system-ui,sans-serif;box-shadow:0 10px 24px -12px rgb(200 67 42/.6)}.ds-primary:hover{background:#A9361F}.ds-primary:focus-visible{outline:2px solid #1E1B26;outline-offset:2px}.ds-primary:active{transform:scale(.98)}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A frosted glass-chip pill with ink words: every action that is not the screen's one coral.",
+      "html": "<button class=\"ds-secondary\" type=\"button\">Reply in my voice</button>",
+      "css": ".ds-secondary{height:48px;padding:0 20px;border:1px solid rgba(255,255,255,.6);border-radius:999px;background:rgba(255,255,255,.62);color:#1E1B26;font:500 15px/1 Inter,system-ui,sans-serif;-webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);box-shadow:inset 1px 1px 0 rgba(255,255,255,.7),0 6px 18px -10px rgba(40,30,60,.22)}.ds-secondary:hover{background:rgba(255,255,255,.9)}"
+    },
+    {
+      "name": "Glass Panel",
+      "kind": "container",
+      "refersTo": "glass-panel",
+      "description": "Frosted white over the aurora (55% soft, 72% strong), 28px radius, inset highlight, glass shadow; 92% white without backdrop-filter.",
+      "html": "<section class=\"ds-glass\"><h3>Lisbon on $60 a day</h3><p>A fan-made guide by a crew of four.</p></section>",
+      "css": ".ds-glass{padding:24px;border-radius:28px;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);box-shadow:inset 1px 1px 0 rgba(255,255,255,.7),0 20px 60px -20px rgba(40,30,60,.18);color:#1E1B26}@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.ds-glass{background:rgba(255,255,255,.92)}}"
+    },
+    {
+      "name": "Match Label",
+      "kind": "chip",
+      "refersTo": "match-label",
+      "description": "Creator side only: words for the match tier (Strong match / Worth a look / Not for you), never a number; the reason sits beside it.",
+      "html": "<span class=\"ds-match\"><i></i>Strong match</span>",
+      "css": ".ds-match{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.62);color:#1E1B26;font:500 12px/16px Inter,system-ui,sans-serif}.ds-match i{width:6px;height:6px;border-radius:50%;background:#15803D}"
+    },
+    {
+      "name": "Active Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "A glass chip with an ink icon and a 3px sunset dot. No lime, no filled pill.",
+      "html": "<a class=\"ds-nav\" aria-current=\"page\" href=\"#\">Today</a>",
+      "css": ".ds-nav{position:relative;display:inline-grid;place-items:center;height:44px;padding:0 16px;border-radius:999px;background:rgba(255,255,255,.85);color:#1E1B26;font:500 15px/1 Inter,system-ui,sans-serif;text-decoration:none}.ds-nav::after{content:\"\";position:absolute;bottom:6px;left:50%;width:3px;height:3px;border-radius:50%;background:#F0603A;transform:translateX(-50%)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Golden Hour Frost: the last hour of light on a trip.",
+    "overview": "Frosted glass panels float directly on a slow peach, sky, lilac and mint aurora over cream. Words are ink; one coral button per screen marks the thing to do. Instrument Serif sets display headlines (28px and up), Inter everything else. Imagery is realistic golden-hour photography of the fictional creator, Mira Lane.",
+    "keyCharacteristics": [
+      "No shell or frame: content floats on the aurora.",
+      "Three glass strengths: soft 55%, strong 72%, chip 62%; 92% white fallback without backdrop-filter.",
+      "One coral (#C8432A) action per screen; sunset (#F0603A) is decoration only.",
+      "Active nav is a glass chip with an ink icon and a 3px sunset dot.",
+      "Matches are words, never numbers, outside side panels."
+    ],
+    "rules": [
+      "One coral per screen.",
+      "Text on glass reaches WCAG AA; check with web/scripts/contrast-check.mjs.",
+      "Serif only at 28px and up.",
+      "Nothing loops forever in view; reduced motion makes the aurora static.",
+      "Every image slot renders a same-ratio gradient until its file exists.",
+      "The AI never sends anything to fans without a creator click."
+    ],
+    "dos": [
+      "Put body text on glass, not on a bright aurora pool.",
+      "Use the GlassPanel, MatchLabel and CreatorImage primitives.",
+      "Use 44px touch targets on fan pages."
+    ],
+    "donts": [
+      "No pewter shell, 40px app frame or header tray (the Starline/Clubhouse look).",
+      "No lime active pill, no purple primary button or focus ring.",
+      "No flat 45% white glass without blur.",
+      "No clay sphere canvas, clay loop video or clay art.",
+      "No raw fit numbers or score bars outside a side panel."
+    ]
+  }
+}

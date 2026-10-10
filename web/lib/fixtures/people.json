@@ -1,0 +1,753 @@
+{
+  "items": [
+    {
+      "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+      "name": "Priya Shah",
+      "image": null,
+      "headline": "Austin solo traveler who plans every trip around food",
+      "skills": ["itinerary planning", "budgeting", "food writing"],
+      "links": [],
+      "joinedAt": "2026-08-09T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 5,
+        "comments": 1,
+        "signalsReceived": 275,
+        "teams": 2
+      },
+      "risingScore": 3.0099
+    },
+    {
+      "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+      "name": "Felix Garcia",
+      "image": null,
+      "headline": "Food writer, mostly street food",
+      "skills": ["food writing", "photography"],
+      "links": [],
+      "joinedAt": "2026-09-12T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        },
+        {
+          "slug": "road-trips",
+          "name": "Road Trips & Van Life",
+          "tint": "white"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 54,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "eebbb2f7-50da-4fc8-86bb-d6f9c5afea05",
+      "name": "Tomas Novak",
+      "image": null,
+      "headline": "Retired and finally traveling",
+      "skills": ["itinerary planning", "slow travel"],
+      "links": [],
+      "joinedAt": "2026-10-09T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 0,
+        "signalsReceived": 41,
+        "teams": 0
+      },
+      "risingScore": 2.023
+    },
+    {
+      "membershipId": "731638a7-c89b-49e1-9a46-16f62cfb689c",
+      "name": "Tyler Morgan",
+      "image": null,
+      "headline": "Architecture student sketching cities",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-10-01T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 0,
+        "signalsReceived": 41,
+        "teams": 0
+      },
+      "risingScore": 2.2376
+    },
+    {
+      "membershipId": "bb2304bc-cb6d-4a8e-aa00-8b520544c645",
+      "name": "Gabriel Morgan",
+      "image": null,
+      "headline": "Points-and-miles nerd, always hunting a fare",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-06T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 35,
+        "teams": 0
+      },
+      "risingScore": 3.9418
+    },
+    {
+      "membershipId": "3b4a40fc-1a86-4d7d-8bfa-6e1d809b46fb",
+      "name": "Hari Ananth",
+      "image": null,
+      "headline": "Food writer, mostly street food",
+      "skills": ["food writing", "photography", "cooking"],
+      "links": [],
+      "joinedAt": "2026-09-03T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 0,
+        "signalsReceived": 34,
+        "teams": 0
+      },
+      "risingScore": 2.8925
+    },
+    {
+      "membershipId": "8dbefa9c-6f5c-4093-93e2-7316fbef0c28",
+      "name": "Hugo Petrov",
+      "image": null,
+      "headline": "Family of four, road trips every June",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-23T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 30,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "6e434464-88b8-44f9-92a9-c146159c35ef",
+      "name": "Leo Anderson",
+      "image": null,
+      "headline": "Student on a gap year",
+      "skills": ["budgeting", "meeting people"],
+      "links": [],
+      "joinedAt": "2026-10-06T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 29,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "5defacec-dae6-4799-be7a-e590fa161e18",
+      "name": "Ari Jain",
+      "image": null,
+      "headline": null,
+      "skills": ["pet travel", "camping"],
+      "links": [],
+      "joinedAt": "2026-09-12T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 27,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "aa43a627-7aa1-4df3-a485-43d67cee50fe",
+      "name": "Mei Zhang",
+      "image": null,
+      "headline": "Points-and-miles nerd, always hunting a fare",
+      "skills": ["flight deals", "budgeting"],
+      "links": [],
+      "joinedAt": "2026-10-08T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 27,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "48674502-cbb1-46c3-a8e2-d9208ebafabb",
+      "name": "Dev Fischer",
+      "image": null,
+      "headline": "Event planner, the friend who organizes group trips",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-28T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 27,
+        "teams": 0
+      },
+      "risingScore": 2.0795
+    },
+    {
+      "membershipId": "f66dea35-4235-45ac-b1ef-6c3d96b66dd7",
+      "name": "Shreya Saito",
+      "image": null,
+      "headline": null,
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-07-26T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 1,
+        "signalsReceived": 25,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "dec855a1-d72f-4e25-8749-3a3bc325d036",
+      "name": "Farah Ramirez",
+      "image": null,
+      "headline": "Backpacker, three countries and counting",
+      "skills": ["hostels", "packing light"],
+      "links": [],
+      "joinedAt": "2026-10-05T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "road-trips",
+          "name": "Road Trips & Van Life",
+          "tint": "white"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 26,
+        "teams": 0
+      },
+      "risingScore": 3.1789
+    },
+    {
+      "membershipId": "8c63d53c-1ac7-4a74-907c-ba15ac77faf6",
+      "name": "Ari Chen",
+      "image": null,
+      "headline": "Photographer, mostly weddings, travels for fun",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-23T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 26,
+        "teams": 0
+      },
+      "risingScore": 2.105
+    },
+    {
+      "membershipId": "25d018a1-5161-4a93-9422-ce89f04e506d",
+      "name": "Sasha Sen",
+      "image": null,
+      "headline": "Retired and finally traveling",
+      "skills": ["itinerary planning", "slow travel"],
+      "links": [],
+      "joinedAt": "2026-09-22T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 26,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "eb2dc731-b4c0-4b4b-abf1-8e44c768f26d",
+      "name": "Lara Vega",
+      "image": null,
+      "headline": "Van-lifer who wired the whole thing herself",
+      "skills": ["van conversion", "camping"],
+      "links": [],
+      "joinedAt": "2026-10-02T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 2,
+        "signalsReceived": 23,
+        "teams": 0
+      },
+      "risingScore": 3.6349
+    },
+    {
+      "membershipId": "0ccabffc-33f2-4a01-9da8-ac277d2550a4",
+      "name": "Andre Bell",
+      "image": null,
+      "headline": "Remote worker, a new city every month",
+      "skills": ["coworking", "budgeting"],
+      "links": [],
+      "joinedAt": "2026-09-19T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "travel-photography",
+          "name": "Travel Photography",
+          "tint": "aqua"
+        },
+        {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 24,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "d1688326-97d3-4c31-83d5-347ac9c682c0",
+      "name": "Keiko Kaur",
+      "image": null,
+      "headline": "Van-lifer who wired the whole thing herself",
+      "skills": ["van conversion", "camping", "mechanics"],
+      "links": [],
+      "joinedAt": "2026-09-16T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 22,
+        "teams": 2
+      },
+      "risingScore": 0.2
+    },
+    {
+      "membershipId": "02ee3647-961d-46ed-8f8e-1e783dcb0c38",
+      "name": "Kaito Lima",
+      "image": null,
+      "headline": "Event planner, the friend who organizes group trips",
+      "skills": ["group trips", "itinerary planning"],
+      "links": [],
+      "joinedAt": "2026-09-11T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 2,
+        "signalsReceived": 23,
+        "teams": 0
+      },
+      "risingScore": 3.8438
+    },
+    {
+      "membershipId": "2d5eee09-eb14-4061-9baa-26eb00a3fb47",
+      "name": "Esha Walker",
+      "image": null,
+      "headline": "Travel nurse, a new city every 13 weeks",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-05T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 24,
+        "teams": 0
+      },
+      "risingScore": 2.1516
+    }
+  ],
+  "nextCursor": "eyJvIjoyMH0",
+  "rising": [
+    {
+      "membershipId": "7081b281-339a-45cb-a34e-324377e00a07",
+      "name": "Mei Williams",
+      "image": null,
+      "headline": "Copywriter for outdoor brands",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-08-27T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "travel-photography",
+          "name": "Travel Photography",
+          "tint": "aqua"
+        },
+        {
+          "slug": "road-trips",
+          "name": "Road Trips & Van Life",
+          "tint": "white"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 0,
+        "signalsReceived": 10,
+        "teams": 0
+      },
+      "risingScore": 4.8714
+    },
+    {
+      "membershipId": "bb2304bc-cb6d-4a8e-aa00-8b520544c645",
+      "name": "Gabriel Morgan",
+      "image": null,
+      "headline": "Points-and-miles nerd, always hunting a fare",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-06T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "road-trips",
+          "name": "Road Trips & Van Life",
+          "tint": "white"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 35,
+        "teams": 0
+      },
+      "risingScore": 3.9418
+    },
+    {
+      "membershipId": "5a835c25-581d-44e3-87f6-65e0b5811360",
+      "name": "Reema Fischer",
+      "image": null,
+      "headline": "Event planner, the friend who organizes group trips",
+      "skills": ["group trips", "logistics"],
+      "links": [],
+      "joinedAt": "2026-09-20T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 22,
+        "teams": 0
+      },
+      "risingScore": 3.846
+    },
+    {
+      "membershipId": "02ee3647-961d-46ed-8f8e-1e783dcb0c38",
+      "name": "Kaito Lima",
+      "image": null,
+      "headline": "Event planner, the friend who organizes group trips",
+      "skills": ["group trips", "itinerary planning"],
+      "links": [],
+      "joinedAt": "2026-09-11T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 2,
+        "signalsReceived": 23,
+        "teams": 0
+      },
+      "risingScore": 3.8438
+    },
+    {
+      "membershipId": "4f5961a5-aa9a-4e8b-959f-9921f04f83ee",
+      "name": "Keiko Suzuki",
+      "image": null,
+      "headline": "Local guide, walking tours in three languages",
+      "skills": ["local knowledge", "walking tours"],
+      "links": [],
+      "joinedAt": "2026-09-11T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 23,
+        "teams": 0
+      },
+      "risingScore": 3.7602
+    },
+    {
+      "membershipId": "eb2dc731-b4c0-4b4b-abf1-8e44c768f26d",
+      "name": "Lara Vega",
+      "image": null,
+      "headline": "Van-lifer who wired the whole thing herself",
+      "skills": ["van conversion", "camping", "mechanics"],
+      "links": [],
+      "joinedAt": "2026-10-02T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        },
+        {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 2,
+        "signalsReceived": 23,
+        "teams": 0
+      },
+      "risingScore": 3.6349
+    },
+    {
+      "membershipId": "8ea41b19-3454-4afe-b31e-fbc98fafa1dd",
+      "name": "Rosa Rao",
+      "image": null,
+      "headline": "Remote worker, a new city every month",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-08-21T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 15,
+        "teams": 0
+      },
+      "risingScore": 3.5462
+    },
+    {
+      "membershipId": "2f3621fd-7001-43b4-bb87-948f4381eb47",
+      "name": "Tara Hassan",
+      "image": null,
+      "headline": "Hostel host in Mexico City",
+      "skills": ["hosting", "spanish"],
+      "links": [],
+      "joinedAt": "2026-10-09T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "slow-living",
+          "name": "Slow Living",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 16,
+        "teams": 0
+      },
+      "risingScore": 3.3732
+    },
+    {
+      "membershipId": "56c32ffe-478b-4706-8c4e-1b6b699efadc",
+      "name": "Casey Flores",
+      "image": null,
+      "headline": "Student on a gap year",
+      "skills": [],
+      "links": [
+        {
+          "url": "https://instagram.com/casey.flores",
+          "label": "Instagram"
+        }
+      ],
+      "joinedAt": "2026-08-28T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 13,
+        "teams": 0
+      },
+      "risingScore": 3.3479
+    },
+    {
+      "membershipId": "dec855a1-d72f-4e25-8749-3a3bc325d036",
+      "name": "Farah Ramirez",
+      "image": null,
+      "headline": "Backpacker, three countries and counting",
+      "skills": ["hostels", "packing light"],
+      "links": [],
+      "joinedAt": "2026-10-05T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "road-trips",
+          "name": "Road Trips & Van Life",
+          "tint": "white"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 26,
+        "teams": 0
+      },
+      "risingScore": 3.1789
+    }
+  ],
+  "total": 1200
+}

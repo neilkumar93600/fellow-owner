@@ -1,0 +1,614 @@
+{
+  "items": [
+    {
+      "id": "2a6339c7-5518-4098-9589-47db16274436",
+      "type": "brand_deal",
+      "subject": "A year as one of six camera ambassadors",
+      "excerpt": "Our mirrorless camera brand is looking for six creators for a year-long ambassador program. You would get a body and two lenses and $2,500 for content across the year. We need…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "26e89a0e-3ce3-4b96-a8fa-0d6295c41f98",
+        "name": "Dilan Taylor",
+        "headline": null,
+        "image": null
+      },
+      "createdAt": "2026-10-06T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A year as one of six camera ambassadors",
+        "category": "brand_deal",
+        "fitScore": 94,
+        "fitReason": "Matches \"small family-run food spots over famous restaurants\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["solo travel", "safety"],
+        "skills": ["hosting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "a026af98-4861-405e-b4e9-5d7c52daf851",
+      "type": "brand_deal",
+      "subject": "Night-train passes for you and a friend, $5,000",
+      "excerpt": "We are a rail pass company and we would like your Budget Travel fans to see how a night-train trip works. $5,000 and two free passes for you and a friend. We will not ask for…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "1d5565c2-1a27-4b03-b248-fb2289965db0",
+        "name": "Akira Young",
+        "headline": "Event planner, the friend who organizes group trips",
+        "image": null
+      },
+      "createdAt": "2026-10-01T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Night-train passes for you and a friend, $5,000",
+        "category": "brand_deal",
+        "fitScore": 94,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Scope is one weekend’s worth of work.",
+        "tags": ["van life", "camping", "national parks", "budget"],
+        "skills": ["video editing", "mechanics"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "90cc7258-4516-421a-9ea3-6bfc30d158e0",
+      "type": "brand_deal",
+      "subject": "Budget national-parks series, $9,000 for three videos",
+      "excerpt": "Our outdoor retailer would like to fund a three-part series on budget national park trips. $9,000 for three videos, and your audience gets a free park-pass guide at the end. You…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "ba1daeae-e0cc-4d12-aa44-00bb4c30cf72",
+        "name": "Keiko Reyes",
+        "headline": "Travel nurse, a new city every 13 weeks",
+        "image": null
+      },
+      "createdAt": "2026-10-06T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Budget national-parks series, $9,000 for three videos",
+        "category": "brand_deal",
+        "fitScore": 93,
+        "fitReason": "Matches \"small family-run food spots over famous restaurants\". The ask is specific and small.",
+        "tags": ["safety", "hostels", "meeting people"],
+        "skills": ["local knowledge"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "14675b7c-bdfb-47ac-880d-1dc5b08743d6",
+      "type": "collab",
+      "subject": "Guest spot at our spring van-life weekend",
+      "excerpt": "We host a van-life weekend in Joshua Tree each spring, around 80 people, mostly beginners. Would you drop in for a Saturday talk? We cover your gas and a campsite, nothing else…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "8fae706a-b640-4acd-9f49-7993e747c44b",
+        "name": "Anika Ortiz",
+        "headline": "Dog owner who travels with the dog",
+        "image": null
+      },
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Guest spot at our spring van-life weekend",
+        "category": "collab",
+        "fitScore": 92,
+        "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+        "tags": ["solo travel", "first trip"],
+        "skills": ["hosting", "illustration"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "0a1268fe-49df-4bf8-bba5-3b0ac385faea",
+      "type": "press",
+      "subject": "Interview for a piece on slow travel",
+      "excerpt": "I am writing a piece on creators who build communities rather than audiences, and yours comes up a lot. Twenty minutes on a call, or over email if you prefer. I will send quotes…",
+      "status": "shortlisted",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "77a46fd7-7a1b-43c7-84d5-0569593b8f2e",
+        "name": "Jamal Reyes",
+        "headline": "Photographer, mostly weddings, travels for fun",
+        "image": null
+      },
+      "createdAt": "2026-09-24T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Interview for a piece on slow travel",
+        "category": "press",
+        "fitScore": 92,
+        "fitReason": "Matches \"small family-run food spots over famous restaurants\". Real prices, which Mira always asks for.",
+        "tags": ["flights", "hostels", "europe"],
+        "skills": ["itinerary planning", "budgeting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "a1b5c27f-0661-44c4-86df-9a806e76f4c8",
+      "type": "collab",
+      "subject": "Guest spot at our spring van-life weekend",
+      "excerpt": "We host a van-life weekend in Joshua Tree each spring, around 80 people, mostly beginners. Would you drop in for a Saturday talk? We cover your gas and a campsite, nothing else…",
+      "status": "replied",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "4f14e2a6-f122-471a-84ec-025f0471aba2",
+        "name": "Olu Wright",
+        "headline": "Hiker who prefers the empty trail",
+        "image": null
+      },
+      "createdAt": "2026-09-17T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Guest spot at our spring van-life weekend",
+        "category": "collab",
+        "fitScore": 92,
+        "fitReason": "Matches \"collabs with a named owner and a date\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["food", "street food", "local"],
+        "skills": ["local knowledge"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "e14c99c4-001c-4c42-bd1b-5c747f6f92f5",
+      "type": "brand_deal",
+      "subject": "Affiliate link for our travel insurance comparison",
+      "excerpt": "We run a travel insurance comparison site. We would like to give your viewers a custom link and pay you 12 percent of each policy. We do not ask you to say anything you do not…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "38587fec-5f42-4d1f-8d01-aa7a1a9fa2f8",
+        "name": "Wei Ramirez",
+        "headline": "Student on a gap year",
+        "image": null
+      },
+      "createdAt": "2026-10-02T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Affiliate link for our travel insurance comparison",
+        "category": "brand_deal",
+        "fitScore": 91,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". The ask is specific and small.",
+        "tags": ["photography", "editing", "golden hour"],
+        "skills": ["photo editing", "video editing", "lightroom"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "f0e8f4d7-e0cd-45cd-9f89-9b0d44d4f6c0",
+      "type": "idea",
+      "subject": "Let fans vote on your next destination",
+      "excerpt": "What if the next big trip was chosen by a vote in Solo Travelers, and the winning plan was built by fans in the room? Small change, but it would turn the whole room into a crew…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "8e7ef583-8e49-4cf6-84db-1802931df46d",
+        "name": "Tyler Ramirez",
+        "headline": "Family of four, road trips every June",
+        "image": null
+      },
+      "createdAt": "2026-09-19T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Let fans vote on your next destination",
+        "category": "idea",
+        "fitScore": 91,
+        "fitReason": "Matches \"small family-run food spots over famous restaurants\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["road trip", "van life"],
+        "skills": ["photography"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "81465118-8b27-4c42-be8c-1b6ab4316203",
+      "type": "brand_deal",
+      "subject": "Two sponsored videos, $4,500, creative control is yours",
+      "excerpt": "We make carry-on luggage and would like to sponsor two of your videos this spring. $4,500 for the pair, you keep creative control, and the bag only appears where it fits the…",
+      "status": "replied",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "c645ea58-c601-4798-9a0c-4a3738505ff6",
+        "name": "Felix Jackson",
+        "headline": "Mechanic who builds camper vans",
+        "image": null
+      },
+      "createdAt": "2026-09-05T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Two sponsored videos, $4,500, creative control is yours",
+        "category": "brand_deal",
+        "fitScore": 91,
+        "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+        "tags": ["food", "street food"],
+        "skills": ["local knowledge", "hosting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "cf6b533f-5282-4833-8175-af12927ea877",
+      "type": "press",
+      "subject": "Profile for our Sunday travel section",
+      "excerpt": "I write the Sunday profile for a small publication, about 2,000 words. I would need two conversations and permission to speak to three people from your communities. You would see…",
+      "status": "replied",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "e7690f44-8364-4993-a0e3-33306e91d19e",
+        "name": "Anika Morgan",
+        "headline": "Architecture student sketching cities",
+        "image": null
+      },
+      "createdAt": "2026-10-05T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Profile for our Sunday travel section",
+        "category": "press",
+        "fitScore": 90,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Real prices, which Mira always asks for.",
+        "tags": ["street food", "local", "markets", "vegetarian"],
+        "skills": ["hosting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "eb54c318-4495-48b9-b189-e399741f8a4b",
+      "type": "collab",
+      "subject": "Swap a video with my slow-travel channel",
+      "excerpt": "I make slow-travel videos for about 90K people, mostly in Portugal and Spain. Straight swap: one video each, on each other’s channel, same week. I have done two of these before…",
+      "status": "shortlisted",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "ddfa5158-d2a6-4799-a3ac-ae4323c6a4e2",
+        "name": "Mei Sousa",
+        "headline": "Hostel host in Mexico City",
+        "image": null
+      },
+      "createdAt": "2026-10-03T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Swap a video with my slow-travel channel",
+        "category": "collab",
+        "fitScore": 90,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Real prices, which Mira always asks for.",
+        "tags": ["photography", "presets"],
+        "skills": ["photography"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "241736e1-4a00-4344-a8dc-97a8b63361eb",
+      "type": "brand_deal",
+      "subject": "Night-train passes for you and a friend, $5,000",
+      "excerpt": "We are a rail pass company and we would like your Budget Travel fans to see how a night-train trip works. $5,000 and two free passes for you and a friend. We will not ask for…",
+      "status": "shortlisted",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "557df49a-ae3c-4048-b12c-214c3a355751",
+        "name": "Nina Moreau",
+        "headline": "Flight attendant, knows the cheap seats",
+        "image": null
+      },
+      "createdAt": "2026-09-30T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Night-train passes for you and a friend, $5,000",
+        "category": "brand_deal",
+        "fitScore": 90,
+        "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["budget", "flights", "europe"],
+        "skills": ["budgeting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "55d6008c-69a3-4222-badb-5a7d84f22bb0",
+      "type": "brand_deal",
+      "subject": "Affiliate link for our travel insurance comparison",
+      "excerpt": "We run a travel insurance comparison site. We would like to give your viewers a custom link and pay you 12 percent of each policy. We do not ask you to say anything you do not…",
+      "status": "shortlisted",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "7cf5851d-c685-40b2-89c9-809f4312706d",
+        "name": "Grace Gill",
+        "headline": "Cyclist planning a coast-to-coast ride",
+        "image": null
+      },
+      "createdAt": "2026-09-18T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Affiliate link for our travel insurance comparison",
+        "category": "brand_deal",
+        "fitScore": 90,
+        "fitReason": "Matches \"beginner-friendly photo and editing tips\". Scope is one weekend’s worth of work.",
+        "tags": ["solo travel", "first trip", "meeting people"],
+        "skills": ["local knowledge"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "a4c75923-e72b-41b5-9c16-82e20b28a09d",
+      "type": "idea",
+      "subject": "A packing-list teardown video",
+      "excerpt": "Fans send in their packing lists and you cut the weight in half, live. People love watching someone else’s suitcase get edited. I would send you mine and it is, frankly, a mess.",
+      "status": "replied",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "068ed291-9035-4ab2-8169-2def67408207",
+        "name": "Ana Wang",
+        "headline": "Remote worker, a new city every month",
+        "image": null
+      },
+      "createdAt": "2026-08-10T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A packing-list teardown video",
+        "category": "idea",
+        "fitScore": 90,
+        "fitReason": "Matches \"small family-run food spots over famous restaurants\". Scope is one weekend’s worth of work.",
+        "tags": ["road trip", "van life", "national parks", "budget"],
+        "skills": ["itinerary planning", "photography"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "69e39fdf-79a0-4651-8b45-fb4d6422867d",
+      "type": "collab",
+      "subject": "A free walking tour in Lisbon this October",
+      "excerpt": "I run a small walking-tour company in Lisbon and your Budget Travel room keeps asking for exactly what we do. Would you be up for a free walking tour with a few of your fans in…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "930f5c9a-88aa-4b9a-9be2-0a202e41d63e",
+        "name": "Zara Iqbal",
+        "headline": "Yoga teacher on the retreat circuit",
+        "image": null
+      },
+      "createdAt": "2026-07-20T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A free walking tour in Lisbon this October",
+        "category": "collab",
+        "fitScore": 90,
+        "fitReason": "Matches \"beginner-friendly photo and editing tips\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["food", "local"],
+        "skills": ["translation"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "5b5591cc-c928-45c2-b32d-cb8a291f2be2",
+      "type": "collab",
+      "subject": "A fan-made Tokyo food map, filmed by us",
+      "excerpt": "We are a two-person video team in Osaka. Your Food Finds fans keep describing a Tokyo food map for people on $30 a day, and nobody has made it. We would film it with them, for…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "5b6d2471-2a73-4751-b6b7-a53008088672",
+        "name": "Ahmed Flores",
+        "headline": null,
+        "image": null
+      },
+      "createdAt": "2026-10-07T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A fan-made Tokyo food map, filmed by us",
+        "category": "collab",
+        "fitScore": 89,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Real prices, which Mira always asks for.",
+        "tags": ["food", "street food"],
+        "skills": ["translation", "photography"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "e5f9bd0c-4f6f-46ba-bb7f-4a9716e9dd73",
+      "type": "idea",
+      "subject": "A live Q&A from a night train",
+      "excerpt": "This is an odd one, but a live Q&A from a night train from Vienna to Venice sounds amazing. Bad wifi, a tiny cabin and a thousand questions. I would join in from my seat in Austin.",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "0c9a393e-ff4c-4b0a-9b81-b5dc5c3926eb",
+        "name": "Sofia Abara",
+        "headline": "Copywriter for outdoor brands",
+        "image": null
+      },
+      "createdAt": "2026-09-07T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A live Q&A from a night train",
+        "category": "idea",
+        "fitScore": 88,
+        "fitReason": "Matches \"beginner-friendly photo and editing tips\". Has a date and a named owner.",
+        "tags": ["golden hour", "presets"],
+        "skills": ["photo editing"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "23c31d04-7a24-463a-81d0-3427d47b4973",
+      "type": "collab",
+      "subject": "A sunrise photo walk in Mexico City",
+      "excerpt": "I am a photographer in Mexico City and I run a monthly sunrise photo walk. Your Travel Photography room would be a perfect fit. I would like to host a walk for ten of your fans…",
+      "status": "replied",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "2258ff6e-0aca-48e5-b8ac-07b43aa7d60a",
+        "name": "Madison Morgan",
+        "headline": "Student on a gap year",
+        "image": null
+      },
+      "createdAt": "2026-08-03T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A sunrise photo walk in Mexico City",
+        "category": "collab",
+        "fitScore": 88,
+        "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+        "tags": ["editing", "phone photos", "presets"],
+        "skills": ["photo editing"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "48b629f6-cc81-4298-a185-57c5734e1f2b",
+      "type": "idea",
+      "subject": "Visit the places your fans recommend, one per month",
+      "excerpt": "Pick one fan recommendation every month and go there, with the fan as your local guide for the day. It makes the community the star and it solves the problem of deciding where to…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "32f396ad-c094-49ce-a427-752e8bbcd5ff",
+        "name": "Ana Schmidt",
+        "headline": "Architecture student sketching cities",
+        "image": null
+      },
+      "createdAt": "2026-09-16T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Visit the places your fans recommend, one per month",
+        "category": "idea",
+        "fitScore": 87,
+        "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+        "tags": ["budget", "flights"],
+        "skills": ["budgeting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    },
+    {
+      "id": "20a4d96a-a1dc-42cf-8eed-505dc4284530",
+      "type": "brand_deal",
+      "subject": "Two sponsored videos, $4,500, creative control is yours",
+      "excerpt": "We make carry-on luggage and would like to sponsor two of your videos this spring. $4,500 for the pair, you keep creative control, and the bag only appears where it fits the…",
+      "status": "new",
+      "isFiltered": false,
+      "sender": {
+        "membershipId": "fecf6dc4-10ea-43c6-a7d3-00b304b1d2e3",
+        "name": "Noa Haider",
+        "headline": "Marathon runner who races abroad",
+        "image": null
+      },
+      "createdAt": "2026-08-19T12:33:21.679Z",
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Two sponsored videos, $4,500, creative control is yours",
+        "category": "brand_deal",
+        "fitScore": 83,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Real prices, which Mira always asks for.",
+        "tags": ["safety", "hostels"],
+        "skills": ["hosting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "recategorized": false
+    }
+  ],
+  "nextCursor": "eyJzIjo4MywidCI6IjIwMjYtMDgtMTlUMTI6MzM6MjEuNjc5WiIsImkiOiIyMGE0ZDk2YS1hMWRjLTQyY2YtOGVlZC01MDVkYzQyODQ1MzAifQ",
+  "counts": {
+    "all": 160,
+    "collabs": 37,
+    "brand_deals": 27,
+    "ideas": 23,
+    "press": 10,
+    "fan_notes": 58,
+    "filtered": 20
+  }
+}

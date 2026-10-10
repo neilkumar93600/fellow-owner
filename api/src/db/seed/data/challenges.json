@@ -1,0 +1,35 @@
+[
+  {
+    "community": "food-finds",
+    "title": "Best $10 meal in your city",
+    "body": "Show me the best meal you can get for ten dollars or less in your city. Tell me what it is, where it is, what it cost and why a stranger should walk there. I will shortlist three and give the winner my spotlight.",
+    "createdDaysAgo": 9,
+    "dueInDays": 5,
+    "status": "open",
+    "shortlist": null,
+    "winnerPostIndex": null
+  },
+  {
+    "community": "travel-photography",
+    "title": "Your best golden-hour frame",
+    "body": "Share the one golden-hour photo from your travels that you are proudest of. Tell me where you stood, what time it was and what phone or camera you used. I will shortlist three and give the winner my spotlight.",
+    "createdDaysAgo": 26,
+    "dueInDays": -12,
+    "status": "closed",
+    "shortlist": [
+      {
+        "postIndex": 51,
+        "reason": "Strong match: it names the time, the spot and how long you waited, which a beginner can copy."
+      },
+      {
+        "postIndex": 55,
+        "reason": "Strong match: the photographer asked first and sent the photo back, which is how Mira wants fans to shoot people."
+      },
+      {
+        "postIndex": 62,
+        "reason": "Worth a look: a phone photo with the exact trick (screen low, wait for the jeep) written down."
+      }
+    ],
+    "winnerPostIndex": 55
+  }
+]

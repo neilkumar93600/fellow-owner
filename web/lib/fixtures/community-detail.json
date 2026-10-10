@@ -1,0 +1,1536 @@
+{
+  "community": {
+    "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+    "slug": "budget-travel",
+    "name": "Budget Travel",
+    "description": "Real prices, cheap flights and trips that do not cost a month of rent.",
+    "tint": "peach",
+    "icon": "wallet",
+    "memberCount": 502,
+    "sortOrder": 0,
+    "archivedAt": null,
+    "postCount": 39,
+    "postsThisWeek": 12,
+    "joinsThisWeek": 156,
+    "trendPct": 45.1,
+    "digest": null,
+    "createdAt": "2026-10-09T12:33:21.836Z"
+  },
+  "members": [
+    {
+      "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+      "name": "Priya Shah",
+      "image": null,
+      "headline": "Austin solo traveler who plans every trip around food",
+      "skills": ["itinerary planning", "budgeting", "food writing"],
+      "links": [],
+      "joinedAt": "2026-08-09T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 5,
+        "comments": 1,
+        "signalsReceived": 275,
+        "teams": 2
+      },
+      "risingScore": 3.0099
+    },
+    {
+      "membershipId": "eebbb2f7-50da-4fc8-86bb-d6f9c5afea05",
+      "name": "Tomas Novak",
+      "image": null,
+      "headline": "Retired and finally traveling",
+      "skills": ["itinerary planning", "slow travel"],
+      "links": [],
+      "joinedAt": "2026-10-09T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 0,
+        "signalsReceived": 41,
+        "teams": 0
+      },
+      "risingScore": 2.023
+    },
+    {
+      "membershipId": "731638a7-c89b-49e1-9a46-16f62cfb689c",
+      "name": "Tyler Morgan",
+      "image": null,
+      "headline": "Architecture student sketching cities",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-10-01T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 0,
+        "signalsReceived": 41,
+        "teams": 0
+      },
+      "risingScore": 2.2376
+    },
+    {
+      "membershipId": "bb2304bc-cb6d-4a8e-aa00-8b520544c645",
+      "name": "Gabriel Morgan",
+      "image": null,
+      "headline": "Points-and-miles nerd, always hunting a fare",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-06T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 35,
+        "teams": 0
+      },
+      "risingScore": 3.9418
+    },
+    {
+      "membershipId": "3b4a40fc-1a86-4d7d-8bfa-6e1d809b46fb",
+      "name": "Hari Ananth",
+      "image": null,
+      "headline": "Food writer, mostly street food",
+      "skills": ["food writing", "photography"],
+      "links": [],
+      "joinedAt": "2026-09-03T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 0,
+        "signalsReceived": 34,
+        "teams": 0
+      },
+      "risingScore": 2.8925
+    },
+    {
+      "membershipId": "aa43a627-7aa1-4df3-a485-43d67cee50fe",
+      "name": "Mei Zhang",
+      "image": null,
+      "headline": "Points-and-miles nerd, always hunting a fare",
+      "skills": ["flight deals", "budgeting"],
+      "links": [],
+      "joinedAt": "2026-10-08T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 27,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "f66dea35-4235-45ac-b1ef-6c3d96b66dd7",
+      "name": "Shreya Saito",
+      "image": null,
+      "headline": null,
+      "skills": ["premiere", "motion"],
+      "links": [],
+      "joinedAt": "2026-07-26T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 1,
+        "signalsReceived": 25,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "25d018a1-5161-4a93-9422-ce89f04e506d",
+      "name": "Sasha Sen",
+      "image": null,
+      "headline": "Retired and finally traveling",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-22T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 26,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "d1688326-97d3-4c31-83d5-347ac9c682c0",
+      "name": "Keiko Kaur",
+      "image": null,
+      "headline": "Van-lifer who wired the whole thing herself",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-16T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "travel-photography",
+          "name": "Travel Photography",
+          "tint": "aqua"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 22,
+        "teams": 2
+      },
+      "risingScore": 0.2
+    },
+    {
+      "membershipId": "02ee3647-961d-46ed-8f8e-1e783dcb0c38",
+      "name": "Kaito Lima",
+      "image": null,
+      "headline": "Event planner, the friend who organizes group trips",
+      "skills": ["group trips", "itinerary planning"],
+      "links": [],
+      "joinedAt": "2026-09-11T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 2,
+        "signalsReceived": 23,
+        "teams": 0
+      },
+      "risingScore": 3.8438
+    },
+    {
+      "membershipId": "2d5eee09-eb14-4061-9baa-26eb00a3fb47",
+      "name": "Esha Walker",
+      "image": null,
+      "headline": "Travel nurse, a new city every 13 weeks",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-05T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "solo-travelers",
+          "name": "Solo Travelers",
+          "tint": "lavender"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 24,
+        "teams": 0
+      },
+      "risingScore": 2.1516
+    },
+    {
+      "membershipId": "1a86740b-24ad-45e8-bda9-ecf9a7ae1ea0",
+      "name": "Esha Haddad",
+      "image": null,
+      "headline": "Retired and finally traveling",
+      "skills": ["itinerary planning", "slow travel"],
+      "links": [
+        {
+          "url": "https://instagram.com/esha.haddad",
+          "label": "Instagram"
+        }
+      ],
+      "joinedAt": "2026-09-04T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 24,
+        "teams": 0
+      },
+      "risingScore": 3.1642
+    },
+    {
+      "membershipId": "116d5c6f-155f-4736-a116-aafe16045e09",
+      "name": "Rania Chen",
+      "image": null,
+      "headline": "Student on a gap year",
+      "skills": ["budgeting", "meeting people"],
+      "links": [],
+      "joinedAt": "2026-10-03T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 23,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "825330d0-7b73-4ea3-81c0-c752eef2bdc4",
+      "name": "Hana Sen",
+      "image": null,
+      "headline": "Architecture student sketching cities",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-10-09T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "travel-photography",
+          "name": "Travel Photography",
+          "tint": "aqua"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 1,
+        "signalsReceived": 21,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "702236df-79c7-41d5-9c5c-310091d4dc13",
+      "name": "Omar Ortiz",
+      "image": null,
+      "headline": "Travel nurse, a new city every 13 weeks",
+      "skills": ["relocating", "local tips", "budgeting"],
+      "links": [],
+      "joinedAt": "2026-09-30T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 1,
+        "signalsReceived": 20,
+        "teams": 0
+      },
+      "risingScore": 1.9816
+    },
+    {
+      "membershipId": "5a835c25-581d-44e3-87f6-65e0b5811360",
+      "name": "Reema Fischer",
+      "image": null,
+      "headline": "Event planner, the friend who organizes group trips",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-09-20T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 22,
+        "teams": 0
+      },
+      "risingScore": 3.846
+    },
+    {
+      "membershipId": "1d86707e-620a-4dae-aa91-72a6c4e2d119",
+      "name": "Ana Adeyemi",
+      "image": null,
+      "headline": "Night-train enthusiast",
+      "skills": ["itinerary planning", "europe"],
+      "links": [],
+      "joinedAt": "2026-07-26T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 21,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "612e8bf8-2578-43c6-961b-ae5d436befb6",
+      "name": "Chen Zhang",
+      "image": null,
+      "headline": null,
+      "skills": ["van conversion", "camping"],
+      "links": [],
+      "joinedAt": "2026-08-20T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "road-trips",
+          "name": "Road Trips & Van Life",
+          "tint": "white"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 20,
+        "teams": 0
+      },
+      "risingScore": 0
+    },
+    {
+      "membershipId": "1e8beabb-7ad8-42ae-878f-7d78acb1f543",
+      "name": "Seun Johnson",
+      "image": null,
+      "headline": "Local guide, walking tours in three languages",
+      "skills": ["local knowledge", "walking tours"],
+      "links": [],
+      "joinedAt": "2026-09-18T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "travel-photography",
+          "name": "Travel Photography",
+          "tint": "aqua"
+        }
+      ],
+      "contributions": {
+        "posts": 1,
+        "comments": 0,
+        "signalsReceived": 19,
+        "teams": 0
+      },
+      "risingScore": 3.0368
+    },
+    {
+      "membershipId": "ef152ccb-9289-4e2e-b5a9-c36f21c4730c",
+      "name": "Uma Krishnan",
+      "image": null,
+      "headline": "Illustrator who sketches every trip",
+      "skills": [],
+      "links": [],
+      "joinedAt": "2026-10-09T12:33:21.679Z",
+      "communities": [
+        {
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach"
+        },
+        {
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach"
+        }
+      ],
+      "contributions": {
+        "posts": 2,
+        "comments": 1,
+        "signalsReceived": 16,
+        "teams": 0
+      },
+      "risingScore": 1.6629
+    }
+  ],
+  "posts": [
+    {
+      "id": "3da81097-f8dd-4543-9240-d4bdceaf6df7",
+      "type": "discussion",
+      "status": "open",
+      "title": "A free-things map of Prague, with real prices",
+      "excerpt": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. I only get ten vacation days a year, so a mistake in the plan is one I pay…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "56c32ffe-478b-4706-8c4e-1b6b699efadc",
+        "name": "Casey Flores",
+        "headline": "Student on a gap year",
+        "image": null
+      },
+      "useCount": 6,
+      "buildCount": 7,
+      "commentCount": 1,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A free-things map of Prague, with real prices",
+        "category": "discussion",
+        "fitScore": 92,
+        "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["flights", "hostels", "europe"],
+        "skills": ["itinerary planning", "video editing"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.8935,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "f533809b-d6bd-4c76-959c-1d266ba77f4d",
+      "type": "project",
+      "status": "building",
+      "title": "A free-things map of Prague for anyone flying out of the US on a budget",
+      "excerpt": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. Every \"cheap\" guide I found left out the tourist taxes and the airport…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "67973871-b374-45db-a008-b003fb56e71e",
+        "name": "Rhea Fischer",
+        "headline": "Van-lifer who wired the whole thing herself",
+        "image": null
+      },
+      "useCount": 15,
+      "buildCount": 1,
+      "commentCount": 2,
+      "teamPreview": [],
+      "teamSize": 3,
+      "featured": false,
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A free-things map of Prague for anyone flying out of the US on a budget",
+        "category": "project",
+        "fitScore": 80,
+        "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["hostels", "points and miles"],
+        "skills": ["photography"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.8241,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "36a4b99d-494d-41b8-8243-de2d88ef688a",
+      "type": "project",
+      "status": "launched",
+      "title": "Lisbon on $60 a day",
+      "excerpt": "Seven days in Lisbon for $420 all in, built by fans in Budget Travel. A local guide checks every price against what a local actually pays, a photographer shoots the golden-hour…",
+      "rolesNeeded": ["Local guide", "Photographer", "Video editor"],
+      "openRoles": ["Itinerary planner"],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+        "name": "Priya Shah",
+        "headline": "Austin solo traveler who plans every trip around food",
+        "image": null
+      },
+      "useCount": 212,
+      "buildCount": 38,
+      "commentCount": 51,
+      "teamPreview": [
+        {
+          "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+          "name": "Priya Shah",
+          "headline": "Austin solo traveler who plans every trip around food",
+          "image": null
+        },
+        {
+          "membershipId": "5eda150a-fa89-4736-aa52-60cf332f4ec5",
+          "name": "Inês Duarte",
+          "headline": "Local guide, walking tours in three languages",
+          "image": null
+        }
+      ],
+      "teamSize": 4,
+      "featured": true,
+      "createdAt": "2026-08-30T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "Lisbon on $60 a day",
+        "category": "project",
+        "fitScore": 97,
+        "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Four roles filled, every price dated and checked by a local.",
+        "tags": ["budget", "points and miles"],
+        "skills": ["photography"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.785,
+      "hidden": false,
+      "promotion": {
+        "id": "16eeefab-9533-42a6-b00c-7a7b67eee602",
+        "state": "live"
+      }
+    },
+    {
+      "id": "7245ef02-a636-4621-8ee8-5df5d1eb9e0b",
+      "type": "project",
+      "status": "forming_team",
+      "title": "A Bangkok street-food budget crawl, with real prices",
+      "excerpt": "A Bangkok street-food budget crawl that eats well for $15 a day across five neighborhoods. The numbers online are all from 2019 and nothing costs that now. Fans add what they…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "5a835c25-581d-44e3-87f6-65e0b5811360",
+        "name": "Reema Fischer",
+        "headline": "Event planner, the friend who organizes group trips",
+        "image": null
+      },
+      "useCount": 20,
+      "buildCount": 2,
+      "commentCount": 7,
+      "teamPreview": [],
+      "teamSize": 3,
+      "featured": false,
+      "createdAt": "2026-10-03T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A Bangkok street-food budget crawl, with real prices",
+        "category": "project",
+        "fitScore": 93,
+        "fitReason": "Matches \"collabs with a named owner and a date\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["budget", "europe"],
+        "skills": ["itinerary planning", "budgeting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.7705,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "a0944a74-60cd-48e1-95b5-0bc5a838c113",
+      "type": "idea",
+      "status": "open",
+      "title": "A points-and-miles starter guide that explains the one card and two habits behind a free flight to Tokyo",
+      "excerpt": "A points-and-miles starter guide that explains the one card and two habits behind a free flight to Tokyo. I only get ten vacation days a year, so a mistake in the plan is one I…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "731638a7-c89b-49e1-9a46-16f62cfb689c",
+        "name": "Tyler Morgan",
+        "headline": "Architecture student sketching cities",
+        "image": null
+      },
+      "useCount": 10,
+      "buildCount": 9,
+      "commentCount": 7,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A points-and-miles starter guide that explains the one card and two habits behind a free flight to Tokyo",
+        "category": "idea",
+        "fitScore": 56,
+        "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+        "tags": ["budget", "hostels", "points and miles"],
+        "skills": ["budgeting", "video editing"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.7451,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "c175e997-bb8e-4511-9437-842f4c3afff3",
+      "type": "idea",
+      "status": "open",
+      "title": "A cheap-flights Sunday thread for anyone flying out of the US on a budget",
+      "excerpt": "A cheap-flights Sunday thread that shares the three best fares found each week, with the dates. I spent my first trip to Europe guessing, and the guessing cost me about $400…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "fcfb9cfb-d6ac-4996-a3e9-906488b66baa",
+        "name": "Jamal Jensen",
+        "headline": "Travel nurse, a new city every 13 weeks",
+        "image": null
+      },
+      "useCount": 8,
+      "buildCount": 0,
+      "commentCount": 0,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A cheap-flights Sunday thread for anyone flying out of the US on a budget",
+        "category": "idea",
+        "fitScore": 68,
+        "fitReason": "Matches \"beginner-friendly photo and editing tips\". The ask is specific and small.",
+        "tags": ["budget", "flights", "europe", "points and miles"],
+        "skills": ["itinerary planning", "budgeting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.7071,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "4ace65b1-a599-4d7c-a4d8-13ec9899b3ba",
+      "type": "idea",
+      "status": "open",
+      "title": "A shoulder-season flight thread, made by fans",
+      "excerpt": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "7babb860-53d1-4cc6-b3d6-68ccc6c77c56",
+        "name": "Vikram Williams",
+        "headline": "Event planner, the friend who organizes group trips",
+        "image": null
+      },
+      "useCount": 18,
+      "buildCount": 0,
+      "commentCount": 5,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A shoulder-season flight thread, made by fans",
+        "category": "idea",
+        "fitScore": 53,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["budget", "flights"],
+        "skills": ["photography", "video editing"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.6985,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "0b031f82-a5c1-445d-91bc-7968b2fba127",
+      "type": "idea",
+      "status": "open",
+      "title": "A Japan rail pass breakdown for people with a week of vacation",
+      "excerpt": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route. The numbers online are all from 2019 and nothing costs that now. Everything fits on…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "a0c78709-9ecd-41cf-8787-7d4012a7ef8d",
+        "name": "Alex Silva",
+        "headline": "Backpacker, three countries and counting",
+        "image": null
+      },
+      "useCount": 0,
+      "buildCount": 9,
+      "commentCount": 4,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-09-09T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A Japan rail pass breakdown for people with a week of vacation",
+        "category": "idea",
+        "fitScore": 92,
+        "fitReason": "Matches \"beginner-friendly photo and editing tips\". Scope is one weekend’s worth of work.",
+        "tags": ["budget", "flights"],
+        "skills": ["itinerary planning", "photography"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.6925,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "7bd610e1-866e-448a-a5fa-544273446048",
+      "type": "idea",
+      "status": "open",
+      "title": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid",
+      "excerpt": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid. The numbers online are all from 2019 and nothing costs that now. Fans add what they…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "116d5c6f-155f-4736-a116-aafe16045e09",
+        "name": "Rania Chen",
+        "headline": "Student on a gap year",
+        "image": null
+      },
+      "useCount": 21,
+      "buildCount": 2,
+      "commentCount": 6,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-09-09T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid",
+        "category": "idea",
+        "fitScore": 86,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Scope is one weekend’s worth of work.",
+        "tags": ["budget", "flights"],
+        "skills": ["photography"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.6871,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "23616e1c-0a07-4970-8224-b887a84a3f8c",
+      "type": "idea",
+      "status": "open",
+      "title": "A Japan rail pass breakdown, for a long weekend",
+      "excerpt": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route. It is hard to tell what is genuinely cheap and what only looks cheap. Fans add what…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "3b4a40fc-1a86-4d7d-8bfa-6e1d809b46fb",
+        "name": "Hari Ananth",
+        "headline": "Food writer, mostly street food",
+        "image": null
+      },
+      "useCount": 19,
+      "buildCount": 4,
+      "commentCount": 4,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-08-02T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A Japan rail pass breakdown, for a long weekend",
+        "category": "idea",
+        "fitScore": 83,
+        "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+        "tags": ["flights", "hostels", "points and miles"],
+        "skills": ["itinerary planning"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.6745,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "df6d04ad-dda5-4518-a4f1-8cc31d543272",
+      "type": "project",
+      "status": "forming_team",
+      "title": "A shoulder-season flight thread, for a long weekend",
+      "excerpt": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. One…",
+      "rolesNeeded": ["Itinerary planner"],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "1a86740b-24ad-45e8-bda9-ecf9a7ae1ea0",
+        "name": "Esha Haddad",
+        "headline": "Retired and finally traveling",
+        "image": null
+      },
+      "useCount": 24,
+      "buildCount": 0,
+      "commentCount": 4,
+      "teamPreview": [
+        {
+          "membershipId": "1a86740b-24ad-45e8-bda9-ecf9a7ae1ea0",
+          "name": "Esha Haddad",
+          "headline": "Retired and finally traveling",
+          "image": null
+        },
+        {
+          "membershipId": "344cbb31-2454-4b31-b3e8-7762e7dac019",
+          "name": "Imran Wang",
+          "headline": "Hiker who prefers the empty trail",
+          "image": null
+        },
+        {
+          "membershipId": "d1688326-97d3-4c31-83d5-347ac9c682c0",
+          "name": "Keiko Kaur",
+          "headline": "Van-lifer who wired the whole thing herself",
+          "image": null
+        }
+      ],
+      "teamSize": 3,
+      "featured": false,
+      "createdAt": "2026-10-02T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A shoulder-season flight thread, for a long weekend",
+        "category": "project",
+        "fitScore": 75,
+        "fitReason": "Matches \"beginner-friendly photo and editing tips\". Real prices, which Mira always asks for.",
+        "tags": ["budget", "flights", "hostels", "points and miles"],
+        "skills": ["translation"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.666,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "125fabb9-c420-4668-a746-f67a5c443985",
+      "type": "discussion",
+      "status": "open",
+      "title": "A hostel-versus-hotel cost sheet for anyone flying out of the US on a budget",
+      "excerpt": "A hostel-versus-hotel cost sheet that works out which is cheaper once breakfast and laundry are counted. The numbers online are all from 2019 and nothing costs that now. Every…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "1e8beabb-7ad8-42ae-878f-7d78acb1f543",
+        "name": "Seun Johnson",
+        "headline": "Local guide, walking tours in three languages",
+        "image": null
+      },
+      "useCount": 12,
+      "buildCount": 7,
+      "commentCount": 6,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-09-26T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A hostel-versus-hotel cost sheet for anyone flying out of the US on a budget",
+        "category": "discussion",
+        "fitScore": 76,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". The ask is specific and small.",
+        "tags": ["flights", "points and miles"],
+        "skills": ["budgeting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.6494,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "45a43aac-187a-4ee6-9e3a-1e1a8cdcc0fb",
+      "type": "discussion",
+      "status": "open",
+      "title": "A shoulder-season flight thread, the honest version",
+      "excerpt": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. Most blogs are written by someone whose flights were comped, and the budget shows it. Day…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+        "name": "Priya Shah",
+        "headline": "Austin solo traveler who plans every trip around food",
+        "image": null
+      },
+      "useCount": 13,
+      "buildCount": 1,
+      "commentCount": 0,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-07-17T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A shoulder-season flight thread, the honest version",
+        "category": "discussion",
+        "fitScore": 85,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Scope is one weekend’s worth of work.",
+        "tags": ["europe", "points and miles"],
+        "skills": ["video editing"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.6365,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "59eabca7-75e2-4923-b7ce-9821c05a7a38",
+      "type": "project",
+      "status": "forming_team",
+      "title": "A night-train guide for Europe, made by fans",
+      "excerpt": "A night-train guide for Europe that swaps a hotel night for a bed on the Vienna to Venice sleeper. Every \"cheap\" guide I found left out the tourist taxes and the airport…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "912f689d-f682-454d-be65-cd56834bad31",
+        "name": "Dilan Weber",
+        "headline": null,
+        "image": null
+      },
+      "useCount": 1,
+      "buildCount": 3,
+      "commentCount": 2,
+      "teamPreview": [],
+      "teamSize": 4,
+      "featured": false,
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A night-train guide for Europe, made by fans",
+        "category": "project",
+        "fitScore": 53,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["budget", "flights"],
+        "skills": ["itinerary planning"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.6321,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "318d8d19-b954-4b5c-82c0-a5de4960c8f4",
+      "type": "idea",
+      "status": "open",
+      "title": "A $45-a-day Mexico City guide for couples on a tight budget",
+      "excerpt": "A $45-a-day Mexico City guide that lists what a taco, a metro ride and a hostel bed really cost. I only get ten vacation days a year, so a mistake in the plan is one I pay for…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "70770641-3fb1-4924-b3f2-96cacb7495d4",
+        "name": "Luca Hayashi",
+        "headline": "Points-and-miles nerd, always hunting a fare",
+        "image": null
+      },
+      "useCount": 8,
+      "buildCount": 8,
+      "commentCount": 5,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-09-14T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A $45-a-day Mexico City guide for couples on a tight budget",
+        "category": "idea",
+        "fitScore": 75,
+        "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+        "tags": ["flights", "europe", "points and miles"],
+        "skills": ["itinerary planning", "budgeting", "video editing"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.6285,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "304ffa84-f4dc-43f7-9883-60e056e85757",
+      "type": "project",
+      "status": "building",
+      "title": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route",
+      "excerpt": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route. I only get ten vacation days a year, so a mistake in the plan is one I pay for…",
+      "rolesNeeded": ["Itinerary planner"],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "702236df-79c7-41d5-9c5c-310091d4dc13",
+        "name": "Omar Ortiz",
+        "headline": "Travel nurse, a new city every 13 weeks",
+        "image": null
+      },
+      "useCount": 9,
+      "buildCount": 0,
+      "commentCount": 1,
+      "teamPreview": [
+        {
+          "membershipId": "702236df-79c7-41d5-9c5c-310091d4dc13",
+          "name": "Omar Ortiz",
+          "headline": "Travel nurse, a new city every 13 weeks",
+          "image": null
+        },
+        {
+          "membershipId": "b20db7a4-8d55-4418-9648-538ec217e0c5",
+          "name": "Leo Torres",
+          "headline": "Family of four, road trips every June",
+          "image": null
+        }
+      ],
+      "teamSize": 2,
+      "featured": false,
+      "createdAt": "2026-10-07T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route",
+        "category": "project",
+        "fitScore": 60,
+        "fitReason": "Matches \"small family-run food spots over famous restaurants\". Real prices, which Mira always asks for.",
+        "tags": ["budget", "points and miles"],
+        "skills": ["itinerary planning"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.605,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "2bc2f6c7-6357-4e51-bf1a-2b77e25aa27a",
+      "type": "idea",
+      "status": "open",
+      "title": "A free-things map of Prague, the honest version",
+      "excerpt": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. Most blogs are written by someone whose flights were comped, and the budget…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "6dc96b20-4719-4caa-9a0f-f39abc857fb7",
+        "name": "Rhea Torres",
+        "headline": "Learning Italian this year",
+        "image": null
+      },
+      "useCount": 7,
+      "buildCount": 3,
+      "commentCount": 0,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-10-07T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A free-things map of Prague, the honest version",
+        "category": "idea",
+        "fitScore": 54,
+        "fitReason": "Matches \"beginner-friendly photo and editing tips\". The ask is specific and small.",
+        "tags": ["budget", "hostels", "europe", "points and miles"],
+        "skills": ["budgeting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.597,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "5c8fe10c-929a-41b2-acc6-84d978de6b18",
+      "type": "idea",
+      "status": "open",
+      "title": "A travel-money cheat sheet, for a long weekend",
+      "excerpt": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "612e8bf8-2578-43c6-961b-ae5d436befb6",
+        "name": "Chen Zhang",
+        "headline": null,
+        "image": null
+      },
+      "useCount": 12,
+      "buildCount": 8,
+      "commentCount": 5,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-09-24T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A travel-money cheat sheet, for a long weekend",
+        "category": "idea",
+        "fitScore": 64,
+        "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["budget", "flights"],
+        "skills": ["budgeting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.5895,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "93ec28f0-63af-4b1f-bf1a-b23720caaf30",
+      "type": "project",
+      "status": "forming_team",
+      "title": "A shoulder-season flight thread for college students on spring break",
+      "excerpt": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. Most blogs are written by someone whose flights were comped, and the budget shows it…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "e534dcf8-98b7-49f9-a90d-546927daa9f3",
+        "name": "Anika Oliveira",
+        "headline": "Translator, Spanish and Portuguese",
+        "image": null
+      },
+      "useCount": 15,
+      "buildCount": 0,
+      "commentCount": 1,
+      "teamPreview": [],
+      "teamSize": 4,
+      "featured": false,
+      "createdAt": "2026-08-09T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A shoulder-season flight thread for college students on spring break",
+        "category": "project",
+        "fitScore": 75,
+        "fitReason": "Matches \"beginner-friendly photo and editing tips\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["flights", "europe"],
+        "skills": ["itinerary planning", "budgeting", "translation"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.5889,
+      "hidden": false,
+      "promotion": null
+    },
+    {
+      "id": "ba4b58bd-79ac-4925-af6c-477d6acfbe2c",
+      "type": "project",
+      "status": "forming_team",
+      "title": "A Bangkok street-food budget crawl for couples on a tight budget",
+      "excerpt": "A Bangkok street-food budget crawl that eats well for $15 a day across five neighborhoods. Most blogs are written by someone whose flights were comped, and the budget shows it…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+        "slug": "budget-travel",
+        "name": "Budget Travel",
+        "tint": "peach",
+        "icon": "wallet"
+      },
+      "author": {
+        "membershipId": "f2c83caa-87ec-4008-bc51-c7b214153ba7",
+        "name": "Jonas Nguyen",
+        "headline": null,
+        "image": null
+      },
+      "useCount": 3,
+      "buildCount": 1,
+      "commentCount": 0,
+      "teamPreview": [],
+      "teamSize": 3,
+      "featured": false,
+      "createdAt": "2026-09-18T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": false,
+      "ai": {
+        "status": "done",
+        "attempts": 1,
+        "error": null,
+        "summary": "A Bangkok street-food budget crawl for couples on a tight budget",
+        "category": "project",
+        "fitScore": 89,
+        "fitReason": "Matches \"beginner-friendly photo and editing tips\". Beginner-friendly, which Mira spotlights.",
+        "tags": ["flights", "hostels"],
+        "skills": ["itinerary planning", "budgeting"],
+        "isSpam": false,
+        "scoredTasteVersion": 1,
+        "stale": false
+      },
+      "score": 0.5833,
+      "hidden": false,
+      "promotion": null
+    }
+  ]
+}

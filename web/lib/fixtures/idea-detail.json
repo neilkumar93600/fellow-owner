@@ -1,0 +1,161 @@
+{
+  "id": "0461e51f-3724-4ed1-b8da-d72022e05871",
+  "type": "project",
+  "status": "forming_team",
+  "title": "A solo hiking primer that says which trails are fine alone and which are not",
+  "excerpt": "A solo hiking primer that says which trails are fine alone and which are not. I never know which neighborhoods are okay after dark until I am standing in one. Real stories from…",
+  "rolesNeeded": ["Host"],
+  "openRoles": [],
+  "community": {
+    "id": "96fa6957-4867-46f2-810c-ea84ea97a1ec",
+    "slug": "solo-travelers",
+    "name": "Solo Travelers",
+    "tint": "lavender",
+    "icon": "backpack"
+  },
+  "author": {
+    "membershipId": "02ee3647-961d-46ed-8f8e-1e783dcb0c38",
+    "name": "Kaito Lima",
+    "headline": "Event planner, the friend who organizes group trips",
+    "image": null
+  },
+  "useCount": 16,
+  "buildCount": 7,
+  "commentCount": 5,
+  "teamPreview": [
+    {
+      "membershipId": "02ee3647-961d-46ed-8f8e-1e783dcb0c38",
+      "name": "Kaito Lima",
+      "headline": "Event planner, the friend who organizes group trips",
+      "image": null
+    },
+    {
+      "membershipId": "a337fa16-576f-4df7-b19a-888a31c84077",
+      "name": "Keiko Nakamura",
+      "headline": null,
+      "image": null
+    }
+  ],
+  "teamSize": 2,
+  "featured": false,
+  "createdAt": "2026-10-09T12:33:21.679Z",
+  "viewerSignals": [],
+  "isAuthor": false,
+  "ai": {
+    "status": "done",
+    "attempts": 1,
+    "error": null,
+    "summary": "A solo hiking primer that says which trails are fine alone and which are not",
+    "category": "project",
+    "fitScore": 92,
+    "fitReason": "Matches \"beginner-friendly photo and editing tips\". Real prices, which Mira always asks for.",
+    "tags": ["solo travel", "safety", "hostels", "meeting people"],
+    "skills": ["translation", "illustration"],
+    "isSpam": false,
+    "scoredTasteVersion": 1,
+    "stale": false
+  },
+  "score": 0.9274,
+  "hidden": false,
+  "promotion": null,
+  "body": "A solo hiking primer that says which trails are fine alone and which are not. I never know which neighborhoods are okay after dark until I am standing in one. Real stories from people who did it last month, with the date and the city. Would love an illustrator to make the checklist look friendly rather than scary.",
+  "links": [],
+  "roles": [
+    {
+      "role": "Host",
+      "filled": true,
+      "filledBy": {
+        "membershipId": "a337fa16-576f-4df7-b19a-888a31c84077",
+        "name": "Keiko Nakamura",
+        "headline": null,
+        "image": null
+      },
+      "requestCount": 1
+    }
+  ],
+  "team": [
+    {
+      "membershipId": "02ee3647-961d-46ed-8f8e-1e783dcb0c38",
+      "name": "Kaito Lima",
+      "headline": "Event planner, the friend who organizes group trips",
+      "image": null,
+      "role": "Lead",
+      "status": "accepted",
+      "isLead": true,
+      "createdAt": "2026-10-09T12:33:21.679Z"
+    },
+    {
+      "membershipId": "0a613254-a437-4a32-a527-e9973ab83e1d",
+      "name": "Shreya Williams",
+      "headline": "Backpacker, three countries and counting",
+      "image": null,
+      "role": "Host",
+      "status": "requested",
+      "isLead": false,
+      "createdAt": "2026-10-09T12:33:21.679Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": "115dfd05-43d3-428e-b3bf-f06f226257a3",
+      "body": "This would have saved me a weekend: the number nobody tracks is what it costs to get to the airport.",
+      "author": {
+        "membershipId": "5618b540-222d-44db-96aa-2dd08267e442",
+        "name": "Casey Khan",
+        "headline": "Cyclist planning a coast-to-coast ride",
+        "image": null
+      },
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "isOwn": false
+    },
+    {
+      "id": "2c24b9b0-4af7-4a45-9d6e-6bd5988e4e3a",
+      "body": "This would have saved me a weekend: put the honest downsides near the top. That is what people come back for.",
+      "author": {
+        "membershipId": "f6ff5ce9-1d67-4909-a4a0-902d857203ea",
+        "name": "Mei Hassan",
+        "headline": "Event planner, the friend who organizes group trips",
+        "image": null
+      },
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "isOwn": false
+    },
+    {
+      "id": "4f2001bb-0e57-437f-adc8-6fef414a5dcc",
+      "body": "Worth saying the quiet part: if nobody owns the first draft it will stay a thread forever.",
+      "author": {
+        "membershipId": "7e6fae94-abdd-4c84-9867-f44cdd2ecb53",
+        "name": "Chen Patel",
+        "headline": null,
+        "image": null
+      },
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "isOwn": false
+    },
+    {
+      "id": "8df7f34d-13f5-41bb-b32c-497ffde76c53",
+      "body": "I did almost this last spring: start with five people who answer their messages. Fifty strangers is worse.",
+      "author": {
+        "membershipId": "dc3cf692-366d-44e0-b809-e833abc21250",
+        "name": "Joy Carter",
+        "headline": "Mechanic who builds camper vans",
+        "image": null
+      },
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "isOwn": false
+    },
+    {
+      "id": "f80e936b-4398-4271-8f08-b3f3bd7bad22",
+      "body": "One worry: prices from last year are already wrong. Put a date next to every number.",
+      "author": {
+        "membershipId": "2ff59456-ce9e-4953-96fe-af4b10d76711",
+        "name": "Chen Thomas",
+        "headline": null,
+        "image": null
+      },
+      "createdAt": "2026-10-09T12:33:21.679Z",
+      "isOwn": false
+    }
+  ],
+  "feedback": null
+}

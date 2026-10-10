@@ -1,0 +1,78 @@
+{
+  "task": "communityDigest",
+  "description": "Recorded smart-tier answer for the P1 community digest.",
+  "cases": [
+    {
+      "name": "solo-travelers-week",
+      "input": {
+        "communityName": "Solo Travelers",
+        "periodDate": "2026-10-01",
+        "posts": [
+          {
+            "id": "4a1b2c3d-0000-4000-8000-000000000001",
+            "title": "First solo trip buddy system",
+            "summary": "Pairs first-timers with a check-in buddy for their first week abroad.",
+            "signals": 17
+          },
+          {
+            "id": "4a1b2c3d-0000-4000-8000-000000000002",
+            "title": "Late-arrival safety plan",
+            "summary": "A one-page plan for getting from the airport to your bed after midnight.",
+            "signals": 23
+          },
+          {
+            "id": "4a1b2c3d-0000-4000-8000-000000000003",
+            "title": "Best snack for a long bus ride?",
+            "summary": null,
+            "signals": 4
+          },
+          {
+            "id": "4a1b2c3d-0000-4000-8000-000000000004",
+            "title": "Saturday free walking tour meetup",
+            "summary": "A free group walking tour every Saturday, then lunch.",
+            "signals": 12
+          }
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "summary": "A busy week: fans wrote plans for first-timers and late arrivals, and the Saturday walking tour keeps growing.",
+            "themes": [
+              "first trips",
+              "Safety",
+              "group tours",
+              "first trips"
+            ],
+            "standouts": [
+              {
+                "post": "p2",
+                "why": "Most signals this week and a clear, usable plan."
+              },
+              {
+                "post": "p1",
+                "why": "A simple buddy system that helps first-timers feel less alone."
+              }
+            ]
+          },
+          "usage": {
+            "prompt_tokens": 700,
+            "completion_tokens": 110
+          }
+        }
+      ],
+      "expect": {
+        "themes": [
+          "first trips",
+          "safety",
+          "group tours"
+        ],
+        "standoutIds": [
+          "4a1b2c3d-0000-4000-8000-000000000002",
+          "4a1b2c3d-0000-4000-8000-000000000001"
+        ],
+        "requests": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "handle": "mira",
+  "displayName": "Mira Lane",
+  "bio": "Slow travel, cheap flights, and the people I meet on the way. Six rooms where my viewers plan, shoot and explore together.",
+  "avatarUrl": "/demo/mira.jpg",
+  "platforms": [
+    {
+      "platform": "youtube",
+      "url": "https://youtube.com/@miralane",
+      "followers": 620000
+    },
+    {
+      "platform": "instagram",
+      "url": "https://instagram.com/miralane",
+      "followers": 380000
+    },
+    {
+      "platform": "tiktok",
+      "url": "https://tiktok.com/@miralane",
+      "followers": 140000
+    }
+  ],
+  "tasteProfile": {
+    "promote": [
+      "budget-honest travel, with real prices and the receipts",
+      "local guides written by people who actually live there",
+      "solo-travel safety that is practical, not scary",
+      "small family-run food spots over famous restaurants",
+      "collabs with a named owner and a date",
+      "beginner-friendly photo and editing tips"
+    ],
+    "never": [
+      "crypto, tokens and anything with a presale",
+      "bought followers and engagement pods",
+      "\"free cruise\" giveaways and prize scams",
+      "MLM and dropshipping pitches",
+      "paid reviews of places she has not been"
+    ],
+    "voice": [
+      "Day four in Porto and I have spent $38. Here is the receipt for every coffee, the tram I should have skipped, and the one meal I would pay double for.",
+      "No sponsored sunsets here. I film what I would have filmed anyway, and I tell you when the place was not worth the flight.",
+      "If you are waiting until you feel brave enough to go alone: I have done eleven solo trips and I was nervous at every airport. Book the ticket anyway, then make the plan."
+    ]
+  }
+}

@@ -1,0 +1,685 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+/* Short windows (laptops up to 920px tall): the auth screens tighten so they fit without scrolling. */
+@custom-variant short (@media (max-height: 920px));
+
+/*
+ * Performance: components/ui/button.tsx asks for `[&_svg:not([class*='size-'])]:size-{3,4}`. A selector that
+ * reads the class attribute makes every class change on <html> (Lenis toggles lenis-scrolling at the start and
+ * end of each scroll, next-themes and the hero entrance write it at boot) restyle the whole document: about
+ * 3,400 elements and 40 to 60ms each at 1x. Those two candidates are not generated; the same icon default is
+ * set in the base layer below without reading the class attribute.
+ */
+@source not inline("[&_svg:not([class*='size-'])]:size-{3,4}");
+
+/*
+ * Golden Hour Frost (DESIGN.md is the source). Frosted glass over a slow peach, sky, lilac and mint aurora
+ * on cream. Ink words, one coral action per screen. Light theme only.
+ *
+ * Coral note: the spec's #F0603A gives white text 3.26:1, under AA, so the action coral is the darker
+ * #C8432A (white 4.89:1, on cream 4.59:1). #F0603A stays as `sunset`, for decoration only (the active nav
+ * dot, glows), never under or as text. Sky is #235D96 for the same reason (#3B82C4 is 4.06:1 on white): 6.8:1 on white, 6.4 on cream, and 5.2 on the raw
+ * aurora peach #FFD9C2, 4.8 on sky and 4.7 on lilac, so a link on any patch of the backdrop reads.
+ * Measure with: node scripts/contrast-check.mjs <fg> <bg> ...
+ */
+@theme {
+  --color-cream: #fbf7f2;
+  --color-ink: #1e1b26;
+  --color-ink-soft: #55506a;
+  --color-coral: #c8432a;
+  --color-coral-hover: #a9361f;
+  --color-sunset: #f0603a;
+  --color-sky: #235d96;
+  --color-success: #15803d;
+  --color-warn-ink: #a45a00;
+  --color-aurora-peach: #ffd9c2;
+  --color-aurora-sky: #bfddf7;
+  --color-aurora-lilac: #dccff7;
+  --color-aurora-mint: #cfefe3;
+  --radius-panel: 28px;
+  --radius-chip: 999px;
+  --shadow-glass: 0 20px 60px -20px rgb(40 30 60 / 0.18);
+  --font-display: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+  /* Rainbow CTA (components/ui/rainbow-button.tsx): 3 passes once in view, then it rests. */
+  --animate-rainbow: rainbow var(--speed, 2s) linear 3;
+}
+
+:root {
+  /* Rainbow CTA stops (Magic UI values). Marketing only; the app keeps coral. */
+  --color-1: hsl(0 100% 63%);
+  --color-2: hsl(270 100% 63%);
+  --color-3: hsl(210 100% 63%);
+  --color-4: hsl(195 100% 63%);
+  --color-5: hsl(90 100% 63%);
+  /* Glass fills: soft for panels that carry short text, strong for long text, lists and side panels. */
+  --glass-soft: rgb(255 255 255 / 0.55);
+  --glass-strong: rgb(255 255 255 / 0.72);
+  --glass-chip: rgb(255 255 255 / 0.62);
+  --glass-fallback: rgb(255 255 255 / 0.92);
+  --glass-highlight: inset 1px 1px 0 rgb(255 255 255 / 0.7);
+  --glass-edge: rgb(255 255 255 / 0.6);
+
+  /*
+   * Landing chrome: the band under the fixed navbar that keyboard focus must clear (WCAG 2.4.11), read by
+   * FocusClear in app/providers.tsx. Not scroll-padding-top: Lenis subtracts that from every anchor target.
+   */
+  --nav-clear: 88px;
+
+  /* Motion: state changes ease out; cards spring (motion). Nothing loops forever in view. */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-base: 200ms;
+  --dur-slow: 250ms;
+
+  /* shadcn variables mapped onto Golden Hour Frost. */
+  --background: var(--color-cream);
+  --foreground: var(--color-ink);
+  --card: rgb(255 255 255 / 0.6);
+  --card-foreground: var(--color-ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-coral);
+  --primary-foreground: #ffffff;
+  --secondary: var(--glass-strong);
+  --secondary-foreground: var(--color-ink);
+  --muted: #f3ece5;
+  --muted-foreground: var(--color-ink-soft);
+  --accent: #f6eee6;
+  --accent-foreground: var(--color-ink);
+  --destructive: #c42b2b;
+  --border: #e9e1d8;
+  --input: #d9cfc5;
+  /* The focus ring is ink: 15.9:1 on cream, 16.9 on white, 12.9 on peach (WCAG 1.4.11 needs 3). */
+  --ring: var(--color-ink);
+  --chart-1: var(--color-coral);
+  --chart-2: var(--color-sky);
+  --chart-3: #3f8f72;
+  --chart-4: #8b6fc9;
+  --chart-5: #a39caf;
+  --radius: 1rem;
+  --sidebar: var(--glass-strong);
+  --sidebar-foreground: var(--color-ink);
+  --sidebar-primary: var(--color-coral);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--glass-chip);
+  --sidebar-accent-foreground: var(--color-ink);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--color-ink);
+
+  /*
+   * legacy: pre-pivot names that screens outside the Golden Hour sweep still read (bg-page, text-ink-muted,
+   * var(--table-head), var(--purple) ...). Neutrals are re-toned warm to sit on cream. Every entry below was
+   * grepped across web/ and still has a caller; delete each one the day `rg` finds none. Already removed:
+   * the --blur-N washes, --glass-border, --lime and its button, the shell radius and the Magic UI tokens.
+   */
+  --page: var(--color-cream);
+  --shell: #f3ece5;
+  --glass: var(--glass-soft);
+  --card-strong: #ffffff;
+  --ink: var(--color-ink);
+  --ink-soft: var(--color-ink-soft);
+  --ink-muted: #5f5a70;
+  --ink-faint: #9a94a6;
+  --line: #ebe4dc;
+  --line-row: #ddd4ca;
+  --line-strong: #8a8296;
+  --line-field: #6f6980;
+  --danger-deep: #c42b2b;
+  --table-head: #f3ece5;
+  --peach: #fff4ec;
+  --peach-tile: #ffd9c2;
+  --orange: #c8432a;
+  --lavender: #f6f1ff;
+  --lavender-tile: #dccff7;
+  --purple: #4f46e5;
+  --purple-chart: #6d4fc2;
+  --aqua: #eefaf5;
+  --aqua-tile: #cfefe3;
+  --teal: #2f7d62;
+  --success: var(--color-success);
+  --success-ink: var(--color-success);
+  --warn-bg: #fff3e0;
+  --warn-ink: var(--color-warn-ink);
+  --info-bg: #e3f0fb;
+  --info-ink: var(--color-sky);
+  --danger: #e04848;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-clear: 96px;
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* legacy: pre-pivot colour utilities still used by screens outside the sweep (see the :root note). */
+  --color-page: var(--page);
+  --color-shell: var(--shell);
+  --color-glass: var(--glass);
+  --color-card-strong: var(--card-strong);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-row: var(--line-row);
+  --color-line-strong: var(--line-strong);
+  --color-line-field: var(--line-field);
+  --color-danger-deep: var(--danger-deep);
+  --color-table-head: var(--table-head);
+  --color-peach: var(--peach);
+  --color-peach-tile: var(--peach-tile);
+  --color-orange: var(--orange);
+  --color-lavender: var(--lavender);
+  --color-lavender-tile: var(--lavender-tile);
+  --color-purple: var(--purple);
+  --color-purple-chart: var(--purple-chart);
+  --color-aqua: var(--aqua);
+  --color-aqua-tile: var(--aqua-tile);
+  --color-teal: var(--teal);
+  --color-success-ink: var(--success-ink);
+  --color-warn-bg: var(--warn-bg);
+  --color-info-bg: var(--info-bg);
+  --color-info-ink: var(--info-ink);
+  --color-danger: var(--danger);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  /* Radius scale from the brief: 12 search, 14 icon tile, 16 input, 20 chip, 24 idea card, 28 card, 32 fan shell, 40 app shell. */
+  --radius-sm: 0.75rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 1.75rem;
+  --radius-4xl: 2rem;
+  /* 28px card radius: declared on :root above, but utilities need it here too (rounded-card). */
+  --radius-card: 1.75rem;
+
+  /* App type scale (04 §4). */
+  --text-display: 2rem;
+  --text-display--line-height: 2.5rem;
+  --text-display--font-weight: 500;
+  --text-h1: 1.5rem;
+  --text-h1--line-height: 2rem;
+  --text-h1--font-weight: 500;
+  --text-h2: 1.25rem;
+  --text-h2--line-height: 1.75rem;
+  --text-h2--font-weight: 500;
+  --text-stat: 2.5rem;
+  --text-stat--line-height: 2.75rem;
+  --text-stat--font-weight: 600;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.375rem;
+  --text-small: 0.8125rem;
+  --text-small--line-height: 1.125rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --text-caption--font-weight: 500;
+
+  /* Landing scale (brand register override in the landing brief). */
+  --text-hero: clamp(3.5rem, 1.6rem + 6.4vw, 7.5rem);
+  --text-hero--line-height: 0.93;
+  --text-hero--letter-spacing: -0.035em;
+  --text-hero--font-weight: 500;
+  --text-section: clamp(2.5rem, 1.4rem + 3.6vw, 4.5rem);
+  --text-section--line-height: 1.05;
+  --text-section--letter-spacing: -0.03em;
+  --text-section--font-weight: 500;
+  --text-lead: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+  --text-lead--line-height: 1.45;
+  --text-lead--letter-spacing: -0.01em;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    /* A classic scrollbar that comes and goes (short and long auth screens) would shift the page. */
+    scrollbar-gutter: stable;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "kern" 1,
+      "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  /* DESIGN.md Focus Ring: solid ink, 2px, offset 2px. Reads on cream, glass, the aurora and coral alike. */
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-aurora-peach);
+    color: var(--color-ink);
+  }
+  /* Button icon default (see the @source note at the top): 16px, 12px on the xs sizes. Any size-* or w-/h-
+     utility on the icon still wins, because utilities sit in a later layer. */
+  [data-slot="button"] svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  [data-slot="button"]:is(.h-6, .size-6) svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}
+
+@layer components {
+  /* Landing buttons: primary coral pill 48 high, secondary glass pill, ghost 40 round. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 3rem;
+    padding-inline: 1.5rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition:
+      background-color var(--dur-base) var(--ease-out-quart),
+      color var(--dur-base) var(--ease-out-quart),
+      border-color var(--dur-base) var(--ease-out-quart),
+      transform var(--dur-fast) var(--ease-out-quart),
+      filter var(--dur-base) var(--ease-out-quart);
+  }
+  .btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .btn-primary {
+    background: var(--color-coral);
+    color: #ffffff;
+    box-shadow: 0 10px 24px -12px rgb(200 67 42 / 0.6);
+  }
+  .btn-primary:hover {
+    background: var(--color-coral-hover);
+  }
+  .btn-secondary {
+    background: var(--glass-strong);
+    color: var(--color-ink);
+    border-color: var(--glass-edge);
+    box-shadow: var(--glass-highlight);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+  }
+  .btn-secondary:hover {
+    background: rgb(255 255 255 / 0.9);
+  }
+  .btn-ghost {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn-ghost:hover {
+    background: var(--glass);
+  }
+
+  /*
+   * Golden Hour Frost glass. Components layer on purpose: a caller's rounded-*, bg-* or shadow-* utility
+   * overrides the default radius, fill or shadow. soft (.glass, 55%) carries short text, strong (72%) long
+   * text, lists and side panels, chip (62%, full pill) small controls. ink-soft on any of them over the
+   * brightest aurora (peach) is 6.9:1 or more.
+   */
+  .glass,
+  .glass-strong,
+  .glass-chip {
+    border: 1px solid var(--glass-edge);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+    box-shadow: var(--glass-highlight), var(--shadow-glass);
+  }
+  .glass {
+    background: var(--glass-soft);
+    border-radius: var(--radius-panel);
+  }
+  .glass-strong {
+    background: var(--glass-strong);
+    border-radius: var(--radius-panel);
+  }
+  .glass-chip {
+    background: var(--glass-chip);
+    border-radius: var(--radius-chip);
+    box-shadow:
+      var(--glass-highlight),
+      0 6px 18px -10px rgb(40 30 60 / 0.22);
+  }
+  /* No backdrop-filter (older in-app webviews): near-opaque, never see-through text on the aurora. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass,
+    .glass-strong,
+    .glass-chip,
+    .btn-secondary {
+      background: var(--glass-fallback);
+    }
+  }
+
+  /*
+   * The aurora: three soft radial blobs on cream (components/shared/aurora-backdrop.tsx). Each blob is a
+   * transformed radial gradient, not a CSS blur filter, so the drift stays on the compositor.
+   */
+  .aurora {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    overflow: hidden;
+    pointer-events: none;
+    background: var(--color-cream);
+  }
+  .aurora-blob {
+    position: absolute;
+    width: 70vmax;
+    height: 70vmax;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--blob), transparent);
+    opacity: 0.85;
+    will-change: transform;
+    /* Three slow passes (about four minutes), then it rests: nothing loops forever in view. */
+    animation: aurora-drift 40s ease-in-out 6 alternate both;
+  }
+  .grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-blob {
+      animation: none;
+    }
+  }
+
+  /* legacy: glass pill, still used by components/onboarding/onboarding-preview.tsx. Move it to .glass-chip, then delete. */
+  .glass-pill {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.75) 0%,
+      rgba(255, 255, 255, 0.45) 100%
+    );
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      0 4px 16px -2px rgba(15, 23, 42, 0.04),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+  }
+
+  /* Small eyebrow chip used above section titles. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2rem;
+    padding-inline: 0.875rem;
+    border-radius: 999px;
+    background: var(--card-strong);
+    color: var(--ink);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Progressive reveal (components/landing/reveal.tsx). Without JavaScript nothing is ever hidden. */
+[data-reveal],
+[data-reveal-group] [data-reveal-item] {
+  transition:
+    opacity 600ms var(--ease-out-quart) var(--reveal-delay, 0s),
+    transform 600ms var(--ease-out-quart) var(--reveal-delay, 0s);
+}
+[data-reveal="pending"],
+[data-reveal-group="pending"] [data-reveal-item] {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(2) {
+  --reveal-delay: 80ms;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(3) {
+  --reveal-delay: 160ms;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(4) {
+  --reveal-delay: 240ms;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(5) {
+  --reveal-delay: 320ms;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(n + 6) {
+  --reveal-delay: 400ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
+  }
+}
+
+/*
+ * Product UI additions for components/ui (DESIGN.md is the source). Additions only: the tokens, the
+ * landing's rules and the reduced-motion block above stay as they are.
+ */
+:root {
+  /* Scrim: ink at 20%, behind dialogs at every width and behind side panels below 1024px. */
+  --scrim: rgba(45, 45, 48, 0.2);
+}
+
+@theme inline {
+  --color-scrim: var(--scrim);
+
+  /* Overlay Soft: side panels, dialogs, popovers, menus and tooltips. Nothing else casts a shadow. */
+  --shadow-overlay: 0 24px 64px -16px rgba(45, 45, 48, 0.22);
+
+  /* The roles the app scale was missing. */
+  --text-count: 1.5rem;
+  --text-count--line-height: 2rem;
+  --text-count--font-weight: 600;
+  --text-count--letter-spacing: -0.01em;
+  --text-trend: 1.125rem;
+  --text-trend--line-height: 1.5rem;
+  --text-trend--font-weight: 500;
+  --text-label: 0.9375rem;
+  --text-label--line-height: 1.375rem;
+  --text-label--font-weight: 500;
+  --text-label-strong: 0.9375rem;
+  --text-label-strong--line-height: 1.375rem;
+  --text-label-strong--font-weight: 600;
+  --text-small-strong: 0.8125rem;
+  --text-small-strong--line-height: 1.125rem;
+  --text-small-strong--font-weight: 500;
+
+  /* Tracking the existing roles left out. */
+  --text-display--letter-spacing: -0.01em;
+  --text-h1--letter-spacing: -0.005em;
+  --text-stat--letter-spacing: -0.02em;
+  --text-caption--letter-spacing: 0.01em;
+}
+
+/* The Counting Rule: the roles that set figures carry tabular numbers, so counts never shimmy. */
+@utility text-stat {
+  font-variant-numeric: tabular-nums;
+}
+@utility text-count {
+  font-variant-numeric: tabular-nums;
+}
+@utility text-trend {
+  font-variant-numeric: tabular-nums;
+}
+@utility text-small {
+  font-variant-numeric: tabular-nums;
+}
+@utility text-small-strong {
+  font-variant-numeric: tabular-nums;
+}
+@utility text-caption {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * The Settled Press Rule: hover is a color change over 150ms ease-out-quart and press a 0.98 scale.
+ * `scale` composes with any transform the element already has. No press under reduced motion.
+ */
+@utility press {
+  transition-property:
+    color, background-color, border-color, text-decoration-color, fill, stroke, opacity, scale;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out-quart);
+  @media (prefers-reduced-motion: no-preference) {
+    &:active:not(:disabled, [aria-disabled="true"]) {
+      scale: 0.98;
+    }
+  }
+}
+
+/*
+ * The "AI reviewing" chip and skeleton blocks: one soft band sweeps across every 1.6s, a translated
+ * pseudo-element behind the content (transform only). Static under reduced motion.
+ */
+@keyframes rainbow {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 200%;
+  }
+}
+
+@keyframes aurora-drift {
+  from {
+    transform: translate3d(var(--from-x, 0), var(--from-y, 0), 0) scale(1);
+  }
+  to {
+    transform: translate3d(var(--to-x, 0), var(--to-y, 0), 0) scale(var(--to-scale, 1.1));
+  }
+}
+
+@keyframes shimmer-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Named sweep, not shimmer: shadcn/tailwind.css ships its own text-clip `shimmer` utility, and two
+   utilities with one name merge. */
+@utility sweep {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--shimmer-band, var(--table-head)),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: shimmer-sweep 1.6s linear infinite;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+    }
+  }
+}
+
+/* A Dove Grey skeleton block with a lighter band. Size and radius come from the caller. */
+@utility skeleton {
+  @apply sweep;
+  background-color: var(--table-head);
+  --shimmer-band: rgb(255 255 255 / 0.6);
+}
+
+/*
+ * Horizontally scrolling glass bands (tab bars, the count chip band, the fan community switcher): a thin
+ * native scrollbar under a fine pointer, none under a coarse one. Pad the band at least 4px so the scroll
+ * box never clips the focus ring of the controls inside.
+ */
+@utility scrollbar-band {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+  @media (pointer: coarse) {
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

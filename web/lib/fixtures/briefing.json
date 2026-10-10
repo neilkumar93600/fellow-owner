@@ -1,0 +1,62 @@
+{
+  "id": "fd9ca6ff-befb-4e16-814d-1d2aef978857",
+  "periodDate": "2026-10-09",
+  "status": "ready",
+  "headline": "390 new fans, 50 ideas and 61 DMs this week",
+  "highlights": [
+    {
+      "index": 0,
+      "refType": "post",
+      "refId": "36a4b99d-494d-41b8-8243-de2d88ef688a",
+      "title": "Lisbon on $60 a day",
+      "why": "Matches \"budget-honest travel, with real prices and the receipts\". Four roles filled, every price dated and checked by a local.",
+      "fitScore": 97,
+      "href": "/dashboard/ideas?item=36a4b99d-494d-41b8-8243-de2d88ef688a",
+      "feedback": null
+    },
+    {
+      "index": 1,
+      "refType": "inbound",
+      "refId": "2a6339c7-5518-4098-9589-47db16274436",
+      "title": "A year as one of six camera ambassadors",
+      "why": "Matches \"small family-run food spots over famous restaurants\". Beginner-friendly, which Mira spotlights.",
+      "fitScore": 94,
+      "href": "/dashboard/inbox?item=2a6339c7-5518-4098-9589-47db16274436",
+      "feedback": null
+    },
+    {
+      "index": 2,
+      "refType": "inbound",
+      "refId": "a026af98-4861-405e-b4e9-5d7c52daf851",
+      "title": "Night-train passes for you and a friend, $5,000",
+      "why": "Matches \"solo-travel safety that is practical, not scary\". Scope is one weekend’s worth of work.",
+      "fitScore": 94,
+      "href": "/dashboard/inbox?item=a026af98-4861-405e-b4e9-5d7c52daf851",
+      "feedback": null
+    },
+    {
+      "index": 3,
+      "refType": "post",
+      "refId": "7245ef02-a636-4621-8ee8-5df5d1eb9e0b",
+      "title": "A Bangkok street-food budget crawl, with real prices",
+      "why": "Matches \"collabs with a named owner and a date\". Beginner-friendly, which Mira spotlights.",
+      "fitScore": 93,
+      "href": "/dashboard/ideas?item=7245ef02-a636-4621-8ee8-5df5d1eb9e0b",
+      "feedback": null
+    },
+    {
+      "index": 4,
+      "refType": "inbound",
+      "refId": "90cc7258-4516-421a-9ea3-6bfc30d158e0",
+      "title": "Budget national-parks series, $9,000 for three videos",
+      "why": "Matches \"small family-run food spots over famous restaurants\". The ask is specific and small.",
+      "fitScore": 93,
+      "href": "/dashboard/inbox?item=90cc7258-4516-421a-9ea3-6bfc30d158e0",
+      "feedback": null
+    }
+  ],
+  "watchouts": ["8 messages were filtered as spam this week."],
+  "regenerationsLeft": 5,
+  "model": "fake",
+  "generatedAt": "2026-10-09T12:43:24.346Z"
+}

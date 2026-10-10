@@ -1,0 +1,637 @@
+/*
+ * Showcase strip (landing brief v2, part 9): on the page background, a heading row, then one full-bleed
+ * marquee of project cards in three widths (sm, md, lg) with soft edge masks. One card is a "Made it" page
+ * crop, the rest are flat tinted cards with the crew's avatar stack as their picture (no creator photos).
+ *
+ * The track holds three identical lists of the six cards (about 2,200px each at desktop) and slides by
+ * one list per loop. The loop runs with the middle (real) list's start between 50vw and 50vw minus one
+ * list, so every real card can be centred when it takes focus, and the copies either side always fill the
+ * screen up to a 2560px viewport. The row pauses on hover and focus-within, on the Pause control
+ * (data-paused) and off-screen (data-offscreen).
+ *
+ * Reduced motion: no marquee. The real list's six cards form one horizontal row that scrolls and snaps
+ * (display: contents flattens the list into it); the copies are hidden.
+ */
+
+.section {
+  --gutter: 16px;
+  --card-sm: 240px;
+  --card-md: 272px;
+  --card-lg: 312px;
+  --gap: 12px;
+
+  position: relative;
+  overflow: clip;
+  padding-block: 104px 112px;
+}
+
+@media (min-width: 768px) {
+  .section {
+    --gutter: 44px;
+    --card-sm: 264px;
+    --card-md: 312px;
+    --card-lg: 372px;
+    --gap: 16px;
+
+    padding-block: 136px 128px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .section {
+    --gutter: 56px;
+    --card-sm: 288px;
+    --card-md: 340px;
+    --card-lg: 420px;
+    --gap: 20px;
+
+    padding-block: 152px 152px;
+  }
+}
+
+/* Wide screens: a little larger, so one list (about 3,020px) still outruns a 2560px viewport plus a card. */
+@media (min-width: 1800px) {
+  .section {
+    --card-sm: 300px;
+    --card-md: 360px;
+    --card-lg: 440px;
+  }
+}
+
+.stage {
+  position: relative;
+}
+
+/* ---------- Heading row ---------- */
+
+.head {
+  display: grid;
+  gap: 20px;
+  max-width: calc(1280px + 2 * var(--gutter));
+  margin-inline: auto;
+  margin-bottom: 40px;
+  padding-inline: var(--gutter);
+}
+
+@media (min-width: 1024px) {
+  .head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 64px;
+    align-items: end;
+    margin-bottom: 56px;
+  }
+}
+
+.titleWrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px 16px;
+}
+
+.title {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  margin-top: 0.5em;
+  padding-inline: 12px;
+  border-radius: 999px;
+  background: var(--card-strong);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .badge {
+    margin-top: 0.9em;
+  }
+}
+
+.side {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+}
+
+@media (min-width: 768px) {
+  .side {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .side {
+    padding-bottom: 6px;
+  }
+}
+
+.line {
+  max-width: 30ch;
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+.control {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding-inline: 14px 18px;
+  border-radius: 999px;
+  background: var(--card-strong);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition:
+    box-shadow var(--dur-base) var(--ease-out-quart),
+    transform var(--dur-fast) var(--ease-out-quart);
+}
+
+/* Phones: a 44px round icon button; the full name stays in the accessible label. */
+@media (max-width: 767.98px) {
+  .control {
+    justify-content: center;
+    width: 44px;
+    padding: 0;
+  }
+
+  .controlText {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.control:hover {
+  box-shadow: inset 0 0 0 1px #d4d4d9;
+}
+
+.control:active {
+  transform: scale(0.98);
+}
+
+/* ---------- Row ---------- */
+
+.rows {
+  /* Edge fades: a mask on the row, never on text colour. */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 min(12%, 160px),
+    #000 calc(100% - min(12%, 160px)),
+    transparent
+  );
+}
+
+/* A keyboard user on a card sees it whole: the fades lift while focus is inside the row. */
+.rows:has(:focus-visible) {
+  mask-image: none;
+}
+
+.row {
+  overflow: clip;
+  /* Room for the hover lift and the focus ring. */
+  padding-block: 8px;
+  margin-block: -8px;
+}
+
+.track {
+  --dur: 112s;
+
+  position: relative;
+  display: flex;
+  width: max-content;
+  animation: marquee var(--dur) linear infinite;
+}
+
+/* One list is a third of the track. The real (middle) list starts at 50vw and ends one list further left. */
+@keyframes marquee {
+  from {
+    transform: translateX(calc(50vw - 100% / 3));
+  }
+  to {
+    transform: translateX(calc(50vw - 200% / 3));
+  }
+}
+
+.row:hover .track,
+.row:focus-within .track,
+.stage[data-paused] .track,
+.stage[data-offscreen] .track {
+  animation-play-state: paused;
+}
+
+.group {
+  display: flex;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0 var(--gap) 0 0;
+  list-style: none;
+}
+
+.item {
+  flex: 0 0 var(--card-md);
+}
+
+.item[data-size="sm"] {
+  flex-basis: var(--card-sm);
+}
+
+.item[data-size="lg"] {
+  flex-basis: var(--card-lg);
+}
+
+/* ---------- Card ---------- */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 8px;
+  border-radius: 28px;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-highlight), var(--shadow-glass);
+  transition: transform 250ms var(--ease-out-quart);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* The picture area: a flat tint, the room chip on top and the title at the foot. */
+.cover {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 260px;
+  padding: 14px 14px 16px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--color-aurora-peach);
+  isolation: isolate;
+}
+
+@media (min-width: 768px) {
+  .cover {
+    min-height: 300px;
+    padding: 16px 16px 18px;
+  }
+}
+
+.flat[data-tint="peach"] {
+  background: var(--color-aurora-peach);
+}
+
+.flat[data-tint="lilac"] {
+  background: var(--color-aurora-lilac);
+}
+
+.flat[data-tint="sky"] {
+  background: var(--color-aurora-sky);
+}
+
+.flat[data-tint="mint"] {
+  background: var(--color-aurora-mint);
+}
+
+/* The crew, as the card's picture: a big avatar stack with the names under it. */
+.makers {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 14px;
+}
+
+.bigStack {
+  display: flex;
+  align-items: center;
+  padding-left: 3px;
+}
+
+.names {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.coverTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.community {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  height: 28px;
+  padding-inline: 12px;
+  background: rgb(255 255 255 / 0.85);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cardTitle {
+  max-width: 16ch;
+  padding-right: 36px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.2rem + 0.6vw, 1.875rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+.cardLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Stretched link: the whole card is the target; the ring draws around the card. */
+.cardLink::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 28px;
+}
+
+.cardLink:focus-visible {
+  outline: none;
+}
+
+.cardLink:focus-visible::after {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 0;
+}
+
+.open {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 200ms var(--ease-out-quart),
+    transform 250ms var(--ease-out-quart);
+}
+
+.card:hover .open,
+.card:has(:focus-visible) .open {
+  opacity: 1;
+  transform: none;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 52px;
+  padding: 8px 8px 4px;
+  color: var(--ink-muted);
+  font-size: 0.8125rem;
+}
+
+.team {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.stack {
+  display: inline-flex;
+}
+
+.avatar {
+  position: relative;
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  overflow: hidden;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px #fff;
+  color: var(--ink);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.avatarLg {
+  width: 44px;
+  height: 44px;
+  font-size: 0.75rem;
+}
+
+.avatar + .avatar {
+  margin-left: -3px;
+}
+
+.bigStack .avatar {
+  width: 56px;
+  height: 56px;
+  font-size: 0.875rem;
+}
+
+.bigStack .avatar + .avatar {
+  margin-left: -10px;
+}
+
+.avatarMore {
+  background: var(--table-head);
+  color: var(--ink-soft);
+}
+
+.signals {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.signals svg {
+  color: var(--color-coral);
+}
+
+.signals b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- The "Made it" page crop ---------- */
+
+.page {
+  justify-content: flex-start;
+  gap: 0;
+  padding: 0;
+  background: rgb(255 255 255 / 0.9);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
+}
+
+/* The page's cover band, as aurora colour (no photo). */
+.pageBand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 16px;
+  background: linear-gradient(
+    110deg,
+    var(--color-aurora-peach),
+    var(--color-aurora-lilac) 55%,
+    var(--color-aurora-sky)
+  );
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding-inline: 11px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status svg {
+  color: #1b7a4f;
+}
+
+.pageBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 16px 18px;
+}
+
+.madeBy {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.credits {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.credits li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-block: 7px;
+  border-bottom: 1px solid var(--line-row);
+}
+
+.credits li:last-child {
+  border-bottom: 0;
+}
+
+.credits .avatar + .avatar {
+  margin-left: 0;
+}
+
+.creditText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+.creditText b {
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* ---------- Reduced motion: one static row that scrolls and snaps ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .rows {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap);
+    overflow-x: auto;
+    padding: 8px max(var(--gutter), calc((100% - 1280px) / 2)) 16px;
+    scroll-padding-inline: max(var(--gutter), calc((100% - 1280px) / 2));
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    mask-image: none;
+  }
+
+  .row,
+  .track,
+  .group {
+    display: contents;
+  }
+
+  .group[data-copy] {
+    display: none;
+  }
+
+  .item {
+    scroll-snap-align: start;
+  }
+
+  .card,
+  .open {
+    transition: none;
+  }
+
+  .control {
+    display: none;
+  }
+}

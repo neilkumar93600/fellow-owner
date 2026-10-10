@@ -1,0 +1,592 @@
+/*
+ * For creators (landing brief v2, part 5): a lavender field inset from the page with shell corners.
+ *
+ * Phones and tablets (to 1023px): one column, at most 880px wide. Heading, then each step caption
+ * over its screen, flat.
+ * 1024+: a sticky story column on the left and the three screens on the right.
+ *  - flow (server markup, no JS, reduced motion, short windows): the screens follow each other down a
+ *    tall track; with motion allowed they tilt in 3D as they pass (creators-motion.tsx writes .tilt).
+ *  - pin ([data-mode="pin"], 640+ tall with motion allowed): the grid pins for 200svh and the screens
+ *    stack as a deck in one sticky frame; creators-motion.tsx poses each slot and CSS animates the swap.
+ * The screens' own layouts respond to their width through container queries on .figure.
+ */
+
+.section {
+  --inset: 8px;
+  --gutter: 16px;
+
+  position: relative;
+  padding: var(--inset);
+}
+
+@media (min-width: 768px) {
+  .section {
+    --inset: 12px;
+    --gutter: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    --inset: 16px;
+    --gutter: 40px;
+  }
+}
+
+.field {
+  position: relative;
+  border-radius: 28px;
+  background:
+    radial-gradient(55% 40% at 100% 100%, rgb(220 207 247 / 0.55), transparent 72%),
+    radial-gradient(40% 30% at 0% 0%, rgb(255 217 194 / 0.5), transparent 72%),
+    linear-gradient(160deg, rgb(255 255 255 / 0.45), rgb(255 255 255 / 0.25));
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-highlight), var(--shadow-glass);
+  padding-block: 72px 40px;
+  /* clip, not hidden: it keeps the sticky column working. */
+  overflow: clip;
+}
+
+@media (min-width: 768px) {
+  .field {
+    border-radius: 32px;
+    padding-block: 104px 64px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .field {
+    padding-block: 24px;
+  }
+}
+
+/* The studio shot above the story: a centred caption over one browser frame. */
+.studio {
+  max-width: 1148px;
+  margin-inline: auto;
+  margin-bottom: 40px;
+  padding-inline: var(--gutter);
+}
+
+@media (min-width: 1024px) {
+  .studio {
+    margin-bottom: 56px;
+    padding-top: 72px;
+  }
+}
+
+.studioCaption {
+  margin: 0 0 20px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  line-height: 1.15;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.inner {
+  max-width: calc(1280px + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    max-width: none;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    column-gap: clamp(40px, 5vw, 88px);
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    /* Wide enough for "sorted in minutes." on one line at the section title size. */
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+}
+
+/* ---------- Story column ---------- */
+
+.aside {
+  margin-bottom: 48px;
+}
+
+@media (min-width: 768px) {
+  .aside {
+    margin-bottom: 64px;
+  }
+}
+
+/* The title sizes from the story column's width, so its second line always fits on one line. */
+.aside {
+  container-type: inline-size;
+}
+
+@media (min-width: 1024px) {
+  .aside {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    display: flex;
+    align-items: center;
+    height: 100svh;
+    margin-bottom: 0;
+    /* Clear the floating navbar at the top. */
+    padding-block: 88px 24px;
+  }
+}
+
+/* Too short for the story to stay in view: it scrolls with the page instead. */
+@media (min-width: 1024px) and (max-height: 639.98px) {
+  .aside {
+    position: relative;
+    align-items: flex-start;
+    height: auto;
+  }
+}
+
+.asideInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.eyebrow {
+  margin-bottom: 20px;
+}
+
+.title {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  /* 13cqi keeps "sorted in minutes." (about 7.3em) on one line in the story column. */
+  font-size: min(clamp(2.75rem, 1.6rem + 3.6vw, 4.5rem), 13cqi);
+  text-wrap: balance;
+}
+
+@media (min-width: 1024px) {
+  .title {
+    /* The section title size, unless the story column or a short laptop screen needs less. */
+    font-size: min(clamp(2.5rem, 1.4rem + 3.6vw, 4.5rem), 13cqi, 9.5vh);
+  }
+}
+
+.lead {
+  max-width: 36ch;
+  margin-top: 20px;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+/* The screens beside this story hold invented numbers; say so, as the fans and problem sections do. */
+.demoLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.demoChip {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: 10px;
+  border-radius: 999px;
+  background: var(--card-strong);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 1024px) {
+  .lead {
+    margin-top: clamp(16px, 2.6vh, 24px);
+    font-size: min(clamp(1.125rem, 1rem + 0.4vw, 1.375rem), 2.7vh);
+  }
+}
+
+/* Steps: the sticky list from 1024. Phones and tablets show the same copy as each screen's caption. */
+.steps {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    max-width: 30rem;
+    margin-top: clamp(20px, 4vh, 48px);
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.stepLink {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-height: 44px;
+  padding: clamp(8px, 1.3vh, 12px) 16px clamp(8px, 1.3vh, 12px) 12px;
+  border-radius: 24px;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color var(--dur-slow) var(--ease-out-quart);
+}
+
+.stepLink:hover {
+  background: rgb(255 255 255 / 0.45);
+}
+
+.stepNum {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    background-color var(--dur-slow) var(--ease-out-quart),
+    box-shadow var(--dur-slow) var(--ease-out-quart);
+}
+
+.stepText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 7px;
+}
+
+.stepTitle {
+  color: var(--ink);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.stepDetail {
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* How far the step's screen has travelled through the viewport (scaled by creators-motion.tsx). */
+.stepBar {
+  display: none;
+}
+
+[data-scene="ready"] .stepBar {
+  display: block;
+  height: 2px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgb(45 45 48 / 0.08);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out-quart);
+}
+
+.stepBar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+[data-scene="ready"] .step[data-active] .stepBar {
+  opacity: 1;
+}
+
+/* Reduced motion: no scroll-scrubbed bar; the filled number alone marks the step. */
+@media (prefers-reduced-motion: reduce) {
+  [data-scene="ready"] .stepBar {
+    display: none;
+  }
+}
+
+/* Once the scene is live, only the step whose screen is in focus keeps the filled number. */
+[data-scene="ready"] .step:not([data-active]) .stepNum {
+  background: rgb(255 255 255 / 0.7);
+  color: var(--ink-soft);
+  box-shadow: inset 0 0 0 1px rgb(45 45 48 / 0.08);
+}
+
+[data-scene="ready"] .step:not([data-active]) .stepTitle {
+  color: var(--ink-soft);
+}
+
+[data-scene="ready"] .step[data-active] .stepLink {
+  background: rgb(255 255 255 / 0.6);
+}
+
+/* ---------- Track of screens ---------- */
+
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+@media (min-width: 768px) {
+  .track {
+    gap: 80px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .track {
+    gap: 0;
+  }
+
+  .slot {
+    display: flex;
+    align-items: center;
+    min-height: 86svh;
+    perspective: 1600px;
+    perspective-origin: 50% 50%;
+  }
+}
+
+/* Flow: the deck wrapper adds no box. */
+.deck {
+  display: contents;
+}
+
+/* ---------- Pin: one sticky frame, the screens stacked as a deck ---------- */
+
+.inner[data-mode="pin"] .grid {
+  /* 100svh of frame plus 200svh of scroll: about two thirds of a screen per step. */
+  height: 300svh;
+}
+
+.inner[data-mode="pin"] .track {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100svh;
+}
+
+.inner[data-mode="pin"] .deck {
+  /*
+   * Laid out at least 600px wide, so narrow columns (1024 to 1199) still get the screens' wide
+   * layouts (the inbox table, the side-by-side composer) instead of their taller phone layouts.
+   * creators-motion.tsx sets the transform: level with the top of the story, scaled to fit.
+   */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: max(100%, 600px);
+  margin-left: calc(max(100%, 600px) / -2);
+  display: grid;
+  transform-origin: 50% 0;
+  perspective: 1400px;
+  perspective-origin: 50% 0;
+}
+
+.inner[data-mode="pin"] .slot {
+  position: relative;
+  grid-area: 1 / 1;
+  align-self: start;
+  display: block;
+  min-height: 0;
+  perspective: none;
+  transform-origin: 50% 0;
+  transition:
+    transform 640ms var(--ease-out-quart),
+    opacity 420ms var(--ease-out-quart);
+  will-change: transform, opacity;
+}
+
+/* A waiting screen only shows its edge, tinted towards the field the further back it waits. */
+.inner[data-mode="pin"] .slot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: var(--color-cream);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 420ms var(--ease-out-quart);
+}
+
+.inner[data-mode="pin"] .slot[data-waiting] {
+  pointer-events: none;
+}
+
+.inner[data-mode="pin"] .slot[data-waiting="1"]::after {
+  opacity: 0.4;
+}
+
+.inner[data-mode="pin"] .slot[data-waiting="2"]::after {
+  opacity: 0.68;
+}
+
+.tilt {
+  width: 100%;
+  transform-origin: 50% 50%;
+}
+
+.figure {
+  margin: 0;
+  container-type: inline-size;
+}
+
+.caption {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 34rem;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 1024px) {
+  /* The sticky list carries this copy beside the screens; the caption stays for screen readers. */
+  .caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* ---------- Reveals (set by creators-motion.tsx only for content below the fold) ---------- */
+
+.inner [data-reveal] {
+  transition:
+    opacity 600ms var(--ease-out-quart),
+    transform 600ms var(--ease-out-quart);
+}
+
+.inner [data-reveal="pending"] {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+
+.inner [data-reveal="shown"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Screen shell: a cropped piece of the app (frosted glass) ---------- */
+
+.shell {
+  position: relative;
+  border-radius: 24px;
+  padding: 10px;
+  /* 96% white: the deck's waiting screens sit right behind this one and must not show through. */
+  background: rgb(255 255 255 / 0.96);
+  border: 1px solid var(--glass-edge);
+  box-shadow:
+    var(--glass-highlight),
+    0 24px 60px -24px rgb(40 30 60 / 0.28);
+  color: var(--ink);
+}
+
+@container (min-width: 480px) {
+  .shell {
+    border-radius: 32px;
+    padding: 16px;
+  }
+}
+
+@container (min-width: 640px) {
+  .shell {
+    padding: 20px;
+  }
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@container (min-width: 480px) {
+  .screen {
+    gap: 14px;
+  }
+}
+
+.screenHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 2px 2px 8px;
+}
+
+.screenTitles {
+  min-width: 0;
+}
+
+.screenTitle {
+  color: var(--ink);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+  letter-spacing: -0.015em;
+}
+
+.screenSub {
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  text-wrap: pretty;
+}
+
+@container (min-width: 560px) {
+  .screenTitle {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .screenSub {
+    font-size: 0.875rem;
+  }
+}
+
+.tray {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding-inline: 14px 6px;
+  border-radius: 999px;
+  background: var(--glass);
+}
+
+.demoTag {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}

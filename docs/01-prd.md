@@ -91,6 +91,14 @@ P0 = required for the MVP demo and pilot. P1 = build in this order if time allow
 | F20 | Asks: creator posts a request to one or all communities, members respond, AI summarizes | Coordination runs both ways | P1 |
 | F21 | In-app notifications (reply received, project featured, team request) | Members know when something happened | P1 |
 
+### Pitch loop (designed 2026-10-03, spec `docs/superpowers/specs/2026-10-03-pitch-loop-design.md`)
+| # | Feature | User benefit | Priority |
+|---|---------|--------------|----------|
+| F30 | Idea Coach: on-demand clarity checklist and a suggested rewrite on the pitch and post forms; never a score | Fans send clearer pitches; the creator reads better ones | P1 |
+| F31 | Pitch Tracker: Sent, Read, Shortlisted, Replied on each pitch; read receipts are the creator's choice | Fans see their pitch has a path; fewer "did you see my DM?" follow-ups | P1 |
+| F32 | Answer Once: repeated questions grouped from pitches; one answer replies to everyone and can be pinned | The creator answers 38 people in one go | P1 |
+| F33 to F37 | Reserved: Taste Swipe, Audience Pulse, Away Mode (batch 2); Team Matchmaker, Weekly Shout-out (batch 3) | | P1 |
+
 ### Platform
 | # | Feature | User benefit | Priority |
 |---|---------|--------------|----------|
@@ -99,7 +107,7 @@ P0 = required for the MVP demo and pilot. P1 = build in this order if time allow
 | F24 | YouTube channel comment import via API | Same as F23 with less effort | P2 |
 | F25 | Moderation basics: creator hides posts, removes members; members report | Keeps spaces usable | P1 |
 | F26 | Dark mode | Matches the theme toggle in the reference header | P2 |
-| F27 | Sign-in pages: login, sign up, verify code (email OTP) | Works inside in-app browsers where fans arrive | P0 |
+| F27 | Account pages: log in (email or username + password), create account, confirm email (6-digit code), forgot and reset password (code); Google, Apple and Facebook sign-in | Works inside in-app browsers where fans arrive: codes instead of links, Google hidden there | P0 |
 | F28 | Legal pages: privacy policy, terms, cookies | Needed for Google sign-in verification and a real pilot | P0 |
 | F29 | Marketing pages: about, contact (P1); pricing, blog (P2) | Explains the product to creators who find it outside the bio link | P1 / P2 |
 
@@ -173,4 +181,22 @@ P0 = required for the MVP demo and pilot. P1 = build in this order if time allow
 | Q5 | Must fans sign in to pitch? | Yes: cuts spam and gives replies a home |
 | Q6 | Postgres host: Supabase or Neon? | Supabase, used only as Postgres |
 | Q7 | Community content public or members-only? | Members-only, except projects the creator promotes (public showcase) |
-| Q8 | Password sign-in as well as email codes? If yes, forgot and reset password pages ship too | No: email code + Google only; forgot and reset stay out |
+| Q8 | Password sign-in as well as email codes? If yes, forgot and reset password pages ship too | **Decided by the product owner, 2026-10-02: yes.** Passwords and usernames ship: log in with email or username + password, a new email account confirms its email with a 6-digit code, and forgot and reset password work by code. The age floor is 18 (`MIN_AGE`) |
+
+## 10. MVP run: built 2026-10-06
+
+Every dashboard and fan screen now reads the real API. Built in this run, checked against the code:
+- **F21 In-app notifications.** Kinds: idea_posted, pitch_received, comment_received, reply_received, project_featured, team_request, team_decision (ask_posted is reserved for Asks). Creator and fan bells poll the unread count every 30 seconds; the popover lists newest first with a "Mark all read" action.
+- **F23 Import audience.** Followers roster (owner only) with manual add, CSV upload or pasted lines (up to 500 rows per import), AI community suggestions when at least 5 rows have notes, and tagging into communities by the creator or by the AI (auto-tag from notes).
+- **Community activity analytics.** Score, change against the previous period and counts per community with a 7 or 30 day toggle on Communities, an activity panel on the community detail page, and the top 5 on Today.
+- **CSV export** of ideas, people, followers and pitches from each list's toolbar.
+
+Not built, despite the feature table: F25 members report (hide and remove exist; there is no report endpoint). F31 Pitch Tracker is partly built: fan-side statuses yes; the creator's read-receipts setting no, since `showReadReceipts` is not in the API settings schema.
+
+Follow-ups:
+- **Realtime notifications:** SSE or websocket instead of 30 second polling.
+- **YouTube import (F24):** comment API integration (P2).
+- **Asks (F20):** creator posts requests to one or all communities; members respond; AI summarizes.
+- **Pitch loop backend (F30 to F32):** Idea Coach, Pitch Tracker (creator side), Answer Once.
+- **Promotions tabs** filter only the loaded page; they need a state param on the API.
+- **Auto-tag** re-sends followers the AI left untagged on every run.

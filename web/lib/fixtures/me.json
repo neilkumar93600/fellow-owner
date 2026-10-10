@@ -1,0 +1,322 @@
+{
+  "space": {
+    "handle": "mira",
+    "displayName": "Mira Lane",
+    "avatarUrl": "/creator/mira-portrait.webp",
+    "showReadReceipts": true
+  },
+  "membership": {
+    "id": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+    "role": "member",
+    "name": "Priya Shah",
+    "headline": "Austin solo traveler who plans every trip around food",
+    "intro": "Long-time viewer, first time posting. Austin-based, eleven countries so far, mostly alone and mostly for the food. Happy to help plan someone else’s trip too.",
+    "skills": ["itinerary planning", "budgeting", "food writing"],
+    "links": [
+      {
+        "url": "https://instagram.com/priyashah.eats",
+        "label": "Instagram"
+      }
+    ],
+    "communityIds": [
+      "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+      "96fa6957-4867-46f2-810c-ea84ea97a1ec"
+    ],
+    "joinedAt": "2026-08-09T12:33:21.679Z"
+  },
+  "communities": [
+    {
+      "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+      "slug": "budget-travel",
+      "name": "Budget Travel",
+      "description": "Real prices, cheap flights and trips that do not cost a month of rent.",
+      "tint": "peach",
+      "icon": "wallet",
+      "memberCount": 502,
+      "sortOrder": 0
+    },
+    {
+      "id": "96fa6957-4867-46f2-810c-ea84ea97a1ec",
+      "slug": "solo-travelers",
+      "name": "Solo Travelers",
+      "description": "Going alone, safely, and meeting good people on the way.",
+      "tint": "lavender",
+      "icon": "backpack",
+      "memberCount": 385,
+      "sortOrder": 1
+    }
+  ],
+  "posts": [
+    {
+      "id": "22beffcb-7818-43f1-b3df-1902e81012a5",
+      "type": "idea",
+      "status": "open",
+      "title": "A \"where I am this week\" thread that lets solo travelers find each other in the same city",
+      "excerpt": "A \"where I am this week\" thread that lets solo travelers find each other in the same city. I never know which neighborhoods are okay after dark until I am standing in one. Small…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "96fa6957-4867-46f2-810c-ea84ea97a1ec",
+        "slug": "solo-travelers",
+        "name": "Solo Travelers",
+        "tint": "lavender",
+        "icon": "backpack"
+      },
+      "author": {
+        "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+        "name": "Priya Shah",
+        "headline": "Austin solo traveler who plans every trip around food",
+        "image": null
+      },
+      "useCount": 0,
+      "buildCount": 0,
+      "commentCount": 0,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-10-08T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": true
+    },
+    {
+      "id": "4a0c9535-031f-4854-9d9e-8bdeba729ed9",
+      "type": "idea",
+      "status": "open",
+      "title": "Brisket tacos and a horchata from a trailer in East Austin, $9.75",
+      "excerpt": "Two brisket tacos, a scoop of rice and a horchata for $9.75, from a trailer that parks outside a laundromat. The line moves fast, the tortillas are made that morning and the…",
+      "rolesNeeded": [],
+      "openRoles": [],
+      "community": {
+        "id": "d2262f11-d852-4e43-b5b9-da284c1f8e10",
+        "slug": "food-finds",
+        "name": "Food Finds",
+        "tint": "peach",
+        "icon": "utensils"
+      },
+      "author": {
+        "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+        "name": "Priya Shah",
+        "headline": "Austin solo traveler who plans every trip around food",
+        "image": null
+      },
+      "useCount": 8,
+      "buildCount": 0,
+      "commentCount": 5,
+      "teamPreview": [],
+      "teamSize": 0,
+      "featured": false,
+      "createdAt": "2026-10-01T12:33:21.679Z",
+      "viewerSignals": [],
+      "isAuthor": true
+    }
+  ],
+  "teams": [
+    {
+      "post": {
+        "id": "c741f4f6-727e-4329-a34d-e98534add70f",
+        "type": "project",
+        "status": "launched",
+        "title": "Ten family kitchens in Oaxaca",
+        "excerpt": "A fan-made food guide to ten family-run kitchens in Oaxaca, with the one dish to order at each, the price in pesos and dollars, and a photo taken that day. A local guide checks…",
+        "rolesNeeded": ["Local guide", "Translator", "Photographer"],
+        "openRoles": [],
+        "community": {
+          "id": "d2262f11-d852-4e43-b5b9-da284c1f8e10",
+          "slug": "food-finds",
+          "name": "Food Finds",
+          "tint": "peach",
+          "icon": "utensils"
+        },
+        "author": {
+          "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+          "name": "Felix Garcia",
+          "headline": "Food writer, mostly street food",
+          "image": null
+        },
+        "useCount": 40,
+        "buildCount": 14,
+        "commentCount": 6,
+        "teamPreview": [
+          {
+            "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+            "name": "Felix Garcia",
+            "headline": "Food writer, mostly street food",
+            "image": null
+          },
+          {
+            "membershipId": "268e4e54-81dc-470e-bcfb-64ba1b189904",
+            "name": "Kemi Okafor",
+            "headline": "Hostel host in Mexico City",
+            "image": null
+          },
+          {
+            "membershipId": "40165da2-368c-46e2-9430-6618b952c47e",
+            "name": "Jorge Sen",
+            "headline": "Translator, Spanish and Portuguese",
+            "image": null
+          },
+          {
+            "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+            "name": "Priya Shah",
+            "headline": "Austin solo traveler who plans every trip around food",
+            "image": null
+          }
+        ],
+        "teamSize": 4,
+        "featured": true,
+        "createdAt": "2026-09-06T12:33:21.679Z",
+        "viewerSignals": [],
+        "isAuthor": false
+      },
+      "role": "Photographer",
+      "status": "accepted",
+      "isLead": false
+    },
+    {
+      "post": {
+        "id": "36a4b99d-494d-41b8-8243-de2d88ef688a",
+        "type": "project",
+        "status": "launched",
+        "title": "Lisbon on $60 a day",
+        "excerpt": "Seven days in Lisbon for $420 all in, built by fans in Budget Travel. A local guide checks every price against what a local actually pays, a photographer shoots the golden-hour…",
+        "rolesNeeded": ["Local guide", "Photographer"],
+        "openRoles": [],
+        "community": {
+          "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach",
+          "icon": "wallet"
+        },
+        "author": {
+          "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+          "name": "Priya Shah",
+          "headline": "Austin solo traveler who plans every trip around food",
+          "image": null
+        },
+        "useCount": 212,
+        "buildCount": 38,
+        "commentCount": 51,
+        "teamPreview": [
+          {
+            "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+            "name": "Priya Shah",
+            "headline": "Austin solo traveler who plans every trip around food",
+            "image": null
+          },
+          {
+            "membershipId": "5eda150a-fa89-4736-aa52-60cf332f4ec5",
+            "name": "Inês Duarte",
+            "headline": "Local guide, walking tours in three languages",
+            "image": null
+          },
+          {
+            "membershipId": "a4412989-e861-4b72-84e6-43bb82c95ecb",
+            "name": "Marcus Reed",
+            "headline": "Photographer, golden-hour obsessed",
+            "image": null
+          }
+        ],
+        "teamSize": 4,
+        "featured": true,
+        "createdAt": "2026-08-30T12:33:21.679Z",
+        "viewerSignals": [],
+        "isAuthor": true
+      },
+      "role": "Lead",
+      "status": "accepted",
+      "isLead": true
+    },
+    {
+      "post": {
+        "id": "d6c89477-5ab5-4e56-9a4b-ac85ad2ad1ee",
+        "type": "project",
+        "status": "building",
+        "title": "A hostel-versus-hotel cost sheet for first-time backpackers",
+        "excerpt": "A hostel-versus-hotel cost sheet that works out which is cheaper once breakfast and laundry are counted. It is hard to tell what is genuinely cheap and what only looks cheap. Day…",
+        "rolesNeeded": ["Itinerary planner", "Photographer", "Translator"],
+        "openRoles": [],
+        "community": {
+          "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+          "slug": "budget-travel",
+          "name": "Budget Travel",
+          "tint": "peach",
+          "icon": "wallet"
+        },
+        "author": {
+          "membershipId": "2473dfd0-6c17-4958-9052-50e1c6345724",
+          "name": "Rania Petrov",
+          "headline": null,
+          "image": null
+        },
+        "useCount": 14,
+        "buildCount": 0,
+        "commentCount": 2,
+        "teamPreview": [
+          {
+            "membershipId": "2473dfd0-6c17-4958-9052-50e1c6345724",
+            "name": "Rania Petrov",
+            "headline": null,
+            "image": null
+          },
+          {
+            "membershipId": "1ecc9000-30d3-4cd3-9d6f-c3d4f51438db",
+            "name": "Camila Taylor",
+            "headline": "Retired and finally traveling",
+            "image": null
+          },
+          {
+            "membershipId": "9905abe6-83c1-4799-aff3-81aa2ffabf54",
+            "name": "Priya Shah",
+            "headline": "Austin solo traveler who plans every trip around food",
+            "image": null
+          }
+        ],
+        "teamSize": 3,
+        "featured": false,
+        "createdAt": "2026-07-25T12:33:21.679Z",
+        "viewerSignals": [],
+        "isAuthor": false
+      },
+      "role": "Itinerary planner",
+      "status": "accepted",
+      "isLead": false
+    }
+  ],
+  "asks": [
+    {
+      "links": [],
+      "creatorReply": null,
+      "repliedAt": null,
+      "shortlistedAt": null,
+      "answeredGroup": null,
+      "id": "76190a3c-125c-4a95-873e-a7f863cb7cd6",
+      "type": "collab",
+      "subject": "An Austin meetup for Solo Travelers",
+      "body": "I would like to host a small Solo Travelers meetup in Austin this fall: one table, a taco trailer, ten people who have all been the one eating alone. I can book the spot and write the invite. Would you send a note to the room?",
+      "status": "shortlisted",
+      "createdAt": "2026-10-04T12:33:21.679Z",
+      "canWithdraw": false,
+      "readAt": null
+    },
+    {
+      "links": [],
+      "creatorReply": "I love this, Priya. Yes: start the Tokyo map in Food Finds and invite people to add their places. When it has twenty, send it back to me and I will feature it with your name on it.",
+      "repliedAt": "2026-09-28T12:33:21.679Z",
+      "shortlistedAt": null,
+      "answeredGroup": null,
+      "id": "d16e99bc-65d9-43b8-9ae0-b3db4fdf9991",
+      "type": "idea",
+      "subject": "A Tokyo food map for people on $30 a day",
+      "body": "I am in Food Finds and I keep seeing the same request: nobody has made a proper Tokyo food map for people on $30 a day. I have eleven places from my trip in March, with prices and the one dish to order. Would you feature it if the fans filled it in?",
+      "status": "replied",
+      "createdAt": "2026-09-27T12:33:21.679Z",
+      "canWithdraw": false,
+      "readAt": "2026-10-01T08:20:00.000Z"
+    }
+  ],
+  "caps": {
+    "asksLeftToday": 5,
+    "postsLeftToday": 20
+  }
+}

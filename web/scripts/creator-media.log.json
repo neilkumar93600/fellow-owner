@@ -1,0 +1,277 @@
+{
+  "calls": [
+    {
+      "name": "mira-portrait",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "high",
+      "size": {
+        "width": 1024,
+        "height": 1280
+      },
+      "request_id": "01a12024-ae14-75b0-8d55-c10011c071ef",
+      "prompt": "Close portrait of a fictional American woman in her late 20s, shoulder-length wavy dark-brown hair, light olive skin, small gold hoop earrings, linen shirt, relaxed warm smile looking just past the camera, golden-hour sun on one side, softly blurred sunlit terracotta street behind her. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 142354
+    },
+    {
+      "name": "vlog-night-market",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12025-253c-7722-b644-4e4098e7e605",
+      "prompt": "A lively evening street food night market, warm string lights, steaming stalls, blurred crowd, no faces in focus, vivid but natural colours. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 162046
+    },
+    {
+      "name": "vlog-lisbon",
+      "endpoint": "openai/gpt-image-2.5/flare/edit",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12025-231e-7810-93fa-a17899ac6f49",
+      "prompt": "Keep the exact same woman as the reference photo (same face, hair, earrings, linen shirt). The same woman walking down a steep cobbled Lisbon street at golden hour, pastel tiled buildings, a yellow tram in the distance, seen from a few metres away, hands relaxed, camera at chest height. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 145172
+    },
+    {
+      "name": "vlog-van-coast",
+      "endpoint": "openai/gpt-image-2.5/flare/edit",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12025-2550-7a73-8677-ef8dccceb926",
+      "prompt": "Keep the exact same woman as the reference photo (same face, hair, earrings, linen shirt). The same woman sitting on the open sliding door of a small camper van parked on a cliff above the Pacific coast at sunset, holding a mug, wide landscape shot. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 140438
+    },
+    {
+      "name": "mira-portrait-alt",
+      "endpoint": "openai/gpt-image-2.5/flare/edit",
+      "quality": "high",
+      "size": {
+        "width": 1024,
+        "height": 1280
+      },
+      "request_id": "01a12025-2323-7e61-816d-59ff6787e5ca",
+      "prompt": "Keep the exact same woman as the reference photo (same face, hair, earrings, linen shirt). The same woman, different framing: laughing, turned three-quarters, sitting on a sunny stone step with a small canvas backpack beside her, soft warm light. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 165368
+    },
+    {
+      "name": "vlog-mountain",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12025-9b58-7b81-a697-90829dcc806c",
+      "prompt": "Mountain sunrise from a rocky viewpoint, soft pink and gold clouds over layered ridges, a lone hiker silhouette far away, calm and wide. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 100720
+    },
+    {
+      "name": "cover-budget-travel",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12025-9d8a-7833-91aa-211bfdc9cf02",
+      "prompt": "Flat lay on a wooden table: passport, a worn paper map, loose coins, a boarding pass with no text, a small notebook and a coffee, warm morning light. No people. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 179408
+    },
+    {
+      "name": "vlog-hostel",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12025-9da4-71a3-81e7-c033d48bbde3",
+      "prompt": "Five young travellers of mixed backgrounds laughing around a long wooden table in a bright hostel common room, shared dinner, backpacks on the floor, candid, faces not in sharp focus. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 112420
+    },
+    {
+      "name": "vlog-cafe",
+      "endpoint": "openai/gpt-image-2.5/flare/edit",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12025-9d89-70d2-9392-39edf0a4e91b",
+      "prompt": "Keep the exact same woman as the reference photo (same face, hair, earrings, linen shirt). The same woman working on a laptop at a sunlit corner cafe table with a flat white and a croissant, plants in the window, relaxed and focused. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 156826
+    },
+    {
+      "name": "cover-travel-photography",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12026-02e3-75f2-8108-505b07661f8c",
+      "prompt": "A mirrorless camera resting on a stone wall overlooking a golden-hour old town skyline, lens catching soft light. No people. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 134554
+    },
+    {
+      "name": "cover-food-finds",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12026-0515-7f32-b5df-0841a00c93cd",
+      "prompt": "A small family-run restaurant table with colourful shared dishes, grilled fish, salad and bread, warm tungsten light, hands reaching in, no faces. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 190538
+    },
+    {
+      "name": "cover-road-trips",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12026-050d-7c51-aee1-2bf41049c9b2",
+      "prompt": "A vintage camper van on an empty coastal highway at sunset, long shadows, wildflowers on the verge. No people. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 157170
+    },
+    {
+      "name": "cover-solo-travelers",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12026-02dd-7c23-aac2-9788c50ca661",
+      "prompt": "A single traveller seen from behind with a backpack on a quiet pier at golden hour, calm water, small figure in a wide frame. Face not visible. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 97752
+    },
+    {
+      "name": "fan-2",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1024,
+        "height": 1024
+      },
+      "request_id": "01a12026-58ca-7cf0-aa02-5d2578d4a192",
+      "prompt": "Head-and-shoulders portrait of a fictional South Asian woman in her late 20s, long dark hair, friendly expression, neutral warm backdrop. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 9728
+    },
+    {
+      "name": "fan-3",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1024,
+        "height": 1024
+      },
+      "request_id": "01a12026-58d7-77d1-a882-6eaee4291293",
+      "prompt": "Head-and-shoulders portrait of a fictional white man in his 40s, short beard and glasses, easy smile, neutral warm backdrop. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 6486
+    },
+    {
+      "name": "cover-slow-living",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1536,
+        "height": 960
+      },
+      "request_id": "01a12026-58f2-7a32-bec6-86c1e0dd1acd",
+      "prompt": "A sunlit window nook with a linen blanket, a ceramic cup of tea, an open paperback and a plant, soft morning haze. No people. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 152476
+    },
+    {
+      "name": "fan-6",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1024,
+        "height": 1024
+      },
+      "request_id": "01a12026-c230-7763-8388-b59190c4bd16",
+      "prompt": "Head-and-shoulders portrait of a fictional older woman in her 60s, silver bob, kind expression, neutral warm backdrop. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 9674
+    },
+    {
+      "name": "fan-4",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1024,
+        "height": 1024
+      },
+      "request_id": "01a12026-c000-7d22-bc0a-41f41b7900d5",
+      "prompt": "Head-and-shoulders portrait of a fictional Latina woman in her early 20s, curly hair, bright laugh, neutral warm backdrop. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 9522
+    },
+    {
+      "name": "fan-5",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1024,
+        "height": 1024
+      },
+      "request_id": "01a12026-c229-7d33-9f8b-f9ff30d94049",
+      "prompt": "Head-and-shoulders portrait of a fictional East Asian man in his late 20s, casual jacket, relaxed smile, neutral warm backdrop. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 7562
+    },
+    {
+      "name": "auth-art",
+      "endpoint": "openai/gpt-image-2.5/flare/edit",
+      "quality": "medium",
+      "size": {
+        "width": 1024,
+        "height": 1280
+      },
+      "request_id": "01a12026-c21f-7753-957e-b4eae5423503",
+      "prompt": "Keep the exact same woman as the reference photo (same face, hair, earrings, linen shirt). The same woman from behind and slightly to the side, looking out over a sunlit terrace at rooftops and the sea, a soft breeze in her hair, calm and open composition with space above. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 129912
+    },
+    {
+      "name": "fan-1",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "quality": "medium",
+      "size": {
+        "width": 1024,
+        "height": 1024
+      },
+      "request_id": "01a12027-309b-70d2-85c3-af1ad7472fde",
+      "prompt": "Head-and-shoulders portrait of a fictional Black woman in her 30s, short natural hair, warm smile, neutral warm beige backdrop. realistic editorial photograph, warm golden-hour light, soft film grain, natural skin texture, candid, shallow depth of field, no text, no logos, no watermarks",
+      "bytes": 7566
+    },
+    {
+      "name": "clip-source",
+      "endpoint": "openai/gpt-image-2.5/flare/text-to-image",
+      "request_id": "01a12038-09e2-7421-9fe3-075bbfc52efe"
+    },
+    {
+      "name": "one-week",
+      "endpoint": "bytedance/seedance-2.5/image-to-video",
+      "request_id": "01a12038-40d8-7dd0-ad00-18ee667ecdf6",
+      "prompt": "Slow handheld walk forward through a Lisbon street at golden hour, pastel buildings, gentle natural camera sway, warm light, calm ambience.",
+      "input": {
+        "image_url": "(clip-source)",
+        "prompt": "Slow handheld walk forward through a Lisbon street at golden hour, pastel buildings, gentle natural camera sway, warm light, calm ambience.",
+        "duration": "8",
+        "resolution": "720p",
+        "generate_audio": false
+      }
+    }
+  ],
+  "portraitUrl": "https://v3b.fal.media/files/b/0aadac8f/NSdOFC7bT-pkEsa5sAs72_8KdswoAR.png",
+  "lisbonUrl": "https://v3b.fal.media/files/b/0aadac93/kPgIVtjBWBxhU5ubieJSD_nx4cotei.png",
+  "clipSrcUrl": "https://v3b.fal.media/files/b/0aadad0e/OVzxA5-abxCL_G4UQj0H5_vGxMVycK.png"
+}

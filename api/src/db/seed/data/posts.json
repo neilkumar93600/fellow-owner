@@ -1,0 +1,7366 @@
+[
+  {
+    "community": "travel-photography",
+    "authorIndex": 1170,
+    "type": "idea",
+    "title": "A golden-hour map of Lisbon, made by fans",
+    "body": "A golden-hour map of Lisbon that marks where the light is best and what time to arrive. Everything online assumes expensive gear, and I shoot on a phone. Plain-English tips with a sample photo for every one. Happy to organize it, but I need someone to lead the first walk.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 84,
+    "signals": {
+      "use": [
+        46,
+        162,
+        194,
+        362,
+        529,
+        533,
+        537,
+        606,
+        875,
+        981,
+        985,
+        1015,
+        1130
+      ],
+      "build": [
+        566,
+        913,
+        1126,
+        1192
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A golden-hour map of Lisbon, made by fans",
+      "category": "idea",
+      "fitScore": 85,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Real prices, which Mira always asks for.",
+      "tags": [
+        "editing",
+        "golden hour"
+      ],
+      "skills": [
+        "video editing",
+        "lightroom",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 320,
+    "type": "idea",
+    "title": "A break-down kit that covers the twelve things worth carrying in the middle of Nevada",
+    "body": "A break-down kit that covers the twelve things worth carrying in the middle of Nevada. Gas, tolls and park fees add up faster than I expected. A route you can follow day by day, with the miles and the drive times. Need a video editor to cut the drive footage into something watchable.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 84,
+    "signals": {
+      "use": [
+        144,
+        155,
+        275,
+        526,
+        604,
+        670,
+        719,
+        752,
+        856,
+        1019,
+        1134,
+        1152,
+        1175,
+        1198
+      ],
+      "build": [
+        90,
+        195,
+        394,
+        629,
+        758,
+        865
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A break-down kit that covers the twelve things worth carrying in the middle of Nevada",
+      "category": "idea",
+      "fitScore": 59,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "road trip",
+        "van life"
+      ],
+      "skills": [
+        "photography",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 643,
+    "type": "project",
+    "title": "A campground booking calendar, on one page",
+    "body": "A campground booking calendar that tells you when the summer sites open and how fast they go. Gas, tolls and park fees add up faster than I expected. One printable page for the glovebox. Looking for someone who has done this route in the last year.",
+    "status": "building",
+    "rolesNeeded": [
+      "Video editor"
+    ],
+    "links": [],
+    "createdDaysAgo": 84,
+    "signals": {
+      "use": [
+        7,
+        82,
+        117,
+        144,
+        155,
+        341,
+        453,
+        497,
+        519,
+        618,
+        701,
+        832,
+        850,
+        865,
+        1062,
+        1080,
+        1119,
+        1140,
+        1152,
+        1178
+      ],
+      "build": [
+        108,
+        905,
+        1133
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 873,
+        "role": "Video editor",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1052,
+        "role": "Video editor",
+        "status": "requested"
+      }
+    ],
+    "ai": {
+      "summary": "A campground booking calendar, on one page",
+      "category": "project",
+      "fitScore": 52,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "photography",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 0,
+    "type": "project",
+    "title": "A shoulder-season flight thread, with real prices",
+    "body": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. I spent my first trip to Europe guessing, and the guessing cost me about $400. One table: what it cost, what I would skip, and what I would pay double for. Looking for a local who can sanity-check the prices.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Itinerary planner",
+      "Video editor",
+      "Translator"
+    ],
+    "links": [],
+    "createdDaysAgo": 83,
+    "signals": {
+      "use": [],
+      "build": [
+        165,
+        780,
+        1001
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 399,
+        "role": "Itinerary planner",
+        "status": "declined"
+      },
+      {
+        "memberIndex": 924,
+        "role": "Video editor",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1048,
+        "role": "Translator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1145,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A shoulder-season flight thread, with real prices",
+      "category": "project",
+      "fitScore": 51,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "flights"
+      ],
+      "skills": [
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    },
+    "lovedDaysAgo": 5
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 0,
+    "type": "project",
+    "title": "A night-market eating order that tells you what to eat first, second and last",
+    "body": "A night-market eating order that tells you what to eat first, second and last. Reviews are full of people who ate one meal and left five stars. Photos taken by the person who ate there, not the restaurant. Looking for someone with a food-allergy background to review the card.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Local guide",
+      "Translator"
+    ],
+    "links": [],
+    "createdDaysAgo": 81,
+    "signals": {
+      "use": [
+        6,
+        159,
+        199,
+        337,
+        391,
+        431,
+        598,
+        676,
+        915,
+        947,
+        1166
+      ],
+      "build": [
+        390,
+        457,
+        528,
+        574,
+        977,
+        1039
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 162,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 786,
+        "role": "Translator",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A night-market eating order that tells you what to eat first, second and last",
+      "category": "project",
+      "fitScore": 87,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "food",
+        "street food",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 1032,
+    "type": "idea",
+    "title": "A family-run restaurant list for Oaxaca for families with picky eaters",
+    "body": "A family-run restaurant list for Oaxaca that finds the places where the grandmother is still in the kitchen. I have eaten at tourist traps in three countries and I still end up at the same blogs. Each place gets a name, a street, a price and the one dish to order. Need a host to run the first tasting evening.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 81,
+    "signals": {
+      "use": [
+        26,
+        46,
+        66,
+        98,
+        159,
+        162,
+        179,
+        192,
+        408,
+        423,
+        443,
+        489,
+        551,
+        569,
+        593,
+        609,
+        639,
+        683,
+        717,
+        759,
+        879,
+        912,
+        926,
+        1081
+      ],
+      "build": [
+        105,
+        349,
+        664,
+        713,
+        813,
+        889,
+        1111
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A family-run restaurant list for Oaxaca for families with picky eaters",
+      "category": "idea",
+      "fitScore": 77,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Real prices, which Mira always asks for.",
+      "tags": [
+        "food",
+        "street food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 1012,
+    "type": "project",
+    "title": "A menu translator for Seoul, with real prices",
+    "body": "A menu translator for Seoul that covers the twenty words that decide what you end up eating. I have eaten at tourist traps in three countries and I still end up at the same blogs. Each place gets a name, a street, a price and the one dish to order. Looking for someone with a food-allergy background to review the card.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Photographer"
+    ],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 78,
+    "signals": {
+      "use": [],
+      "build": [
+        124,
+        244,
+        390,
+        488,
+        507,
+        510,
+        891
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 192,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 879,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1015,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 0,
+        "role": "Photographer",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A menu translator for Seoul, with real prices",
+      "category": "project",
+      "fitScore": 73,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "food",
+        "local"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 802,
+    "type": "idea",
+    "title": "An honest day-six thread, with real prices",
+    "body": "An honest day-six thread that is a place to say the loneliness hits around day six, and what helped. The first night alone in a new city is the part nobody prepares you for. Small groups of three to five, matched by city and dates. Looking for a host who will run the weekly check-in thread.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 78,
+    "signals": {
+      "use": [
+        0
+      ],
+      "build": [
+        72,
+        430,
+        540,
+        569,
+        602,
+        713,
+        807,
+        814
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "An honest day-six thread, with real prices",
+      "category": "idea",
+      "fitScore": 76,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "first trip"
+      ],
+      "skills": [
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 995,
+    "type": "discussion",
+    "title": "A village-stay guide for people with a month to spare",
+    "body": "A village-stay guide that finds family-run guesthouses under $60 a night. It is hard to switch off when everyone else is posting a new city every day. A short note each evening, written by hand and photographed.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 75,
+    "signals": {
+      "use": [],
+      "build": [
+        198,
+        244,
+        369,
+        424,
+        427,
+        496,
+        740,
+        832
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A village-stay guide for people with a month to spare",
+      "category": "discussion",
+      "fitScore": 82,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "journaling",
+        "village stays"
+      ],
+      "skills": [
+        "illustration",
+        "photography",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 118,
+    "type": "idea",
+    "title": "A long weekend from New York that gets to Montreal and back for under $250",
+    "body": "A long weekend from New York that gets to Montreal and back for under $250. It is hard to tell what is genuinely cheap and what only looks cheap. One table: what it cost, what I would skip, and what I would pay double for. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 75,
+    "signals": {
+      "use": [
+        43,
+        48,
+        65,
+        204,
+        368,
+        437,
+        651,
+        793,
+        841,
+        875,
+        1046,
+        1074,
+        1156,
+        1188,
+        0
+      ],
+      "build": [
+        371
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A long weekend from New York that gets to Montreal and back for under $250",
+      "category": "idea",
+      "fitScore": 55,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "budget",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 684,
+    "type": "idea",
+    "title": "A free-things map of Prague for first-time backpackers",
+    "body": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. One table: what it cost, what I would skip, and what I would pay double for. I can write it up but need someone to turn it into a clean one-page layout.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 73,
+    "signals": {
+      "use": [
+        0
+      ],
+      "build": [
+        28,
+        49,
+        214,
+        257,
+        517,
+        611,
+        691,
+        792,
+        811
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A free-things map of Prague for first-time backpackers",
+      "category": "idea",
+      "fitScore": 94,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 246,
+    "type": "idea",
+    "title": "A night-train guide for Europe, made by fans",
+    "body": "A night-train guide for Europe that swaps a hotel night for a bed on the Vienna to Venice sleeper. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. Costs are shown in dollars and in the local currency, side by side. Looking for a local who can sanity-check the prices.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 72,
+    "signals": {
+      "use": [
+        492,
+        1181,
+        0
+      ],
+      "build": [
+        984
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A night-train guide for Europe, made by fans",
+      "category": "idea",
+      "fitScore": 52,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "budget",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 950,
+    "type": "project",
+    "title": "A phone-safety routine, the honest version",
+    "body": "A phone-safety routine that covers backups, eSIMs and what to do if your phone is stolen. I have cancelled two solo trips because I could not find anyone to ask. Real stories from people who did it last month, with the date and the city. Want someone to translate the safety phrases into Spanish and Portuguese.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Local guide"
+    ],
+    "links": [],
+    "createdDaysAgo": 70,
+    "signals": {
+      "use": [
+        31,
+        601,
+        610,
+        1104,
+        1138,
+        0
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 44,
+        "role": "Local guide",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 587,
+        "role": "Local guide",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 1018,
+        "role": "Local guide",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A phone-safety routine, the honest version",
+      "category": "project",
+      "fitScore": 76,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 1108,
+    "type": "idea",
+    "title": "A travel-insurance explainer, on one page",
+    "body": "A travel-insurance explainer that compares the four plans that actually covered a broken wrist. Most advice is written by people traveling in pairs. Small groups of three to five, matched by city and dates. Looking for three people who have traveled solo in Asia to review it.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 69,
+    "signals": {
+      "use": [
+        182,
+        206,
+        251,
+        284,
+        295,
+        306,
+        415,
+        546,
+        547,
+        618,
+        627,
+        750,
+        757,
+        807,
+        814,
+        978,
+        1138,
+        0
+      ],
+      "build": [
+        38,
+        171,
+        383,
+        625,
+        1115,
+        1168
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A travel-insurance explainer, on one page",
+      "category": "idea",
+      "fitScore": 85,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 790,
+    "type": "project",
+    "title": "A first-solo-trip checklist, on one page",
+    "body": "A first-solo-trip checklist that covers the twelve things I wish I had sorted before landing alone. Most advice is written by people traveling in pairs. Everything is updated by the people who were there most recently. Want someone to translate the safety phrases into Spanish and Portuguese.",
+    "status": "building",
+    "rolesNeeded": [
+      "Host"
+    ],
+    "links": [],
+    "createdDaysAgo": 64,
+    "signals": {
+      "use": [
+        75,
+        96,
+        171,
+        181,
+        286,
+        329,
+        379,
+        383,
+        705,
+        948,
+        0
+      ],
+      "build": [
+        508,
+        883,
+        912,
+        1122,
+        1166
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 404,
+        "role": "Host",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 722,
+        "role": "Host",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 839,
+        "role": "Host",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A first-solo-trip checklist, on one page",
+      "category": "project",
+      "fitScore": 59,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "solo travel",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting",
+        "translation",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 258,
+    "type": "project",
+    "title": "A shot-list template that plans the ten must-have frames of a trip before you leave",
+    "body": "A shot-list template that plans the ten must-have frames of a trip before you leave. Everything online assumes expensive gear, and I shoot on a phone. Ten shots each, one theme, shared in a single album at the end of the month. Happy to organize it, but I need someone to lead the first walk.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Video editor",
+      "Illustrator"
+    ],
+    "links": [],
+    "createdDaysAgo": 58,
+    "signals": {
+      "use": [
+        36,
+        37,
+        135,
+        154,
+        180,
+        185,
+        242,
+        343,
+        367,
+        422,
+        495,
+        625,
+        759,
+        868,
+        960,
+        1064
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 71,
+        "role": "Video editor",
+        "status": "declined"
+      },
+      {
+        "memberIndex": 759,
+        "role": "Illustrator",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 992,
+        "role": "Video editor",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1071,
+        "role": "Illustrator",
+        "status": "declined"
+      }
+    ],
+    "ai": {
+      "summary": "A shot-list template that plans the ten must-have frames of a trip before you leave",
+      "category": "project",
+      "fitScore": 47,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "photography",
+        "editing",
+        "golden hour"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 102,
+    "type": "idea",
+    "title": "A meet-people-on-the-road guide, the honest version",
+    "body": "A meet-people-on-the-road guide that lists the free walking tours and shared dinners where friends actually happen. I have cancelled two solo trips because I could not find anyone to ask. A one-page card you can screenshot and keep offline. Need a local who can tell me which neighborhoods are fine at night.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 58,
+    "signals": {
+      "use": [
+        63,
+        121,
+        129,
+        197,
+        246,
+        253,
+        268,
+        353,
+        396,
+        516,
+        688,
+        872,
+        932,
+        1172,
+        1195
+      ],
+      "build": [
+        675
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A meet-people-on-the-road guide, the honest version",
+      "category": "idea",
+      "fitScore": 86,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 915,
+    "type": "project",
+    "title": "A vegetarian guide to Tokyo for vegetarians on the road",
+    "body": "A vegetarian guide to Tokyo that finds ramen and izakaya places that are truly meat-free. The top-ranked restaurants are all the same ones with a forty-minute wait. Each place gets a name, a street, a price and the one dish to order. Need a host to run the first tasting evening.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Video editor"
+    ],
+    "links": [],
+    "createdDaysAgo": 58,
+    "signals": {
+      "use": [],
+      "build": [
+        187,
+        222,
+        888,
+        1015,
+        1111
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 86,
+        "role": "Video editor",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 816,
+        "role": "Video editor",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A vegetarian guide to Tokyo for vegetarians on the road",
+      "category": "project",
+      "fitScore": 89,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "food",
+        "local",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation",
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 370,
+    "type": "idea",
+    "title": "A dog-friendly road-trip list, for a long weekend",
+    "body": "A dog-friendly road-trip list that finds rest stops, trails and patios that welcome dogs. Everything online is either a luxury build or a nightmare story. A route you can follow day by day, with the miles and the drive times. Looking for a mechanic-minded fan to check the maintenance list.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 53,
+    "signals": {
+      "use": [
+        117,
+        230,
+        284,
+        565,
+        611,
+        897,
+        1095,
+        1177
+      ],
+      "build": [
+        526,
+        788
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A dog-friendly road-trip list, for a long weekend",
+      "category": "idea",
+      "fitScore": 67,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "van life",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "photography",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 546,
+    "type": "project",
+    "title": "A solo check-in group, the honest version",
+    "body": "A solo check-in group that pairs two travelers in the same city so someone always knows where you are. The first night alone in a new city is the part nobody prepares you for. Small groups of three to five, matched by city and dates. Looking for a host who will run the weekly check-in thread.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Translator",
+      "Illustrator",
+      "Itinerary planner"
+    ],
+    "links": [],
+    "createdDaysAgo": 52,
+    "signals": {
+      "use": [],
+      "build": [
+        675,
+        835
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 223,
+        "role": "Translator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 290,
+        "role": "Illustrator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 296,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 880,
+        "role": "Translator",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A solo check-in group, the honest version",
+      "category": "project",
+      "fitScore": 72,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 91,
+    "type": "idea",
+    "title": "A street-food safety guide that explains how to pick a stall that is safe and still good",
+    "body": "A street-food safety guide that explains how to pick a stall that is safe and still good. I want to eat where locals eat, but I do not speak the language well enough to ask. Only places a fan has eaten at in the last six months. Want a photographer who will shoot the food in daylight.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 50,
+    "signals": {
+      "use": [
+        6,
+        70,
+        173,
+        480,
+        482,
+        590,
+        707,
+        711,
+        714,
+        737,
+        751,
+        807,
+        1068,
+        1118
+      ],
+      "build": [
+        544,
+        759,
+        895
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A street-food safety guide that explains how to pick a stall that is safe and still good",
+      "category": "idea",
+      "fitScore": 59,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "food",
+        "local",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 483,
+    "type": "idea",
+    "title": "A first-solo-trip checklist for digital nomads on a short stay",
+    "body": "A first-solo-trip checklist that covers the twelve things I wish I had sorted before landing alone. The guides are either scary or breezy, and neither is true. A short check-in message once a day, sent to one person you chose. Need a local who can tell me which neighborhoods are fine at night.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 50,
+    "signals": {
+      "use": [
+        59,
+        119,
+        145,
+        229,
+        251,
+        253,
+        263,
+        354,
+        361,
+        415,
+        535,
+        575,
+        595,
+        672,
+        678,
+        729,
+        745,
+        862,
+        929,
+        930,
+        993,
+        1027,
+        1166
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A first-solo-trip checklist for digital nomads on a short stay",
+      "category": "idea",
+      "fitScore": 50,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "safety",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "translation",
+        "local knowledge",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 578,
+    "type": "idea",
+    "title": "A breakfast-around-the-world thread that shows what locals eat before nine in ten cities",
+    "body": "A breakfast-around-the-world thread that shows what locals eat before nine in ten cities. I want to eat where locals eat, but I do not speak the language well enough to ask. Prices in dollars and local currency, with the date. Want a photographer who will shoot the food in daylight.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 49,
+    "signals": {
+      "use": [
+        270,
+        330,
+        535,
+        592,
+        661,
+        676,
+        704,
+        901,
+        912,
+        1095
+      ],
+      "build": [
+        216,
+        286,
+        401,
+        407,
+        489,
+        521,
+        544,
+        545,
+        809
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A breakfast-around-the-world thread that shows what locals eat before nine in ten cities",
+      "category": "idea",
+      "fitScore": 82,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "local",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "translation",
+        "hosting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 986,
+    "type": "idea",
+    "title": "A Bangkok street-food budget crawl for anyone flying out of the US on a budget",
+    "body": "A Bangkok street-food budget crawl that eats well for $15 a day across five neighborhoods. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my real budget was off by a hundred dollars. Day by day, with the cheapest option first and one splurge per trip. Could use a translator for the menus and the bus signs.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 47,
+    "signals": {
+      "use": [],
+      "build": [
+        841
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Bangkok street-food budget crawl for anyone flying out of the US on a budget",
+      "category": "idea",
+      "fitScore": 63,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 568,
+    "type": "idea",
+    "title": "A phone-safety routine that covers backups, eSIMs and what to do if your phone is stolen",
+    "body": "A phone-safety routine that covers backups, eSIMs and what to do if your phone is stolen. I never know which neighborhoods are okay after dark until I am standing in one. Everything is updated by the people who were there most recently. Would love an illustrator to make the checklist look friendly rather than scary.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 46,
+    "signals": {
+      "use": [
+        60,
+        75,
+        153,
+        253,
+        497,
+        567,
+        612,
+        643,
+        708,
+        966,
+        1072,
+        1112,
+        1172
+      ],
+      "build": [
+        328
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A phone-safety routine that covers backups, eSIMs and what to do if your phone is stolen",
+      "category": "idea",
+      "fitScore": 78,
+      "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 139,
+    "type": "project",
+    "title": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route",
+    "body": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route. Most blogs are written by someone whose flights were comped, and the budget shows it. One table: what it cost, what I would skip, and what I would pay double for. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Video editor"
+    ],
+    "links": [],
+    "createdDaysAgo": 46,
+    "signals": {
+      "use": [
+        1,
+        127,
+        141,
+        152,
+        153,
+        163,
+        240,
+        405,
+        435,
+        479,
+        683,
+        738,
+        747,
+        904,
+        1018,
+        1092,
+        1110,
+        1199
+      ],
+      "build": [
+        112,
+        527,
+        541,
+        610,
+        881,
+        1097,
+        1116,
+        1171
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 579,
+        "role": "Video editor",
+        "status": "requested"
+      }
+    ],
+    "ai": {
+      "summary": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route",
+      "category": "project",
+      "fitScore": 63,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "flights",
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 383,
+    "type": "discussion",
+    "title": "A day-trip buddy board, made by fans",
+    "body": "A day-trip buddy board that finds someone to split a $90 tour with. My family worries, and I would like to show them a real plan rather than say it will be fine. Everything is updated by the people who were there most recently.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 46,
+    "signals": {
+      "use": [
+        483
+      ],
+      "build": [
+        53
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A day-trip buddy board, made by fans",
+      "category": "discussion",
+      "fitScore": 89,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "safety",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 90,
+    "type": "discussion",
+    "title": "A Pacific Coast Highway week for people driving cross-country",
+    "body": "A Pacific Coast Highway week that plans seven days from San Francisco to San Diego for about $900. Gas, tolls and park fees add up faster than I expected. Every stop has a note on cell signal and water.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 45,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Pacific Coast Highway week for people driving cross-country",
+      "category": "discussion",
+      "fitScore": 75,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "road trip",
+        "van life",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 831,
+    "type": "idea",
+    "title": "A family-run restaurant list for Oaxaca, for a long weekend",
+    "body": "A family-run restaurant list for Oaxaca that finds the places where the grandmother is still in the kitchen. I get stuck on whether a stall is safe, and then I just eat at a chain. A card with the order of the dishes, written in the local language. Need a host to run the first tasting evening.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 44,
+    "signals": {
+      "use": [
+        548,
+        697
+      ],
+      "build": [
+        244,
+        365,
+        1167
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A family-run restaurant list for Oaxaca, for a long weekend",
+      "category": "idea",
+      "fitScore": 70,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "local",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 651,
+    "type": "idea",
+    "title": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid",
+    "body": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid. It is hard to tell what is genuinely cheap and what only looks cheap. One table: what it cost, what I would skip, and what I would pay double for. Need a photographer who has actually been there to make it look as good as it is.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 43,
+    "signals": {
+      "use": [
+        139,
+        168,
+        267,
+        586,
+        771,
+        834,
+        859,
+        1129
+      ],
+      "build": [
+        137,
+        779,
+        860
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid",
+      "category": "idea",
+      "fitScore": 49,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 306,
+    "type": "idea",
+    "title": "An honest day-six thread for people on a gap year",
+    "body": "An honest day-six thread that is a place to say the loneliness hits around day six, and what helped. The guides are either scary or breezy, and neither is true. A one-page card you can screenshot and keep offline. Need a local who can tell me which neighborhoods are fine at night.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 42,
+    "signals": {
+      "use": [
+        241,
+        274,
+        277,
+        278,
+        291,
+        354,
+        379,
+        382,
+        407,
+        430,
+        442,
+        454,
+        540,
+        564,
+        618,
+        622,
+        628,
+        654,
+        678,
+        832,
+        851,
+        855,
+        974,
+        983,
+        998,
+        1108
+      ],
+      "build": [
+        247,
+        329,
+        478,
+        732,
+        1120,
+        1196
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "An honest day-six thread for people on a gap year",
+      "category": "idea",
+      "fitScore": 53,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "hostels",
+        "first trip"
+      ],
+      "skills": [
+        "hosting",
+        "translation",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 0,
+    "type": "project",
+    "title": "Lisbon on $60 a day",
+    "body": "Seven days in Lisbon for $420 all in, built by fans in Budget Travel. A local guide checks every price against what a local actually pays, a photographer shoots the golden-hour spots, an editor cuts it into a 12-minute guide and a planner lays it out day by day. A hostel bed is $24, a 24-hour tram pass $7.50, a pastel de nata at the counter about $1.50, and one fado night at a small tasca $16. Every price has a date next to it, so the guide stays honest.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Local guide",
+      "Photographer",
+      "Video editor",
+      "Itinerary planner"
+    ],
+    "links": [
+      {
+        "label": "The fan guide",
+        "url": "https://example.com/lisbon-on-60-a-day"
+      }
+    ],
+    "createdDaysAgo": 40,
+    "lovedDaysAgo": 3,
+    "signals": {
+      "use": [
+        9,
+        14,
+        23,
+        29,
+        31,
+        34,
+        35,
+        38,
+        48,
+        54,
+        65,
+        75,
+        79,
+        85,
+        88,
+        89,
+        99,
+        106,
+        109,
+        117,
+        120,
+        127,
+        130,
+        140,
+        147,
+        168,
+        169,
+        181,
+        187,
+        189,
+        200,
+        213,
+        214,
+        225,
+        232,
+        238,
+        251,
+        252,
+        257,
+        269,
+        271,
+        275,
+        278,
+        287,
+        288,
+        297,
+        298,
+        299,
+        301,
+        313,
+        317,
+        325,
+        327,
+        340,
+        346,
+        349,
+        352,
+        355,
+        363,
+        364,
+        371,
+        377,
+        380,
+        392,
+        399,
+        405,
+        406,
+        412,
+        433,
+        435,
+        437,
+        439,
+        441,
+        444,
+        459,
+        464,
+        465,
+        468,
+        472,
+        479,
+        492,
+        504,
+        505,
+        513,
+        517,
+        518,
+        519,
+        522,
+        527,
+        536,
+        550,
+        554,
+        558,
+        562,
+        581,
+        610,
+        611,
+        616,
+        619,
+        621,
+        626,
+        630,
+        632,
+        646,
+        652,
+        655,
+        659,
+        661,
+        662,
+        673,
+        676,
+        681,
+        682,
+        683,
+        687,
+        691,
+        711,
+        721,
+        725,
+        726,
+        731,
+        732,
+        737,
+        738,
+        743,
+        746,
+        748,
+        752,
+        753,
+        755,
+        758,
+        760,
+        761,
+        763,
+        767,
+        773,
+        777,
+        779,
+        783,
+        786,
+        790,
+        792,
+        795,
+        798,
+        811,
+        812,
+        816,
+        818,
+        829,
+        831,
+        837,
+        838,
+        860,
+        863,
+        864,
+        873,
+        875,
+        877,
+        881,
+        886,
+        887,
+        899,
+        907,
+        923,
+        942,
+        943,
+        949,
+        951,
+        961,
+        967,
+        971,
+        975,
+        984,
+        986,
+        999,
+        1004,
+        1011,
+        1025,
+        1028,
+        1042,
+        1048,
+        1049,
+        1057,
+        1067,
+        1076,
+        1084,
+        1088,
+        1089,
+        1090,
+        1092,
+        1097,
+        1104,
+        1116,
+        1119,
+        1121,
+        1129,
+        1146,
+        1147,
+        1148,
+        1151,
+        1154,
+        1156,
+        1162,
+        1165,
+        1168,
+        1169,
+        1176,
+        1180,
+        1184,
+        1188,
+        1193,
+        1198
+      ],
+      "build": [
+        84,
+        101,
+        132,
+        139,
+        159,
+        174,
+        195,
+        221,
+        223,
+        235,
+        294,
+        309,
+        337,
+        358,
+        398,
+        419,
+        436,
+        466,
+        526,
+        539,
+        593,
+        613,
+        689,
+        694,
+        716,
+        762,
+        854,
+        862,
+        956,
+        1006,
+        1024,
+        1053,
+        1055,
+        1085,
+        1110,
+        1131,
+        1185,
+        1199
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 1,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 10,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 118,
+        "role": "Video editor",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 0,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "Lisbon on $60 a day",
+      "category": "project",
+      "fitScore": 97,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Four roles filled, every price dated and checked by a local.",
+      "tags": [
+        "budget",
+        "flights",
+        "points and miles"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 44,
+    "type": "idea",
+    "title": "A solo hiking primer, made by fans",
+    "body": "A solo hiking primer that says which trails are fine alone and which are not. I have cancelled two solo trips because I could not find anyone to ask. A simple yes-or-no list for each place: lighting, locks, late check-in, staff. Looking for three people who have traveled solo in Asia to review it.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 40,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A solo hiking primer, made by fans",
+      "category": "idea",
+      "fitScore": 80,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "local knowledge",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 443,
+    "type": "idea",
+    "title": "A regional-dish checklist, on one page",
+    "body": "A regional-dish checklist that lists the five dishes you cannot get anywhere else in Portugal. I get stuck on whether a stall is safe, and then I just eat at a chain. Prices in dollars and local currency, with the date. Looking for a local who can check the addresses.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 40,
+    "signals": {
+      "use": [
+        844
+      ],
+      "build": [
+        631
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A regional-dish checklist, on one page",
+      "category": "idea",
+      "fitScore": 94,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "local",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "photography",
+        "hosting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 1135,
+    "type": "project",
+    "title": "A $45-a-day Mexico City guide that lists what a taco, a metro ride and a hostel bed really cost",
+    "body": "A $45-a-day Mexico City guide that lists what a taco, a metro ride and a hostel bed really cost. It is hard to tell what is genuinely cheap and what only looks cheap. Fans add what they paid last month and the guide gets updated monthly. Looking for a local who can sanity-check the prices.",
+    "status": "building",
+    "rolesNeeded": [
+      "Local guide",
+      "Itinerary planner"
+    ],
+    "links": [],
+    "createdDaysAgo": 39,
+    "signals": {
+      "use": [
+        632
+      ],
+      "build": [
+        577,
+        900
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 683,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 812,
+        "role": "Itinerary planner",
+        "status": "declined"
+      }
+    ],
+    "ai": {
+      "summary": "A $45-a-day Mexico City guide that lists what a taco, a metro ride and a hostel bed really cost",
+      "category": "project",
+      "fitScore": 60,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "europe"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 613,
+    "type": "idea",
+    "title": "A Southwest loop, on one page",
+    "body": "A Southwest loop that strings together Zion, Bryce, Arches and Moab in nine days. I have the van and no idea where it is legal to sleep. Maps that download for offline use. Looking for a mechanic-minded fan to check the maintenance list.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 37,
+    "signals": {
+      "use": [
+        144,
+        280,
+        322,
+        458,
+        597,
+        649,
+        805,
+        852,
+        853,
+        873,
+        1097,
+        1133
+      ],
+      "build": [
+        298,
+        385,
+        519,
+        561,
+        751,
+        987,
+        1059
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Southwest loop, on one page",
+      "category": "idea",
+      "fitScore": 51,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "road trip",
+        "van life",
+        "national parks"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 828,
+    "type": "discussion",
+    "title": "A drone-rules cheat sheet, for a long weekend",
+    "body": "A drone-rules cheat sheet that lists where you can and cannot fly in twelve popular cities. I never know if it is okay to photograph the people I meet. Every preset comes with a note on which light it was made for.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 37,
+    "signals": {
+      "use": [
+        440,
+        875
+      ],
+      "build": [
+        11,
+        103,
+        427,
+        622,
+        927,
+        934
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A drone-rules cheat sheet, for a long weekend",
+      "category": "discussion",
+      "fitScore": 65,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "photography",
+        "golden hour",
+        "phone photos"
+      ],
+      "skills": [
+        "photo editing",
+        "video editing",
+        "lightroom"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 28,
+    "type": "project",
+    "title": "A food-allergy phrase card, made by fans",
+    "body": "A food-allergy phrase card that tells a kitchen about your allergy in six languages. Reviews are full of people who ate one meal and left five stars. Opening hours checked by a local before it goes in. Need a host to run the first tasting evening.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Local guide",
+      "Photographer"
+    ],
+    "links": [],
+    "createdDaysAgo": 35,
+    "signals": {
+      "use": [
+        105,
+        124,
+        170,
+        222,
+        230,
+        316,
+        391,
+        574,
+        729,
+        737,
+        810,
+        823,
+        838,
+        879,
+        915,
+        998,
+        1004,
+        1015,
+        1130
+      ],
+      "build": [
+        704,
+        890
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 703,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 714,
+        "role": "Photographer",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A food-allergy phrase card, made by fans",
+      "category": "project",
+      "fitScore": 71,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "food",
+        "street food",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 356,
+    "type": "discussion",
+    "title": "A Japan rail pass breakdown, for a long weekend",
+    "body": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my real budget was off by a hundred dollars. Day by day, with the cheapest option first and one splurge per trip.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 34,
+    "signals": {
+      "use": [
+        1,
+        9,
+        203,
+        240,
+        317,
+        335,
+        348,
+        399,
+        425,
+        465,
+        630,
+        900,
+        941,
+        967,
+        1067,
+        1098,
+        1147,
+        1162
+      ],
+      "build": [
+        15,
+        528
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Japan rail pass breakdown, for a long weekend",
+      "category": "discussion",
+      "fitScore": 82,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "budget",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 1178,
+    "type": "idea",
+    "title": "A free-things map of Prague, for a long weekend",
+    "body": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. I spent my first trip to Europe guessing, and the guessing cost me about $400. Everything fits on one phone-friendly page that works offline. Need a photographer who has actually been there to make it look as good as it is.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 34,
+    "signals": {
+      "use": [
+        99,
+        148,
+        152,
+        213,
+        293,
+        459,
+        516,
+        539,
+        592,
+        654,
+        730,
+        752,
+        793,
+        818,
+        844,
+        979,
+        988,
+        999
+      ],
+      "build": [
+        214,
+        225,
+        346,
+        694,
+        869
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A free-things map of Prague, for a long weekend",
+      "category": "idea",
+      "fitScore": 69,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Has a date and a named owner.",
+      "tags": [
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 230,
+    "type": "project",
+    "title": "Ten family kitchens in Oaxaca",
+    "body": "A fan-made food guide to ten family-run kitchens in Oaxaca, with the one dish to order at each, the price in pesos and dollars, and a photo taken that day. A local guide checks every address, a translator writes the menu cards and a photographer shoots the plates in daylight. Most meals are $4 to $9. The goal is a guide you can follow on foot in four days.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Local guide",
+      "Translator",
+      "Photographer"
+    ],
+    "links": [],
+    "createdDaysAgo": 33,
+    "lovedDaysAgo": 20,
+    "signals": {
+      "use": [
+        45,
+        66,
+        78,
+        84,
+        98,
+        170,
+        206,
+        215,
+        222,
+        270,
+        308,
+        328,
+        330,
+        367,
+        390,
+        395,
+        431,
+        436,
+        508,
+        520,
+        544,
+        590,
+        592,
+        639,
+        692,
+        711,
+        737,
+        791,
+        807,
+        810,
+        813,
+        844,
+        860,
+        907,
+        945,
+        972,
+        1032,
+        1039,
+        1118,
+        1123
+      ],
+      "build": [
+        51,
+        124,
+        188,
+        408,
+        413,
+        435,
+        703,
+        846,
+        867,
+        891,
+        906,
+        1065,
+        1094,
+        1116
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 1081,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1095,
+        "role": "Translator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 0,
+        "role": "Photographer",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "Ten family kitchens in Oaxaca",
+      "category": "project",
+      "fitScore": 91,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Three roles filled and every address checked by a local.",
+      "tags": [
+        "street food",
+        "local",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 924,
+    "type": "idea",
+    "title": "A $45-a-day Mexico City guide for anyone flying out of the US on a budget",
+    "body": "A $45-a-day Mexico City guide that lists what a taco, a metro ride and a hostel bed really cost. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my real budget was off by a hundred dollars. Fans add what they paid last month and the guide gets updated monthly. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 32,
+    "signals": {
+      "use": [
+        106,
+        121,
+        132,
+        193,
+        194,
+        207,
+        314,
+        412,
+        443,
+        616,
+        661,
+        712,
+        771,
+        808,
+        842,
+        1090,
+        1153
+      ],
+      "build": [
+        26,
+        35,
+        378,
+        1020
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A $45-a-day Mexico City guide for anyone flying out of the US on a budget",
+      "category": "idea",
+      "fitScore": 73,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "flights",
+        "europe"
+      ],
+      "skills": [
+        "itinerary planning",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 478,
+    "type": "project",
+    "title": "A vegetarian guide to Tokyo for families with picky eaters",
+    "body": "A vegetarian guide to Tokyo that finds ramen and izakaya places that are truly meat-free. I want to eat where locals eat, but I do not speak the language well enough to ask. Prices in dollars and local currency, with the date. Need a translator for the menu words.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Translator"
+    ],
+    "links": [],
+    "createdDaysAgo": 31,
+    "signals": {
+      "use": [
+        2,
+        51,
+        52,
+        786,
+        1081
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 330,
+        "role": "Translator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1114,
+        "role": "Translator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1118,
+        "role": "Translator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1191,
+        "role": "Translator",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A vegetarian guide to Tokyo for families with picky eaters",
+      "category": "project",
+      "fitScore": 94,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "food",
+        "vegetarian"
+      ],
+      "skills": [
+        "translation",
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 754,
+    "type": "discussion",
+    "title": "A one-city month, on one page",
+    "body": "A one-city month that shows what four weeks in Porto costs instead of seeing six cities in nine days. I came home from my last trip more tired than when I left. A shared weekly thread where people post one slow moment.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 30,
+    "signals": {
+      "use": [
+        13,
+        48,
+        80,
+        128,
+        131,
+        179,
+        200,
+        240,
+        481,
+        494,
+        513,
+        536,
+        539,
+        575,
+        587,
+        702,
+        721,
+        740,
+        849,
+        948,
+        975,
+        1000,
+        1043,
+        1094,
+        1154
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A one-city month, on one page",
+      "category": "discussion",
+      "fitScore": 75,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "slow travel",
+        "journaling",
+        "wellbeing",
+        "village stays"
+      ],
+      "skills": [
+        "photography",
+        "writing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 1001,
+    "type": "project",
+    "title": "A cheap-flights Sunday thread, made by fans",
+    "body": "A cheap-flights Sunday thread that shares the three best fares found each week, with the dates. Most blogs are written by someone whose flights were comped, and the budget shows it. Day by day, with the cheapest option first and one splurge per trip. Need a photographer who has actually been there to make it look as good as it is.",
+    "status": "building",
+    "rolesNeeded": [
+      "Local guide"
+    ],
+    "links": [],
+    "createdDaysAgo": 27,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 3,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 414,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 548,
+        "role": "Local guide",
+        "status": "declined"
+      },
+      {
+        "memberIndex": 558,
+        "role": "Local guide",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A cheap-flights Sunday thread, made by fans",
+      "category": "project",
+      "fitScore": 67,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 239,
+    "type": "idea",
+    "title": "A night-train guide for Europe, on one page",
+    "body": "A night-train guide for Europe that swaps a hotel night for a bed on the Vienna to Venice sleeper. I spent my first trip to Europe guessing, and the guessing cost me about $400. Everything fits on one phone-friendly page that works offline. Could use a translator for the menus and the bus signs.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 27,
+    "signals": {
+      "use": [
+        1113
+      ],
+      "build": [
+        84,
+        104,
+        674,
+        798
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A night-train guide for Europe, on one page",
+      "category": "idea",
+      "fitScore": 62,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "itinerary planning",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 14,
+    "type": "idea",
+    "title": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing",
+    "body": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. The numbers online are all from 2019 and nothing costs that now. Day by day, with the cheapest option first and one splurge per trip. Need a photographer who has actually been there to make it look as good as it is.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 25,
+    "signals": {
+      "use": [
+        15,
+        21,
+        28,
+        58,
+        157,
+        167,
+        287,
+        317,
+        349,
+        411,
+        437,
+        453,
+        464,
+        496,
+        635,
+        637,
+        777,
+        812,
+        913,
+        979,
+        1047,
+        1079,
+        1090,
+        1135,
+        1137,
+        1171
+      ],
+      "build": [
+        441,
+        466,
+        818
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing",
+      "category": "idea",
+      "fitScore": 66,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "flights",
+        "hostels"
+      ],
+      "skills": [
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 501,
+    "type": "idea",
+    "title": "A before-and-after edit series for people who want better vacation photos",
+    "body": "A before-and-after edit series that shows the five-minute edit behind a flat shot. I never know if it is okay to photograph the people I meet. Before and after side by side, with the exact settings underneath. Looking for a photographer who knows the city well.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 25,
+    "signals": {
+      "use": [],
+      "build": [
+        475,
+        669,
+        964,
+        1171
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A before-and-after edit series for people who want better vacation photos",
+      "category": "idea",
+      "fitScore": 51,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "photography",
+        "editing",
+        "golden hour",
+        "presets"
+      ],
+      "skills": [
+        "video editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 920,
+    "type": "idea",
+    "title": "Alfama rooftops at 7:42pm, phone only",
+    "body": "Shot on a four-year-old phone from a viewpoint above Alfama, ten minutes before sunset. I stood on the wall to the left of the crowd so the tram lines lead into the frame. No edit except lifting the shadows a little.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 24,
+    "challenge": 1,
+    "signals": {
+      "use": [
+        49,
+        343,
+        624,
+        728,
+        759,
+        913,
+        938,
+        1026,
+        1137,
+        1182
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "Alfama rooftops at 7:42pm, phone only",
+      "category": "idea",
+      "fitScore": 53,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "editing",
+        "presets"
+      ],
+      "skills": [
+        "photo editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 933,
+    "type": "project",
+    "title": "A carry-on-only packing list for two weeks that saves the $70 checked-bag fee on every budget airline",
+    "body": "A carry-on-only packing list for two weeks that saves the $70 checked-bag fee on every budget airline. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my real budget was off by a hundred dollars. Day by day, with the cheapest option first and one splurge per trip. Need a photographer who has actually been there to make it look as good as it is.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Photographer"
+    ],
+    "links": [],
+    "createdDaysAgo": 23,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 221,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 352,
+        "role": "Photographer",
+        "status": "requested"
+      }
+    ],
+    "ai": {
+      "summary": "A carry-on-only packing list for two weeks that saves the $70 checked-bag fee on every budget airline",
+      "category": "project",
+      "fitScore": 85,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 1065,
+    "type": "idea",
+    "title": "A cheap-flights Sunday thread for first-time backpackers",
+    "body": "A cheap-flights Sunday thread that shares the three best fares found each week, with the dates. I spent my first trip to Europe guessing, and the guessing cost me about $400. Costs are shown in dollars and in the local currency, side by side. Could use a translator for the menus and the bus signs.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 23,
+    "signals": {
+      "use": [
+        240,
+        592
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A cheap-flights Sunday thread for first-time backpackers",
+      "category": "idea",
+      "fitScore": 70,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "budget",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting",
+        "photography",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 501,
+    "type": "idea",
+    "title": "Fog lifting off the Douro, 6:50am",
+    "body": "Porto, from the upper deck of the big iron bridge, tripod on the railing. I arrived at 6:15 and had the whole bridge to myself for forty minutes. The light came through just once.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 22,
+    "challenge": 1,
+    "signals": {
+      "use": [
+        22,
+        36,
+        154,
+        162,
+        217,
+        302,
+        357,
+        359,
+        377,
+        409,
+        612,
+        640,
+        768,
+        876,
+        916,
+        1007,
+        1064,
+        1092,
+        1171,
+        1192
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "Fog lifting off the Douro, 6:50am",
+      "category": "idea",
+      "fitScore": 78,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "photography",
+        "phone photos"
+      ],
+      "skills": [
+        "lightroom"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 1041,
+    "type": "idea",
+    "title": "A one-city month, made by fans",
+    "body": "A one-city month that shows what four weeks in Porto costs instead of seeing six cities in nine days. I want a trip I can describe by how it felt, not how many stamps it has. Plans that fit on an index card. Want a host who will keep the weekly thread kind.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 22,
+    "signals": {
+      "use": [
+        349,
+        1164
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A one-city month, made by fans",
+      "category": "idea",
+      "fitScore": 79,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "journaling",
+        "long stays",
+        "village stays"
+      ],
+      "skills": [
+        "illustration",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 1121,
+    "type": "project",
+    "title": "A Bangkok street-food budget crawl for couples on a tight budget",
+    "body": "A Bangkok street-food budget crawl that eats well for $15 a day across five neighborhoods. Most blogs are written by someone whose flights were comped, and the budget shows it. One table: what it cost, what I would skip, and what I would pay double for. Looking for a local who can sanity-check the prices.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Local guide"
+    ],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 21,
+    "signals": {
+      "use": [
+        842,
+        921,
+        1145
+      ],
+      "build": [
+        859
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 355,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1028,
+        "role": "Local guide",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A Bangkok street-food budget crawl for couples on a tight budget",
+      "category": "project",
+      "fitScore": 89,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 975,
+    "type": "idea",
+    "title": "A travel journaling prompt pack, on one page",
+    "body": "A travel journaling prompt pack that turns a train ride into three good pages. I tried to see everything and remember almost none of it. A short note each evening, written by hand and photographed. Want a host who will keep the weekly thread kind.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 21,
+    "signals": {
+      "use": [
+        33,
+        131,
+        254,
+        258,
+        344,
+        401,
+        428,
+        546,
+        552,
+        645,
+        693,
+        948,
+        1043
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A travel journaling prompt pack, on one page",
+      "category": "idea",
+      "fitScore": 57,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "slow travel",
+        "long stays",
+        "wellbeing",
+        "village stays"
+      ],
+      "skills": [
+        "photography",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 640,
+    "type": "idea",
+    "title": "Last light on a fisherman’s hands, Nazaré",
+    "body": "I asked first, he nodded, and I took four frames while he mended a net. The light came in low from the right. I sent him the photo afterwards through his niece.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 20,
+    "challenge": 1,
+    "signals": {
+      "use": [
+        559,
+        668,
+        724,
+        913,
+        1052,
+        1139
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "Last light on a fisherman’s hands, Nazaré",
+      "category": "idea",
+      "fitScore": 86,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Real prices, which Mira always asks for.",
+      "tags": [
+        "editing",
+        "golden hour",
+        "presets"
+      ],
+      "skills": [
+        "photo editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 464,
+    "type": "discussion",
+    "title": "A Route 66 stop list that picks twelve diners and motels still worth a detour",
+    "body": "A Route 66 stop list that picks twelve diners and motels still worth a detour. Everything online is either a luxury build or a nightmare story. One printable page for the glovebox.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 20,
+    "signals": {
+      "use": [
+        59,
+        83,
+        752,
+        853,
+        1194
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Route 66 stop list that picks twelve diners and motels still worth a detour",
+      "category": "discussion",
+      "fitScore": 69,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "mechanics",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 284,
+    "type": "idea",
+    "title": "A meet-people-on-the-road guide for women traveling alone",
+    "body": "A meet-people-on-the-road guide that lists the free walking tours and shared dinners where friends actually happen. Most advice is written by people traveling in pairs. A one-page card you can screenshot and keep offline. Need a local who can tell me which neighborhoods are fine at night.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 20,
+    "signals": {
+      "use": [],
+      "build": [
+        25,
+        357,
+        880
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A meet-people-on-the-road guide for women traveling alone",
+      "category": "idea",
+      "fitScore": 60,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "first trip"
+      ],
+      "skills": [
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 435,
+    "type": "idea",
+    "title": "A shoulder-season flight thread, for a long weekend",
+    "body": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. Most blogs are written by someone whose flights were comped, and the budget shows it. Every price has a date next to it, so anyone can tell when it has gone stale. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 19,
+    "signals": {
+      "use": [
+        157
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A shoulder-season flight thread, for a long weekend",
+      "category": "idea",
+      "fitScore": 84,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 861,
+    "type": "idea",
+    "title": "A \"where I am this week\" thread, made by fans",
+    "body": "A \"where I am this week\" thread that lets solo travelers find each other in the same city. My family worries, and I would like to show them a real plan rather than say it will be fine. A simple yes-or-no list for each place: lighting, locks, late check-in, staff. Looking for a host who will run the weekly check-in thread.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 18,
+    "signals": {
+      "use": [],
+      "build": [
+        698,
+        767,
+        781,
+        807,
+        972,
+        1086
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A \"where I am this week\" thread, made by fans",
+      "category": "idea",
+      "fitScore": 93,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "hostels",
+        "first trip"
+      ],
+      "skills": [
+        "translation",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 189,
+    "type": "idea",
+    "title": "A rooftop in Fes at golden hour",
+    "body": "Fes, Morocco, from a rooftop café that charges nothing if you buy a mint tea (30 dirhams). The call to prayer started right as the sun dropped behind the medina. I kept the exposure low so the sky stayed orange.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 17,
+    "challenge": 1,
+    "signals": {
+      "use": [
+        49,
+        64,
+        239,
+        342,
+        479,
+        486,
+        523,
+        565,
+        633,
+        686,
+        876,
+        1142,
+        1170,
+        1177,
+        1182
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A rooftop in Fes at golden hour",
+      "category": "idea",
+      "fitScore": 86,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "editing",
+        "golden hour",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "photo editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 774,
+    "type": "idea",
+    "title": "A travel journaling prompt pack that turns a train ride into three good pages",
+    "body": "A travel journaling prompt pack that turns a train ride into three good pages. I do not know how to stay somewhere longer without it feeling like a mistake. A short note each evening, written by hand and photographed. Need an illustrator for the journaling pages.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 17,
+    "signals": {
+      "use": [
+        29,
+        33,
+        42,
+        159,
+        200,
+        254,
+        267,
+        277,
+        305,
+        316,
+        366,
+        485,
+        494,
+        515,
+        520,
+        522,
+        687,
+        692,
+        721,
+        903,
+        966,
+        983,
+        1013,
+        1087
+      ],
+      "build": [
+        198,
+        323,
+        389,
+        536,
+        657
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A travel journaling prompt pack that turns a train ride into three good pages",
+      "category": "idea",
+      "fitScore": 79,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "slow travel",
+        "long stays",
+        "wellbeing"
+      ],
+      "skills": [
+        "illustration",
+        "photography",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 345,
+    "type": "idea",
+    "title": "Salt flats at 5:30pm, Bolivia",
+    "body": "Uyuni in the wet season. The ground turns into a mirror and the sky doubles. I kept the horizon dead centre and waited for the jeep to move out of the shot. Shot on a phone with the screen brightness turned down.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 15,
+    "challenge": 1,
+    "signals": {
+      "use": [
+        46,
+        64,
+        74,
+        124,
+        219,
+        228,
+        283,
+        422,
+        457,
+        567,
+        640,
+        876,
+        951,
+        954,
+        984,
+        1015,
+        1052,
+        1109,
+        1136
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "Salt flats at 5:30pm, Bolivia",
+      "category": "idea",
+      "fitScore": 73,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "photography",
+        "golden hour",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 10,
+    "type": "discussion",
+    "title": "A $45-a-day Mexico City guide for college students on spring break",
+    "body": "A $45-a-day Mexico City guide that lists what a taco, a metro ride and a hostel bed really cost. Most blogs are written by someone whose flights were comped, and the budget shows it. One table: what it cost, what I would skip, and what I would pay double for.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 15,
+    "signals": {
+      "use": [
+        23,
+        115,
+        139,
+        161,
+        203,
+        221,
+        239,
+        436,
+        448,
+        517,
+        592,
+        635,
+        686,
+        723,
+        730,
+        829,
+        984,
+        999,
+        1004,
+        1046,
+        1053,
+        1085,
+        1195
+      ],
+      "build": [
+        148,
+        165,
+        225,
+        388,
+        603,
+        815,
+        1113,
+        1144,
+        1156
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A $45-a-day Mexico City guide for college students on spring break",
+      "category": "discussion",
+      "fitScore": 91,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels"
+      ],
+      "skills": [
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 568,
+    "type": "idea",
+    "title": "A day-trip buddy board, the honest version",
+    "body": "A day-trip buddy board that finds someone to split a $90 tour with. I never know which neighborhoods are okay after dark until I am standing in one. Real stories from people who did it last month, with the date and the city. Want someone to translate the safety phrases into Spanish and Portuguese.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 15,
+    "signals": {
+      "use": [],
+      "build": [
+        53,
+        229,
+        321,
+        407,
+        419,
+        454,
+        704,
+        756
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A day-trip buddy board, the honest version",
+      "category": "idea",
+      "fitScore": 88,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 126,
+    "type": "idea",
+    "title": "A shoulder-season flight thread, the honest version",
+    "body": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. The numbers online are all from 2019 and nothing costs that now. Costs are shown in dollars and in the local currency, side by side. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 14,
+    "signals": {
+      "use": [
+        1,
+        753,
+        870,
+        925
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A shoulder-season flight thread, the honest version",
+      "category": "idea",
+      "fitScore": 62,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "budget",
+        "hostels",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 942,
+    "type": "idea",
+    "title": "A travel-money cheat sheet, made by fans",
+    "body": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid. The numbers online are all from 2019 and nothing costs that now. Every price has a date next to it, so anyone can tell when it has gone stale. Could use a translator for the menus and the bus signs.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 13,
+    "signals": {
+      "use": [],
+      "build": [
+        259,
+        405,
+        583,
+        798,
+        1049,
+        1082,
+        1094
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A travel-money cheat sheet, made by fans",
+      "category": "idea",
+      "fitScore": 92,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 564,
+    "type": "idea",
+    "title": "An honest day-six thread, made by fans",
+    "body": "An honest day-six thread that is a place to say the loneliness hits around day six, and what helped. The guides are either scary or breezy, and neither is true. A simple yes-or-no list for each place: lighting, locks, late check-in, staff. Looking for a host who will run the weekly check-in thread.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 12,
+    "signals": {
+      "use": [
+        72,
+        271,
+        396,
+        682,
+        766,
+        1115
+      ],
+      "build": [
+        470,
+        569,
+        612,
+        614,
+        617,
+        998,
+        1010,
+        1166
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "An honest day-six thread, made by fans",
+      "category": "idea",
+      "fitScore": 49,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "solo travel",
+        "first trip"
+      ],
+      "skills": [
+        "hosting",
+        "translation",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 1077,
+    "type": "discussion",
+    "title": "An honest day-six thread, on one page",
+    "body": "An honest day-six thread that is a place to say the loneliness hits around day six, and what helped. Most advice is written by people traveling in pairs. A one-page card you can screenshot and keep offline.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 11,
+    "signals": {
+      "use": [
+        24,
+        55,
+        220,
+        379,
+        387,
+        713,
+        761,
+        766,
+        825,
+        866
+      ],
+      "build": [
+        477,
+        800
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "An honest day-six thread, on one page",
+      "category": "discussion",
+      "fitScore": 94,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 500,
+    "type": "idea",
+    "title": "A meet-people-on-the-road guide for first-time solo travelers",
+    "body": "A meet-people-on-the-road guide that lists the free walking tours and shared dinners where friends actually happen. I never know which neighborhoods are okay after dark until I am standing in one. Real stories from people who did it last month, with the date and the city. Looking for a host who will run the weekly check-in thread.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 11,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A meet-people-on-the-road guide for first-time solo travelers",
+      "category": "idea",
+      "fitScore": 87,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "hostels",
+        "first trip"
+      ],
+      "skills": [
+        "hosting",
+        "local knowledge",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 587,
+    "type": "project",
+    "title": "A phone-free afternoon, made by fans",
+    "body": "A phone-free afternoon that tests a whole day abroad with the screen off. The itineraries online are minute-by-minute and I just want a rhythm. Plans that fit on an index card. Need an illustrator for the journaling pages.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Itinerary planner"
+    ],
+    "links": [],
+    "createdDaysAgo": 11,
+    "signals": {
+      "use": [
+        254,
+        344,
+        966
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 229,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 524,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A phone-free afternoon, made by fans",
+      "category": "project",
+      "fitScore": 78,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "slow travel",
+        "long stays"
+      ],
+      "skills": [
+        "hosting",
+        "illustration",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 1062,
+    "type": "discussion",
+    "title": "A fuel-budget calculator that shows what a 2,000-mile trip costs in a truck, a van and a hybrid",
+    "body": "A fuel-budget calculator that shows what a 2,000-mile trip costs in a truck, a van and a hybrid. Everything online is either a luxury build or a nightmare story. A packing list that fits in one tote.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 11,
+    "signals": {
+      "use": [],
+      "build": [
+        195,
+        752
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A fuel-budget calculator that shows what a 2,000-mile trip costs in a truck, a van and a hybrid",
+      "category": "discussion",
+      "fitScore": 47,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning",
+        "mechanics",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 1007,
+    "type": "idea",
+    "title": "A monthly photo walk for phone photographers",
+    "body": "A monthly photo walk that gets ten fans shooting the same neighborhood and sharing one frame each. Everything online assumes expensive gear, and I shoot on a phone. Ten shots each, one theme, shared in a single album at the end of the month. Need someone to edit the examples into a short video.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 10,
+    "signals": {
+      "use": [
+        285
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A monthly photo walk for phone photographers",
+      "category": "idea",
+      "fitScore": 55,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Has a date and a named owner.",
+      "tags": [
+        "editing",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "lightroom"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 1199,
+    "type": "idea",
+    "title": "A monthly photo walk for weekend travelers",
+    "body": "A monthly photo walk that gets ten fans shooting the same neighborhood and sharing one frame each. I take four hundred photos and keep six. Before and after side by side, with the exact settings underneath. Would love an illustrator for the map.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 10,
+    "signals": {
+      "use": [
+        64,
+        312
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A monthly photo walk for weekend travelers",
+      "category": "idea",
+      "fitScore": 92,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". The ask is specific and small.",
+      "tags": [
+        "photography",
+        "golden hour",
+        "presets"
+      ],
+      "skills": [
+        "photo editing",
+        "lightroom"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 972,
+    "type": "discussion",
+    "title": "A seasonal travel calendar, the honest version",
+    "body": "A seasonal travel calendar that tells you where to be in March, June and October. I do not know how to stay somewhere longer without it feeling like a mistake. Four weeks in one place, with a weekly budget on top.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 10,
+    "signals": {
+      "use": [
+        13,
+        33,
+        57,
+        80,
+        89,
+        171,
+        261,
+        323,
+        366,
+        520,
+        664,
+        693,
+        698,
+        740,
+        803,
+        906,
+        975,
+        1043
+      ],
+      "build": [
+        217,
+        344,
+        394,
+        424,
+        428,
+        1033,
+        1107
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A seasonal travel calendar, the honest version",
+      "category": "discussion",
+      "fitScore": 61,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "slow travel",
+        "journaling",
+        "long stays",
+        "village stays"
+      ],
+      "skills": [
+        "photography",
+        "writing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 1133,
+    "type": "idea",
+    "title": "A dog-friendly road-trip list that finds rest stops, trails and patios that welcome dogs",
+    "body": "A dog-friendly road-trip list that finds rest stops, trails and patios that welcome dogs. I have the van and no idea where it is legal to sleep. A route you can follow day by day, with the miles and the drive times. Need a video editor to cut the drive footage into something watchable.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 9,
+    "signals": {
+      "use": [
+        440,
+        660
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A dog-friendly road-trip list that finds rest stops, trails and patios that welcome dogs",
+      "category": "idea",
+      "fitScore": 79,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Real prices, which Mira always asks for.",
+      "tags": [
+        "road trip",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 444,
+    "type": "project",
+    "title": "A Bangkok street-food budget crawl that eats well for $15 a day across five neighborhoods",
+    "body": "A Bangkok street-food budget crawl that eats well for $15 a day across five neighborhoods. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. Day by day, with the cheapest option first and one splurge per trip. Need a photographer who has actually been there to make it look as good as it is.",
+    "status": "open",
+    "rolesNeeded": [
+      "Local guide",
+      "Itinerary planner",
+      "Video editor"
+    ],
+    "links": [],
+    "createdDaysAgo": 9,
+    "signals": {
+      "use": [
+        29,
+        35,
+        229,
+        252,
+        269,
+        496,
+        598,
+        951,
+        999,
+        1004,
+        1079,
+        1113,
+        1148,
+        1184
+      ],
+      "build": [
+        348
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 527,
+        "role": "Local guide",
+        "status": "requested"
+      }
+    ],
+    "ai": {
+      "summary": "A Bangkok street-food budget crawl that eats well for $15 a day across five neighborhoods",
+      "category": "project",
+      "fitScore": 73,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "itinerary planning",
+        "photography",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 83,
+    "type": "idea",
+    "title": "A night-train guide for Europe, with real prices",
+    "body": "A night-train guide for Europe that swaps a hotel night for a bed on the Vienna to Venice sleeper. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my real budget was off by a hundred dollars. Day by day, with the cheapest option first and one splurge per trip. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 9,
+    "signals": {
+      "use": [
+        38,
+        49,
+        221,
+        259,
+        275,
+        356,
+        392,
+        418,
+        529,
+        563,
+        586,
+        665,
+        763,
+        792,
+        1171
+      ],
+      "build": [
+        0,
+        453,
+        528,
+        591,
+        712
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A night-train guide for Europe, with real prices",
+      "category": "idea",
+      "fitScore": 51,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 0,
+    "type": "idea",
+    "title": "Brisket tacos and a horchata from a trailer in East Austin, $9.75",
+    "body": "Two brisket tacos, a scoop of rice and a horchata for $9.75, from a trailer that parks outside a laundromat. The line moves fast, the tortillas are made that morning and the salsa verde is worth asking for twice. Go before 1pm or the brisket is gone.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 8,
+    "challenge": 0,
+    "signals": {
+      "use": [
+        52,
+        213,
+        273,
+        280,
+        316,
+        435,
+        446,
+        848
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "Brisket tacos and a horchata from a trailer in East Austin, $9.75",
+      "category": "idea",
+      "fitScore": 76,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "food",
+        "street food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 854,
+    "type": "idea",
+    "title": "A Japan rail pass breakdown for couples on a tight budget",
+    "body": "A Japan rail pass breakdown that works out whether the pass is worth it for your actual route. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my real budget was off by a hundred dollars. Every price has a date next to it, so anyone can tell when it has gone stale. Need a photographer who has actually been there to make it look as good as it is.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 8,
+    "signals": {
+      "use": [
+        79,
+        877
+      ],
+      "build": [
+        331,
+        579,
+        1146
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Japan rail pass breakdown for couples on a tight budget",
+      "category": "idea",
+      "fitScore": 85,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "budget",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 141,
+    "type": "project",
+    "title": "A hostel-versus-hotel cost sheet that works out which is cheaper once breakfast and laundry are counted",
+    "body": "A hostel-versus-hotel cost sheet that works out which is cheaper once breakfast and laundry are counted. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. Costs are shown in dollars and in the local currency, side by side. Need a photographer who has actually been there to make it look as good as it is.",
+    "status": "building",
+    "rolesNeeded": [
+      "Photographer"
+    ],
+    "links": [],
+    "createdDaysAgo": 8,
+    "signals": {
+      "use": [],
+      "build": [
+        26,
+        360
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 22,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 101,
+        "role": "Photographer",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A hostel-versus-hotel cost sheet that works out which is cheaper once breakfast and laundry are counted",
+      "category": "project",
+      "fitScore": 74,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "flights",
+        "hostels"
+      ],
+      "skills": [
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 1021,
+    "type": "discussion",
+    "title": "A one-city month for remote workers",
+    "body": "A one-city month that shows what four weeks in Porto costs instead of seeing six cities in nine days. It is hard to switch off when everyone else is posting a new city every day. Four weeks in one place, with a weekly budget on top.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 8,
+    "signals": {
+      "use": [
+        200,
+        546,
+        774,
+        903,
+        966,
+        1128
+      ],
+      "build": [
+        33,
+        159,
+        201,
+        494,
+        734,
+        1043,
+        1060,
+        1135
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A one-city month for remote workers",
+      "category": "discussion",
+      "fitScore": 94,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "slow travel",
+        "journaling"
+      ],
+      "skills": [
+        "photography",
+        "writing",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 977,
+    "type": "idea",
+    "title": "A bowl of pho and a Vietnamese iced coffee in Houston, $9.50",
+    "body": "A family counter on the edge of Midtown. The broth simmers overnight and the owner’s mother still tastes every pot. A small bowl is $7.25 and the iced coffee is $2.25. Cash only, so bring ten dollars.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 7,
+    "challenge": 0,
+    "signals": {
+      "use": [
+        50,
+        159,
+        401,
+        436,
+        471,
+        499,
+        740,
+        809,
+        810,
+        1001,
+        1155
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A bowl of pho and a Vietnamese iced coffee in Houston, $9.50",
+      "category": "idea",
+      "fitScore": 92,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Has a date and a named owner.",
+      "tags": [
+        "food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "translation",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 530,
+    "type": "idea",
+    "title": "A list of women-friendly hostels, the honest version",
+    "body": "A list of women-friendly hostels that rates hostels on lighting, locks and how staff treat late arrivals. The guides are either scary or breezy, and neither is true. Everything is updated by the people who were there most recently. Need a local who can tell me which neighborhoods are fine at night.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 7,
+    "signals": {
+      "use": [
+        1125
+      ],
+      "build": [
+        31,
+        129,
+        277,
+        547,
+        705,
+        717,
+        1004,
+        1122
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A list of women-friendly hostels, the honest version",
+      "category": "idea",
+      "fitScore": 62,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "first trip"
+      ],
+      "skills": [
+        "translation",
+        "local knowledge",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 1146,
+    "type": "discussion",
+    "title": "A points-and-miles starter guide, made by fans",
+    "body": "A points-and-miles starter guide that explains the one card and two habits behind a free flight to Tokyo. It is hard to tell what is genuinely cheap and what only looks cheap. One table: what it cost, what I would skip, and what I would pay double for.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 7,
+    "signals": {
+      "use": [
+        15,
+        161,
+        177,
+        519,
+        562,
+        593,
+        619,
+        682,
+        752,
+        815,
+        831,
+        879,
+        1017,
+        1025,
+        1180
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A points-and-miles starter guide, made by fans",
+      "category": "discussion",
+      "fitScore": 89,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "flights"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 90,
+    "type": "idea",
+    "title": "A plate lunch at a Hawaiian counter in Honolulu, $10",
+    "body": "Two scoops of rice, mac salad and kalua pork for $10 flat, from a counter that has been open since 1974. Eat it standing at the window like everyone else. The portion is built for a construction crew, so I had half of it for dinner.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 6,
+    "challenge": 0,
+    "signals": {
+      "use": [
+        190,
+        222,
+        409,
+        476,
+        510,
+        511,
+        631,
+        704,
+        836,
+        846,
+        945,
+        1061,
+        1095,
+        1111,
+        1142
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A plate lunch at a Hawaiian counter in Honolulu, $10",
+      "category": "idea",
+      "fitScore": 53,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "street food",
+        "local"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 977,
+    "type": "idea",
+    "title": "An independent café passport, the honest version",
+    "body": "An independent café passport that collects stamps from non-chain coffee shops in a city. I want to eat where locals eat, but I do not speak the language well enough to ask. A card with the order of the dishes, written in the local language. Happy to collect the places, but I want a second person to keep it honest.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 6,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "An independent café passport, the honest version",
+      "category": "idea",
+      "fitScore": 61,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "food",
+        "markets"
+      ],
+      "skills": [
+        "translation",
+        "hosting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 666,
+    "type": "idea",
+    "title": "A one-song-per-state playlist, for a long weekend",
+    "body": "A one-song-per-state playlist that collects a road-trip soundtrack from fans across the country. Everything online is either a luxury build or a nightmare story. An honest costs table: fuel, camping, food and the one thing that broke. Want a photographer to join for the Utah leg.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 6,
+    "signals": {
+      "use": [
+        55,
+        231,
+        320,
+        354,
+        636,
+        852,
+        873,
+        902,
+        908,
+        1031,
+        1198
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A one-song-per-state playlist, for a long weekend",
+      "category": "idea",
+      "fitScore": 94,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 500,
+    "type": "idea",
+    "title": "A meet-people-on-the-road guide, on one page",
+    "body": "A meet-people-on-the-road guide that lists the free walking tours and shared dinners where friends actually happen. The guides are either scary or breezy, and neither is true. Real stories from people who did it last month, with the date and the city. Happy to start it, but I want one more person so it does not depend on me.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 6,
+    "signals": {
+      "use": [
+        12,
+        40,
+        73,
+        96,
+        119,
+        134,
+        149,
+        182,
+        202,
+        219,
+        257,
+        328,
+        352,
+        388,
+        452,
+        456,
+        543,
+        688,
+        795,
+        998,
+        1034
+      ],
+      "build": [
+        80,
+        357,
+        695,
+        866,
+        869
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A meet-people-on-the-road guide, on one page",
+      "category": "idea",
+      "fitScore": 91,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "translation",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 1018,
+    "type": "project",
+    "title": "A free-things map of Prague for people with a week of vacation",
+    "body": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. Most blogs are written by someone whose flights were comped, and the budget shows it. Day by day, with the cheapest option first and one splurge per trip. Could use a translator for the menus and the bus signs.",
+    "status": "building",
+    "rolesNeeded": [
+      "Local guide",
+      "Photographer",
+      "Video editor"
+    ],
+    "links": [],
+    "createdDaysAgo": 6,
+    "signals": {
+      "use": [
+        28,
+        117,
+        275,
+        466,
+        725,
+        726,
+        761,
+        829,
+        1048
+      ],
+      "build": [
+        152,
+        161,
+        232,
+        687,
+        690,
+        758,
+        1006,
+        1168
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 644,
+        "role": "Local guide",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A free-things map of Prague for people with a week of vacation",
+      "category": "project",
+      "fitScore": 52,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "budget",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 580,
+    "type": "discussion",
+    "title": "A points-and-miles starter guide for couples on a tight budget",
+    "body": "A points-and-miles starter guide that explains the one card and two habits behind a free flight to Tokyo. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. Fans add what they paid last month and the guide gets updated monthly.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 5,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A points-and-miles starter guide for couples on a tight budget",
+      "category": "discussion",
+      "fitScore": 90,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "hostels",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 1196,
+    "type": "project",
+    "title": "A first-solo-trip checklist for people on a gap year",
+    "body": "A first-solo-trip checklist that covers the twelve things I wish I had sorted before landing alone. My family worries, and I would like to show them a real plan rather than say it will be fine. A short check-in message once a day, sent to one person you chose. Want someone to translate the safety phrases into Spanish and Portuguese.",
+    "status": "building",
+    "rolesNeeded": [
+      "Local guide",
+      "Translator",
+      "Illustrator"
+    ],
+    "links": [],
+    "createdDaysAgo": 5,
+    "signals": {
+      "use": [
+        794
+      ],
+      "build": [
+        56,
+        595
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 452,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 672,
+        "role": "Translator",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A first-solo-trip checklist for people on a gap year",
+      "category": "project",
+      "fitScore": 85,
+      "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Has a date and a named owner.",
+      "tags": [
+        "safety",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "translation",
+        "local knowledge",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 223,
+    "type": "project",
+    "title": "A points-and-miles starter guide for anyone flying out of the US on a budget",
+    "body": "A points-and-miles starter guide that explains the one card and two habits behind a free flight to Tokyo. It is hard to tell what is genuinely cheap and what only looks cheap. Day by day, with the cheapest option first and one splurge per trip. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Itinerary planner",
+      "Translator"
+    ],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 5,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 40,
+        "role": "Itinerary planner",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 317,
+        "role": "Translator",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 886,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1163,
+        "role": "Translator",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A points-and-miles starter guide for anyone flying out of the US on a budget",
+      "category": "project",
+      "fitScore": 90,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 1173,
+    "type": "idea",
+    "title": "A street-portrait etiquette guide that explains how to ask, what to say and when to put the camera away",
+    "body": "A street-portrait etiquette guide that explains how to ask, what to say and when to put the camera away. I take four hundred photos and keep six. One page per spot: where to stand, when to arrive, what to skip. Need someone to edit the examples into a short video.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 5,
+    "signals": {
+      "use": [
+        124,
+        152,
+        162,
+        219,
+        269,
+        285,
+        346,
+        382,
+        409,
+        420,
+        445,
+        479,
+        485,
+        501,
+        567,
+        728,
+        763,
+        784,
+        1038,
+        1045,
+        1109,
+        1130,
+        1156,
+        1199
+      ],
+      "build": [
+        19,
+        201
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A street-portrait etiquette guide that explains how to ask, what to say and when to put the camera away",
+      "category": "idea",
+      "fitScore": 69,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "editing",
+        "golden hour"
+      ],
+      "skills": [
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 711,
+    "type": "idea",
+    "title": "A $10-meal map, the honest version",
+    "body": "A $10-meal map that pins the best lunch under ten dollars in your city. I have eaten at tourist traps in three countries and I still end up at the same blogs. Opening hours checked by a local before it goes in. Looking for someone with a food-allergy background to review the card.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 5,
+    "signals": {
+      "use": [
+        2,
+        70,
+        213,
+        367,
+        417,
+        457,
+        639,
+        647,
+        980,
+        1039,
+        1048,
+        1142
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A $10-meal map, the honest version",
+      "category": "idea",
+      "fitScore": 66,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "food",
+        "local",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 86,
+    "type": "idea",
+    "title": "Jollof rice with fried plantain in Atlanta, $8",
+    "body": "A tiny Nigerian kitchen inside a grocery store. The jollof has that smoky edge from the pot and the plantain comes out hot. $8 with a drink. The owner asks where you are from and then sits you next to someone who is from there.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 4,
+    "challenge": 0,
+    "signals": {
+      "use": [
+        162,
+        436,
+        542,
+        590,
+        912,
+        1004,
+        1039
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "Jollof rice with fried plantain in Atlanta, $8",
+      "category": "idea",
+      "fitScore": 56,
+      "fitReason": "Matches \"collabs with a named owner and a date\". Real prices, which Mira always asks for.",
+      "tags": [
+        "local",
+        "markets"
+      ],
+      "skills": [
+        "local knowledge",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 402,
+    "type": "project",
+    "title": "A photo-trade swap, on one page",
+    "body": "A photo-trade swap that pairs a local photographer with a traveler who will be in their city. Everything online assumes expensive gear, and I shoot on a phone. One page per spot: where to stand, when to arrive, what to skip. Would love an illustrator for the map.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Photographer",
+      "Illustrator"
+    ],
+    "links": [],
+    "createdDaysAgo": 4,
+    "signals": {
+      "use": [
+        64,
+        266,
+        336,
+        457,
+        473,
+        474,
+        491,
+        559,
+        565,
+        604,
+        616,
+        668,
+        759,
+        771,
+        799,
+        855,
+        1035,
+        1142
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 37,
+        "role": "Photographer",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 113,
+        "role": "Illustrator",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A photo-trade swap, on one page",
+      "category": "project",
+      "fitScore": 59,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "photography",
+        "golden hour",
+        "phone photos"
+      ],
+      "skills": [
+        "photography",
+        "photo editing",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 532,
+    "type": "idea",
+    "title": "A fuel-budget calculator, made by fans",
+    "body": "A fuel-budget calculator that shows what a 2,000-mile trip costs in a truck, a van and a hybrid. Cell signal disappears and so does the plan. Every stop has a note on cell signal and water. Need a video editor to cut the drive footage into something watchable.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 4,
+    "signals": {
+      "use": [
+        77,
+        285,
+        312,
+        489,
+        561,
+        604,
+        649,
+        668,
+        1053
+      ],
+      "build": [
+        394,
+        618,
+        646,
+        817,
+        1097,
+        1152
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A fuel-budget calculator, made by fans",
+      "category": "idea",
+      "fitScore": 73,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "van life",
+        "camping",
+        "national parks",
+        "budget"
+      ],
+      "skills": [
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 1065,
+    "type": "idea",
+    "title": "A Bangkok street-food budget crawl for first-time backpackers",
+    "body": "A Bangkok street-food budget crawl that eats well for $15 a day across five neighborhoods. It is hard to tell what is genuinely cheap and what only looks cheap. Everything fits on one phone-friendly page that works offline. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 4,
+    "signals": {
+      "use": [
+        313,
+        471,
+        518,
+        731,
+        1147,
+        1148
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Bangkok street-food budget crawl for first-time backpackers",
+      "category": "idea",
+      "fitScore": 65,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "budget",
+        "hostels",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 277,
+    "type": "idea",
+    "title": "A solo dining guide for Tokyo for people on a gap year",
+    "body": "A solo dining guide for Tokyo that shows the counters and set-menu spots where eating alone is completely normal. The first night alone in a new city is the part nobody prepares you for. Real stories from people who did it last month, with the date and the city. Looking for a host who will run the weekly check-in thread.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 4,
+    "signals": {
+      "use": [
+        303,
+        892,
+        982
+      ],
+      "build": [
+        729
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A solo dining guide for Tokyo for people on a gap year",
+      "category": "idea",
+      "fitScore": 55,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "safety",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 240,
+    "type": "idea",
+    "title": "A long weekend from New York for people with a week of vacation",
+    "body": "A long weekend from New York that gets to Montreal and back for under $250. Most blogs are written by someone whose flights were comped, and the budget shows it. One table: what it cost, what I would skip, and what I would pay double for. Could use a translator for the menus and the bus signs.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 4,
+    "signals": {
+      "use": [
+        21,
+        95,
+        223,
+        287,
+        334,
+        365,
+        436,
+        580,
+        626,
+        659,
+        971,
+        1127,
+        1131,
+        1137,
+        1140
+      ],
+      "build": [
+        933
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A long weekend from New York for people with a week of vacation",
+      "category": "idea",
+      "fitScore": 81,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "budget",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 749,
+    "type": "idea",
+    "title": "Hand-pulled noodles in Flushing, $8.50",
+    "body": "You watch the noodles being pulled behind the glass, then you eat them ten minutes later in a chili-oil broth. $8.50, no tip culture, and the lunch rush is gone by 1:30. Ask for them wide.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 3,
+    "challenge": 0,
+    "signals": {
+      "use": [
+        179,
+        489,
+        530
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "Hand-pulled noodles in Flushing, $8.50",
+      "category": "idea",
+      "fitScore": 72,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "food",
+        "street food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "hosting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 90,
+    "type": "project",
+    "title": "A free-camping map, on one page",
+    "body": "A free-camping map that pins legal dispersed sites between Utah and Oregon. Cell signal disappears and so does the plan. One printable page for the glovebox. Looking for someone who has done this route in the last year.",
+    "status": "building",
+    "rolesNeeded": [
+      "Itinerary planner"
+    ],
+    "links": [],
+    "createdDaysAgo": 3,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 302,
+        "role": "Itinerary planner",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 326,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 432,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 751,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A free-camping map, on one page",
+      "category": "project",
+      "fitScore": 66,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "van life",
+        "camping"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 701,
+    "type": "idea",
+    "title": "An editing preset pack for phone photographers",
+    "body": "An editing preset pack that matches the warm look of the vlog in one tap. Everything online assumes expensive gear, and I shoot on a phone. Ten shots each, one theme, shared in a single album at the end of the month. Looking for a photographer who knows the city well.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 3,
+    "signals": {
+      "use": [],
+      "build": [
+        537,
+        1015
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "An editing preset pack for phone photographers",
+      "category": "idea",
+      "fitScore": 77,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". The ask is specific and small.",
+      "tags": [
+        "photography",
+        "golden hour",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 113,
+    "type": "project",
+    "title": "A drone-rules cheat sheet that lists where you can and cannot fly in twelve popular cities",
+    "body": "A drone-rules cheat sheet that lists where you can and cannot fly in twelve popular cities. Presets that work on one photo wreck the next. Plain-English tips with a sample photo for every one. Looking for a photographer who knows the city well.",
+    "status": "building",
+    "rolesNeeded": [
+      "Photographer",
+      "Local guide"
+    ],
+    "links": [],
+    "createdDaysAgo": 2,
+    "signals": {
+      "use": [
+        19,
+        312,
+        565,
+        668,
+        784
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 217,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 234,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 440,
+        "role": "Photographer",
+        "status": "requested"
+      }
+    ],
+    "ai": {
+      "summary": "A drone-rules cheat sheet that lists where you can and cannot fly in twelve popular cities",
+      "category": "project",
+      "fitScore": 46,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Has a date and a named owner.",
+      "tags": [
+        "photography",
+        "editing",
+        "golden hour",
+        "presets"
+      ],
+      "skills": [
+        "photo editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 924,
+    "type": "idea",
+    "title": "A long weekend from New York, made by fans",
+    "body": "A long weekend from New York that gets to Montreal and back for under $250. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. Fans add what they paid last month and the guide gets updated monthly. Could use a translator for the menus and the bus signs.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 2,
+    "signals": {
+      "use": [
+        15,
+        870,
+        877,
+        1029
+      ],
+      "build": [
+        16,
+        54,
+        145,
+        833,
+        986,
+        1178
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A long weekend from New York, made by fans",
+      "category": "idea",
+      "fitScore": 62,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "hostels"
+      ],
+      "skills": [
+        "budgeting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 15,
+    "type": "project",
+    "title": "A travel-money cheat sheet for first-time backpackers",
+    "body": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid. I spent my first trip to Europe guessing, and the guessing cost me about $400. One table: what it cost, what I would skip, and what I would pay double for. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Local guide"
+    ],
+    "links": [],
+    "createdDaysAgo": 2,
+    "signals": {
+      "use": [],
+      "build": [
+        3,
+        205,
+        293,
+        418,
+        737,
+        770,
+        925,
+        1185
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 233,
+        "role": "Local guide",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A travel-money cheat sheet for first-time backpackers",
+      "category": "project",
+      "fitScore": 55,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "europe"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 1096,
+    "type": "idea",
+    "title": "Comida corrida in Mexico City, about $5",
+    "body": "Four courses for 90 pesos, about $5: soup, rice, a main of the day and a jug of agua fresca. It is in a back room behind a pharmacy and there is no sign. Ask any taxi driver for \"la comida corrida de la esquina\".",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 1,
+    "challenge": 0,
+    "signals": {
+      "use": [
+        162,
+        188,
+        295,
+        397,
+        401,
+        467,
+        482,
+        493,
+        507,
+        574,
+        703,
+        718,
+        751,
+        831,
+        867,
+        901,
+        959,
+        1003
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "Comida corrida in Mexico City, about $5",
+      "category": "idea",
+      "fitScore": 63,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "street food",
+        "markets"
+      ],
+      "skills": [
+        "local knowledge",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 580,
+    "type": "project",
+    "title": "A points-and-miles starter guide that explains the one card and two habits behind a free flight to Tokyo",
+    "body": "A points-and-miles starter guide that explains the one card and two habits behind a free flight to Tokyo. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my real budget was off by a hundred dollars. One table: what it cost, what I would skip, and what I would pay double for. I can write it up but need someone to turn it into a clean one-page layout.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Video editor"
+    ],
+    "links": [],
+    "createdDaysAgo": 1,
+    "signals": {
+      "use": [
+        89,
+        139,
+        161,
+        196,
+        197,
+        388,
+        435,
+        637,
+        641,
+        682,
+        747,
+        760,
+        923,
+        1006,
+        1076,
+        1147,
+        1150,
+        1169
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 257,
+        "role": "Video editor",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 529,
+        "role": "Video editor",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 921,
+        "role": "Video editor",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1097,
+        "role": "Video editor",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A points-and-miles starter guide that explains the one card and two habits behind a free flight to Tokyo",
+      "category": "project",
+      "fitScore": 87,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "budget",
+        "flights",
+        "hostels",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 0,
+    "type": "project",
+    "title": "A late-arrival plan that gets you from the airport to your bed safely after midnight",
+    "body": "A late-arrival plan that gets you from the airport to your bed safely after midnight. I never know which neighborhoods are okay after dark until I am standing in one. Small groups of three to five, matched by city and dates. Happy to start it, but I want one more person so it does not depend on me.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Host"
+    ],
+    "links": [],
+    "createdDaysAgo": 1,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 18,
+        "role": "Host",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A late-arrival plan that gets you from the airport to your bed safely after midnight",
+      "category": "project",
+      "fitScore": 53,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 932,
+    "type": "discussion",
+    "title": "A day-trip buddy board that finds someone to split a $90 tour with",
+    "body": "A day-trip buddy board that finds someone to split a $90 tour with. The first night alone in a new city is the part nobody prepares you for. A one-page card you can screenshot and keep offline.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 1,
+    "signals": {
+      "use": [
+        114,
+        128,
+        237,
+        291,
+        304,
+        376,
+        545,
+        553,
+        795,
+        880,
+        963,
+        964,
+        966
+      ],
+      "build": [
+        215,
+        615,
+        785,
+        891,
+        972
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A day-trip buddy board that finds someone to split a $90 tour with",
+      "category": "discussion",
+      "fitScore": 94,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 506,
+    "type": "idea",
+    "title": "A phone-only photo guide that gets sharp travel shots without a $2,000 camera",
+    "body": "A phone-only photo guide that gets sharp travel shots without a $2,000 camera. Everything online assumes expensive gear, and I shoot on a phone. Every preset comes with a note on which light it was made for. Need someone to edit the examples into a short video.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 1,
+    "signals": {
+      "use": [
+        11,
+        63,
+        180,
+        185,
+        322,
+        363,
+        444,
+        570,
+        617,
+        626,
+        782,
+        793,
+        799,
+        939,
+        996,
+        1064,
+        1119,
+        1130,
+        1137,
+        1164,
+        1174
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A phone-only photo guide that gets sharp travel shots without a $2,000 camera",
+      "category": "idea",
+      "fitScore": 55,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Has a date and a named owner.",
+      "tags": [
+        "photography",
+        "editing",
+        "golden hour",
+        "phone photos"
+      ],
+      "skills": [
+        "photo editing",
+        "video editing",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 595,
+    "type": "idea",
+    "title": "A one-city month, with real prices",
+    "body": "A one-city month that shows what four weeks in Porto costs instead of seeing six cities in nine days. I tried to see everything and remember almost none of it. Plans that fit on an index card. Looking for a local to suggest the quiet hours in their town.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 1,
+    "signals": {
+      "use": [],
+      "build": [
+        277,
+        305,
+        832,
+        966
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A one-city month, with real prices",
+      "category": "idea",
+      "fitScore": 65,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "journaling",
+        "long stays",
+        "wellbeing",
+        "village stays"
+      ],
+      "skills": [
+        "writing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 983,
+    "type": "discussion",
+    "title": "A late-arrival plan, the honest version",
+    "body": "A late-arrival plan that gets you from the airport to your bed safely after midnight. The first night alone in a new city is the part nobody prepares you for. Everything is updated by the people who were there most recently.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 1,
+    "signals": {
+      "use": [],
+      "build": [
+        419,
+        524,
+        684,
+        772
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A late-arrival plan, the honest version",
+      "category": "discussion",
+      "fitScore": 66,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 1074,
+    "type": "discussion",
+    "title": "A breakfast-around-the-world thread for families with picky eaters",
+    "body": "A breakfast-around-the-world thread that shows what locals eat before nine in ten cities. The top-ranked restaurants are all the same ones with a forty-minute wait. Prices in dollars and local currency, with the date.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 1,
+    "signals": {
+      "use": [
+        959
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A breakfast-around-the-world thread for families with picky eaters",
+      "category": "discussion",
+      "fitScore": 93,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 1136,
+    "type": "idea",
+    "title": "A \"where I am this week\" thread that lets solo travelers find each other in the same city",
+    "body": "A \"where I am this week\" thread that lets solo travelers find each other in the same city. I never know which neighborhoods are okay after dark until I am standing in one. Small groups of three to five, matched by city and dates. Would love an illustrator to make the checklist look friendly rather than scary.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 1,
+    "signals": {
+      "use": [
+        389,
+        704,
+        717,
+        732,
+        882,
+        994,
+        1027,
+        1035
+      ],
+      "build": [
+        1,
+        972,
+        1120
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A \"where I am this week\" thread that lets solo travelers find each other in the same city",
+      "category": "idea",
+      "fitScore": 54,
+      "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "safety",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "translation",
+        "local knowledge",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 994,
+    "type": "project",
+    "title": "A hostel-versus-hotel cost sheet, on one page",
+    "body": "A hostel-versus-hotel cost sheet that works out which is cheaper once breakfast and laundry are counted. It is hard to tell what is genuinely cheap and what only looks cheap. Fans add what they paid last month and the guide gets updated monthly. Could use a translator for the menus and the bus signs.",
+    "status": "building",
+    "rolesNeeded": [
+      "Local guide",
+      "Photographer"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        35,
+        136,
+        661,
+        662,
+        820,
+        1135,
+        1137
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 174,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 237,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 824,
+        "role": "Local guide",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A hostel-versus-hotel cost sheet, on one page",
+      "category": "project",
+      "fitScore": 60,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "flights",
+        "hostels"
+      ],
+      "skills": [
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 839,
+    "type": "project",
+    "title": "A travel-money cheat sheet for anyone flying out of the US on a budget",
+    "body": "A travel-money cheat sheet that shows which cards skip foreign fees and which ATMs to avoid. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. Costs are shown in dollars and in the local currency, side by side. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "building",
+    "rolesNeeded": [
+      "Itinerary planner",
+      "Photographer",
+      "Translator"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        29,
+        117,
+        158,
+        165,
+        240,
+        401,
+        443,
+        581,
+        860,
+        1017,
+        1074,
+        1127,
+        1145
+      ],
+      "build": [
+        49,
+        221,
+        376,
+        621,
+        709,
+        721,
+        1147
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 85,
+        "role": "Itinerary planner",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 314,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 439,
+        "role": "Translator",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A travel-money cheat sheet for anyone flying out of the US on a budget",
+      "category": "project",
+      "fitScore": 89,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "flights",
+        "points and miles"
+      ],
+      "skills": [
+        "photography",
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 404,
+    "type": "project",
+    "title": "An honest day-six thread that is a place to say the loneliness hits around day six, and what helped",
+    "body": "An honest day-six thread that is a place to say the loneliness hits around day six, and what helped. I have cancelled two solo trips because I could not find anyone to ask. A simple yes-or-no list for each place: lighting, locks, late check-in, staff. Would love an illustrator to make the checklist look friendly rather than scary.",
+    "status": "open",
+    "rolesNeeded": [
+      "Host"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 389,
+        "role": "Host",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 835,
+        "role": "Host",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1089,
+        "role": "Host",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "An honest day-six thread that is a place to say the loneliness hits around day six, and what helped",
+      "category": "project",
+      "fitScore": 65,
+      "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Real prices, which Mira always asks for.",
+      "tags": [
+        "solo travel",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "translation",
+        "illustration",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 878,
+    "type": "project",
+    "title": "A solo dining guide for Tokyo that shows the counters and set-menu spots where eating alone is completely normal",
+    "body": "A solo dining guide for Tokyo that shows the counters and set-menu spots where eating alone is completely normal. The guides are either scary or breezy, and neither is true. Small groups of three to five, matched by city and dates. Looking for a host who will run the weekly check-in thread.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Local guide",
+      "Itinerary planner"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        1000,
+        1021
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 531,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 602,
+        "role": "Itinerary planner",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1196,
+        "role": "Local guide",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A solo dining guide for Tokyo that shows the counters and set-menu spots where eating alone is completely normal",
+      "category": "project",
+      "fitScore": 59,
+      "fitReason": "Matches \"solo-travel safety that is practical, not scary\". Has a date and a named owner.",
+      "tags": [
+        "solo travel",
+        "safety",
+        "hostels",
+        "meeting people"
+      ],
+      "skills": [
+        "local knowledge",
+        "itinerary planning"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 878,
+    "type": "idea",
+    "title": "A Pacific Coast Highway week that plans seven days from San Francisco to San Diego for about $900",
+    "body": "A Pacific Coast Highway week that plans seven days from San Francisco to San Diego for about $900. Gas, tolls and park fees add up faster than I expected. Every stop has a note on cell signal and water. Happy to plan it, but I want a second driver.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        113,
+        195,
+        777,
+        987
+      ],
+      "build": [
+        17,
+        83,
+        191,
+        230,
+        241,
+        805,
+        1071,
+        1149,
+        1194
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Pacific Coast Highway week that plans seven days from San Francisco to San Diego for about $900",
+      "category": "idea",
+      "fitScore": 62,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "road trip",
+        "van life",
+        "camping",
+        "national parks"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 153,
+    "type": "idea",
+    "title": "A \"where I am this week\" thread for anyone nervous about a first solo trip",
+    "body": "A \"where I am this week\" thread that lets solo travelers find each other in the same city. I never know which neighborhoods are okay after dark until I am standing in one. Real stories from people who did it last month, with the date and the city. Happy to start it, but I want one more person so it does not depend on me.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        149,
+        234,
+        530,
+        880,
+        969
+      ],
+      "build": [
+        750,
+        785,
+        805
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A \"where I am this week\" thread for anyone nervous about a first solo trip",
+      "category": "idea",
+      "fitScore": 71,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "safety",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 381,
+    "type": "project",
+    "title": "A shoulder-season flight thread for couples on a tight budget",
+    "body": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. I spent my first trip to Europe guessing, and the guessing cost me about $400. Day by day, with the cheapest option first and one splurge per trip. Would love two people who traveled there recently to fact-check the numbers.",
+    "status": "building",
+    "rolesNeeded": [
+      "Photographer"
+    ],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        68,
+        145,
+        325,
+        496,
+        682,
+        1017,
+        1110
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 942,
+        "role": "Photographer",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 1097,
+        "role": "Photographer",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A shoulder-season flight thread for couples on a tight budget",
+      "category": "project",
+      "fitScore": 93,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "hostels",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 280,
+    "type": "project",
+    "title": "A market-day itinerary, for a long weekend",
+    "body": "A market-day itinerary that builds a whole day around one covered market. I get stuck on whether a stall is safe, and then I just eat at a chain. Each place gets a name, a street, a price and the one dish to order. Want a photographer who will shoot the food in daylight.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Translator"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        70,
+        91,
+        162,
+        208,
+        215,
+        245,
+        315,
+        548,
+        585,
+        609,
+        642,
+        703,
+        776,
+        816,
+        959,
+        980,
+        1081,
+        1122,
+        1123,
+        1130,
+        1187,
+        1191,
+        1196
+      ],
+      "build": [
+        0,
+        26,
+        147,
+        402,
+        471,
+        647,
+        1118
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 664,
+        "role": "Translator",
+        "status": "requested"
+      }
+    ],
+    "ai": {
+      "summary": "A market-day itinerary, for a long weekend",
+      "category": "project",
+      "fitScore": 83,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "food",
+        "street food",
+        "markets",
+        "vegetarian"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation",
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 198,
+    "type": "project",
+    "title": "A no-itinerary weekend, for a long weekend",
+    "body": "A no-itinerary weekend that plans only the first night and the last meal. I do not know how to stay somewhere longer without it feeling like a mistake. Four weeks in one place, with a weekly budget on top. Need a photographer to catch ordinary mornings.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Photographer"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        142,
+        164,
+        229,
+        304,
+        344,
+        587,
+        687,
+        740,
+        775,
+        915,
+        926,
+        931,
+        957,
+        1051,
+        1107,
+        1164
+      ],
+      "build": [
+        575,
+        648
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 1013,
+        "role": "Photographer",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A no-itinerary weekend, for a long weekend",
+      "category": "project",
+      "fitScore": 90,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Has a date and a named owner.",
+      "tags": [
+        "slow travel",
+        "journaling",
+        "long stays",
+        "village stays"
+      ],
+      "skills": [
+        "illustration",
+        "writing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 104,
+    "type": "idea",
+    "title": "A cheap-flights Sunday thread for anyone flying out of the US on a budget",
+    "body": "A cheap-flights Sunday thread that shares the three best fares found each week, with the dates. I spent my first trip to Europe guessing, and the guessing cost me about $400. Fans add what they paid last month and the guide gets updated monthly. I can write it up but need someone to turn it into a clean one-page layout.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        26,
+        54,
+        88,
+        380,
+        406,
+        436,
+        673,
+        731
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A cheap-flights Sunday thread for anyone flying out of the US on a budget",
+      "category": "idea",
+      "fitScore": 68,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "flights",
+        "europe"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 1103,
+    "type": "project",
+    "title": "A crowd-free sunrise list for weekend travelers",
+    "body": "A crowd-free sunrise list that shows eight famous spots that are empty before 7am. The famous spots are packed by nine, and I do not have the time to scout. Before and after side by side, with the exact settings underneath. Need a local who can confirm the opening times.",
+    "status": "building",
+    "rolesNeeded": [
+      "Illustrator"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        115,
+        625,
+        1092,
+        1119
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 409,
+        "role": "Illustrator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 728,
+        "role": "Illustrator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1071,
+        "role": "Illustrator",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1141,
+        "role": "Illustrator",
+        "status": "declined"
+      }
+    ],
+    "ai": {
+      "summary": "A crowd-free sunrise list for weekend travelers",
+      "category": "project",
+      "fitScore": 74,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". The ask is specific and small.",
+      "tags": [
+        "photography",
+        "editing",
+        "golden hour"
+      ],
+      "skills": [
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "solo-travelers",
+    "authorIndex": 756,
+    "type": "project",
+    "title": "A first-solo-trip checklist for first-time solo travelers",
+    "body": "A first-solo-trip checklist that covers the twelve things I wish I had sorted before landing alone. The first night alone in a new city is the part nobody prepares you for. A simple yes-or-no list for each place: lighting, locks, late check-in, staff. Looking for three people who have traveled solo in Asia to review it.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Local guide",
+      "Translator",
+      "Illustrator"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        31,
+        62,
+        181,
+        237,
+        272,
+        308,
+        533,
+        559,
+        717,
+        805,
+        855,
+        865,
+        974,
+        991,
+        1040,
+        1101,
+        1103
+      ],
+      "build": [
+        41,
+        53,
+        352,
+        535,
+        568,
+        829,
+        832,
+        1089,
+        1115
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 268,
+        "role": "Local guide",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A first-solo-trip checklist for first-time solo travelers",
+      "category": "project",
+      "fitScore": 80,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "solo travel",
+        "hostels",
+        "first trip",
+        "meeting people"
+      ],
+      "skills": [
+        "translation",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 277,
+    "type": "discussion",
+    "title": "A one-city month, the honest version",
+    "body": "A one-city month that shows what four weeks in Porto costs instead of seeing six cities in nine days. I came home from my last trip more tired than when I left. One anchor per day, and everything else optional.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        485
+      ],
+      "build": [
+        142
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A one-city month, the honest version",
+      "category": "discussion",
+      "fitScore": 76,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Real prices, which Mira always asks for.",
+      "tags": [
+        "long stays",
+        "village stays"
+      ],
+      "skills": [
+        "illustration",
+        "writing",
+        "local knowledge"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 469,
+    "type": "idea",
+    "title": "A vegetarian guide to Tokyo for food-obsessed travelers",
+    "body": "A vegetarian guide to Tokyo that finds ramen and izakaya places that are truly meat-free. I get stuck on whether a stall is safe, and then I just eat at a chain. Opening hours checked by a local before it goes in. Need a translator for the menu words.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [],
+      "build": [
+        124,
+        212,
+        397,
+        510,
+        528,
+        551,
+        922,
+        1114
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A vegetarian guide to Tokyo for food-obsessed travelers",
+      "category": "idea",
+      "fitScore": 65,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "street food",
+        "local",
+        "markets"
+      ],
+      "skills": [
+        "local knowledge",
+        "translation",
+        "hosting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "travel-photography",
+    "authorIndex": 298,
+    "type": "project",
+    "title": "A carry-on camera kit list that fits a camera, two lenses and a tripod under the cabin weight limit",
+    "body": "A carry-on camera kit list that fits a camera, two lenses and a tripod under the cabin weight limit. Everything online assumes expensive gear, and I shoot on a phone. A shared map anyone can add a pin to, with the time of day. Need someone to edit the examples into a short video.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Photographer"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        155,
+        185,
+        285,
+        312,
+        422,
+        444,
+        506,
+        535,
+        573,
+        633,
+        669,
+        728,
+        849,
+        870,
+        913,
+        1002,
+        1156
+      ],
+      "build": [
+        742,
+        769
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 74,
+        "role": "Photographer",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 994,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1174,
+        "role": "Photographer",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A carry-on camera kit list that fits a camera, two lenses and a tripod under the cabin weight limit",
+      "category": "project",
+      "fitScore": 88,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "photography",
+        "golden hour",
+        "phone photos",
+        "presets"
+      ],
+      "skills": [
+        "video editing",
+        "lightroom",
+        "illustration"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "road-trips",
+    "authorIndex": 990,
+    "type": "idea",
+    "title": "A Southwest loop that strings together Zion, Bryce, Arches and Moab in nine days",
+    "body": "A Southwest loop that strings together Zion, Bryce, Arches and Moab in nine days. I have the van and no idea where it is legal to sleep. A route you can follow day by day, with the miles and the drive times. Happy to plan it, but I want a second driver.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [],
+      "build": [
+        197,
+        330,
+        618,
+        649
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Southwest loop that strings together Zion, Bryce, Arches and Moab in nine days",
+      "category": "idea",
+      "fitScore": 71,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "van life",
+        "camping"
+      ],
+      "skills": [
+        "video editing",
+        "mechanics"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 401,
+    "type": "project",
+    "title": "A hostel-versus-hotel cost sheet for first-time backpackers",
+    "body": "A hostel-versus-hotel cost sheet that works out which is cheaper once breakfast and laundry are counted. The numbers online are all from 2019 and nothing costs that now. One table: what it cost, what I would skip, and what I would pay double for. I can write it up but need someone to turn it into a clean one-page layout.",
+    "status": "building",
+    "rolesNeeded": [
+      "Photographer",
+      "Video editor",
+      "Translator"
+    ],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        9,
+        213,
+        298,
+        311,
+        360,
+        412,
+        425,
+        499,
+        517,
+        562,
+        747,
+        886,
+        887,
+        999,
+        1092,
+        1123,
+        1178
+      ],
+      "build": [
+        674
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 38,
+        "role": "Photographer",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 340,
+        "role": "Video editor",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A hostel-versus-hotel cost sheet for first-time backpackers",
+      "category": "project",
+      "fitScore": 91,
+      "fitReason": "Fits your style.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe"
+      ],
+      "skills": [
+        "budgeting"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 698,
+    "type": "project",
+    "title": "A night-train guide for Europe that swaps a hotel night for a bed on the Vienna to Venice sleeper",
+    "body": "A night-train guide for Europe that swaps a hotel night for a bed on the Vienna to Venice sleeper. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my real budget was off by a hundred dollars. Costs are shown in dollars and in the local currency, side by side. Could use a translator for the menus and the bus signs.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Photographer",
+      "Translator"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        288,
+        363,
+        492
+      ],
+      "build": [
+        586,
+        753,
+        875,
+        1110,
+        1129
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 287,
+        "role": "Photographer",
+        "status": "declined"
+      },
+      {
+        "memberIndex": 802,
+        "role": "Translator",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 1098,
+        "role": "Photographer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 1193,
+        "role": "Translator",
+        "status": "requested"
+      }
+    ],
+    "ai": {
+      "summary": "A night-train guide for Europe that swaps a hotel night for a bed on the Vienna to Venice sleeper",
+      "category": "project",
+      "fitScore": 72,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting",
+        "photography"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "slow-living",
+    "authorIndex": 1160,
+    "type": "project",
+    "title": "A letters-to-yourself series that collects postcards to open six months after the trip",
+    "body": "A letters-to-yourself series that collects postcards to open six months after the trip. I came home from my last trip more tired than when I left. A shared weekly thread where people post one slow moment. Looking for a local to suggest the quiet hours in their town.",
+    "status": "forming_team",
+    "rolesNeeded": [
+      "Illustrator"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        33,
+        89,
+        316,
+        349,
+        401,
+        774,
+        1074
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 200,
+        "role": "Illustrator",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 381,
+        "role": "Illustrator",
+        "status": "requested"
+      },
+      {
+        "memberIndex": 952,
+        "role": "Illustrator",
+        "status": "declined"
+      }
+    ],
+    "ai": {
+      "summary": "A letters-to-yourself series that collects postcards to open six months after the trip",
+      "category": "project",
+      "fitScore": 90,
+      "fitReason": "Matches \"local guides written by people who actually live there\". Real prices, which Mira always asks for.",
+      "tags": [
+        "journaling",
+        "long stays",
+        "village stays"
+      ],
+      "skills": [
+        "illustration",
+        "photography",
+        "writing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 562,
+    "type": "discussion",
+    "title": "A free-things map of Prague, with real prices",
+    "body": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. Day by day, with the cheapest option first and one splurge per trip.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        75,
+        235,
+        793,
+        986,
+        1025,
+        1097
+      ],
+      "build": [
+        14,
+        141,
+        183,
+        327,
+        405,
+        654,
+        916
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A free-things map of Prague, with real prices",
+      "category": "discussion",
+      "fitScore": 92,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". The ask is specific and small.",
+      "tags": [
+        "flights",
+        "hostels",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 465,
+    "type": "idea",
+    "title": "A Bangkok street-food budget crawl, the honest version",
+    "body": "A Bangkok street-food budget crawl that eats well for $15 a day across five neighborhoods. I only get ten vacation days a year, so a mistake in the plan is one I pay for twice. Fans add what they paid last month and the guide gets updated monthly. I can write it up but need someone to turn it into a clean one-page layout.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        716,
+        944,
+        1105
+      ],
+      "build": [
+        75,
+        486,
+        589,
+        753,
+        779,
+        1004,
+        1065,
+        1147
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A Bangkok street-food budget crawl, the honest version",
+      "category": "idea",
+      "fitScore": 49,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Beginner-friendly, which Mira promotes.",
+      "tags": [
+        "budget",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "itinerary planning",
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 314,
+    "type": "project",
+    "title": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe",
+    "body": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. It is hard to tell what is genuinely cheap and what only looks cheap. Fans add what they paid last month and the guide gets updated monthly. Could use a translator for the menus and the bus signs.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Translator"
+    ],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        9,
+        28,
+        38,
+        83,
+        140,
+        225,
+        252,
+        259,
+        297,
+        348,
+        399,
+        401,
+        414,
+        491,
+        519,
+        611,
+        694,
+        723,
+        747,
+        753,
+        816,
+        847,
+        904,
+        1042,
+        1089,
+        1135
+      ],
+      "build": []
+    },
+    "team": [
+      {
+        "memberIndex": 1042,
+        "role": "Translator",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe",
+      "category": "project",
+      "fitScore": 72,
+      "fitReason": "Matches \"local guides written by people who actually live there\". The ask is specific and small.",
+      "tags": [
+        "budget",
+        "points and miles"
+      ],
+      "skills": [
+        "budgeting",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 309,
+    "type": "idea",
+    "title": "A shoulder-season flight thread, made by fans",
+    "body": "A shoulder-season flight thread that flags the cheap weeks to fly from the US to Europe. I spent my first trip to Europe guessing, and the guessing cost me about $400. Everything fits on one phone-friendly page that works offline. Could use a translator for the menus and the bus signs.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        48,
+        61,
+        75,
+        137,
+        163,
+        174,
+        269,
+        346,
+        365,
+        392,
+        448,
+        459,
+        465,
+        491,
+        528,
+        579,
+        611,
+        632,
+        748,
+        755,
+        771,
+        886,
+        1144
+      ],
+      "build": [
+        15,
+        961
+      ]
+    },
+    "team": [],
+    "ai": {
+      "summary": "A shoulder-season flight thread, made by fans",
+      "category": "idea",
+      "fitScore": 81,
+      "fitReason": "Matches \"beginner-friendly photo and editing tips\". Has a date and a named owner.",
+      "tags": [
+        "budget",
+        "flights",
+        "europe",
+        "points and miles"
+      ],
+      "skills": [
+        "video editing",
+        "translation"
+      ],
+      "isSpam": false
+    }
+  },
+  {
+    "community": "food-finds",
+    "authorIndex": 736,
+    "type": "idea",
+    "title": "A cooking-class swap for food-obsessed travelers",
+    "body": "A cooking-class swap that matches fans with a home cook who teaches one dish for a small fee. The family places do not have websites, so nobody can find them. Only places a fan has eaten at in the last six months. Need a host to run the first tasting evening.",
+    "status": "open",
+    "rolesNeeded": [],
+    "links": [
+      {
+        "label": "Notes",
+        "url": "https://example.com/notes"
+      }
+    ],
+    "createdDaysAgo": 0,
+    "signals": {
+      "use": [
+        20,
+        97,
+        98,
+        295,
+        407,
+        551,
+        656,
+        664,
+        888,
+        977
+      ],
+      "build": []
+    },
+    "team": [],
+    "ai": {
+      "summary": "A cooking-class swap for food-obsessed travelers",
+      "category": "idea",
+      "fitScore": 60,
+      "fitReason": "Matches \"small family-run food spots over famous restaurants\". Scope is one weekend’s worth of work.",
+      "tags": [
+        "food",
+        "street food"
+      ],
+      "skills": [
+        "translation",
+        "photography",
+        "video editing"
+      ],
+      "isSpam": false
+    }
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "space": {
+    "handle": "mira",
+    "displayName": "Mira Lane",
+    "avatarUrl": "/creator/mira-portrait.webp"
+  },
+  "promotion": {
+    "showcaseSlug": "ten-family-kitchens-in-oaxaca",
+    "headline": "Featured: Ten family kitchens in Oaxaca",
+    "publishedAt": "2026-10-04T12:33:21.679Z",
+    "live": true
+  },
+  "post": {
+    "id": "c741f4f6-727e-4329-a34d-e98534add70f",
+    "type": "project",
+    "title": "Ten family kitchens in Oaxaca",
+    "body": "A fan-made food guide to ten family-run kitchens in Oaxaca, with the one dish to order at each, the price in pesos and dollars, and a photo taken that day. A local guide checks every address, a translator writes the menu cards and a photographer shoots the plates in daylight. Most meals are $4 to $9. The goal is a guide you can follow on foot in four days.",
+    "status": "launched",
+    "links": [],
+    "rolesNeeded": ["Local guide", "Translator", "Photographer"],
+    "openRoles": [],
+    "useCount": 40,
+    "buildCount": 14,
+    "community": {
+      "slug": "food-finds",
+      "name": "Food Finds",
+      "tint": "peach",
+      "icon": "utensils"
+    },
+    "author": {
+      "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+      "name": "Felix Garcia",
+      "headline": "Food writer, mostly street food",
+      "image": null
+    }
+  },
+  "team": [
+    {
+      "membershipId": "42773bd4-8291-48c1-800c-ffab86ad197b",
+      "name": "Felix Garcia",
+      "headline": "Food writer, mostly street food",
+      "image": null,
+      "role": "Lead",
+      "status": "accepted",
+      "isLead": true,
+      "createdAt": "2026-09-06T12:33:21.679Z"
+    }
+  ]
+}

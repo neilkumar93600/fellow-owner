@@ -1,0 +1,40 @@
+{
+  "id": "f533809b-d6bd-4c76-959c-1d266ba77f4d",
+  "type": "project",
+  "status": "building",
+  "title": "A free-things map of Prague for anyone flying out of the US on a budget",
+  "excerpt": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. Every \"cheap\" guide I found left out the tourist taxes and the airport…",
+  "rolesNeeded": [],
+  "openRoles": [],
+  "community": {
+    "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+    "slug": "budget-travel",
+    "name": "Budget Travel",
+    "tint": "peach",
+    "icon": "wallet"
+  },
+  "author": {
+    "membershipId": "67973871-b374-45db-a008-b003fb56e71e",
+    "name": "Rhea Fischer",
+    "headline": "Van-lifer who wired the whole thing herself",
+    "image": null
+  },
+  "useCount": 15,
+  "buildCount": 1,
+  "commentCount": 2,
+  "teamPreview": [],
+  "teamSize": 3,
+  "featured": false,
+  "createdAt": "2026-10-09T12:33:21.679Z",
+  "viewerSignals": [],
+  "isAuthor": false,
+  "body": "A free-things map of Prague that pins forty museums, viewpoints and walking tours that cost nothing. Every \"cheap\" guide I found left out the tourist taxes and the airport transfer, so my real budget was off by a hundred dollars. Every price has a date next to it, so anyone can tell when it has gone stale. Need a photographer who has actually been there to make it look as good as it is.",
+  "links": [],
+  "updatedAt": "2026-10-09T12:33:21.679Z",
+  "canEdit": false,
+  "editableUntil": "2026-10-10T12:33:21.679Z",
+  "roles": [],
+  "team": [],
+  "viewerTeam": null,
+  "comments": []
+}

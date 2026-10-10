@@ -1,0 +1,32 @@
+{
+  "name": "fellow-owners",
+  "private": true,
+  "description": "One link in your bio that gathers your followers into communities, surfaces the best ideas and people, and lets you give fans your spotlight.",
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:unit": "turbo run test:unit",
+    "test:integration": "turbo run test:integration",
+    "test:e2e": "pnpm --filter @fellow-owners/web test:e2e",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "db:generate": "pnpm --filter @fellow-owners/api db:generate",
+    "db:migrate": "pnpm --filter @fellow-owners/api db:migrate",
+    "db:seed": "pnpm --filter @fellow-owners/api db:seed",
+    "db:embed": "pnpm --filter @fellow-owners/api db:embed",
+    "db:studio": "pnpm --filter @fellow-owners/api db:studio"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "turbo": "^2.11.6",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "task": "suggestCommunities",
+  "description": "Recorded fast-tier answers for suggestCommunities (join step 2).",
+  "cases": [
+    {
+      "name": "solo-traveler-who-loves-street-food",
+      "description": "The demo path: Solo Travelers and Food Finds preselected; the weak Slow Living guess is dropped.",
+      "input": {
+        "intro": "solo traveler who loves street food",
+        "communities": [
+          { "slug": "budget-travel", "name": "Budget Travel", "description": "Real prices, cheap flights and trips that do not cost a month of rent" },
+          { "slug": "solo-travelers", "name": "Solo Travelers", "description": "Going alone, safely, and meeting good people on the way" },
+          { "slug": "travel-photography", "name": "Travel Photography", "description": "Better trip photos, on a phone or a camera" },
+          { "slug": "food-finds", "name": "Food Finds", "description": "Small family-run spots, street food and the one dish to order" },
+          { "slug": "road-trips", "name": "Road Trips & Van Life", "description": "Long drives, cheap campsites and what the van really costs" },
+          { "slug": "slow-living", "name": "Slow Living", "description": "Staying longer, going slower, and coming home rested" }
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "suggestions": [
+              { "slug": "solo-travelers", "confidence": 0.92 },
+              { "slug": "food-finds", "confidence": 0.88 },
+              { "slug": "slow-living", "confidence": 0.2 }
+            ]
+          },
+          "usage": { "prompt_tokens": 420, "completion_tokens": 40 }
+        }
+      ],
+      "expect": {
+        "suggestions": [
+          { "slug": "solo-travelers", "confidence": 0.92 },
+          { "slug": "food-finds", "confidence": 0.88 }
+        ],
+        "requests": 1
+      }
+    },
+    {
+      "name": "unknown-slug-then-percent-confidence",
+      "description": "The first answer invents a slug (fails the enum, retried); the second uses a 0..100 confidence, normalized to 0..1.",
+      "input": {
+        "intro": "I plan group trips every summer and help beginners pack light",
+        "communities": [
+          { "slug": "solo-travelers", "name": "Solo Travelers", "description": "Going alone, safely, and meeting good people on the way" },
+          { "slug": "budget-travel", "name": "Budget Travel", "description": "Real prices, cheap flights and trips that do not cost a month of rent" }
+        ]
+      },
+      "responses": [
+        {
+          "content": { "suggestions": [{ "slug": "group-trips", "confidence": 0.9 }] },
+          "usage": { "prompt_tokens": 300, "completion_tokens": 20 }
+        },
+        {
+          "content": { "suggestions": [{ "slug": "budget-travel", "confidence": 85 }] },
+          "usage": { "prompt_tokens": 360, "completion_tokens": 20 }
+        }
+      ],
+      "expect": {
+        "suggestions": [{ "slug": "budget-travel", "confidence": 0.85 }],
+        "requests": 2
+      }
+    }
+  ]
+}

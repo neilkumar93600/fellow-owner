@@ -1,0 +1,126 @@
+{
+  "task": "briefing",
+  "description": "Recorded smart-tier answers for the daily briefing. Candidates are referenced by key (c1..); expectations list the refIds after mapping.",
+  "cases": [
+    {
+      "name": "ready-briefing",
+      "description": "Three highlights by key, two watchouts based on the counts.",
+      "input": {
+        "creatorName": "Mira Lane",
+        "periodDate": "2026-10-01",
+        "tasteProfile": {
+          "promote": ["Budget-honest travel with real prices", "Guides made by people in my community"],
+          "never": ["Crypto or prize scams"],
+          "voice": []
+        },
+        "candidates": [
+          { "refType": "post", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a01", "title": "Lisbon on $60 a day", "summary": "A fan-made Lisbon budget guide with every price checked by a local.", "fitScore": 88, "signals": 14, "reason": "Matches \"Budget-honest travel with real prices\"." },
+          { "refType": "post", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a02", "title": "Free walking tours map", "summary": "A map of free walking tours in Lisbon.", "fitScore": 64, "signals": 9, "reason": null },
+          { "refType": "inbound", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a03", "title": "Collab with a luggage brand on a packing challenge", "summary": "A brand proposes a paid 30-day packing challenge.", "fitScore": 82, "reason": "Fits your budget-honest travel line." },
+          { "refType": "membership", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a04", "title": "Priya Shah", "summary": "Local guide, joined 3 crews this fortnight.", "fitScore": null, "signals": 21, "reason": "3 accepted team joins in 14 days" },
+          { "refType": "inbound", "refId": "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a05", "title": "Claim your free cruise", "summary": "A prize giveaway asking for passport details.", "fitScore": 12, "reason": "Touches \"Crypto or prize scams\"." }
+        ],
+        "counts": {
+          "members": 1204,
+          "newMembers7d": 87,
+          "ideas7d": 23,
+          "pitches7d": 31,
+          "opportunitiesWaiting": 4,
+          "filteredSpam7d": 6,
+          "pendingAnalysis": 2,
+          "perCommunity": [
+            { "slug": "budget-travel", "name": "Budget Travel", "posts7d": 9, "joins7d": 31 },
+            { "slug": "solo-travelers", "name": "Solo Travelers", "posts7d": 7, "joins7d": 24 }
+          ]
+        }
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "A fan-made Lisbon guide leads 23 new ideas, and 4 strong messages are waiting for you.",
+            "highlights": [
+              { "candidate": "c1", "why": "A strong match with 14 signals: it is exactly the kind of honest, priced guide you love, made by your community." },
+              { "candidate": "c3", "why": "A paid 30-day packing challenge that fits your budget-honest line; worth a reply before the brand moves on." },
+              { "candidate": "c4", "why": "Priya joined 3 crews this fortnight; a natural fan to spotlight." }
+            ],
+            "watchouts": [
+              "6 messages were filtered as spam this week; a quick look at the Filtered tab keeps good ones from slipping.",
+              "2 items are still waiting for AI review."
+            ]
+          },
+          "usage": { "prompt_tokens": 2300, "completion_tokens": 260 }
+        }
+      ],
+      "expect": {
+        "headline": "A fan-made Lisbon guide leads 23 new ideas, and 4 strong messages are waiting for you.",
+        "refIds": [
+          "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a01",
+          "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a03",
+          "6b0c5e1e-1f0a-4c8e-9a51-0d6f3c1f0a04"
+        ],
+        "watchouts": 2,
+        "requests": 1
+      }
+    },
+    {
+      "name": "invented-numbers-and-too-few-highlights",
+      "description": "Attempt 1 has 2 highlights and a made-up 40%; attempt 2 has 3 highlights but keeps the 40% headline and adds an unsupported watchout. The headline falls back to the code-written one and the watchout is dropped.",
+      "input": {
+        "creatorName": "Mira Lane",
+        "periodDate": "2026-10-01",
+        "tasteProfile": { "promote": ["Guides made by people in my community"], "never": [], "voice": [] },
+        "candidates": [
+          { "refType": "post", "refId": "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b01", "title": "Night-train guide for Europe", "summary": "A guide to the best sleeper routes.", "fitScore": 79, "signals": 11 },
+          { "refType": "post", "refId": "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b02", "title": "Monthly photo walk", "summary": "A proposal for a monthly fan photo walk.", "fitScore": 71, "signals": 8 },
+          { "refType": "inbound", "refId": "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b03", "title": "Podcast interview", "summary": "A podcast about slow travel.", "fitScore": 76 }
+        ],
+        "counts": {
+          "members": 310,
+          "newMembers7d": 12,
+          "ideas7d": 5,
+          "pitches7d": 4,
+          "opportunitiesWaiting": 1,
+          "filteredSpam7d": 0,
+          "pendingAnalysis": 0,
+          "perCommunity": []
+        }
+      },
+      "responses": [
+        {
+          "content": {
+            "headline": "Your community grew 40% this week.",
+            "highlights": [
+              { "candidate": "c1", "why": "A sleeper-train guide with 11 signals, made by your community." },
+              { "candidate": "c1", "why": "Duplicate." }
+            ],
+            "watchouts": []
+          },
+          "usage": { "prompt_tokens": 1500, "completion_tokens": 120 }
+        },
+        {
+          "content": {
+            "headline": "Your community grew 40% this week.",
+            "highlights": [
+              { "candidate": "c1", "why": "A sleeper-train guide with 11 signals, made by your community." },
+              { "candidate": "c3", "why": "A podcast about slow travel, a strong match (76)." },
+              { "candidate": "c2", "why": "A monthly photo walk could double your output to 50 guides." }
+            ],
+            "watchouts": ["15 members left this week."]
+          },
+          "usage": { "prompt_tokens": 1700, "completion_tokens": 150 }
+        }
+      ],
+      "expect": {
+        "headline": "12 new fans, 5 ideas and 4 fan messages this week",
+        "refIds": [
+          "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b01",
+          "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b03",
+          "7c1d6f2f-2a1b-4d9f-8b62-1e7a4d2a0b02"
+        ],
+        "thirdWhyIsFallback": true,
+        "watchouts": 0,
+        "requests": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "voice": "Sarah",
+  "model": "elevenlabs/tts/eleven-v4",
+  "lines": {
+    "vo-01": "Seven hundred and forty thousand people follow Mira.",
+    "vo-02": "Until now, they were one number.",
+    "vo-03": "Every week, thousands of messages pour in.",
+    "vo-04": "The ones that matter get buried under spam.",
+    "vo-05": "Most never get read.",
+    "vo-06": "This is Fellow Owners.",
+    "vo-07": "Turn your followers into fellow owners.",
+    "vo-08": "One link in your bio. Fans join, share ideas, form teams, and you back the best one.",
+    "vo-09": "Fans tap your link, write one line about themselves, and the AI suggests where they fit. In under a minute, they’re in.",
+    "vo-10": "Your AI reads every pitch, filters the spam, and sorts the rest by fit, with a reason you can check.",
+    "vo-11": "Every morning, a short briefing: the few things worth your time.",
+    "vo-12": "Minutes, not hours.",
+    "vo-13": "When an idea takes off, a team forms around it.",
+    "vo-14": "Drafts in your voice. One click to publish. A showcase page, and a link that counts every click.",
+    "vo-15": "Fellow Owners. Turn followers into fellow owners. Start your space today."
+  }
+}

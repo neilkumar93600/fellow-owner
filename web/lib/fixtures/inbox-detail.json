@@ -1,0 +1,49 @@
+{
+  "id": "2a6339c7-5518-4098-9589-47db16274436",
+  "type": "brand_deal",
+  "subject": "A year as one of six camera ambassadors",
+  "excerpt": "Our mirrorless camera brand is looking for six creators for a year-long ambassador program. You would get a body and two lenses and $2,500 for content across the year. We need…",
+  "status": "new",
+  "isFiltered": false,
+  "sender": {
+    "membershipId": "26e89a0e-3ce3-4b96-a8fa-0d6295c41f98",
+    "name": "Dilan Taylor",
+    "headline": null,
+    "image": null
+  },
+  "createdAt": "2026-10-06T12:33:21.679Z",
+  "ai": {
+    "status": "done",
+    "attempts": 1,
+    "error": null,
+    "summary": "A year as one of six camera ambassadors",
+    "category": "brand_deal",
+    "fitScore": 94,
+    "fitReason": "Matches \"small family-run food spots over famous restaurants\". Beginner-friendly, which Mira spotlights.",
+    "tags": ["solo travel", "safety"],
+    "skills": ["hosting"],
+    "isSpam": false,
+    "scoredTasteVersion": 1,
+    "stale": false
+  },
+  "recategorized": false,
+  "body": "Our mirrorless camera brand is looking for six creators for a year-long ambassador program. You would get a body and two lenses and $2,500 for content across the year. We need you to actually like the camera, which is why we send it ahead.",
+  "links": [],
+  "creatorReply": null,
+  "repliedAt": null,
+  "senderProfile": {
+    "skills": ["itinerary planning", "budgeting"],
+    "links": [],
+    "joinedAt": "2026-09-17T12:33:21.679Z",
+    "communities": [
+      {
+        "slug": "travel-photography",
+        "name": "Travel Photography",
+        "tint": "aqua"
+      }
+    ],
+    "askCount": 1,
+    "postCount": 0
+  },
+  "feedback": null
+}

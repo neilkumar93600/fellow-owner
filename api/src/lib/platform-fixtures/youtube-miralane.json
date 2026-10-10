@@ -1,0 +1,84 @@
+{
+  "displayName": "Mira Lane",
+  "avatarUrl": "/demo/mira.jpg",
+  "bio": "Slow travel, cheap flights, and the people I meet on the way.",
+  "verified": false,
+  "recent": [
+    {
+      "title": "Lisbon on a $60-a-day budget: every receipt",
+      "url": "https://www.youtube.com/watch?v=miralane00",
+      "views": 182000,
+      "likes": null,
+      "postedAt": "2026-09-30T15:00:00.000Z"
+    },
+    {
+      "title": "Porto for $38 a day: the cheap tram I should have skipped",
+      "url": "https://www.youtube.com/watch?v=miralane01",
+      "views": 141000,
+      "likes": null,
+      "postedAt": "2026-09-27T15:00:00.000Z"
+    },
+    {
+      "title": "My first solo trip to Japan (I was nervous at every airport)",
+      "url": "https://www.youtube.com/watch?v=miralane02",
+      "views": 96000,
+      "likes": null,
+      "postedAt": "2026-09-24T15:00:00.000Z"
+    },
+    {
+      "title": "Cheap flights: how I booked Madrid for $41",
+      "url": "https://www.youtube.com/watch?v=miralane03",
+      "views": 210000,
+      "likes": null,
+      "postedAt": "2026-09-21T15:00:00.000Z"
+    },
+    {
+      "title": "A slow morning in Sintra",
+      "url": "https://www.youtube.com/watch?v=miralane04",
+      "views": 64000,
+      "likes": null,
+      "postedAt": "2026-09-18T15:00:00.000Z"
+    },
+    {
+      "title": "Hostel vs guesthouse: what $25 a night gets you in Hanoi",
+      "url": "https://www.youtube.com/watch?v=miralane05",
+      "views": 158000,
+      "likes": null,
+      "postedAt": "2026-09-15T15:00:00.000Z"
+    },
+    {
+      "title": "Editing travel clips on my phone, beginner settings",
+      "url": "https://www.youtube.com/watch?v=miralane06",
+      "views": 71000,
+      "likes": null,
+      "postedAt": "2026-09-12T15:00:00.000Z"
+    },
+    {
+      "title": "Mexico City on a budget: 3 days, $150 total",
+      "url": "https://www.youtube.com/watch?v=miralane07",
+      "views": 199000,
+      "likes": null,
+      "postedAt": "2026-09-09T15:00:00.000Z"
+    },
+    {
+      "title": "The family-run taverna I would pay double for",
+      "url": "https://www.youtube.com/watch?v=miralane08",
+      "views": 88000,
+      "likes": null,
+      "postedAt": "2026-09-06T15:00:00.000Z"
+    },
+    {
+      "title": "Backpacking the Balkans cheaply: my full cost breakdown",
+      "url": "https://www.youtube.com/watch?v=miralane09",
+      "views": 176000,
+      "likes": null,
+      "postedAt": "2026-09-03T15:00:00.000Z"
+    }
+  ],
+  "source": "fixture",
+  "fetchedAt": "2026-10-01T06:00:00.000Z",
+  "platform": "youtube",
+  "handle": "miralane",
+  "followers": 620000,
+  "profileUrl": "https://www.youtube.com/@miralane"
+}

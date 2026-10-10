@@ -1,0 +1,116 @@
+{
+  "space": {
+    "id": "69930a4e-5d11-4148-8a64-df3dcdc9edbd",
+    "handle": "mira",
+    "displayName": "Mira Lane",
+    "bio": "Slow travel, cheap flights, and the people I meet on the way. Six rooms where my viewers plan, shoot and explore together.",
+    "avatarUrl": "/creator/mira-portrait.webp",
+    "platforms": [
+      {
+        "url": "https://youtube.com/@miralane",
+        "platform": "youtube",
+        "followers": 620000
+      },
+      {
+        "url": "https://instagram.com/miralane",
+        "platform": "instagram",
+        "followers": 380000
+      },
+      {
+        "url": "https://tiktok.com/@miralane",
+        "platform": "tiktok",
+        "followers": 140000
+      }
+    ],
+    "totalFollowers": 1140000,
+    "memberCount": 1200
+  },
+  "communities": [
+    {
+      "id": "e6d7b009-5bc1-4c45-b269-06c68fa988d1",
+      "slug": "budget-travel",
+      "name": "Budget Travel",
+      "description": "Real prices, cheap flights and trips that do not cost a month of rent.",
+      "tint": "peach",
+      "icon": "wallet",
+      "memberCount": 502,
+      "sortOrder": 0
+    },
+    {
+      "id": "96fa6957-4867-46f2-810c-ea84ea97a1ec",
+      "slug": "solo-travelers",
+      "name": "Solo Travelers",
+      "description": "Going alone, safely, and meeting good people on the way.",
+      "tint": "lavender",
+      "icon": "backpack",
+      "memberCount": 385,
+      "sortOrder": 1
+    },
+    {
+      "id": "260cecd8-a52f-4ea2-b354-767d88b74277",
+      "slug": "travel-photography",
+      "name": "Travel Photography",
+      "description": "Better trip photos, on a phone or a camera, and where the light falls.",
+      "tint": "aqua",
+      "icon": "camera",
+      "memberCount": 284,
+      "sortOrder": 2
+    },
+    {
+      "id": "d2262f11-d852-4e43-b5b9-da284c1f8e10",
+      "slug": "food-finds",
+      "name": "Food Finds",
+      "description": "Small family-run spots, street food and the one dish to order.",
+      "tint": "peach",
+      "icon": "utensils",
+      "memberCount": 278,
+      "sortOrder": 3
+    },
+    {
+      "id": "8681e388-3782-4577-bc0c-f3440fe6774e",
+      "slug": "road-trips",
+      "name": "Road Trips & Van Life",
+      "description": "Long drives, cheap campsites and what the van really costs.",
+      "tint": "white",
+      "icon": "car",
+      "memberCount": 213,
+      "sortOrder": 4
+    },
+    {
+      "id": "28205068-4f9e-4bdc-88ae-48bd40414ecd",
+      "slug": "slow-living",
+      "name": "Slow Living",
+      "description": "Staying longer, going slower, and coming home rested.",
+      "tint": "lavender",
+      "icon": "sunrise",
+      "memberCount": 152,
+      "sortOrder": 5
+    }
+  ],
+  "featured": [
+    {
+      "showcaseSlug": "ten-family-kitchens-in-oaxaca",
+      "postId": "c741f4f6-727e-4329-a34d-e98534add70f",
+      "title": "Ten family kitchens in Oaxaca",
+      "headline": "Featured: Ten family kitchens in Oaxaca",
+      "excerpt": "A fan-made food guide to ten family-run kitchens in Oaxaca, with the one dish to order at each, the price in pesos and dollars, and a photo taken that day. A local guide checks…",
+      "type": "project",
+      "communityName": "Food Finds",
+      "tint": "peach",
+      "teamSize": 4,
+      "publishedAt": "2026-10-04T12:33:21.679Z"
+    },
+    {
+      "showcaseSlug": "lisbon-on-60-a-day",
+      "postId": "36a4b99d-494d-41b8-8243-de2d88ef688a",
+      "title": "Lisbon on $60 a day",
+      "headline": "Featured: Lisbon on $60 a day",
+      "excerpt": "Seven days in Lisbon for $420 all in, built by fans in Budget Travel. A local guide checks every price against what a local actually pays, a photographer shoots the golden-hour…",
+      "type": "project",
+      "communityName": "Budget Travel",
+      "tint": "peach",
+      "teamSize": 4,
+      "publishedAt": "2026-09-29T12:33:21.679Z"
+    }
+  ]
+}

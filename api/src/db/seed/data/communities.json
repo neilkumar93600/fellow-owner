@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "budget-travel",
+    "name": "Budget Travel",
+    "description": "Real prices, cheap flights and trips that do not cost a month of rent.",
+    "tint": "peach",
+    "icon": "wallet"
+  },
+  {
+    "slug": "solo-travelers",
+    "name": "Solo Travelers",
+    "description": "Going alone, safely, and meeting good people on the way.",
+    "tint": "lavender",
+    "icon": "backpack"
+  },
+  {
+    "slug": "travel-photography",
+    "name": "Travel Photography",
+    "description": "Better trip photos, on a phone or a camera, and where the light falls.",
+    "tint": "aqua",
+    "icon": "camera"
+  },
+  {
+    "slug": "food-finds",
+    "name": "Food Finds",
+    "description": "Small family-run spots, street food and the one dish to order.",
+    "tint": "peach",
+    "icon": "utensils"
+  },
+  {
+    "slug": "road-trips",
+    "name": "Road Trips & Van Life",
+    "description": "Long drives, cheap campsites and what the van really costs.",
+    "tint": "white",
+    "icon": "car"
+  },
+  {
+    "slug": "slow-living",
+    "name": "Slow Living",
+    "description": "Staying longer, going slower, and coming home rested.",
+    "tint": "lavender",
+    "icon": "sunrise"
+  }
+]

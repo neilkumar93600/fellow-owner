@@ -10,7 +10,7 @@ Demo data used in examples: creator **Mira Kapoor** (`/mira`), communities Build
 | Bio link | Instagram, YouTube or X bio; video descriptions | `/{handle}` |
 | Short link | A creator's promotion post | `/r/{code}` -> `/{handle}/s/{slug}` |
 | Product landing | Direct visit, Startupathon submission | `/` |
-| Sign-in code | 6-digit code in email, typed on `/verify-otp` or inline in Join | `returnTo`, else `/dashboard` (owners) or `/{handle}` (members) |
+| Email code | 6-digit code in email: confirms a new account's email on `/verify-otp`, resets a password on `/reset-password`, or signs a fan in inline in Join | `returnTo`, else `/dashboard` (a reset ends on `/login`) |
 | Notification (P1) | In-app bell | The referenced item |
 
 ## 2. Screen inventory
@@ -20,13 +20,13 @@ Demo data used in examples: creator **Mira Kapoor** (`/mira`), communities Build
 | Route | Screen | Purpose | Data | Access |
 |-------|--------|---------|------|--------|
 | `/` | Landing | Explain the product; Enter as creator; Enter as fan; Start your space | static | public |
-| `/login` | Sign in | Email (code sent) or Google; Google hidden inside in-app browsers | none | public |
-| `/sign-up` | Sign up | Name + email, then code. Same backend step as sign in | none | public |
-| `/verify-otp` | Verify code | 6-digit code, resend after 30s, 5 attempts | email in session storage | public |
-| `/forgot-password`, `/reset-password` | Password recovery | Only if password sign-in is turned on (01, Q8) | none | public |
+| `/login` | Log in | Email or username + password, with "Forgot password?" beside the Password label; or Google, Apple, Facebook (Google hidden inside in-app browsers). Links to Create account and to the demo | none | public |
+| `/create-account` | Create account | Google, Apple, Facebook, or name, email, username (checked live), optional social profile (platform + handle), password with a strength meter, confirm password, then the line confirming 18+ and agreeing to the Terms and Privacy Policy. No creator-or-fan question: the role is per space (`memberships.role`), not per account. `/sign-up` permanently redirects here (keeps `returnTo`) | none | public |
+| `/verify-otp` | Confirm your email | 6-digit code, sent with the account's password (held from the screen before, or typed after a reload), confirms a new account's email and signs it in; a different password sends the person to reset it. Resend after 30s, 5 attempts. With no email in the tab, asks for it (and sends a new code unless one just went out) | email in session storage | public |
+| `/forgot-password`, `/reset-password` | Password recovery | Email, then a 6-digit code and a new password typed twice; the reset signs out every session (01, Q8) | email in session storage | public |
 | `/about`, `/contact` | Marketing (P1) | Who it's for, contact form | static | public |
 | `/pricing`, `/blog` | Marketing (P2) | Plans, posts | static / MDX | public |
-| `/privacy-policy`, `/terms`, `/cookies` | Legal | Required before Google OAuth verification and any real pilot | static | public |
+| `/privacy-policy`, `/terms`, `/cookies`, `/refunds` | Legal | Required before Google OAuth verification and any real pilot. Copy and tables come from `web/lib/legal.ts` and `shared/src/operator.ts` | static | public |
 | `/{handle}` | Bio link page | Creator header and platforms, community cards with counts and Join, Send a pitch, Featured projects | space, communities, featured promotions | public |
 | `/{handle}/join` | Join (3 steps) | 1 sign in, 2 intro + AI-suggested communities, 3 skills and links (skippable) | communities, suggestions | signed in |
 | `/{handle}/c/{slug}` | Community feed | Tabs Ideas, Projects, Discussions (Asks in P1); New post | posts (cursor), counts | member |
@@ -45,13 +45,14 @@ Demo data used in examples: creator **Mira Kapoor** (`/mira`), communities Build
 | `/dashboard` | Today | Stat cards, This week card, AI briefing, inbox mix, top ideas, fanbase activity chart; setup checklist for new spaces | overview, briefing | owner |
 | `/dashboard/inbox` | Inbox | Tabs All, Collabs, Investment, Ideas, Press, Fan notes, Filtered; sort Fit or Newest; status filter; side panel `?item=` | pitches (cursor) | owner |
 | `/dashboard/ideas` | Ideas | Community count chips; Ranked or Board view; Promote | ranked posts | owner |
-| `/dashboard/communities` | Communities | Pastel card per community; Add community | communities + stats | owner |
-| `/dashboard/communities/{slug}` | Community detail | Members, posts, digest (P1), rename, archive | community | owner |
-| `/dashboard/people` | People | Rising contributors strip; members table with skills and contributions; search | memberships | owner |
+| `/dashboard/communities` | Communities | Pastel card per community; Add community; Most active analytics with 7/30 day toggle and score bar per community | communities + stats | owner |
+| `/dashboard/communities/{slug}` | Community detail | Activity panel (score, rank, change vs previous period), Members, posts, digest (P1), rename, archive | community | owner |
+| `/dashboard/people` | People | Tabs Members \| Followers; Members: rising contributors strip, members table with skills and contributions, search, Export CSV; Followers: roster with tags, add, import, tag, auto-tag, export | memberships, followers, communities | owner |
+| `/dashboard/people/followers` | Followers | Add follower form, import panel (paste or upload CSV; AI suggests communities), roster with filters (community tag, untagged, joined), bulk tag, auto-tag, export CSV | followers, communities | owner |
 | `/dashboard/promote` | Promote | Promotions list: drafts, live, clicks | promotions | owner |
 | `/dashboard/promote/{postId}` | Promote composer | Drafts per platform, preview, Publish, Copy, Open in X, short link, clicks | post, drafts | owner |
 | `/dashboard/asks` | Asks (P1) | Create ask, responses, AI summary | asks | owner |
-| `/dashboard/settings` | Settings | Tabs Profile, Taste profile, Bio link (copy, QR), Import audience (P1) | space | owner |
+| `/dashboard/settings` | Settings | Tabs Profile, Taste profile, Bio link (copy, QR), Import audience | space | owner |
 
 Access "member" means a member of the space: they can read every community feed. Posting needs membership of that specific community. The creator sees the fan side as any member does. Fit scores and AI reasons appear only in `/dashboard`.
 
@@ -73,7 +74,7 @@ Promote in the post side panel -> `/dashboard/promote/{postId}` -> drafts appear
 Member opens a Project needing a Designer -> Join as Designer -> author sees the request on the project -> Accept -> success: member listed in team, role filled. P1: "People who could help" lists three more members by similarity.
 
 **J6 · A new creator sets up (pilot)**
-`/` -> Start your space -> sign in -> `/onboarding` 4 steps -> `/dashboard` with setup checklist -> Copy bio link -> success: `/{handle}` live and shareable.
+`/` -> Start your space -> `/create-account?returnTo=/onboarding` (email and password, then the 6-digit code on `/verify-otp` to confirm the email; or Google, Apple, Facebook) -> `/onboarding` 4 steps -> `/dashboard` with setup checklist -> Copy bio link -> success: `/{handle}` live and shareable.
 
 **J7 · Three-minute judge path (demo mode)**
 `/` -> Enter as creator -> Today (30s: briefing, stats) -> Inbox (30s: Filtered tab shows spam removed; open the top collab and its reason) -> Ideas (30s: ranked list, community chips) -> Promote the top idea (45s: drafts, Publish) -> open the showcase link (15s) -> back to `/` -> Enter as fan -> join flow with AI suggestions (30s).
@@ -95,6 +96,7 @@ Member opens a Project needing a Designer -> Join as Designer -> author sees the
 
 | Action | Trigger | Validation | Loading | Success | Error | Next |
 |--------|---------|------------|---------|---------|-------|------|
+| Check inbox | Auto-poll every 30s (creator + fan) | session valid | — | unread count and notification list shown in popover | count and list unavailable silently | stay |
 | Get suggestions | "Suggest" or intro blur | intro >= 10 chars | skeleton chips | communities preselected with "AI suggested" chip | all communities unselected + "Suggestions unavailable" | confirm |
 | Join space | Confirm (step 2) | >= 1 community; intro <= 280 | button spinner | toast "Welcome in", counts update | inline error, Retry | step 3 |
 | Publish post | Publish | member of community; title 5..120; body 20..5000; roles <= 5; links <= 5 http(s); 20 a day | button spinner | optimistic insert at top of feed | toast, form kept | feed |
@@ -109,6 +111,12 @@ Member opens a Project needing a Designer -> Join as Designer -> author sees the
 | Publish promotion | Publish | at least one non-empty draft | spinner | showcase URL and short link shown | toast | stay |
 | Copy / Open in X | Buttons | none | none | clipboard toast / new tab with intent text + short link `?p=x` | none | stay |
 | Save taste profile | Save | promote 1..10 lines, never 0..10, each <= 120 chars; voice 0..5 samples, each <= 600 | spinner | toast; taste version +1 | inline errors | stay |
+| Import followers | Upload CSV or paste | 1..500 rows; name, handle, email, platform, note columns | spinner | ImportResult with created, duplicates, skipped, errors, suggestions if >= 5 notes and suggest=true | row errors listed (first 50): invalid email, invalid handle, no name, handle or email; "Your follower list is full" past 5000 followers | stay |
+| Suggest communities | "Create" in import suggestions | >= 5 notes exist | spinner | communities list for the creator to pick | suggestions unavailable silently, list empty | create or close |
+| Add follower | "Add" button | name 1..80, email unique per space, handle unique per space + platform | spinner | follower added, linked if email/handle matches a member | 409 on a duplicate email or handle; name required | stay |
+| Tag followers | Select + bulk tag | 1..500 selected; community active | spinner | tagged count | community not found or archived: 400 error | stay |
+| Auto-tag followers | "AI" button | untagged followers (up to 500) with a note | spinner | AutoTagResult: tagged count, skipped, aiPaused flag | if AI unavailable or capped, aiPaused=true, no error | stay |
+| Export CSV | "Export" button | owner | attachment download | CSV file sent as text/csv with attachment filename | none | stay |
 | Create space | Finish onboarding | handle 3..30 `[a-z0-9_.]`, unique, not reserved; >= 1 community | spinner | redirect to Today | "Handle taken" + 3 suggestions | Today |
 | Enter demo | Enter as creator or fan | `DEMO_ENABLED` | button spinner | session set | toast "Demo unavailable" | Today or `/mira` |
 
