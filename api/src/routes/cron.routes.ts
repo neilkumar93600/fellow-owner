@@ -18,6 +18,18 @@ export function createCronRoutes(container: Container): Router {
   router.use(noStore());
   router.route('/tick').get(tickQuery, controller.tick).post(tickQuery, controller.tick);
   router.get('/status', controller.status);
+  // Ops check of the proxy chain (Vercel -> Railway): which client headers arrive, and the IP used.
+  router.get('/ip', (req, res) => {
+    res.json({
+      clientIp: req.clientIp,
+      edgeKey: Boolean(req.get('x-edge-key')),
+      headers: Object.fromEntries(
+        ['x-edge-client-ip', 'x-vercel-forwarded-for', 'x-forwarded-for', 'x-real-ip'].map(
+          (name) => [name, req.get(name) ?? null],
+        ),
+      ),
+    });
+  });
   router.route('/demo-reset').get(controller.demoReset).post(controller.demoReset);
   router.route('/purge').get(controller.purge).post(controller.purge);
   router

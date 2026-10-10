@@ -1,0 +1,2 @@
+# Biome formats with LF; keep checkouts LF on every OS (core.autocrlf would turn them into CRLF).
+* text=auto eol=lf
