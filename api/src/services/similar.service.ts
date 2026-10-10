@@ -5,36 +5,19 @@ import type { PostRow } from '../db/schema/posts.js';
 import type { SpaceRow } from '../db/schema/spaces.js';
 import { notFound } from '../lib/errors.js';
 import { memberRef } from '../lib/present.js';
-import { createAccessService } from './access.service.js';
-import { createLimitsService } from './limits.service.js';
-import { createNotificationsService } from './notifications.service.js';
-import { createPostsService } from './posts.service.js';
+import type { AccessService } from './access.service.js';
+import type { PostsService } from './posts.service.js';
 
-/**
- * container.ts types the bag as a bare generic, so the shared services are rebuilt here from the
- * core dependencies: all of them are stateless wrappers over the same repos.
- */
-export type SimilarServiceDeps = Pick<
-  CoreDeps,
-  'db' | 'repos' | 'logger' | 'analyzer' | 'background' | 'pubsub'
->;
+export type SimilarServiceDeps = Pick<CoreDeps, 'repos'> & {
+  access: AccessService;
+  posts: PostsService;
+};
 
 const EMPTY: SimilarResult = { posts: [], people: [] };
 
 /** F17 similar ideas + people who could help: nearest posts and members to a post's embedding. */
 export function createSimilarService(deps: SimilarServiceDeps) {
-  const { db, repos, logger, analyzer, background, pubsub } = deps;
-  const access = createAccessService({ repos });
-  const posts = createPostsService({
-    db,
-    repos,
-    access,
-    limits: createLimitsService({ repos }),
-    analyzer,
-    background,
-    notifications: createNotificationsService({ db, repos, logger, pubsub }),
-    logger,
-  });
+  const { repos, access, posts } = deps;
 
   /** Their headline, else the skill the post text mentions, else their first skill. */
   function reasonFor(member: MembershipRow, post: PostRow): string {

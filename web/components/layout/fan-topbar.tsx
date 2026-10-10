@@ -1,7 +1,7 @@
 'use client';
 
 import type { PublicCommunity, PublicSpace, ViewerMembership } from '@fellow-owners/shared';
-import { LayoutGrid, LogOut, Send, UserRound } from 'lucide-react';
+import { LayoutGrid, LogOut, Send, Settings, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -164,6 +164,13 @@ function ViewerMenu({ space, viewer }: Pick<FanTopbarProps, 'space' | 'viewer'>)
           </>
         )}
         <MenuSeparator />
+        <MenuLinkItem
+          icon={<Settings />}
+          render={<Link href={routes.fan.account()} />}
+          className="h-11"
+        >
+          Account
+        </MenuLinkItem>
         <MenuLinkItem icon={<LogOut />} render={<Link href={SIGN_OUT_HREF} />} className="h-11">
           Sign out
         </MenuLinkItem>

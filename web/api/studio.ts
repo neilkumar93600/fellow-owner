@@ -45,7 +45,9 @@ export type IdeasParams = Params<IdeasQuery>;
 export type PeopleParams = Params<PeopleQuery>;
 
 /** `?a=1&b=x` from the values that are set; blank strings are left out, others trimmed. */
-export function query(params: Record<string, string | number | null | undefined>): string {
+export function query(
+  params: Record<string, string | number | boolean | null | undefined>,
+): string {
   const search = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
     const text = typeof value === 'string' ? value.trim() : value;

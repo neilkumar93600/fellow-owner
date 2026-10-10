@@ -208,6 +208,61 @@ describe('DELETE /api/spaces/:handle/me', () => {
     await request(app).delete('/api/spaces/mira/me').set('Cookie', leaver.cookie).expect(403);
   });
 
+  it('lets a fan who left join again, like a fresh join', async () => {
+    const leaver = await member('rejoin@mod.test', 'Rejoiner');
+    const count = async () =>
+      (await repos.communities.listBySpace(mira.space.id)).find((c) => c.id === builders.id)
+        ?.memberCount;
+    const before = await count();
+    await request(app).delete('/api/spaces/mira/me').set('Cookie', leaver.cookie).expect(204);
+    const [left] = await db
+      .select()
+      .from(memberships)
+      .where(eq(memberships.id, leaver.membership.id));
+    expect(left?.leftAt).not.toBeNull();
+    expect(left?.removedAt).not.toBeNull();
+
+    const joined = await request(app)
+      .post('/api/spaces/mira/join')
+      .set('Cookie', leaver.cookie)
+      .send({ communityIds: [builders.id] })
+      .expect(200);
+    expect(joined.body.alreadyMember).toBe(false);
+    const [back] = await db
+      .select()
+      .from(memberships)
+      .where(eq(memberships.id, leaver.membership.id));
+    expect(back?.removedAt).toBeNull();
+    expect(back?.leftAt).toBeNull();
+    expect(await count()).toBe(before);
+    await request(app).get('/api/spaces/mira/me').set('Cookie', leaver.cookie).expect(200);
+  });
+
+  it('keeps a member the owner removed out, even after an earlier leave and rejoin', async () => {
+    const fanToRemove = await member('removed@mod.test', 'Removed');
+    await request(app).delete('/api/spaces/mira/me').set('Cookie', fanToRemove.cookie).expect(204);
+    await request(app)
+      .post('/api/spaces/mira/join')
+      .set('Cookie', fanToRemove.cookie)
+      .send({ communityIds: [builders.id] })
+      .expect(200);
+    await request(app)
+      .delete(`/api/studio/people/${fanToRemove.membership.id}`)
+      .set('Cookie', owner.cookie)
+      .expect(204);
+    const [row] = await db
+      .select()
+      .from(memberships)
+      .where(eq(memberships.id, fanToRemove.membership.id));
+    expect(row?.removedAt).not.toBeNull();
+    expect(row?.leftAt).toBeNull();
+    await request(app)
+      .post('/api/spaces/mira/join')
+      .set('Cookie', fanToRemove.cookie)
+      .send({ communityIds: [builders.id] })
+      .expect(403);
+  });
+
   it('refuses the owner', async () => {
     await request(app).delete('/api/spaces/mira/me').set('Cookie', owner.cookie).expect(400);
   });

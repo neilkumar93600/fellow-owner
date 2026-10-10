@@ -1,4 +1,4 @@
-import type { ChallengeSummary, IdeaItem } from '@fellow-owners/shared';
+import type { ChallengeDetail, ChallengeSummary } from '@fellow-owners/shared';
 import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   closeChallenge,
@@ -15,8 +15,6 @@ export const challengeKeys = {
   list: ['studio', 'challenges', 'list'] as const,
   detail: (id: string) => ['studio', 'challenges', 'detail', id] as const,
 };
-
-type ChallengeDetail = ChallengeSummary & { entries: IdeaItem[] };
 
 /** Every challenge, open and closed. A 404 or 501 means the API does not have challenges yet. */
 export function useChallenges() {

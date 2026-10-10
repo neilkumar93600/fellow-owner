@@ -15,20 +15,29 @@ import type {
   TeamStatus,
   Tint,
 } from '@fellow-owners/shared';
-import { eq, like } from 'drizzle-orm';
+import { asc, eq, inArray, like } from 'drizzle-orm';
 import { DEMO_NAMES, ensureDemoUsers } from '../../auth/demo.js';
 import { buildContainer, type CoreDeps } from '../../container.js';
-import { daysAgo } from '../../lib/dates.js';
+import { daysAgo, utcDayString, weekStart } from '../../lib/dates.js';
 import { contentHash } from '../../lib/hash.js';
 import { closeDb } from '../client.js';
 import { type NewUserRow, user } from '../schema/auth.js';
 import type { NewCommunityMemberRow } from '../schema/communities.js';
-import type { NewInboundRow } from '../schema/inbound.js';
+import { followers } from '../schema/followers.js';
+import { inbound, type NewInboundRow } from '../schema/inbound.js';
 import { asks } from '../schema/later.js';
 import type { NewMembershipRow } from '../schema/memberships.js';
+import { reports } from '../schema/moderation.js';
+import { pageVisits } from '../schema/page-visits.js';
 import type { NewPostRow } from '../schema/posts.js';
 import type { NewClickEventRow, NewPromotionRow } from '../schema/promotions.js';
-import type { NewCommentRow, NewSignalRow, NewTeamMemberRow } from '../schema/social.js';
+import { questionGroups } from '../schema/question-groups.js';
+import {
+  comments,
+  type NewCommentRow,
+  type NewSignalRow,
+  type NewTeamMemberRow,
+} from '../schema/social.js';
 
 /**
  * pnpm db:seed — loads data/*.json into the demo space (05-backend-schema section 9).
@@ -644,6 +653,21 @@ export async function seedDemoSpace(
     );
   }
 
+  await seedNewFeatures(deps, {
+    data,
+    now,
+    spaceId: space.id,
+    tasteVersion: space.tasteVersion,
+    creatorUserId: demoUsers.creator.id,
+    ownerMembershipId: ownerMembership.id,
+    memberUserIds: userRows.map((row) => row.id as string),
+    communityIdBySlug,
+    posts,
+    pitches,
+    followerRows: seededFollowers,
+    followerSeeds,
+  });
+
   const result: SeedResult = {
     spaceId: space.id,
     handle: space.handle,
@@ -669,6 +693,372 @@ export async function seedDemoSpace(
 
   logger.info({ ...result, ownerMembershipId: ownerMembership.id }, 'demo space seeded');
   return result;
+}
+
+/** data/question-groups.json: hand-written like followers.json, generate-content.ts leaves it alone. */
+interface SeedQuestionGroup {
+  /** Pitches whose subject matches (and are fan_note / idea / other, not filtered, not spam) join. */
+  subject: string;
+  question: string;
+  status: 'open' | 'answered';
+  draft: string | null;
+  answer?: string;
+  /** Answered groups: one pinned discussion post per community slug; the first is post_id. */
+  pinnedCommunities?: string[];
+  answeredDaysAgo?: number;
+  askerLimit: number;
+}
+
+const GROUP_PITCH_TYPES: readonly string[] = ['fan_note', 'idea', 'other'];
+
+interface NewFeatureContext {
+  data: SeedData;
+  now: Date;
+  spaceId: string;
+  tasteVersion: number;
+  creatorUserId: string;
+  ownerMembershipId: string;
+  memberUserIds: string[];
+  communityIdBySlug: Map<string, string>;
+  posts: Array<{ id: string }>;
+  pitches: Array<{ id: string }>;
+  followerRows: Array<{ id: string }>;
+  followerSeeds: Array<{ taggedBy?: 'creator' | 'ai' }>;
+}
+
+/**
+ * Seeds the backend-completion features so every new screen shows data after a demo reset:
+ * question groups (+ pinned answers), read/shortlist stamps, weekly digests, reports, 30 days of
+ * page visits, creator bell notifications and ai_tagged_at. Everything is derived from the
+ * committed JSON and `now`, so repeated runs match.
+ */
+async function seedNewFeatures(deps: CoreDeps, ctx: NewFeatureContext): Promise<void> {
+  const { repos, db } = deps;
+  const { data, spaceId } = ctx;
+  const at = (days: number) => daysAgo(days, ctx.now);
+
+  // --- Answer Once: question groups built from existing pitches.
+  const groupSeeds = await readJson<SeedQuestionGroup[]>('question-groups');
+  const claimed = new Set<number>();
+  for (const seed of groupSeeds) {
+    const indices = data.pitches.flatMap((pitch, i) =>
+      !claimed.has(i) &&
+      pitch.subject === seed.subject &&
+      GROUP_PITCH_TYPES.includes(pitch.type) &&
+      !pitch.isFiltered &&
+      !pitch.ai.isSpam
+        ? [i]
+        : [],
+    );
+    indices.splice(seed.askerLimit);
+    if (indices.length === 0) continue; // smaller data sets (tests) may lack these pitches
+    for (const i of indices) claimed.add(i);
+    const created = indices.map((i) => data.pitches[i]?.createdDaysAgo ?? 0);
+    const answered = seed.status === 'answered';
+    const answeredAt = answered ? at(seed.answeredDaysAgo ?? 1) : null;
+    const pinSlugs = (seed.pinnedCommunities ?? []).filter((slug) =>
+      ctx.communityIdBySlug.has(slug),
+    );
+    const pinIds = pinSlugs.map((slug) => ctx.communityIdBySlug.get(slug) as string);
+
+    const [group] = await db
+      .insert(questionGroups)
+      .values({
+        spaceId,
+        question: seed.question,
+        status: seed.status,
+        draft: answered ? null : seed.draft,
+        answer: answered ? (seed.answer ?? null) : null,
+        askedCount: indices.length,
+        firstAskedAt: at(Math.max(...created)),
+        lastAskedAt: at(Math.min(...created)),
+        answeredAt,
+        pinnedCommunityIds: answered ? pinIds : [],
+      })
+      .returning();
+    if (!group) throw new Error('question group insert returned no row');
+
+    const pitchIds = indices.flatMap((i) => ctx.pitches[i]?.id ?? []);
+    await db
+      .update(inbound)
+      .set({ questionGroupId: group.id })
+      .where(inArray(inbound.id, pitchIds));
+    if (answered && seed.answer) {
+      await db
+        .update(inbound)
+        .set({ status: 'replied', creatorReply: seed.answer, repliedAt: answeredAt })
+        .where(inArray(inbound.id, pitchIds));
+    }
+
+    // Answered: one pinned discussion post per chosen community; the first is question_groups.post_id.
+    let firstPostId: string | null = null;
+    for (const communityId of answered ? pinIds : []) {
+      const title = seed.question.slice(0, 120);
+      const post = await repos.posts.insert({
+        spaceId,
+        communityId,
+        authorMembershipId: ctx.ownerMembershipId,
+        questionGroupId: group.id,
+        type: 'discussion',
+        title,
+        body: seed.answer ?? '',
+        rolesNeeded: [],
+        createdAt: answeredAt ?? ctx.now,
+        updatedAt: answeredAt ?? ctx.now,
+        contentHash: contentHash(title, seed.answer ?? ''),
+        ...aiColumns(
+          {
+            summary: 'The creator answered a question many fans asked.',
+            category: 'discussion',
+            fitScore: 70,
+            fitReason: 'A creator answer to a common fan question.',
+            tags: [],
+            skills: [],
+            isSpam: false,
+          },
+          ctx.tasteVersion,
+        ),
+      });
+      firstPostId ??= post.id;
+    }
+    if (firstPostId) {
+      await db
+        .update(questionGroups)
+        .set({ postId: firstPostId })
+        .where(eq(questionGroups.id, group.id));
+    }
+  }
+
+  // --- Pitch tracker: Priya (the demo fan) has opened and shortlisted pitches.
+  const fanIndex = data.members.findIndex((m) => m.isDemoFan);
+  const priya = data.pitches.flatMap((pitch, i) => (pitch.senderIndex === fanIndex ? [i] : []));
+  const shortlistIndex =
+    priya.find((i) => data.pitches[i]?.status === 'shortlisted') ?? priya[priya.length - 1];
+  for (const i of priya) {
+    const pitch = data.pitches[i];
+    const id = ctx.pitches[i]?.id;
+    if (!pitch || !id) continue;
+    await db
+      .update(inbound)
+      .set({
+        readAt: new Date(at(pitch.createdDaysAgo).getTime() + 3_600_000),
+        shortlistedAt:
+          i === shortlistIndex ? new Date(at(pitch.createdDaysAgo).getTime() + 7_200_000) : null,
+      })
+      .where(eq(inbound.id, id));
+  }
+
+  // --- Weekly community digests, dated this ISO week's Monday.
+  const periodDate = utcDayString(weekStart(ctx.now));
+  for (const community of data.communities) {
+    const communityId = ctx.communityIdBySlug.get(community.slug);
+    if (!communityId) continue;
+    const top = data.posts
+      .flatMap((post, i) =>
+        post.community === community.slug ? [{ post, row: ctx.posts[i] }] : [],
+      )
+      .sort(
+        (a, b) =>
+          b.post.signals.use.length +
+          b.post.signals.build.length -
+          (a.post.signals.use.length + a.post.signals.build.length),
+      )
+      .slice(0, 3);
+    await repos.digests.upsert({
+      spaceId,
+      communityId,
+      periodDate,
+      content: {
+        summary: `${community.name} spent the week on ${top.length} standout posts. Fans swapped tips, asked for feedback and backed each other's ideas.`,
+        themes: top.length > 0 ? [community.slug.replace(/-/g, ' ')] : [],
+        standouts: top.flatMap(({ post, row }) =>
+          row ? [{ refId: row.id, why: post.title.slice(0, 140) }] : [],
+        ),
+      },
+      model: 'seed',
+    });
+  }
+
+  // --- Moderation: 2 open reports and 1 resolved (different reporters).
+  const [firstComment] = await db
+    .select({ id: comments.id, postId: comments.postId })
+    .from(comments)
+    .where(eq(comments.spaceId, spaceId))
+    .orderBy(asc(comments.createdAt), asc(comments.id))
+    .limit(1);
+  const reporter = (n: number) => ctx.memberUserIds[n + 1] ?? ctx.memberUserIds[0] ?? '';
+  const reportSpecs = [
+    {
+      by: 0,
+      type: 'post' as const,
+      id: ctx.posts[5]?.id,
+      reason: 'spam' as const,
+      days: 1,
+      open: true,
+    },
+    {
+      by: 1,
+      type: 'comment' as const,
+      id: firstComment?.id,
+      reason: 'off_topic' as const,
+      days: 2,
+      open: true,
+    },
+    {
+      by: 2,
+      type: 'post' as const,
+      id: ctx.posts[9]?.id,
+      reason: 'other' as const,
+      days: 6,
+      open: false,
+    },
+  ];
+  const reportIds: Array<{ id: string; type: 'post' | 'comment'; reason: string; open: boolean }> =
+    [];
+  for (const spec of reportSpecs) {
+    if (!spec.id || !reporter(spec.by)) continue;
+    const [row] = await db
+      .insert(reports)
+      .values({
+        spaceId,
+        reporterUserId: reporter(spec.by),
+        targetType: spec.type,
+        targetId: spec.id,
+        reason: spec.reason,
+        note: null,
+        status: spec.open ? 'open' : 'resolved',
+        resolvedByUserId: spec.open ? null : ctx.creatorUserId,
+        resolvedAt: spec.open ? null : at(spec.days - 1),
+        createdAt: at(spec.days),
+      })
+      .returning();
+    if (row) reportIds.push({ id: row.id, type: spec.type, reason: spec.reason, open: spec.open });
+  }
+
+  // --- 30 days of bio-page visits: a weekday/weekend rhythm, a few repeat visitors.
+  const visitRows = Array.from({ length: 30 }, (_, d) => {
+    const day = utcDayString(at(d));
+    const weekend = [0, 6].includes(at(d).getUTCDay());
+    const visitors = (weekend ? 5 : 9) + ((d * 7) % 6);
+    return Array.from({ length: visitors }, (_, n) => ({
+      spaceId,
+      visitorHash: `seed-visit-${day}-${n}`,
+      day,
+      visits: 1 + ((d + n) % 3 === 0 ? 1 : 0),
+    }));
+  }).flat();
+  await db.insert(pageVisits).values(visitRows);
+
+  // --- The creator's bell: 5 unread (one report_filed) and 2 read.
+  const newest = [...data.pitches.keys()]
+    .sort((a, b) => (data.pitches[a]?.createdDaysAgo ?? 0) - (data.pitches[b]?.createdDaysAgo ?? 0))
+    .slice(0, 3);
+  const bell: Array<{
+    kind: NotificationKind;
+    payload: Record<string, unknown>;
+    hours: number;
+    read: boolean;
+  }> = [];
+  const openReports = reportIds.filter((r) => r.open);
+  const firstReport = openReports[0];
+  if (firstReport) {
+    bell.push({
+      kind: 'report_filed',
+      payload: {
+        reportId: firstReport.id,
+        targetType: firstReport.type,
+        reason: firstReport.reason,
+      },
+      hours: 3,
+      read: false,
+    });
+  }
+  const secondReport = openReports[1];
+  if (secondReport) {
+    bell.push({
+      kind: 'report_filed',
+      payload: {
+        reportId: secondReport.id,
+        targetType: secondReport.type,
+        reason: secondReport.reason,
+      },
+      hours: 40,
+      read: true,
+    });
+  }
+  for (const [n, i] of newest.entries()) {
+    const pitch = data.pitches[i];
+    const id = ctx.pitches[i]?.id;
+    if (!pitch || !id) continue;
+    bell.push({
+      kind: 'pitch_received',
+      payload: {
+        inboundId: id,
+        subject: pitch.subject,
+        pitchType: pitch.type,
+        actorName: data.members[pitch.senderIndex]?.name ?? 'A fan',
+      },
+      hours: 5 + n * 6,
+      read: n === 2, // 1 report + 2 pitches + comment + idea = five unread
+    });
+  }
+  if (firstComment) {
+    const commentPost = data.posts.findIndex((_, i) => ctx.posts[i]?.id === firstComment.postId);
+    const seedPost = data.posts[commentPost];
+    if (seedPost) {
+      bell.push({
+        kind: 'comment_received',
+        payload: {
+          postId: firstComment.postId,
+          title: seedPost.title,
+          actorName: data.members[data.comments[0]?.authorIndex ?? 0]?.name ?? 'A fan',
+          commentId: firstComment.id,
+        },
+        hours: 9,
+        read: false,
+      });
+    }
+  }
+  const latestPost = [...data.posts.keys()].sort(
+    (a, b) => (data.posts[a]?.createdDaysAgo ?? 0) - (data.posts[b]?.createdDaysAgo ?? 0),
+  )[0];
+  const latest = latestPost === undefined ? undefined : data.posts[latestPost];
+  if (latest && latestPost !== undefined && ctx.posts[latestPost]) {
+    bell.push({
+      kind: 'idea_posted',
+      payload: {
+        postId: ctx.posts[latestPost]?.id,
+        title: latest.title,
+        actorName: data.members[latest.authorIndex]?.name ?? 'A fan',
+        postType: latest.type,
+        communityName: data.communities.find((c) => c.slug === latest.community)?.name ?? '',
+      },
+      hours: 12,
+      read: false,
+    });
+  }
+  for (const item of bell) {
+    const createdAt = new Date(ctx.now.getTime() - item.hours * 3_600_000);
+    await repos.notifications.insert({
+      userId: ctx.creatorUserId,
+      spaceId,
+      kind: item.kind,
+      payload: item.payload,
+      createdAt,
+      readAt: item.read ? createdAt : null,
+    });
+  }
+
+  // --- Followers the AI tagged remember when it did.
+  const aiTagged = ctx.followerSeeds.flatMap((seed, i) =>
+    seed.taggedBy === 'ai' ? (ctx.followerRows[i]?.id ?? []) : [],
+  );
+  if (aiTagged.length > 0) {
+    await db
+      .update(followers)
+      .set({ aiTaggedAt: at(3) })
+      .where(inArray(followers.id, aiTagged));
+  }
 }
 
 /** The prefilled AI columns for a post or pitch row: `done` for the space's current taste version. */

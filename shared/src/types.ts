@@ -52,6 +52,7 @@ export type ApiErrorCode =
   | 'edit_window_closed'
   | 'demo_disabled'
   | 'ai_unavailable'
+  | 'uploads_disabled'
   | 'internal_error';
 
 export interface ApiErrorBody {
@@ -800,6 +801,8 @@ export interface ChallengeShortlistItem {
 export interface ChallengeResponseSummary {
   shortlist: ChallengeShortlistItem[] | null;
   winnerPostId: string | null;
+  /** The AI recap of the entries, written after close (workers/close-challenges.ts). */
+  summary?: string | null;
 }
 
 /** A creator challenge, for the studio list and the fan list. */
@@ -817,6 +820,13 @@ export interface ChallengeSummary {
   shortlist: ChallengeShortlistItem[] | null;
   winnerPostId: string | null;
   createdAt: ISODate;
+}
+
+/** GET /api/studio/challenges/:id: the summary, every entry and the AI recap (owner only). */
+export interface ChallengeDetail extends ChallengeSummary {
+  entries: IdeaItem[];
+  /** The AI recap of the entries; null until the challenge is closed and recapped. */
+  aiSummary: string | null;
 }
 
 // ---------------------------------------------------------------- notifications (F21)

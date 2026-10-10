@@ -1,10 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { UNTRUSTED_TAG } from '../../src/ai/guard.js';
-import {
-  type TriageFeedbackExample,
-  type TriageInputWithFeedback,
-  triagePrompt,
-} from '../../src/ai/tasks/triage-item.js';
+import { type TriageFeedbackExample, triagePrompt } from '../../src/ai/tasks/triage-item.js';
 import type { AiServices, BackgroundRunner, TriageInput } from '../../src/ai/types.js';
 import { createAnalyzer } from '../../src/workers/analyze-item.js';
 import { silentLogger } from '../fixtures/ai/harness.js';
@@ -99,14 +95,14 @@ describe('analyzer passes recent feedback to triage', () => {
       excludeRefId: subject.id,
       limit: 10,
     });
-    const input = triageItem.mock.calls[0]?.[0] as TriageInputWithFeedback;
+    const input = triageItem.mock.calls[0]?.[0] as TriageInput;
     expect(input.feedback).toEqual(examples);
   });
 
   it('triages without examples when loading feedback fails', async () => {
     const { analyzer, triageItem, subject } = setup(new Error('db down'));
     expect(await analyzer.analyze({ kind: 'post', id: subject.id })).toBe('done');
-    const input = triageItem.mock.calls[0]?.[0] as TriageInputWithFeedback;
+    const input = triageItem.mock.calls[0]?.[0] as TriageInput;
     expect(input.feedback ?? []).toEqual([]);
   });
 });

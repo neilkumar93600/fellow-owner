@@ -1,10 +1,6 @@
 import type { PitchType, PostType } from '@fellow-owners/shared';
 import { isPitchType, isPostType } from '../ai/fake.js';
-import {
-  TRIAGE_FEEDBACK_MAX,
-  type TriageFeedbackExample,
-  type TriageInputWithFeedback,
-} from '../ai/tasks/triage-item.js';
+import { TRIAGE_FEEDBACK_MAX, type TriageFeedbackExample } from '../ai/tasks/triage-item.js';
 import {
   type AiServices,
   type Analyzer,
@@ -13,6 +9,7 @@ import {
   type ItemRef,
   isAiUnavailable,
   type SweepResult,
+  type TriageInput,
 } from '../ai/types.js';
 import type { Logger } from '../lib/logger.js';
 import type { Repos } from '../repositories/index.js';
@@ -110,7 +107,7 @@ export function createAnalyzer(deps: AnalyzerDeps): Analyzer & {
         log.warn({ err: error, ref }, 'feedback examples failed; triaging without them');
         return [];
       });
-    const triageInput: TriageInputWithFeedback = {
+    const triageInput: TriageInput = {
       kind: subject.kind,
       type: subject.type,
       title: subject.title,

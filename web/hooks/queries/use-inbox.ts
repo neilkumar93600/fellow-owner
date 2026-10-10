@@ -31,6 +31,8 @@ export interface InboxFilters {
   sort?: InboxSort;
   status?: PitchStatus | null;
   q?: string | null;
+  /** Today: leave out pitches snoozed with Later. */
+  hideSnoozed?: boolean;
 }
 
 /** Filters as they sit in query keys and requests: defaults filled in, blanks left out. */
@@ -39,14 +41,16 @@ interface InboxListFilters {
   sort: InboxSort;
   status?: PitchStatus;
   q?: string;
+  hideSnoozed?: true;
 }
 
-function listFilters({ tab, sort, status, q }: InboxFilters): InboxListFilters {
+function listFilters({ tab, sort, status, q, hideSnoozed }: InboxFilters): InboxListFilters {
   return {
     tab: tab ?? 'all',
     sort: sort ?? 'fit',
     status: status ?? undefined,
     q: q?.trim() || undefined,
+    ...(hideSnoozed ? { hideSnoozed: true as const } : {}),
   };
 }
 

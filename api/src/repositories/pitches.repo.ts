@@ -19,6 +19,7 @@ import {
   isNull,
   lt,
   ne,
+  notInArray,
   type SQL,
   sql,
 } from 'drizzle-orm';
@@ -60,6 +61,8 @@ export interface InboxFilter {
   q?: string | undefined;
   cursor?: string | undefined;
   limit: number;
+  /** Pitch ids to leave out (Today: snoozed with Later). */
+  excludeIds?: string[] | undefined;
 }
 
 export type InboxMixKey = PitchType | 'spam';
@@ -350,12 +353,13 @@ export function createPitchesRepo(db: Db) {
       filter: InboxFilter,
       tx: DbOrTx = db,
     ): Promise<PageResult<InboxRow>> {
-      const { tab, sort, status, q, cursor, limit } = filter;
+      const { tab, sort, status, q, cursor, limit, excludeIds } = filter;
       const conditions: Array<SQL | undefined> = [
         eq(inbound.spaceId, spaceId),
         tabCondition(tab),
         status ? eq(inbound.status, status) : undefined,
         searchCondition(q),
+        excludeIds?.length ? notInArray(inbound.id, excludeIds) : undefined,
       ];
       if (sort === 'fit') {
         const position = decodeScoreCursor(cursor);

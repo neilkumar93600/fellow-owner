@@ -74,6 +74,26 @@ describe('snoozes', () => {
     );
   });
 
+  it("Today's lists leave out snoozed pitches and posts; the full lists keep them", async () => {
+    await post('/snoozes', { refType: 'pitch', refId: pitchId }).expect(204);
+    await post('/snoozes', { refType: 'post', refId: postId }).expect(204);
+    const ids = async (path: string) =>
+      (
+        await request(app).get(`/api/studio${path}`).set('Cookie', owner.cookie).expect(200)
+      ).body.items.map((item: { id: string }) => item.id);
+
+    expect(await ids('/inbox?hideSnoozed=true')).not.toContain(pitchId);
+    expect(await ids('/inbox')).toContain(pitchId);
+    expect(await ids('/ideas?hideSnoozed=true')).not.toContain(postId);
+    expect(await ids('/ideas')).toContain(postId);
+
+    await request(app)
+      .delete(`/api/studio/snoozes/post/${postId}`)
+      .set('Cookie', owner.cookie)
+      .expect(204);
+    expect(await ids('/ideas?hideSnoozed=true')).toContain(postId);
+  });
+
   it("another owner's items are a 404 and nothing is stored", async () => {
     await post('/snoozes', { refType: 'pitch', refId: foreignPitchId }).expect(404);
     const rows = await db

@@ -42,7 +42,7 @@ function PartError({ error, retry }: { error: unknown; retry: () => void }) {
 export function TodayContainer() {
   const overview = useOverview();
   const briefing = useBriefing();
-  const inbox = useInbox({ status: 'new' });
+  const inbox = useInbox({ status: 'new', hideSnoozed: true });
   // ponytail: 50 so most briefing picks find their author's face; a miss shows "A fan".
   const ideas = useTopIdeas(50);
   const people = usePeople({}, { urlParam: null });

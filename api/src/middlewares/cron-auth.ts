@@ -2,7 +2,8 @@ import { timingSafeEqual } from 'node:crypto';
 import type { RequestHandler } from 'express';
 import { unauthorized } from '../lib/errors.js';
 
-function safeEqual(a: string, b: string): boolean {
+/** Constant-time string compare (lengths may differ: then false). */
+export function safeEqual(a: string, b: string): boolean {
   const left = Buffer.from(a);
   const right = Buffer.from(b);
   return left.length === right.length && timingSafeEqual(left, right);

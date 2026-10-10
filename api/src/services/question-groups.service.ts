@@ -24,17 +24,12 @@ import {
 import { contentHash } from '../lib/hash.js';
 import { excerpt, memberRef, unique } from '../lib/present.js';
 import type { GroupMemberRow } from '../repositories/question-groups.repo.js';
-import { createNotificationsService, type NotificationsService } from './notifications.service.js';
+import type { NotificationsService } from './notifications.service.js';
 
-/**
- * `notifications` is the container's (the bag carries every base service at runtime). It is
- * optional only because container.ts types the bag as a bare generic; the fallback is an
- * equivalent stateless instance over the same repos and pub/sub.
- */
 export type QuestionGroupsServiceDeps = Pick<
   CoreDeps,
-  'db' | 'repos' | 'ai' | 'logger' | 'background' | 'analyzer' | 'pubsub'
-> & { notifications?: NotificationsService };
+  'db' | 'repos' | 'ai' | 'logger' | 'background' | 'analyzer'
+> & { notifications: NotificationsService };
 
 /** The studio shows at most this many askers per group ("See the N latest"). */
 const ASKERS_SHOWN = 50;
@@ -78,9 +73,8 @@ type CommunityPick = Pick<PublicCommunity, 'id' | 'slug' | 'name' | 'tint' | 'ic
  * query is scoped by the owner's space, so another space's ids are 404.
  */
 export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
-  const { db, repos, ai } = deps;
+  const { db, repos, ai, notifications } = deps;
   const log = deps.logger.child({ module: 'question-groups' });
-  const notifications = deps.notifications ?? createNotificationsService(deps);
 
   /** QuestionGroups for rows of one space, batch-loaded (askers, their communities). */
   async function present(spaceId: string, rows: QuestionGroupRow[]): Promise<QuestionGroup[]> {

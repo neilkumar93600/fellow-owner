@@ -73,11 +73,11 @@ export function useIdeas(
   };
 }
 
-/** Today's "Top ideas": the first `limit` ranked posts (hidden ones included, flagged). */
+/** Today's "Top ideas": the first `limit` ranked posts (hidden ones flagged, snoozed ones left out). */
 export function useTopIdeas(limit = 5) {
   return useQuery({
     queryKey: ideasKeys.top(limit),
-    queryFn: ({ signal }) => getIdeas({ limit }, signal),
+    queryFn: ({ signal }) => getIdeas({ limit, hideSnoozed: true }, signal),
     select: (page) => page.items,
   });
 }

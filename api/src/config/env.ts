@@ -99,6 +99,7 @@ const rawEnvSchema = z.object({
   ADMIN_EMAILS: commaList,
   CRON_SECRET: optionalString,
   CLICK_SALT: optionalString,
+  INTERNAL_API_KEY: optionalString.pipe(z.string().min(32).optional()),
 
   VERCEL_GIT_COMMIT_SHA: optionalString,
   RAILWAY_GIT_COMMIT_SHA: optionalString,
@@ -194,6 +195,8 @@ export interface Env {
   ADMIN_EMAILS: string[];
   CRON_SECRET: string;
   CLICK_SALT: string;
+  /** Shared with the web server (server-api.ts): requests sending it as x-internal-key skip rate limits. */
+  INTERNAL_API_KEY: string | undefined;
 }
 
 export class EnvError extends Error {
@@ -392,6 +395,7 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     ADMIN_EMAILS: raw.ADMIN_EMAILS.map((email) => email.toLowerCase()),
     CRON_SECRET: cronSecret,
     CLICK_SALT: clickSalt,
+    INTERNAL_API_KEY: raw.INTERNAL_API_KEY,
   };
 }
 

@@ -127,6 +127,11 @@ describe('closing overdue challenges', () => {
     expect(summary.summary).toEqual(expect.any(String));
     expect(summary.summary?.length).toBeGreaterThan(0);
     expect(await kinds(fan.userId)).toContain('challenge_shortlisted');
+    const detail = await request(app)
+      .get(`/api/studio/challenges/${tacosId}`)
+      .set('Cookie', owner.cookie)
+      .expect(200);
+    expect(detail.body.aiSummary).toBe(summary.summary);
 
     // Another space's overdue challenge is closed too; with no entries there is nothing to summarize.
     const empty = await askRow(otherAsk.id);
@@ -155,6 +160,11 @@ describe('closing overdue challenges', () => {
     expect(row?.status).toBe('closed');
     expect(stored(row).shortlist).toHaveLength(1);
     expect(stored(row).summary).toBeUndefined();
+    const detail = await request(app)
+      .get(`/api/studio/challenges/${id}`)
+      .set('Cookie', owner.cookie)
+      .expect(200);
+    expect(detail.body.aiSummary).toBeNull();
   });
 
   it('a challenge not yet due is left open', async () => {

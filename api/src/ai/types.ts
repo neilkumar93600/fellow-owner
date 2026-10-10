@@ -11,6 +11,7 @@ import type {
   TasteProfile,
   Tint,
 } from '@fellow-owners/shared';
+import type { TriageFeedbackExample } from './tasks/triage-item.js';
 
 // The contract between the domain services (callers) and the AI module (implementations).
 // Domain code depends only on these types; `container.ts` decides which implementation is used:
@@ -121,6 +122,8 @@ export interface TriageInput {
   communityName: string | null;
   tasteProfile: TasteProfile;
   creatorName: string;
+  /** The creator's recent thumbs (workers/analyze-item.ts), shown as taste hints. */
+  feedback?: TriageFeedbackExample[];
 }
 
 export interface TriageResult {

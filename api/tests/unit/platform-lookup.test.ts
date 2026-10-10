@@ -192,7 +192,12 @@ describe('createPlatformLookup', () => {
 
   it('no token -> deterministic simulated profile', async () => {
     const fetch = vi.fn();
-    const lookup = createPlatformLookup({ enabled: false, fetch, sleep: noSleep });
+    const lookup = createPlatformLookup({
+      enabled: false,
+      fetch,
+      sleep: noSleep,
+      now: () => NOW,
+    });
     const a = await lookup.lookup({ platform: 'instagram', handle: 'someone' });
     const b = await lookup.lookup({ platform: 'instagram', handle: 'someone' });
     expect(a).toMatchObject({ status: 'ready', profile: { source: 'simulated' } });

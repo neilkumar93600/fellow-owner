@@ -1,6 +1,5 @@
 import { randomUUID } from 'node:crypto';
 import type {
-  ApiErrorCode,
   PresignedUpload,
   PresignUploadInput,
   UploadContentType,
@@ -21,9 +20,7 @@ const EXTENSIONS: Record<UploadContentType, string> = {
 const KEY_PATTERN =
   /^(?:avatar|space_cover|community_cover|member_avatar)\/[A-Za-z0-9_-]{1,64}\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(?:jpg|png|webp)$/;
 
-// ponytail: 'uploads_disabled' is not in the frozen ApiErrorCode union; the cast keeps the wire code.
-const uploadsDisabled = () =>
-  new AppError('uploads_disabled' as ApiErrorCode, 503, 'Image uploads are turned off');
+const uploadsDisabled = () => new AppError('uploads_disabled', 503, 'Image uploads are turned off');
 
 const OWNER_KINDS: readonly UploadKind[] = ['space_cover', 'community_cover'];
 

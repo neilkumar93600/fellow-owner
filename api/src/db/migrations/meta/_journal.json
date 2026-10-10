@@ -50,6 +50,13 @@
       "when": 1791618531255,
       "tag": "0006_backend_complete",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791622101876,
+      "tag": "0007_membership_left_at",
+      "breakpoints": true
     }
   ]
 }

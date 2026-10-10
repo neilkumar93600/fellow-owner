@@ -1,8 +1,8 @@
 import type {
+  ChallengeDetail,
   ChallengeSummary,
   ChallengeWinnerInput,
   CreateChallengeInput,
-  IdeaItem,
 } from '@fellow-owners/shared';
 import { apiFetch } from '@/lib/fetcher';
 
@@ -15,11 +15,8 @@ export function getChallenges(signal?: AbortSignal): Promise<{ items: ChallengeS
   return apiFetch<{ items: ChallengeSummary[] }>('/api/studio/challenges', { signal });
 }
 
-/** GET /challenges/:id : the challenge and every entry (a post linked to it). */
-export function getChallenge(
-  id: string,
-  signal?: AbortSignal,
-): Promise<ChallengeSummary & { entries: IdeaItem[] }> {
+/** GET /challenges/:id : the challenge, every entry (a post linked to it) and the AI recap. */
+export function getChallenge(id: string, signal?: AbortSignal): Promise<ChallengeDetail> {
   return apiFetch(`/api/studio/challenges/${at(id)}`, { signal });
 }
 

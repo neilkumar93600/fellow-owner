@@ -1,10 +1,10 @@
 import type {
+  ChallengeDetail,
   ChallengeResponseSummary,
   ChallengeShortlistItem,
   ChallengeSummary,
   challengeEntrySchema,
   createChallengeSchema,
-  IdeaItem,
   PostDetail,
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
@@ -275,14 +275,15 @@ export function createChallengesService(deps: ChallengesServiceDeps) {
       return { items: (await repos.asks.list(owner.space.id)).map(summarize) };
     },
 
-    /** GET /api/studio/challenges/:id: the summary plus every entry as an IdeaItem. */
-    async detail(
-      owner: OwnerContext,
-      id: string,
-    ): Promise<ChallengeSummary & { entries: IdeaItem[] }> {
+    /** GET /api/studio/challenges/:id: the summary, every entry as an IdeaItem, the AI recap. */
+    async detail(owner: OwnerContext, id: string): Promise<ChallengeDetail> {
       const row = await load(owner.space, id);
       const entries = await repos.asks.entries(id, { visibleOnly: false });
-      return { ...summarize(row), entries: await deps.posts.buildIdeaItems(owner, entries) };
+      return {
+        ...summarize(row),
+        entries: await deps.posts.buildIdeaItems(owner, entries),
+        aiSummary: storedSummary(row)?.summary ?? null,
+      };
     },
 
     /**

@@ -44,12 +44,6 @@ export interface TriageFeedbackExample {
   summary: string | null;
 }
 
-/**
- * TriageInput plus the creator's recent thumbs. ponytail: kept here because ai/types.ts is frozen
- * in this wave; fold `feedback?` into TriageInput when that file opens again.
- */
-export type TriageInputWithFeedback = TriageInput & { feedback?: TriageFeedbackExample[] };
-
 /** Fan-written titles and summaries of rated items, as one untrusted block (empty: no block). */
 function feedbackLines(feedback: readonly TriageFeedbackExample[] | undefined): string[] {
   if (!feedback || feedback.length === 0) return [];
@@ -158,7 +152,7 @@ ${UNTRUSTED_DATA_RULES}
 Respond with only a JSON object with the keys category, isSpam, summary, fitScore, fitReason, tags and skills.`;
 }
 
-export function triagePrompt(input: TriageInputWithFeedback): string {
+export function triagePrompt(input: TriageInput): string {
   const labels: Record<string, string> = { ...POST_TYPE_LABELS, ...PITCH_TYPE_LABELS };
   const where =
     input.kind === 'post'

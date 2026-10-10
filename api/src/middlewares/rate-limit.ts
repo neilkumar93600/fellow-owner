@@ -1,7 +1,9 @@
 import type { Request, RequestHandler } from 'express';
+import { env } from '../config/env.js';
 import { rateLimited } from '../lib/errors.js';
 import { logger } from '../lib/logger.js';
 import { connected, redis as defaultRedis, type Redis } from '../lib/redis.js';
+import { safeEqual } from './cron-auth.js';
 
 export interface RateLimitOptions {
   /** Counter namespace, e.g. 'public' or 'support'. Keys are `rl:<name>:<key>:<window>`. */
@@ -13,6 +15,11 @@ export interface RateLimitOptions {
   key: (req: Request) => string;
   /** Defaults to the process Redis (lib/redis.ts); null forces the in-process store. */
   redis?: Redis | null;
+  /**
+   * Requests whose `x-internal-key` header equals it skip the limit (the web server's own reads,
+   * which all come from Vercel IPs). Defaults to env.INTERNAL_API_KEY; null turns it off.
+   */
+  internalKey?: string | null;
 }
 
 /** ponytail: memory windows are per process; Redis shares them across replicas when set. */
@@ -35,14 +42,21 @@ function countInMemory(id: string, windowMs: number, now: number) {
  * Fixed-window rate limit: INCR + EXPIRE on Redis when available, an in-process Map otherwise
  * (or when Redis errors: the limit keeps working per process instead of failing open).
  * Sets `RateLimit-Limit`, `RateLimit-Remaining`, `RateLimit-Reset` (seconds); over the limit it
- * also sets `Retry-After` and throws 429 rate_limited.
+ * also sets `Retry-After` and throws 429 rate_limited. Internal requests (see `internalKey`) skip it.
  */
 export function createRateLimit(options: RateLimitOptions): RequestHandler {
   const { name, windowSeconds, max } = options;
   const client = options.redis === undefined ? defaultRedis : options.redis;
   const windowMs = windowSeconds * 1000;
+  const internalKey =
+    options.internalKey === undefined ? env.INTERNAL_API_KEY : options.internalKey;
 
   return async (req, res, next) => {
+    const given = internalKey ? req.get('x-internal-key') : undefined;
+    if (internalKey && given && safeEqual(given, internalKey)) {
+      next();
+      return;
+    }
     const now = Date.now();
     const windowStart = Math.floor(now / windowMs) * windowMs;
     const id = `rl:${name}:${options.key(req)}`;

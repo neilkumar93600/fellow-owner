@@ -1,0 +1,33 @@
+[
+  {
+    "subject": "A packing-list teardown video",
+    "question": "Will you do a video that tears down a real packing list, item by item?",
+    "status": "open",
+    "draft": "Yes, this is on the list. I will pick one real packing list from the community, go through it item by item, and say what I would leave at home. Post yours in Solo Travelers and I will choose one.",
+    "askerLimit": 4
+  },
+  {
+    "subject": "A \"my first solo trip\" starter series",
+    "question": "Would you make a starter series for people planning their first solo trip?",
+    "status": "open",
+    "draft": "I would love to. A short series that follows one first trip from booking to the last day, with the mistakes left in. Tell me where you would want to start and I will plan around it.",
+    "askerLimit": 4
+  },
+  {
+    "subject": "A live Q&A from a night train",
+    "question": "Can you do a live Q&A from a night train?",
+    "status": "open",
+    "draft": "A night train Q&A sounds fun, and the wifi is the only risk. I will try it on my next overnight route and post the date here first.",
+    "askerLimit": 3
+  },
+  {
+    "subject": "Visit the places your fans recommend, one per month",
+    "question": "Will you visit a place your fans recommend, one per month?",
+    "status": "answered",
+    "draft": null,
+    "answer": "Yes, starting next month. Each month I will pick one place from the recommendations in Food Finds and Road Trips, visit it, and share what I found. Keep the suggestions coming, and tell me why that place matters to you.",
+    "pinnedCommunities": ["food-finds", "road-trips"],
+    "answeredDaysAgo": 2,
+    "askerLimit": 3
+  }
+]

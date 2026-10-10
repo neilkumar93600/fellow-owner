@@ -14,17 +14,17 @@ import { badRequest, notFound, rateLimited } from '../lib/errors.js';
 import { clampLimit, decodeTimeCursor, encodeTimeCursor, toPage } from '../lib/pagination.js';
 import { displayName, excerpt } from '../lib/present.js';
 import type { ReportWithReporter } from '../repositories/reports.repo.js';
-import { createAccessService } from './access.service.js';
-import { createNotificationsService } from './notifications.service.js';
+import type { AccessService } from './access.service.js';
+import type { NotificationsService } from './notifications.service.js';
 
-export type ModerationServiceDeps = Pick<CoreDeps, 'db' | 'repos' | 'logger' | 'pubsub'>;
+export type ModerationServiceDeps = Pick<CoreDeps, 'db' | 'repos' | 'logger'> & {
+  access: AccessService;
+  notifications: NotificationsService;
+};
 
 /** F25 moderation: reports, the owner queue, comment hide, leaving a space. */
 export function createModerationService(deps: ModerationServiceDeps) {
-  const { db, repos } = deps;
-  // ponytail: own instances (the container bag is generic, so extra services are not typed here).
-  const access = createAccessService({ repos });
-  const notifications = createNotificationsService(deps);
+  const { db, repos, access, notifications } = deps;
   const log = deps.logger.child({ module: 'moderation' });
 
   async function file(
@@ -175,7 +175,7 @@ export function createModerationService(deps: ModerationServiceDeps) {
       const space = await access.spaceByHandle(handle);
       if (space.ownerUserId === userId) throw badRequest("You can't leave your own space");
       const ctx = await access.requireMember(space, userId);
-      await repos.memberships.remove(space.id, ctx.membership.id);
+      await repos.memberships.remove(space.id, ctx.membership.id, undefined, { left: true });
       log.info({ spaceId: space.id, membershipId: ctx.membership.id }, 'member left');
     },
   };

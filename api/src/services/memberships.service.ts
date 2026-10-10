@@ -203,7 +203,8 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
     /**
      * POST /api/spaces/:handle/join: creates the member membership and joins the communities in
      * one transaction (member_count in sync). Already a member (including the owner or a
-     * pitch-only membership): adds any new communities. Removed members: 403.
+     * pitch-only membership): adds any new communities. A member who left joins again like a new
+     * one; members the owner removed: 403.
      */
     async join(handle: string, userId: string, input: JoinBody): Promise<JoinResponse> {
       const space = await access.spaceByHandle(handle);
@@ -218,13 +219,19 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
           tx,
         );
         let row = result.row;
+        let created = result.created;
         const priorIntro = row.intro;
-        if (row.removedAt) throw forbidden('You were removed from this space');
-        if (!result.created && intro !== null && intro !== row.intro) {
+        if (row.removedAt) {
+          const back = row.leftAt ? await repos.memberships.rejoin(space.id, row.id, tx) : null;
+          if (!back) throw forbidden('You were removed from this space');
+          row = back;
+          created = true;
+        }
+        if (intro !== null && intro !== row.intro) {
           row = (await repos.memberships.update(space.id, row.id, { intro }, tx)) ?? row;
         }
         await repos.memberships.addCommunities(space.id, row.id, communityIds, tx);
-        return { membership: row, created: result.created, priorIntro };
+        return { membership: row, created, priorIntro };
       });
       if (created) log.info({ spaceId: space.id, membershipId: membership.id }, 'member joined');
       // New member, or a returning one whose intro just changed.

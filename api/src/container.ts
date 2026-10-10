@@ -221,7 +221,7 @@ function createBaseServices(deps: CoreDeps) {
 }
 
 /** The services added for the backend completion; each takes the whole bag. */
-function withBackendServices<B extends object>(deps: CoreDeps, base: B) {
+function withBackendServices(deps: CoreDeps, base: ReturnType<typeof createBaseServices>) {
   const bag = { ...deps, ...base };
   return {
     ...base,

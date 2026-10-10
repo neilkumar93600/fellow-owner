@@ -70,6 +70,8 @@ export const ideasQuerySchema = cursorQuerySchema.extend({
   community: z.string().trim().toLowerCase().max(LIMITS.community.slug.max).optional(),
   type: z.enum(POST_TYPES).optional(),
   q: z.string().trim().max(LIMITS.search.queryMax).optional(),
+  /** Today: leave out posts snoozed with Later. */
+  hideSnoozed: z.stringbool().optional(),
 });
 export type IdeasQuery = z.output<typeof ideasQuerySchema>;
 

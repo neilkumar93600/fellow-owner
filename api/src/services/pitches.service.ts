@@ -183,6 +183,9 @@ export function createPitchesService(deps: PitchesServiceDeps) {
     /** GET /api/studio/inbox: one tab, Fit or Newest, optional status and search, tab counts. */
     async inbox(owner: OwnerContext, query: InboxQuery): Promise<InboxPage> {
       const { space } = owner;
+      const snoozed = query.hideSnoozed
+        ? [...(await repos.snoozes.activeIds(space.id, 'pitch'))]
+        : undefined;
       const [page, counts] = await Promise.all([
         repos.pitches.listInbox(space.id, {
           tab: query.tab,
@@ -191,6 +194,7 @@ export function createPitchesService(deps: PitchesServiceDeps) {
           q: query.q,
           cursor: query.cursor,
           limit: clampLimit(query.limit),
+          excludeIds: snoozed,
         }),
         repos.pitches.tabCounts(space.id, { status: query.status, q: query.q }),
       ]);

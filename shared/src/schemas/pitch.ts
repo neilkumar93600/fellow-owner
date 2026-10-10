@@ -55,5 +55,7 @@ export const inboxQuerySchema = cursorQuerySchema.extend({
   sort: z.enum(INBOX_SORTS).default('fit'),
   status: z.enum(PITCH_STATUSES).optional(),
   q: z.string().trim().max(LIMITS.search.queryMax).optional(),
+  /** Today: leave out pitches snoozed with Later. */
+  hideSnoozed: z.stringbool().optional(),
 });
 export type InboxQuery = z.output<typeof inboxQuerySchema>;

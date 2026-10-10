@@ -40,7 +40,7 @@ export function createChallengesController(deps: {
       res.status(201).json(created);
     },
 
-    /** GET /api/studio/challenges/:id -> ChallengeSummary & { entries: IdeaItem[] } */
+    /** GET /api/studio/challenges/:id -> ChallengeDetail */
     async detail(req: Request, res: Response): Promise<void> {
       res.json(await challenges.detail(ownerOf(req), idOf(req)));
     },

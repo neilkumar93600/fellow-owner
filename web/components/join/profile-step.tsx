@@ -3,10 +3,12 @@
 import { LIMITS, type LinkInput, linkSchema, skillsSchema } from '@fellow-owners/shared';
 import { Plus, X } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { ImageUpload } from '@/components/shared/image-upload';
 import { Button } from '@/components/ui/button';
 import { Field, TextField } from '@/components/ui/field';
 import { useUpdateMe } from '@/hooks/queries/use-me';
-import { toastSuccess } from '@/lib/toast';
+import { authClient, useSession } from '@/lib/auth-client';
+import { toastError, toastSuccess } from '@/lib/toast';
 
 const { skills: SKILLS, links: LINKS } = LIMITS.membership;
 
@@ -28,6 +30,22 @@ export function ProfileStep({ handle, onDone }: { handle: string; onDone: () => 
   const updateMe = useUpdateMe(handle);
   const saving = updateMe.isPending;
   const full = skills.length >= SKILLS.max;
+  const session = useSession();
+  // The photo lives on the account (Better Auth user.image); show a fresh upload before the session refetches.
+  const [photo, setPhoto] = useState<string | null | undefined>(undefined);
+  const image = photo !== undefined ? photo : (session.data?.user.image ?? null);
+
+  async function savePhoto(url: string | null) {
+    const previous = image;
+    setPhoto(url);
+    const { error } = await authClient.updateUser({ image: url });
+    if (error) {
+      setPhoto(previous);
+      toastError(error, { fallback: 'Could not save your photo. Try again.' });
+      return;
+    }
+    toastSuccess(url ? 'Photo saved' : 'Photo removed');
+  }
 
   /** Adds the typed skill; returns the new list, or null when the schema refuses it. */
   function addSkill(): string[] | null {
@@ -83,6 +101,14 @@ export function ProfileStep({ handle, onDone }: { handle: string; onDone: () => 
 
   return (
     <div className="flex flex-col gap-8">
+      <ImageUpload
+        kind="member_avatar"
+        label="Photo"
+        name={session.data?.user.name ?? ''}
+        value={image}
+        onChange={savePhoto}
+      />
+
       <div className="flex flex-col gap-3">
         <Field
           label="Skills"

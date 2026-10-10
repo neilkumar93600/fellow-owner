@@ -74,6 +74,27 @@ describe('public limiter', () => {
     }
     await request(app).post('/api/demo/session').set('X-Forwarded-For', ip).send({}).expect(429);
   });
+
+  it('the web server skips the limits with x-internal-key (INTERNAL_API_KEY); a wrong key does not', async () => {
+    const key = 'k'.repeat(40);
+    const saved = env.INTERNAL_API_KEY;
+    // Limiters read the key when the routes are built.
+    env.INTERNAL_API_KEY = key;
+    let internalApp: ReturnType<typeof createApp>;
+    try {
+      internalApp = createApp(container);
+    } finally {
+      env.INTERNAL_API_KEY = saved;
+    }
+    const ip = '203.0.113.9';
+    const read = () =>
+      request(internalApp).get('/api/spaces/nobody-here').set('X-Forwarded-For', ip);
+    for (let i = 0; i < 120; i += 1) await read().expect(404);
+    await read().set('x-internal-key', key).expect(404);
+    await read().expect(429);
+    await read().set('x-internal-key', 'w'.repeat(40)).expect(429);
+    await read().set('x-internal-key', key).expect(404);
+  });
 });
 
 describe('JSON body limits', () => {

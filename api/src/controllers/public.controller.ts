@@ -6,7 +6,6 @@ import {
   showcaseParamsSchema,
 } from '@fellow-owners/shared';
 import type { Request, Response } from 'express';
-import { rateLimited } from '../lib/errors.js';
 import { PRIVATE_NO_STORE, setPublicCache } from '../lib/http.js';
 import { paramsOf, queryOf } from '../middlewares/validate.js';
 import type { ClicksService } from '../services/clicks.service.js';
@@ -19,9 +18,8 @@ export interface PublicControllerDeps {
   clicks: ClicksService;
 }
 
-/** GET /api/handle-available checks one client (IP) may make per minute. */
+/** GET /api/handle-available checks one client (IP) may make per minute (public.routes.ts). */
 export const HANDLE_AVAILABLE_PER_MINUTE = 30;
-const MINUTE_MS = 60_000;
 
 /**
  * Public, signed-out endpoints: the bio page and the showcase (CDN-cached, so they never read
@@ -29,35 +27,14 @@ const MINUTE_MS = 60_000;
  * redirect.
  */
 export function createPublicController(deps: PublicControllerDeps) {
-  // ponytail: per-process fixed window, so each replica counts on its own; move it to Redis
-  // (like Better Auth's counters in auth/index.ts) if one IP spread over replicas matters.
-  const checks = new Map<string, { count: number; resetAt: number }>();
-
-  function allowCheck(ip: string): boolean {
-    const now = Date.now();
-    if (checks.size > 10_000) {
-      for (const [key, window] of checks) if (window.resetAt <= now) checks.delete(key);
-    }
-    const window = checks.get(ip);
-    if (!window || window.resetAt <= now) {
-      checks.set(ip, { count: 1, resetAt: now + MINUTE_MS });
-      return true;
-    }
-    window.count += 1;
-    return window.count <= HANDLE_AVAILABLE_PER_MINUTE;
-  }
-
   return {
     /**
      * GET /api/handle-available?h= -> HandleCheck (never cached, no session read). Free only when
      * no space has it as its handle and no user as their username. 429 rate_limited after
-     * HANDLE_AVAILABLE_PER_MINUTE checks per minute from one IP.
+     * HANDLE_AVAILABLE_PER_MINUTE checks per minute from one IP (route limiter).
      */
     async handleAvailable(req: Request, res: Response): Promise<void> {
       res.set('Cache-Control', PRIVATE_NO_STORE);
-      if (!allowCheck(req.ip ?? 'unknown')) {
-        throw rateLimited('Too many handle checks. Try again in a minute.');
-      }
       const { h } = queryOf(req, handleAvailableQuerySchema);
       res.json(await deps.spaces.checkHandle(h));
     },
