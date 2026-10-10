@@ -68,10 +68,12 @@ export interface TaskCap {
 }
 
 /**
- * Tasks fans trigger (C5): they write ai_runs rows (caps, accounting) but are neither counted
- * toward nor blocked by the space's daily token budget, so fans cannot drain the creator's AI.
+ * Tasks that write ai_runs rows (caps, accounting) but are neither counted toward nor blocked by
+ * the space's daily token budget: coach, because fans trigger it (C5) and must not drain the
+ * creator's AI; embedItem, because embeddings cost about 1% of chat tokens and a backfill (the
+ * nightly demo reset embeds ~1500 rows) would otherwise pause triage and briefings for the day.
  */
-export const BUDGET_EXEMPT_TASKS: readonly AiTaskName[] = ['coach'];
+export const BUDGET_EXEMPT_TASKS: readonly AiTaskName[] = ['coach', 'embedItem'];
 
 export function isBudgetExempt(task: AiTaskName): boolean {
   return BUDGET_EXEMPT_TASKS.includes(task);

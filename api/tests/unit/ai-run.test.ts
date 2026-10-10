@@ -331,10 +331,15 @@ describe('runEmbeddingTask', () => {
     expect(rows[0]?.error).toContain('expected 1536 finite numbers');
   });
 
-  it('checks the budget like chat tasks', async () => {
+  it('runs even when the daily token budget is used up (embeddings are budget-exempt)', async () => {
+    const vector = Array.from({ length: 1536 }, () => 0.01);
+    const embedding = new MockEmbeddingModelV4({
+      doEmbed: async () => ({ embeddings: [vector], usage: { tokens: 8 }, warnings: [] }),
+    });
     const { model } = scriptedModel([]);
-    const { rt, rows } = runtimeWith(model, { budget: 10, usedToday: 10 });
-    expect((await rejection(runEmbeddingTask(rt, { ctx, value: 'x' }))).reason).toBe('budget');
-    expect(rows).toHaveLength(0);
+    const { rt, rows } = runtimeWith(model, { embedding, budget: 10, usedToday: 10 });
+    const result = await runEmbeddingTask(rt, { ctx, value: 'x' });
+    expect(result.output).toHaveLength(1536);
+    expect(rows[0]).toMatchObject({ task: 'embedItem', status: 'ok' });
   });
 });
