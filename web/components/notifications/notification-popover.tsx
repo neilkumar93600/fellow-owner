@@ -3,6 +3,7 @@
 import type { NotificationItem } from '@fellow-owners/shared';
 import {
   Bell,
+  Flag,
   Heart,
   Lightbulb,
   Loader2,
@@ -32,6 +33,7 @@ const KIND_ICON: Record<NotificationItem['kind'], LucideIcon> = {
   post_loved: Heart,
   spotlighted: Sparkles,
   challenge_shortlisted: Trophy,
+  report_filed: Flag,
 };
 
 export interface NotificationPopoverProps {

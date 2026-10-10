@@ -187,7 +187,7 @@ export function AccountMenu({ space, className }: { space: HeaderSpace; classNam
           className,
         )}
       >
-        <AvatarInitials name={space.displayName} image={space.avatarUrl} size={40} online />
+        <AvatarInitials name={space.displayName} image={space.avatarUrl} size={40} />
       </MenuTrigger>
       <MenuContent>
         <MenuLinkItem icon={<Link2 />} render={<Link href={routes.fan.space(space.handle)} />}>

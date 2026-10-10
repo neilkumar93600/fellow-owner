@@ -1,10 +1,11 @@
 import type { ChallengeResponseSummary } from '@fellow-owners/shared';
-import { and, asc, desc, eq, gte, isNull, ne, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, isNull, lte, ne, or, sql } from 'drizzle-orm';
 import type { Db, DbOrTx } from '../db/client.js';
 import { communities, communityMembers } from '../db/schema/communities.js';
 import { type AskRow, asks } from '../db/schema/later.js';
 import { memberships } from '../db/schema/memberships.js';
 import { type PostRow, posts } from '../db/schema/posts.js';
+import { type SpaceRow, spaces } from '../db/schema/spaces.js';
 
 /** An ask (creator challenge) with what its summary card needs. */
 export interface AskWithCounts {
@@ -118,6 +119,34 @@ export function createAsksRepo(db: Db) {
         .where(and(eq(asks.id, id), eq(asks.status, 'open')))
         .returning();
       return row ?? null;
+    },
+
+    /**
+     * Open asks past their due date in every space, oldest due first, with their space (the
+     * close_challenges job). ponytail: `limit` per run; the next hourly run takes the rest.
+     */
+    async overdue(
+      now: Date,
+      limit: number,
+      tx: DbOrTx = db,
+    ): Promise<Array<{ ask: AskRow; space: SpaceRow }>> {
+      return tx
+        .select({ ask: asks, space: spaces })
+        .from(asks)
+        .innerJoin(spaces, eq(spaces.id, asks.spaceId))
+        .where(and(eq(asks.status, 'open'), lte(asks.dueAt, now)))
+        .orderBy(asc(asks.dueAt), asc(asks.id))
+        .limit(limit);
+    },
+
+    /** Stores the AI recap of a closed ask in response_summary.summary. */
+    async setSummary(id: string, summary: string, tx: DbOrTx = db): Promise<void> {
+      await tx
+        .update(asks)
+        .set({
+          responseSummary: sql`jsonb_set(coalesce(${asks.responseSummary}, '{}'::jsonb), '{summary}', to_jsonb(${summary}::text))`,
+        })
+        .where(eq(asks.id, id));
     },
 
     async setWinner(spaceId: string, id: string, postId: string, tx: DbOrTx = db): Promise<void> {

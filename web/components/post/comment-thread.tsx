@@ -5,6 +5,7 @@ import { Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { AvatarInitials } from '@/components/shared/avatar-initials';
 import { ConfirmDialog } from '@/components/shared/confirm-dialog';
+import { ReportButton } from '@/components/shared/report-button';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/components/ui/cn';
 import { isPendingComment, useAddComment, useDeleteComment } from '@/hooks/queries/use-post';
@@ -76,6 +77,9 @@ export function CommentThread({
                     <Trash2 />
                   </Button>
                 ) : null}
+                {comment.isOwn || pending ? null : (
+                  <ReportButton target="comment" id={comment.id} />
+                )}
               </li>
             );
           })}

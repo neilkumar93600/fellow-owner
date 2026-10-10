@@ -4,7 +4,6 @@ import {
   createCommunitySchema,
   createPromotionSchema,
   createSpaceSchema,
-  cursorQuerySchema,
   handleCheckQuerySchema,
   ideasQuerySchema,
   idParamsSchema,
@@ -13,7 +12,9 @@ import {
   peopleQuerySchema,
   promotionActionSchema,
   promotionPostParamsSchema,
+  promotionsQuerySchema,
   setPersonCommunitiesSchema,
+  spotlightSchema,
   studioCommunityParamsSchema,
   studioPitchActionSchema,
   studioPostActionSchema,
@@ -21,8 +22,6 @@ import {
   updateSettingsSchema,
 } from '@fellow-owners/shared';
 import type { Request, Response } from 'express';
-import { z } from 'zod';
-import { SPOTLIGHT_NOTE_MAX } from '../ai/tasks/spotlight-note.js';
 import { sessionOf } from '../middlewares/require-session.js';
 import { bodyOf, paramsOf, queryOf } from '../middlewares/validate.js';
 import type { AccessService, OwnerContext } from '../services/access.service.js';
@@ -35,11 +34,6 @@ import type { PitchesService } from '../services/pitches.service.js';
 import type { PostsService } from '../services/posts.service.js';
 import type { PromotionsService } from '../services/promotions.service.js';
 import type { SpacesService } from '../services/spaces.service.js';
-
-/** PUT /api/studio/people/:membershipId/spotlight. ponytail: move to shared/schemas when the web form needs it. */
-export const spotlightBodySchema = z.object({
-  note: z.string().trim().min(1).max(SPOTLIGHT_NOTE_MAX),
-});
 
 export interface StudioControllerDeps {
   access: AccessService;
@@ -208,7 +202,7 @@ export function createStudioController(deps: StudioControllerDeps) {
     /** PUT /people/:membershipId/spotlight -> FanSpotlight */
     async setSpotlight(req: Request, res: Response): Promise<void> {
       const { membershipId } = paramsOf(req, membershipParamsSchema);
-      const { note } = bodyOf(req, spotlightBodySchema);
+      const { note } = bodyOf(req, spotlightSchema);
       res.json(await deps.promotions.setSpotlight(ownerOf(req), membershipId, note));
     },
 
@@ -253,7 +247,7 @@ export function createStudioController(deps: StudioControllerDeps) {
 
     /** GET /promotions -> PromotionsPage */
     async promotions(req: Request, res: Response): Promise<void> {
-      res.json(await deps.promotions.list(ownerOf(req), queryOf(req, cursorQuerySchema)));
+      res.json(await deps.promotions.list(ownerOf(req), queryOf(req, promotionsQuerySchema)));
     },
 
     /** GET /promotions/post/:postId -> PromotionComposer */

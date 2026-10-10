@@ -1,10 +1,10 @@
 import type { CreatePitchInput, MySpace } from '@fellow-owners/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { withdrawPitch } from '@/api/pitches';
-import { createPitch } from '@/api/spaces';
 import { readSession, writeSession } from '@/components/auth/auth-storage';
 import { meKeys } from '@/hooks/queries/use-me';
 import { membershipKeys } from '@/hooks/use-membership';
+import { withdrawPitch } from '@/lib/api/pitches';
+import { createPitch } from '@/lib/api/spaces';
 import { toastError } from '@/lib/toast';
 
 // The sender's pitches are read through useMe (MySpace.pitches); this file only writes.

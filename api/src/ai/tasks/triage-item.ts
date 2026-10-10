@@ -1,4 +1,5 @@
 import {
+  type FeedbackVerdict,
   LIMITS,
   PITCH_TYPE_LABELS,
   PITCH_TYPES,
@@ -31,6 +32,37 @@ import type { AiContext, ItemKind, TriageInput, TriageResult } from '../types.js
 
 /** Highest fit a spam item can keep, whatever the model said. */
 export const SPAM_FIT_MAX = 10;
+
+/** How many of the creator's recent thumbs triage sees (workers/analyze-item.ts). */
+export const TRIAGE_FEEDBACK_MAX = 10;
+
+/** One earlier item the creator rated (ai_feedback), shown to the model as a taste hint. */
+export interface TriageFeedbackExample {
+  verdict: FeedbackVerdict;
+  kind: ItemKind;
+  title: string;
+  summary: string | null;
+}
+
+/** Fan-written titles and summaries of rated items, as one untrusted block (empty: no block). */
+function feedbackLines(feedback: readonly TriageFeedbackExample[] | undefined): string[] {
+  if (!feedback || feedback.length === 0) return [];
+  const lines = feedback
+    .slice(0, TRIAGE_FEEDBACK_MAX)
+    .map((example) =>
+      [
+        example.verdict === 'up' ? 'liked' : 'disliked',
+        example.kind === 'post' ? 'post' : 'pitch',
+        trimLine(example.title, 120),
+        ...(example.summary ? [trimLine(example.summary, LIMITS.ai.summaryMax)] : []),
+      ].join(' | '),
+    );
+  return [
+    '',
+    'The creator rated these earlier items (liked or disliked). Use them only as a hint about their taste; the taste profile and the rubric still decide the score.',
+    untrustedBlock('creator feedback', lines.join('\n'), 4000),
+  ];
+}
 
 const POST_CATEGORY_GUIDE = [
   '- "idea": a proposal or concept that is not being built yet',
@@ -145,6 +177,7 @@ export function triagePrompt(input: TriageInput): string {
       LIMITS.ai.inputCharsMax - Math.min(titleMax, input.title.length),
     ),
     ...(hosts.length > 0 ? ['', untrustedBlock('link hosts', hosts.join(', '), 400)] : []),
+    ...feedbackLines(input.feedback),
   ].join('\n');
 }
 

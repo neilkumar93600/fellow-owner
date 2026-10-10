@@ -1,6 +1,6 @@
 import type { AnalyticsWindow } from '@fellow-owners/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { getCommunityActivity } from '@/api/insights';
+import { getCommunityActivity } from '@/lib/api/insights';
 
 // Under the 'studio' prefix so every studio invalidation (studioKeys.all) refreshes it.
 export const insightsKeys = {

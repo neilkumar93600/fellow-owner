@@ -6,13 +6,12 @@ import {
   type SetupSuggestions,
   setupSuggestionsSchema,
 } from '@fellow-owners/shared';
-import type { Request, Response } from 'express';
+import type { Request, RequestHandler, Response } from 'express';
 import { fakeSuggestSetup } from '../ai/fake.js';
 import { buildSetupSuggestions } from '../ai/tasks/suggest-setup.js';
 import type { AiServices, SuggestSetupOutput } from '../ai/types.js';
-import { redisRateLimitStorage } from '../auth/index.js';
 import type { Env } from '../config/env.js';
-import { dailyCapReached, rateLimited } from '../lib/errors.js';
+import { AppError, dailyCapReached, rateLimited } from '../lib/errors.js';
 import type { Logger } from '../lib/logger.js';
 import {
   createPlatformLookup,
@@ -21,12 +20,14 @@ import {
   parseProfileUrl,
 } from '../lib/platform-lookup.js';
 import type { Redis } from '../lib/redis.js';
+import { createRateLimit } from '../middlewares/rate-limit.js';
 import { sessionOf } from '../middlewares/require-session.js';
 import { bodyOf } from '../middlewares/validate.js';
 
 /**
  * POST /api/studio/platform-lookup and /setup-suggestions (Round 4 §6). Session only: onboarding
- * runs before a space exists. Lookups: 5 per user per minute. Suggestions: 10 per user per UTC
+ * runs before a space exists. Lookups: 5 per user per minute, 30 per user and 500 in all per UTC
+ * day. Suggestions: 10 per user per UTC
  * day (the AI call has no space budget yet, so this is its cap).
  */
 
@@ -40,32 +41,19 @@ export interface PlatformControllerDeps {
   fetchAvatar?: (url: string) => Promise<string | null>;
 }
 
-const MINUTE_MS = 60_000;
-const DAY_MS = 86_400_000;
+/** Lookups per UTC day: per user, and for the whole API (each one may cost an Apify run). */
+export const PLATFORM_LOOKUPS_PER_DAY = { user: 30, global: 500 } as const;
+const DAY_SECONDS = 86_400;
 
-/**
- * Fixed-window counters: Redis when REDIS_URL is set (shared by replicas, fails open like the
- * auth limiter), else in process. ponytail: in process is per instance on serverless; the Apify
- * monthly spend limit and maxTotalChargeUsd stay the hard cap.
- */
-function createLimiter(redis: Redis | null | undefined, logger: Logger) {
-  const store = redis ? redisRateLimitStorage(redis, logger) : null;
-  const memory = new Map<string, { count: number; resetAt: number }>();
-  return async (key: string, max: number, windowMs: number): Promise<boolean> => {
-    if (store) {
-      const result = await store.consume(key, { window: windowMs / 1000, max });
-      return result.allowed;
-    }
-    const now = Date.now();
-    const entry = memory.get(key);
-    if (!entry || entry.resetAt <= now) {
-      if (memory.size > 10_000) memory.clear();
-      memory.set(key, { count: 1, resetAt: now + windowMs });
-      return true;
-    }
-    entry.count += 1;
-    return entry.count <= max;
-  };
+/** Runs a createRateLimit middleware as a check: false once its window is used up. */
+async function within(limit: RequestHandler, req: Request, res: Response): Promise<boolean> {
+  try {
+    await limit(req, res, () => {});
+    return true;
+  } catch (error) {
+    if (error instanceof AppError && error.status === 429) return false;
+    throw error;
+  }
 }
 
 /** Our own demo images may pass through as site paths; anything else must be fetched. */
@@ -80,7 +68,24 @@ export function createPlatformController(deps: PlatformControllerDeps) {
       logger: deps.logger,
     });
   const fetchAvatar = deps.fetchAvatar ?? ((url: string) => fetchAvatarDataUrl(url));
-  const allow = createLimiter(deps.redis, deps.logger);
+  // Fixed windows (middlewares/rate-limit.ts): Redis when REDIS_URL is set, in process otherwise.
+  // ponytail: the Apify monthly spend limit and maxTotalChargeUsd stay the hard cap.
+  const userKey = (req: Request) => sessionOf(req).user.id;
+  const limiter = (name: string, windowSeconds: number, max: number, key = userKey) =>
+    createRateLimit({ name, windowSeconds, max, key, redis: deps.redis });
+  const lookupsPerMinute = limiter('platform-lookup', 60, PLATFORM_LOOKUP_LIMITS.lookupsPerMinute);
+  const lookupsPerDay = limiter('platform-lookup-day', DAY_SECONDS, PLATFORM_LOOKUPS_PER_DAY.user);
+  const lookupsPerDayAll = limiter(
+    'platform-lookup-day-all',
+    DAY_SECONDS,
+    PLATFORM_LOOKUPS_PER_DAY.global,
+    () => 'all',
+  );
+  const suggestionsPerDay = limiter(
+    'setup-suggestions',
+    DAY_SECONDS,
+    PLATFORM_LOOKUP_LIMITS.suggestionsPerDay,
+  );
 
   async function avatarFor(profiles: readonly PlatformProfile[]): Promise<string | null> {
     for (const profile of profiles) {
@@ -95,13 +100,12 @@ export function createPlatformController(deps: PlatformControllerDeps) {
 
   return {
     async lookup(req: Request, res: Response): Promise<void> {
-      const { user } = sessionOf(req);
-      const ok = await allow(
-        `platform-lookup:${user.id}`,
-        PLATFORM_LOOKUP_LIMITS.lookupsPerMinute,
-        MINUTE_MS,
-      );
-      if (!ok) throw rateLimited('Too many lookups. Try again in a minute.');
+      if (!(await within(lookupsPerMinute, req, res))) {
+        throw rateLimited('Too many lookups. Try again in a minute.');
+      }
+      if (!(await within(lookupsPerDay, req, res)) || !(await within(lookupsPerDayAll, req, res))) {
+        throw dailyCapReached('Profile lookups are used up for today. Try again tomorrow.');
+      }
       const { url } = bodyOf(req, platformLookupSchema);
       const target = parseProfileUrl(url);
       const result: PlatformLookupResult = target
@@ -112,12 +116,7 @@ export function createPlatformController(deps: PlatformControllerDeps) {
 
     async setupSuggestions(req: Request, res: Response): Promise<void> {
       const { user } = sessionOf(req);
-      const ok = await allow(
-        `setup-suggestions:${user.id}`,
-        PLATFORM_LOOKUP_LIMITS.suggestionsPerDay,
-        DAY_MS,
-      );
-      if (!ok) {
+      if (!(await within(suggestionsPerDay, req, res))) {
         throw dailyCapReached(
           `You've asked for setup suggestions ${PLATFORM_LOOKUP_LIMITS.suggestionsPerDay} times today. Try again tomorrow.`,
         );

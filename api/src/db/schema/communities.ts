@@ -34,6 +34,8 @@ export const communities = pgTable(
     /** Updated in the same transaction as joins and leaves (community_members). */
     memberCount: integer('member_count').notNull().default(0),
     archivedAt: timestamptz('archived_at'),
+    /** Uploaded cover (/api/media/<key>) or an image link. */
+    coverUrl: text('cover_url'),
     createdAt: createdAt(),
   },
   (t) => [

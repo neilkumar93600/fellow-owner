@@ -1,14 +1,14 @@
 import type {
+  ChallengeDetail,
   ChallengeResponseSummary,
   ChallengeShortlistItem,
   ChallengeSummary,
   challengeEntrySchema,
   createChallengeSchema,
-  IdeaItem,
   PostDetail,
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
-import type { Analyzer, BackgroundRunner } from '../ai/types.js';
+import type { AiServices, Analyzer, BackgroundRunner } from '../ai/types.js';
 import type { Db } from '../db/client.js';
 import type { PostRow } from '../db/schema/posts.js';
 import type { SpaceRow } from '../db/schema/spaces.js';
@@ -17,12 +17,13 @@ import { AppError, conflict, forbidden, notFound } from '../lib/errors.js';
 import { contentHash } from '../lib/hash.js';
 import type { Logger } from '../lib/logger.js';
 import { displayName } from '../lib/present.js';
+import type { PubSub } from '../lib/pubsub.js';
 import { signalScore } from '../lib/ranking.js';
 import type { AskWithCounts } from '../repositories/asks.repo.js';
 import type { Repos } from '../repositories/index.js';
 import type { MemberContext, OwnerContext } from './access.service.js';
 import type { LimitsService } from './limits.service.js';
-import type { NotificationsService } from './notifications.service.js';
+import type { NotificationPayloads, NotificationsService } from './notifications.service.js';
 import type { PostsService } from './posts.service.js';
 
 export type CreateChallengeBody = z.output<typeof createChallengeSchema>;
@@ -31,11 +32,13 @@ export type ChallengeEntryBody = z.output<typeof challengeEntrySchema>;
 export interface ChallengesServiceDeps {
   db: Db;
   repos: Repos;
+  ai: AiServices;
   limits: LimitsService;
   posts: PostsService;
   analyzer: Analyzer;
   background: BackgroundRunner;
   notifications: NotificationsService;
+  pubsub: PubSub;
   logger: Logger;
 }
 
@@ -47,6 +50,8 @@ export type ChallengeEntryResponse = PostDetail & {
 /** How long a closed challenge stays on the fan list after its due date. */
 const RECENTLY_CLOSED_DAYS = 30;
 const SHORTLIST_MAX = 3;
+/** ask_posted rows per insert when a challenge opens. */
+const FAN_OUT_CHUNK = 500;
 const FIT_WEIGHT = 0.7;
 const SIGNAL_WEIGHT = 0.3;
 
@@ -62,10 +67,14 @@ function storedSummary(row: AskWithCounts): ChallengeResponseSummary | null {
   return (row.ask.responseSummary ?? null) as ChallengeResponseSummary | null;
 }
 
+/**
+ * An overdue challenge reads as closed even before the hourly close_challenges job has closed it
+ * (its shortlist then shows as empty until the job runs); reads never close anything.
+ */
 function summarize(row: AskWithCounts): ChallengeSummary {
   const { ask } = row;
   const stored = storedSummary(row);
-  const closed = ask.status === 'closed';
+  const closed = ask.status === 'closed' || isOverdue(row);
   return {
     id: ask.id,
     title: ask.title,
@@ -74,7 +83,7 @@ function summarize(row: AskWithCounts): ChallengeSummary {
     communityName: row.communityName,
     // due_at is nullable on the P1 table; every challenge made here has one.
     dueAt: toIso(ask.dueAt ?? ask.createdAt),
-    status: ask.status,
+    status: closed ? 'closed' : ask.status,
     entryCount: row.entryCount,
     shortlist: closed ? (stored?.shortlist ?? []) : null,
     winnerPostId: stored?.winnerPostId ?? null,
@@ -86,7 +95,7 @@ function isPastDue(dueAt: Date | null, now: Date): boolean {
   return dueAt !== null && dueAt.getTime() <= now.getTime();
 }
 
-/** Open but past its due date: closed lazily the next time anyone reads it. */
+/** Open but past its due date: the job closes it; reads show it as closed meanwhile. */
 function isOverdue(row: AskWithCounts): boolean {
   return row.ask.status === 'open' && isPastDue(row.ask.dueAt, new Date());
 }
@@ -129,9 +138,15 @@ export function createChallengesService(deps: ChallengesServiceDeps) {
   const { db, repos, limits, notifications } = deps;
   const log = deps.logger.child({ module: 'challenges' });
 
-  /** Ranks the visible entries, stores the top 3 and tells each shortlisted author. No-op once closed. */
-  async function closeAsk(space: SpaceRow, id: string): Promise<void> {
-    const shortlist = await db.transaction(async (tx) => {
+  /**
+   * Ranks the visible entries, stores the top 3 and tells each shortlisted author. Resolves with
+   * what the AI recap needs when this call closed it, null when it was already closed.
+   */
+  async function closeAsk(
+    space: SpaceRow,
+    id: string,
+  ): Promise<{ title: string; entries: PostRow[] } | null> {
+    const closed = await db.transaction(async (tx) => {
       const ask = await repos.asks.lock(space.id, id, 'update', tx);
       if (!ask) throw notFound('Challenge');
       if (ask.status === 'closed') return null;
@@ -144,12 +159,14 @@ export function createChallengesService(deps: ChallengesServiceDeps) {
         displayName(membershipId ? authors.get(membershipId)?.name : null),
       );
       await repos.asks.close(ask.id, { shortlist: items, winnerPostId: null }, tx);
-      return items.map((item) => ({
+      const shortlist = items.map((item) => ({
         item,
         membershipId: entries.find((row) => row.id === item.postId)?.authorMembershipId ?? null,
       }));
+      return { title: ask.title, entries, shortlist };
     });
-    if (!shortlist) return;
+    if (!closed) return null;
+    const { shortlist } = closed;
     log.info({ askId: id, spaceId: space.id, shortlisted: shortlist.length }, 'challenge closed');
     deps.background.run(`notify:challenge_shortlisted:${id}`, async () => {
       for (const { item, membershipId } of shortlist) {
@@ -163,34 +180,51 @@ export function createChallengesService(deps: ChallengesServiceDeps) {
         });
       }
     });
+    return { title: closed.title, entries: closed.entries };
   }
 
-  /** One challenge; an overdue one is closed first, so it never reads as open past its date. */
+  /**
+   * The AI recap of a just-closed challenge into response_summary.summary. Nothing to recap
+   * without entries. Never throws: a closed challenge without a recap is fine.
+   */
+  async function writeSummary(
+    space: SpaceRow,
+    id: string,
+    closed: { title: string; entries: PostRow[] },
+  ): Promise<void> {
+    if (closed.entries.length === 0) return;
+    try {
+      const { summary } = await deps.ai.challengeSummary(
+        {
+          title: closed.title,
+          entries: closed.entries.map((row) => ({
+            title: row.title,
+            summary: row.analysisStatus === 'done' ? row.aiSummary : null,
+          })),
+        },
+        { spaceId: space.id, userId: null, refType: 'ask', refId: id },
+      );
+      if (summary.trim()) await repos.asks.setSummary(id, summary);
+    } catch (err) {
+      log.warn({ err, askId: id, spaceId: space.id }, 'challenge summary failed');
+    }
+  }
+
+  /** Closes now (if still open) and writes the recap after the response. */
+  async function closeInRequest(space: SpaceRow, id: string): Promise<void> {
+    const closed = await closeAsk(space, id);
+    if (closed) {
+      deps.background.run(`summary:challenge:${id}`, () => writeSummary(space, id, closed));
+    }
+  }
+
+  /** One challenge; an overdue one is closed first (detail, winner, entry paths). */
   async function load(space: SpaceRow, id: string): Promise<AskWithCounts> {
     const row = await repos.asks.get(space.id, id);
     if (!row) throw notFound('Challenge');
     if (!isOverdue(row)) return row;
-    await closeAsk(space, id);
+    await closeInRequest(space, id);
     return (await repos.asks.get(space.id, id)) ?? row;
-  }
-
-  /** repos.asks.list, with any overdue challenge closed first. */
-  async function listClosingOverdue(
-    space: SpaceRow,
-    filter?: { openOrDueSince?: Date; liveCommunityOnly?: boolean },
-  ): Promise<AskWithCounts[]> {
-    const rows = await repos.asks.list(space.id, filter);
-    const overdue = rows.filter(isOverdue);
-    if (overdue.length === 0) return rows;
-    for (const row of overdue) {
-      // One failed close must not break the list: that challenge just reads as open until the next read.
-      try {
-        await closeAsk(space, row.ask.id);
-      } catch (err) {
-        log.warn({ err, askId: row.ask.id, spaceId: space.id }, 'overdue challenge close failed');
-      }
-    }
-    return repos.asks.list(space.id, filter);
   }
 
   /**
@@ -225,19 +259,31 @@ export function createChallengesService(deps: ChallengesServiceDeps) {
   }
 
   return {
-    /** GET /api/studio/challenges: every challenge, open first, newest first. */
-    async list(owner: OwnerContext): Promise<{ items: ChallengeSummary[] }> {
-      return { items: (await listClosingOverdue(owner.space)).map(summarize) };
+    /**
+     * close_challenges job: closes one overdue challenge (shortlist + notifications) and waits for
+     * its AI recap. Resolves true when this call closed it.
+     */
+    async closeWithSummary(space: SpaceRow, id: string): Promise<boolean> {
+      const closed = await closeAsk(space, id);
+      if (!closed) return false;
+      await writeSummary(space, id, closed);
+      return true;
     },
 
-    /** GET /api/studio/challenges/:id: the summary plus every entry as an IdeaItem. */
-    async detail(
-      owner: OwnerContext,
-      id: string,
-    ): Promise<ChallengeSummary & { entries: IdeaItem[] }> {
+    /** GET /api/studio/challenges: every challenge, open first, newest first. */
+    async list(owner: OwnerContext): Promise<{ items: ChallengeSummary[] }> {
+      return { items: (await repos.asks.list(owner.space.id)).map(summarize) };
+    },
+
+    /** GET /api/studio/challenges/:id: the summary, every entry as an IdeaItem, the AI recap. */
+    async detail(owner: OwnerContext, id: string): Promise<ChallengeDetail> {
       const row = await load(owner.space, id);
       const entries = await repos.asks.entries(id, { visibleOnly: false });
-      return { ...summarize(row), entries: await deps.posts.buildIdeaItems(owner, entries) };
+      return {
+        ...summarize(row),
+        entries: await deps.posts.buildIdeaItems(owner, entries),
+        aiSummary: storedSummary(row)?.summary ?? null,
+      };
     },
 
     /**
@@ -272,14 +318,22 @@ export function createChallengesService(deps: ChallengesServiceDeps) {
           ask.communityId,
           space.ownerUserId,
         );
-        // ponytail: one insert per fan, in order; a bulk insert if audiences reach the 10Ks.
-        for (const userId of userIds) {
-          await notifications.notify({
-            userId,
-            spaceId: space.id,
-            kind: 'ask_posted',
-            payload: { askId: ask.id, title: ask.title, communityName },
-          });
+        const payload: NotificationPayloads['ask_posted'] = {
+          askId: ask.id,
+          title: ask.title,
+          communityName,
+        };
+        for (let i = 0; i < userIds.length; i += FAN_OUT_CHUNK) {
+          const chunk = userIds.slice(i, i + FAN_OUT_CHUNK);
+          await repos.notifications.insertMany(
+            chunk.map((userId) => ({ userId, spaceId: space.id, kind: 'ask_posted', payload })),
+          );
+          // Live bells hear about it only once the rows exist.
+          for (const userId of chunk) {
+            await deps.pubsub.publish({ userId, spaceId: space.id }).catch((err: unknown) => {
+              log.error({ err, spaceId: space.id }, 'notification publish failed');
+            });
+          }
         }
       });
       return summarize({ ask, communityName, entryCount: 0 });
@@ -290,7 +344,7 @@ export function createChallengesService(deps: ChallengesServiceDeps) {
      * reasons in response_summary and tells each shortlisted author. Closing again is a no-op.
      */
     async close(owner: OwnerContext, id: string): Promise<ChallengeSummary> {
-      await closeAsk(owner.space, id);
+      await closeInRequest(owner.space, id);
       return summarize(await load(owner.space, id));
     },
 
@@ -314,7 +368,7 @@ export function createChallengesService(deps: ChallengesServiceDeps) {
      */
     async listForFans(ctx: MemberContext): Promise<{ items: ChallengeSummary[] }> {
       const since = new Date(Date.now() - RECENTLY_CLOSED_DAYS * DAY_MS);
-      const rows = await listClosingOverdue(ctx.space, {
+      const rows = await repos.asks.list(ctx.space.id, {
         openOrDueSince: since,
         liveCommunityOnly: true,
       });

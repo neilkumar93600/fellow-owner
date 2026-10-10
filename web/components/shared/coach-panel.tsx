@@ -7,11 +7,15 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/components/ui/cn';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useCoachCheck } from '@/hooks/queries/use-coach';
+import { ApiError } from '@/lib/fetcher';
 
 type Draft = { subject: string; body: string };
 type Status = 'idle' | 'loading' | 'ready' | 'unavailable';
 
 export interface CoachPanelProps {
+  /** The creator's space the draft is for (the check is counted per signed-in user). */
+  handle: string;
   /** 'pitch' checks a pitch to the creator; 'post' an Idea or Project post. */
   kind: 'pitch' | 'post';
   creatorName: string;
@@ -19,8 +23,6 @@ export interface CoachPanelProps {
   draft: Draft;
   /** Puts a version into the form (the suggestion, or the fan's own text again on Undo). */
   onReplace: (next: Draft) => void;
-  /** Design phase: the captured coach answer. Wiring swaps this for POST /api/spaces/:handle/coach. */
-  sample: CoachResult;
   className?: string;
 }
 
@@ -30,11 +32,11 @@ export interface CoachPanelProps {
  * clarity, never taste: no score, no "Mira would like this", and nothing here reaches the creator.
  */
 export function CoachPanel({
+  handle,
   kind,
   creatorName,
   draft,
   onReplace,
-  sample,
   className,
 }: CoachPanelProps) {
   const [status, setStatus] = useState<Status>('idle');
@@ -42,6 +44,7 @@ export function CoachPanel({
   const [checked, setChecked] = useState<Draft | null>(null);
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [checksLeft, setChecksLeft] = useState<number>(LIMITS.coach.perDay);
+  const coachCheck = useCoachCheck(handle);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const noteId = useId();
   const suggestionId = useId();
@@ -56,15 +59,29 @@ export function CoachPanel({
   }, [status]);
 
   function check() {
+    const asked = draft;
     setStatus('loading');
     setShowSuggestion(false);
-    // Design phase: a short pause stands in for the AI call.
-    window.setTimeout(() => {
-      setResult(sample);
-      setChecked(draft);
-      setChecksLeft(Math.min(sample.checksLeftToday, checksLeft - 1));
-      setStatus('ready');
-    }, 900);
+    coachCheck.mutate(
+      { kind, subject: asked.subject, body: asked.body },
+      {
+        onSuccess: (next) => {
+          setResult(next);
+          setChecked(asked);
+          setChecksLeft(next.checksLeftToday);
+          setStatus('ready');
+        },
+        onError: (error) => {
+          // 429: today's checks are used up. Anything else: the coach is paused, the draft is fine.
+          if (error instanceof ApiError && error.status === 429) {
+            setChecksLeft(0);
+            setStatus(result ? 'ready' : 'idle');
+          } else {
+            setStatus('unavailable');
+          }
+        },
+      },
+    );
   }
 
   function applySuggestion(next: Draft) {

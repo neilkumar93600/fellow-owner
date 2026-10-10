@@ -1,9 +1,9 @@
 import type { MySpace, UpdateMembershipInput, ViewerMembership } from '@fellow-owners/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getMe, updateMe } from '@/api/spaces';
 import { feedKeys } from '@/hooks/queries/use-feed';
 import { spacePageKeys } from '@/hooks/queries/use-space-page';
 import { membershipKeys } from '@/hooks/use-membership';
+import { getMe, updateMe } from '@/lib/api/spaces';
 import { toastError } from '@/lib/toast';
 
 export const meKeys = {

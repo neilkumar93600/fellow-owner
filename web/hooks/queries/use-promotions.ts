@@ -3,6 +3,7 @@ import {
   type Promotion,
   type PromotionAction,
   type PromotionComposer,
+  type PromotionState,
   type PromotionsPage,
 } from '@fellow-owners/shared';
 import {
@@ -12,9 +13,14 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { actOnPromotion, createPromotion, getPromotionComposer, getPromotions } from '@/api/studio';
 import { useCursorPages } from '@/hooks/use-cursor-list';
 import { studioKeys } from '@/hooks/use-space';
+import {
+  actOnPromotion,
+  createPromotion,
+  getPromotionComposer,
+  getPromotions,
+} from '@/lib/api/studio';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 
@@ -32,20 +38,27 @@ export interface PromotionActionVars {
   action: PromotionAction;
 }
 
-const countAll = (page: PromotionsPage) =>
-  PROMOTION_STATES.reduce((sum, state) => sum + page.counts[state], 0);
+const countAll = (page: PromotionsPage, state?: PromotionState | null) =>
+  state ? page.counts[state] : PROMOTION_STATES.reduce((sum, state) => sum + page.counts[state], 0);
 
 /**
  * Every promotion (all states), newest first, 20 a page with numbered pages (?page=), with the
  * counts per state and the clicks across all of them. The last page stays shown while the next
  * one loads.
  */
-export function usePromotions({ urlParam }: { urlParam?: string | null } = {}) {
+export function usePromotions({
+  urlParam,
+  state,
+}: {
+  urlParam?: string | null;
+  state?: PromotionState | null;
+} = {}) {
   const list = useCursorPages<PromotionsPage>({
-    queryKey: promotionKeys.list,
-    fetchPage: (cursor, signal) => getPromotions({ cursor, limit: PROMOTIONS_PAGE_SIZE }, signal),
+    queryKey: [...promotionKeys.list, state ?? 'all'],
+    fetchPage: (cursor, signal) =>
+      getPromotions({ cursor, limit: PROMOTIONS_PAGE_SIZE, state }, signal),
     pageSize: PROMOTIONS_PAGE_SIZE,
-    total: countAll,
+    total: (page) => countAll(page, state),
     urlParam,
   });
   const data = list.data;
@@ -54,7 +67,7 @@ export function usePromotions({ urlParam }: { urlParam?: string | null } = {}) {
     items: data?.items ?? [],
     counts: data?.counts,
     totalClicks: data?.totalClicks,
-    total: data && countAll(data),
+    total: data && countAll(data, state),
   };
 }
 

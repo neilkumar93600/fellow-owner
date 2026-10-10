@@ -14,7 +14,7 @@ import { Check, Globe, Plus, Trash2 } from 'lucide-react';
 import type * as React from 'react';
 import { useState } from 'react';
 import { PlatformIcon } from '@/components/auth/platform-icons';
-import { AvatarInitials } from '@/components/shared/avatar-initials';
+import { ImageUpload } from '@/components/shared/image-upload';
 import { Button } from '@/components/ui/button';
 import { Field, NativeSelect, TextArea, TextField } from '@/components/ui/field';
 import { useUpdateSettings } from '@/hooks/queries/use-settings';
@@ -37,7 +37,10 @@ export function PlatformMark({ platform }: { platform: Platform }) {
 }
 
 export interface ProfileFormProps {
-  space: Pick<StudioSpace, 'displayName' | 'bio' | 'avatarUrl' | 'platforms' | 'showReadReceipts'>;
+  space: Pick<
+    StudioSpace,
+    'displayName' | 'bio' | 'avatarUrl' | 'coverUrl' | 'platforms' | 'showReadReceipts'
+  >;
   isPending?: boolean;
 }
 
@@ -50,6 +53,8 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
   const [name, setName] = useState(space.displayName);
   const [bio, setBio] = useState(space.bio ?? '');
   const [platforms, setPlatforms] = useState(space.platforms);
+  const [avatarUrl, setAvatarUrl] = useState(space.avatarUrl);
+  const [coverUrl, setCoverUrl] = useState(space.coverUrl);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const save = (event: React.FormEvent) => {
@@ -57,6 +62,8 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
     const result = spaceProfileSchema.safeParse({
       displayName: name,
       bio: bio.trim() || null,
+      avatarUrl,
+      coverUrl,
       platforms,
     });
     if (!result.success) {
@@ -68,6 +75,8 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
       profile: {
         displayName: name,
         bio: bio.trim() || null,
+        avatarUrl,
+        coverUrl,
         platforms,
       },
     });
@@ -90,19 +99,25 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <AvatarInitials
+        <div className="flex flex-col gap-2">
+          <ImageUpload
+            kind="avatar"
+            label="Avatar"
             name={name.trim() || space.displayName}
-            image={space.avatarUrl}
-            size={96}
+            value={avatarUrl}
+            onChange={setAvatarUrl}
           />
-          <div className="min-w-0">
-            <p className="text-small-strong text-ink">Avatar</p>
-            <p className="mt-0.5 text-small text-ink-muted">
-              Your initials show until a photo is added. Photo upload comes after the pilot.
-            </p>
-          </div>
+          <p className="text-small text-ink-muted">
+            Your initials show until a photo is added. Save your profile to keep the change.
+          </p>
         </div>
+
+        <ImageUpload
+          kind="space_cover"
+          label="Cover image"
+          value={coverUrl}
+          onChange={setCoverUrl}
+        />
 
         <Field
           label="Display name"

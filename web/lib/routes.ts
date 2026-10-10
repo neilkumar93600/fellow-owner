@@ -53,6 +53,8 @@ export const routes = {
     ideas: (q: { community?: string; view?: IdeasView; q?: string; item?: string } = {}) =>
       withQuery('/dashboard/ideas', q, { view: 'ranked' }),
     communities: () => '/dashboard/communities',
+    /** F25 moderation: reports filed by members. */
+    reports: () => '/dashboard/communities/reports',
     community: (slug: string) => `/dashboard/communities/${seg(slug)}`,
     /** `spotlight`: a membership id; the Fans screen opens that fan's spotlight panel. */
     people: (q: { q?: string; community?: string; item?: string; spotlight?: string } = {}) =>
@@ -87,7 +89,13 @@ export const routes = {
     pitch: (handle: string) => `${space(handle)}/pitch`,
     me: (handle: string) => `${space(handle)}/me`,
     showcase: (handle: string, slug: string) => `${space(handle)}/s/${seg(slug)}`,
+    /** The signed-in fan's own account page (password, sessions, emails, data). */
+    account: () => '/account',
   },
+
+  /** Where the newsletter confirm and unsubscribe links land. */
+  newsletter: (status: 'confirmed' | 'unsubscribed' | 'invalid') => `/newsletter/${status}`,
+  emailPrefs: (status?: string | null) => withQuery('/email-preferences', { status }),
 
   auth: {
     login: (returnTo?: string | null) => withQuery('/login', { returnTo }),

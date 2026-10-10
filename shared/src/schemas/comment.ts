@@ -17,3 +17,12 @@ export const commentParamsSchema = z.object({
   id: idSchema,
   commentId: idSchema,
 });
+
+/** POST /api/comments/:commentId/report */
+export const commentIdParamsSchema = z.object({ commentId: idSchema });
+
+/** PATCH /api/studio/posts/:postId/comments/:commentId (owner hides or unhides, F25). */
+export const postCommentParamsSchema = z.object({
+  postId: idSchema,
+  commentId: idSchema,
+});

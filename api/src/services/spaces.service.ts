@@ -12,7 +12,7 @@ import type { z } from 'zod';
 import type { Db } from '../db/client.js';
 import { user as users } from '../db/schema/auth.js';
 import type { SpaceRow } from '../db/schema/spaces.js';
-import { toIso } from '../lib/dates.js';
+import { toIso, toIsoOrNull } from '../lib/dates.js';
 import { uniqueViolation } from '../lib/db-errors.js';
 import { conflict, handleTaken, notFound } from '../lib/errors.js';
 import { handleCandidates, handleProblem } from '../lib/handles.js';
@@ -25,9 +25,11 @@ import {
   totalFollowers,
 } from '../lib/present.js';
 import { slugify, uniqueSlug } from '../lib/slug.js';
+import type { Storage } from '../lib/storage.js';
 import type { Repos } from '../repositories/index.js';
 import type { SpaceProfileUpdate } from '../repositories/spaces.repo.js';
 import type { AccessService, OwnerContext } from './access.service.js';
+import { assertStorableImage } from './uploads.service.js';
 
 export type CreateSpaceBody = z.output<typeof createSpaceSchema>;
 export type UpdateSettingsBody = z.output<typeof updateSettingsSchema>;
@@ -37,6 +39,8 @@ export interface SpacesServiceDeps {
   repos: Repos;
   access: AccessService;
   logger: Logger;
+  /** Uploaded avatars and covers are checked in the bucket before they are stored. */
+  storage: Storage;
 }
 
 /** Live promotions on the bio page ("Featured by ..."). */
@@ -62,6 +66,7 @@ export function publicSpace(space: SpaceRow, memberCount: number): PublicSpace {
     totalFollowers: totalFollowers(space.platforms),
     memberCount,
     isDemo: space.isDemo,
+    coverUrl: space.coverUrl,
   };
 }
 
@@ -71,7 +76,7 @@ export function publicSpace(space: SpaceRow, memberCount: number): PublicSpace {
  * Saving the taste profile bumps taste_version; items scored with an older version show as stale.
  */
 export function createSpacesService(deps: SpacesServiceDeps) {
-  const { db, repos, access } = deps;
+  const { db, repos, access, storage } = deps;
   const log = deps.logger.child({ module: 'spaces' });
 
   /**
@@ -113,6 +118,8 @@ export function createSpacesService(deps: SpacesServiceDeps) {
       createdAt: toIso(space.createdAt),
       communityCount: communities.length,
       ownerName: displayName(owner?.name),
+      showReadReceipts: space.showReadReceipts,
+      bioLinkSharedAt: toIsoOrNull(space.bioLinkSharedAt),
     };
   }
 
@@ -191,6 +198,7 @@ export function createSpacesService(deps: SpacesServiceDeps) {
       if (await repos.spaces.findByOwnerUserId(user.id)) {
         throw conflict('You already have a space');
       }
+      await assertStorableImage(storage, ['avatarUrl'], input.avatarUrl, user.image);
       if ((await takenHandles([input.handle], user.id)).size > 0) {
         throw handleTaken(await suggestions(input.handle, user.id));
       }
@@ -253,15 +261,31 @@ export function createSpacesService(deps: SpacesServiceDeps) {
 
     /** PUT /api/studio/settings: profile and/or taste profile (taste_version + 1). */
     async updateSettings(owner: OwnerContext, input: UpdateSettingsBody): Promise<StudioSpace> {
+      const profile = input.profile;
+      await assertStorableImage(
+        storage,
+        ['profile', 'avatarUrl'],
+        profile?.avatarUrl,
+        owner.space.avatarUrl,
+      );
+      await assertStorableImage(
+        storage,
+        ['profile', 'coverUrl'],
+        profile?.coverUrl,
+        owner.space.coverUrl,
+      );
       const updated = await db.transaction(async (tx) => {
         let row: SpaceRow | null = owner.space;
+        const patch: SpaceProfileUpdate = {};
         if (input.profile) {
-          const patch: SpaceProfileUpdate = {
-            displayName: input.profile.displayName,
-            platforms: input.profile.platforms,
-          };
+          patch.displayName = input.profile.displayName;
+          patch.platforms = input.profile.platforms;
           if (input.profile.bio !== undefined) patch.bio = nullableText(input.profile.bio);
           if (input.profile.avatarUrl !== undefined) patch.avatarUrl = input.profile.avatarUrl;
+          if (input.profile.coverUrl !== undefined) patch.coverUrl = input.profile.coverUrl;
+        }
+        if (input.showReadReceipts !== undefined) patch.showReadReceipts = input.showReadReceipts;
+        if (Object.keys(patch).length > 0) {
           row = await repos.spaces.update(owner.space.id, patch, tx);
         }
         if (input.tasteProfile) {

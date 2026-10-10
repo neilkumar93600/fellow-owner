@@ -29,6 +29,7 @@ export const comments = pgTable(
   },
   (t) => [
     index('comments_post_created_idx').on(t.postId, t.createdAt),
+    index('comments_space_idx').on(t.spaceId),
     index('comments_author_created_idx').on(t.authorMembershipId, t.createdAt),
     index('comments_deleted_idx').on(t.deletedAt).where(sql`${t.deletedAt} is not null`),
     check(
@@ -54,6 +55,7 @@ export const signals = pgTable(
   (t) => [
     primaryKey({ name: 'signals_pk', columns: [t.postId, t.membershipId, t.kind] }),
     index('signals_membership_idx').on(t.membershipId),
+    index('signals_created_idx').on(t.createdAt),
   ],
 );
 

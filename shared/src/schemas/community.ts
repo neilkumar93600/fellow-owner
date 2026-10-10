@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { COMMUNITY_ICONS, TINTS } from '../enums.js';
 import { LIMITS } from '../limits.js';
-import { cursorQuerySchema, handleParamsSchema } from './space.js';
+import { coverUrlSchema, cursorQuerySchema, handleParamsSchema } from './space.js';
 
 const C = LIMITS.community;
 
@@ -31,6 +31,7 @@ export const createCommunitySchema = z.object({
   description: communityDescriptionSchema.optional(),
   tint: z.enum(TINTS),
   icon: z.enum(COMMUNITY_ICONS),
+  coverUrl: coverUrlSchema.nullable().optional(),
 });
 export type CreateCommunityInput = z.input<typeof createCommunitySchema>;
 
@@ -43,6 +44,7 @@ export const updateCommunitySchema = z
     icon: z.enum(COMMUNITY_ICONS).optional(),
     sortOrder: z.number().int().min(0).max(1000).optional(),
     archived: z.boolean().optional(),
+    coverUrl: coverUrlSchema.nullable().optional(),
   })
   .refine((value) => Object.values(value).some((v) => v !== undefined), {
     message: 'Nothing to update',

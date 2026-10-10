@@ -7,6 +7,7 @@ import type {
   BriefingRefType,
   ClickPlatform,
   CommunityIcon,
+  EmailNotificationKind,
   FeedbackVerdict,
   FollowerSource,
   FollowerTagger,
@@ -20,6 +21,10 @@ import type {
   PostType,
   PromotionPlatform,
   PromotionState,
+  QuestionGroupStatus,
+  ReportReason,
+  ReportStatus,
+  ReportTarget,
   SignalKind,
   TeamStatus,
   Tint,
@@ -47,6 +52,7 @@ export type ApiErrorCode =
   | 'edit_window_closed'
   | 'demo_disabled'
   | 'ai_unavailable'
+  | 'uploads_disabled'
   | 'internal_error';
 
 export interface ApiErrorBody {
@@ -128,6 +134,8 @@ export interface PublicSpace {
   memberCount: number;
   /** The seeded demo space: the web shows its demo cover and art. */
   isDemo: boolean;
+  /** Uploaded cover (/api/media/<key>) or an image link; null = the default art. */
+  coverUrl: string | null;
 }
 
 export interface PublicCommunity {
@@ -139,6 +147,8 @@ export interface PublicCommunity {
   icon: CommunityIcon;
   memberCount: number;
   sortOrder: number;
+  /** Uploaded cover (/api/media/<key>) or an image link; null = the tint. */
+  coverUrl: string | null;
 }
 
 /** A promoted project shown under "Featured by {creator}" on the bio page. */
@@ -320,6 +330,8 @@ export interface CommentItem {
   author: MemberRef;
   createdAt: ISODate;
   isOwn: boolean;
+  /** Studio post detail only: true for a comment the owner hid (fans never see those). */
+  hidden?: boolean;
 }
 
 export interface RoleSlot {
@@ -364,18 +376,18 @@ export interface Pitch {
   repliedAt: ISODate | null;
   createdAt: ISODate;
   canWithdraw: boolean;
-  // Pitch Tracker (F31). Optional until the API sends them.
+  // Pitch Tracker (F31).
   /** First time the creator opened it; null when unread or when read receipts are off. */
-  readAt?: ISODate | null;
-  shortlistedAt?: ISODate | null;
+  readAt: ISODate | null;
+  shortlistedAt: ISODate | null;
   /** Set when the reply came from Answer Once (F32): how many people got it, and the pinned post. */
-  answeredGroup?: { count: number; postHref: string } | null;
+  answeredGroup: { count: number; postHref: string } | null;
 }
 
 /** GET /api/spaces/:handle/me */
 export interface MySpace {
   /** showReadReceipts: whether the tracker draws a Read step (the creator's setting). */
-  space: Pick<PublicSpace, 'handle' | 'displayName' | 'avatarUrl'> & { showReadReceipts?: boolean };
+  space: Pick<PublicSpace, 'handle' | 'displayName' | 'avatarUrl'> & { showReadReceipts: boolean };
   membership: OwnMembership;
   communities: PublicCommunity[];
   posts: PostCard[];
@@ -393,8 +405,10 @@ export interface StudioSpace extends PublicSpace {
   createdAt: ISODate;
   communityCount: number;
   ownerName: string;
-  /** Fans see when their pitch was read (F31). Optional until the API sends it. */
-  showReadReceipts?: boolean;
+  /** Fans see when their pitch was read (F31). */
+  showReadReceipts: boolean;
+  /** When the creator first copied their bio link (setup checklist); null until then. */
+  bioLinkSharedAt: ISODate | null;
 }
 
 // ---------------------------------------------------------------- pitch loop (F30, F32)
@@ -434,7 +448,7 @@ export interface QuestionGroup {
   communities: Array<Pick<PublicCommunity, 'id' | 'slug' | 'name' | 'tint' | 'icon'>>;
   /** AI draft in the creator's voice; null while the AI is pending. */
   draft: string | null;
-  status: 'open' | 'answered' | 'dismissed';
+  status: QuestionGroupStatus;
   firstAskedAt: ISODate;
   answeredAt: ISODate | null;
   answer: string | null;
@@ -789,6 +803,8 @@ export interface ChallengeShortlistItem {
 export interface ChallengeResponseSummary {
   shortlist: ChallengeShortlistItem[] | null;
   winnerPostId: string | null;
+  /** The AI recap of the entries, written after close (workers/close-challenges.ts). */
+  summary?: string | null;
 }
 
 /** A creator challenge, for the studio list and the fan list. */
@@ -806,6 +822,13 @@ export interface ChallengeSummary {
   shortlist: ChallengeShortlistItem[] | null;
   winnerPostId: string | null;
   createdAt: ISODate;
+}
+
+/** GET /api/studio/challenges/:id: the summary, every entry and the AI recap (owner only). */
+export interface ChallengeDetail extends ChallengeSummary {
+  entries: IdeaItem[];
+  /** The AI recap of the entries; null until the challenge is closed and recapped. */
+  aiSummary: string | null;
 }
 
 // ---------------------------------------------------------------- notifications (F21)
@@ -865,4 +888,127 @@ export interface CommunityActivityReport {
   from: ISODate;
   to: ISODate;
   communities: CommunityActivity[];
+}
+
+// ---------------------------------------------------------------- backend completion (0006)
+
+/** GET /api/studio/question-groups: open first (most recently asked), then answered. */
+export interface QuestionGroupsPage {
+  items: QuestionGroup[];
+}
+
+/** POST /api/studio/question-groups/:id/redraft */
+export interface RedraftResult {
+  draft: string;
+  redraftsLeft: number;
+}
+
+/** A source the Ask answer used; only items from the matched set are ever cited. */
+export interface AskCitation {
+  refType: 'post' | 'pitch';
+  refId: string;
+  title: string;
+  /** Dashboard link to the item. */
+  href: string;
+}
+
+/** POST /api/studio/ask (F13). */
+export interface AskAnswer {
+  answer: string;
+  citations: AskCitation[];
+  asksLeftToday: number;
+}
+
+/** A member whose profile is close to a post (F17 "People who could help"). */
+export interface SimilarPeople {
+  membershipId: string;
+  member: MemberRef;
+  headline: string | null;
+  /** Their headline or top matching skill. */
+  reason: string;
+}
+
+/** GET /api/posts/:postId/similar and /api/studio/posts/:postId/similar */
+export interface SimilarResult {
+  posts: PostCard[];
+  people: SimilarPeople[];
+}
+
+/** One report in the owner's queue (F25). */
+export interface ReportItem {
+  id: string;
+  target: {
+    type: ReportTarget;
+    id: string;
+    excerpt: string;
+    /** Web path to the post (a comment links to its post). */
+    href: string;
+    authorName: string | null;
+    hidden: boolean;
+  };
+  reason: ReportReason;
+  note: string | null;
+  /** Null once the reporter deleted their account. */
+  reporterName: string | null;
+  status: ReportStatus;
+  createdAt: ISODate;
+  resolvedAt: ISODate | null;
+}
+
+/** GET /api/studio/reports */
+export interface ReportsPage extends Page<ReportItem> {
+  openCount: number;
+}
+
+/** GET /api/config (public, cached 5 minutes): what the web may offer. */
+export interface PublicConfig {
+  providers: { google: boolean; apple: boolean; facebook: boolean };
+  demoEnabled: boolean;
+  uploads: boolean;
+  youtubeImport: boolean;
+}
+
+/** GET /api/studio/metrics?days= (pilot analytics). */
+export interface StudioMetrics {
+  days: 7 | 30;
+  /** Unique visitors per day, summed over the window. */
+  bioVisitors: StatValue;
+  joins: StatValue;
+  /** joins / bioVisitors; null when there were no visitors. */
+  joinRate: number | null;
+  /** Thumbs on AI picks; rate = up / (up + down), null when none. */
+  aiAgreement: { up: number; down: number; rate: number | null };
+  /** Projects with at least 2 accepted team members. */
+  collabs: number;
+  promotionsPerWeek: number;
+}
+
+/** POST /api/uploads/presign: PUT the file to uploadUrl with headers, then save `url`. */
+export interface PresignedUpload {
+  uploadUrl: string;
+  method: 'PUT';
+  headers: Record<string, string>;
+  key: string;
+  /** Site path to store and render: /api/media/<key>. */
+  url: string;
+}
+
+/** GET/PUT /api/me/notification-prefs */
+export interface NotificationPrefs {
+  emailEnabled: boolean;
+  kinds: Record<EmailNotificationKind, boolean>;
+  /** True after a one-click email unsubscribe (notification_prefs.unsubscribed_at is set). */
+  unsubscribed: boolean;
+}
+
+/** GET /api/me/export: the caller's own rows only. */
+export interface AccountExport {
+  exportedAt: ISODate;
+  user: { id: string; name: string; email: string; username: string | null; createdAt: ISODate };
+  ownedSpaces: unknown[];
+  memberships: unknown[];
+  posts: unknown[];
+  comments: unknown[];
+  pitches: unknown[];
+  notifications: unknown[];
 }

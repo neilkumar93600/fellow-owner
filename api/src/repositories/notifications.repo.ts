@@ -23,6 +23,16 @@ export function createNotificationsRepo(db: Db) {
       return row;
     },
 
+    /** One multi-row insert (callers chunk large fan-outs). Returns the rows written. */
+    async insertMany(rows: NewNotificationRow[], tx: DbOrTx = db): Promise<number> {
+      if (rows.length === 0) return 0;
+      const inserted = await tx
+        .insert(notifications)
+        .values(rows)
+        .returning({ id: notifications.id });
+      return inserted.length;
+    },
+
     /** True when the user already has a `kind` notification about this post (payload.postId). */
     async existsForPost(
       userId: string,

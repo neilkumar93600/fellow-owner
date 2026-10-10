@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getMembership } from '@/api/spaces';
+import { getMembership } from '@/lib/api/spaces';
 
 export const membershipKeys = {
   all: ['membership'] as const,

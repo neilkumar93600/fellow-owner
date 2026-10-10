@@ -1,7 +1,7 @@
 import type { CreateCommunityInput, UpdateCommunityInput } from '@fellow-owners/shared';
 import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createCommunity, getCommunities, getCommunity, updateCommunity } from '@/api/studio';
 import { studioKeys } from '@/hooks/use-space';
+import { createCommunity, getCommunities, getCommunity, updateCommunity } from '@/lib/api/studio';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 import { useIdeas } from './use-ideas';

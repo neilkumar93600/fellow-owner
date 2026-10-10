@@ -5,6 +5,8 @@ export { closeDb, db };
 
 /** Every table, children first (TRUNCATE ... CASCADE handles the rest). */
 const TABLES = [
+  // No foreign keys, so the cascade below would miss it.
+  'job_runs',
   'click_events',
   'promotions',
   'ai_feedback',

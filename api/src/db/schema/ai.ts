@@ -50,6 +50,7 @@ export const digests = pgTable(
       .on(t.spaceId, t.communityId, t.periodDate)
       .nullsNotDistinct(),
     index('digests_period_idx').on(t.periodDate),
+    index('digests_community_idx').on(t.communityId),
     check('digests_regenerations_check', sql`${t.regenerations} >= 0`),
   ],
 );
@@ -104,6 +105,7 @@ export const aiFeedback = pgTable(
   (t) => [
     unique('ai_feedback_ref_user_key').on(t.refType, t.refId, t.createdByUserId),
     index('ai_feedback_space_idx').on(t.spaceId, t.refType),
+    index('ai_feedback_created_by_idx').on(t.createdByUserId),
     check(
       'ai_feedback_ref_type_check',
       sql`${t.refType} in (${sql.raw(FEEDBACK_REF_TYPES.map((v) => `'${v}'`).join(', '))})`,

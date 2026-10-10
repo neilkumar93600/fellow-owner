@@ -66,7 +66,6 @@ export function PitchFormContainer({ handle }: PitchFormContainerProps) {
         creatorName={creator}
         pitchesLeftToday={meQuery.data?.caps.pitchesLeftToday ?? DAILY_CAPS.pitches}
         showReadReceipts={meQuery.data?.space.showReadReceipts ?? true}
-        coachSample={null}
         sendPitchMutation={sendPitchMutation}
       />
     </div>

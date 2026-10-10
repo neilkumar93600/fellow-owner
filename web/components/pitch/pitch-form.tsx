@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  type CoachResult,
   type CreatePitchInput,
   createPitchSchema,
   DAILY_CAPS,
@@ -38,8 +37,6 @@ export interface PitchFormProps {
   pitchesLeftToday: number;
   /** The creator's setting, for the tracker on the confirmation. */
   showReadReceipts: boolean;
-  /** Design phase: the captured Idea Coach answer. Only shown in demo space. */
-  coachSample: CoachResult | null;
   /** The mutation for sending an idea. */
   sendPitchMutation: SendPitchMutation;
 }
@@ -54,7 +51,6 @@ export function PitchForm({
   creatorName,
   pitchesLeftToday,
   showReadReceipts,
-  coachSample,
   sendPitchMutation,
 }: PitchFormProps) {
   const [sentAt, setSentAt] = useState<string | null>(null);
@@ -149,18 +145,16 @@ export function PitchForm({
           <TextArea {...register('body')} rows={8} />
         </Field>
 
-        {coachSample ? (
-          <CoachPanel
-            kind="pitch"
-            creatorName={creatorName}
-            draft={{ subject: watch('subject'), body: watch('body') }}
-            onReplace={({ subject, body }) => {
-              setValue('subject', subject, { shouldDirty: true });
-              setValue('body', body, { shouldDirty: true });
-            }}
-            sample={coachSample}
-          />
-        ) : null}
+        <CoachPanel
+          handle={handle}
+          kind="pitch"
+          creatorName={creatorName}
+          draft={{ subject: watch('subject'), body: watch('body') }}
+          onReplace={({ subject, body }) => {
+            setValue('subject', subject, { shouldDirty: true });
+            setValue('body', body, { shouldDirty: true });
+          }}
+        />
 
         <LinksField
           max={LIMITS.pitch.links.max}

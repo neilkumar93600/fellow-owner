@@ -46,6 +46,8 @@ export interface RankedIdeasFilter {
   communityId?: string | undefined;
   type?: PostType | undefined;
   q?: string | undefined;
+  /** Post ids to leave out (Today: snoozed with Later). */
+  excludeIds?: Set<string> | undefined;
 }
 
 const round4 = (value: number) => Math.round(value * 10_000) / 10_000;
@@ -142,7 +144,11 @@ export function createDiscoveryService(deps: DiscoveryServiceDeps) {
       q: filter.q,
       includeHidden: true,
     });
-    const ranked = rankIdeas(inputs, now);
+    const excluded = filter.excludeIds;
+    const ranked = rankIdeas(
+      excluded?.size ? inputs.filter((input) => !excluded.has(input.id)) : inputs,
+      now,
+    );
     const page = pageByOffset(ranked, cursor, limit);
     const rows = await repos.posts.findManyByIds(
       owner.space.id,
@@ -194,7 +200,14 @@ export function createDiscoveryService(deps: DiscoveryServiceDeps) {
 
       const page = await rankedIdeas(
         owner,
-        { communityId: community?.id, type: query.type, q: query.q },
+        {
+          communityId: community?.id,
+          type: query.type,
+          q: query.q,
+          excludeIds: query.hideSnoozed
+            ? await repos.snoozes.activeIds(space.id, 'post')
+            : undefined,
+        },
         query.cursor,
         clampLimit(query.limit),
       );

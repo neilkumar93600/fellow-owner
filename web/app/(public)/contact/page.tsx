@@ -1,5 +1,6 @@
 import { Copyright, LifeBuoy, Lock, type LucideIcon, Scale } from 'lucide-react';
 import type { Metadata } from 'next';
+import { ContactForm } from '@/components/marketing/contact-form';
 import { PageFrame } from '@/components/marketing/page-frame';
 import { type CardTint, TINT_STYLES } from '@/components/shared/tint';
 import { buttonVariants } from '@/components/ui/button-variants';
@@ -8,9 +9,9 @@ import { DISPLAY_H1 } from '@/lib/constants';
 import { CONTACT, MIN_AGE, OPERATOR, RESPONSE_DAYS } from '@/lib/legal';
 
 /*
- * Honest channels only: the four addresses from shared CONTACT and the postal address from OPERATOR. No
- * form, because a form would only send the same email without leaving the sender a copy. Support is the
- * one coral action; the other mailboxes are secondary.
+ * Honest channels only: the four addresses from shared CONTACT and the postal address from OPERATOR, plus
+ * a contact form that stores the message and emails the sender a copy. Support is the one coral action;
+ * the other mailboxes are secondary.
  */
 
 export const metadata: Metadata = {
@@ -117,6 +118,8 @@ export default function Page() {
           );
         })}
       </ul>
+
+      <ContactForm />
 
       <section
         aria-labelledby="post-title"

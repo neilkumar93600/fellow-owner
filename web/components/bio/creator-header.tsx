@@ -35,7 +35,15 @@ export function CreatorHeader({ space, cta }: CreatorHeaderProps) {
   return (
     <header className="flex flex-col">
       <div className="glass relative h-52 overflow-hidden sm:h-64">
-        {photos ? (
+        {space.coverUrl ? (
+          // biome-ignore lint/performance/noImgElement: uploads come from the bucket, not next/image remotePatterns
+          <img
+            src={space.coverUrl}
+            alt=""
+            className="absolute inset-0 size-full object-cover"
+            fetchPriority="high"
+          />
+        ) : photos ? (
           <CreatorImage
             fill
             priority

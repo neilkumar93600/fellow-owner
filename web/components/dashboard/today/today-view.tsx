@@ -19,6 +19,8 @@ interface TodaySlots {
   pulse: React.ReactNode;
   fans: React.ReactNode;
   communities: React.ReactNode;
+  /** Cards below the communities (Ask your AI, pilot metrics); absent while loading. */
+  extras?: React.ReactNode;
 }
 
 /**
@@ -26,7 +28,15 @@ interface TodaySlots {
  * community tiles) once main is 56rem wide; below that the column drops under the stack. Shared by the
  * screen and its skeleton so both hold one shape.
  */
-export function TodayView({ banner, greeting, stack, pulse, fans, communities }: TodaySlots) {
+export function TodayView({
+  banner,
+  greeting,
+  stack,
+  pulse,
+  fans,
+  communities,
+  extras,
+}: TodaySlots) {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="sr-only">Today</h1>
@@ -38,6 +48,7 @@ export function TodayView({ banner, greeting, stack, pulse, fans, communities }:
           {pulse}
           {fans}
           {communities}
+          {extras}
         </div>
       </div>
     </div>

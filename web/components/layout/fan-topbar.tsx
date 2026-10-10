@@ -1,7 +1,7 @@
 'use client';
 
 import type { PublicCommunity, PublicSpace, ViewerMembership } from '@fellow-owners/shared';
-import { LayoutGrid, LogOut, Send, UserRound } from 'lucide-react';
+import { LayoutGrid, LogOut, Send, Settings, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -51,7 +51,7 @@ export function FanTopbar({ space, communities, viewer, className }: FanTopbarPr
       <div className="glass flex items-center justify-between gap-3 rounded-full p-1.5">
         <Link
           href={routes.fan.space(space.handle)}
-          className="press inline-flex h-11 min-w-0 items-center gap-3 rounded-full pr-4 pl-1 hover:bg-white/60"
+          className="inline-flex h-11 min-w-0 press items-center gap-3 rounded-full pr-4 pl-1 hover:bg-white/60"
         >
           <AvatarInitials name={space.displayName} image={space.avatarUrl} size={40} />
           <span className="truncate text-label-strong text-ink">{space.displayName}</span>
@@ -85,7 +85,7 @@ export function FanTopbar({ space, communities, viewer, className }: FanTopbarPr
         </div>
       </div>
       <nav aria-label={`${space.displayName}'s communities`}>
-        <ul ref={bandRef} className="scrollbar-band -m-1 flex gap-2 p-1">
+        <ul ref={bandRef} className="-m-1 scrollbar-band flex gap-2 p-1">
           {communities.map((community) => {
             const href = routes.fan.community(space.handle, community.slug);
             const current = pathname === href || pathname.startsWith(`${href}/`);
@@ -95,7 +95,7 @@ export function FanTopbar({ space, communities, viewer, className }: FanTopbarPr
                   href={href}
                   aria-current={current ? 'page' : undefined}
                   className={cn(
-                    'press relative inline-flex h-11 items-center rounded-full px-4 whitespace-nowrap text-ink',
+                    'relative inline-flex h-11 press items-center rounded-full px-4 whitespace-nowrap text-ink',
                     // The active dot: 3px sunset under the word, the same cue as the tab bar.
                     'after:absolute after:bottom-1 after:left-1/2 after:size-[3px] after:-translate-x-1/2 after:rounded-full after:bg-sunset',
                     current
@@ -132,7 +132,7 @@ function ViewerMenu({ space, viewer }: Pick<FanTopbarProps, 'space' | 'viewer'>)
     <Menu>
       <MenuTrigger
         aria-label={`Your account, ${name}`}
-        className="press grid size-11 shrink-0 place-items-center rounded-full hover:bg-white/60 data-popup-open:bg-white/60"
+        className="grid size-11 shrink-0 press place-items-center rounded-full hover:bg-white/60 data-popup-open:bg-white/60"
       >
         <AvatarInitials name={name} image={viewer.isOwner ? space.avatarUrl : null} size={40} />
       </MenuTrigger>
@@ -164,6 +164,13 @@ function ViewerMenu({ space, viewer }: Pick<FanTopbarProps, 'space' | 'viewer'>)
           </>
         )}
         <MenuSeparator />
+        <MenuLinkItem
+          icon={<Settings />}
+          render={<Link href={routes.fan.account()} />}
+          className="h-11"
+        >
+          Account
+        </MenuLinkItem>
         <MenuLinkItem icon={<LogOut />} render={<Link href={SIGN_OUT_HREF} />} className="h-11">
           Sign out
         </MenuLinkItem>

@@ -28,6 +28,8 @@ export const memberships = pgTable(
     spotlightAt: timestamptz('spotlight_at'),
     spotlightNote: text('spotlight_note'),
     removedAt: timestamptz('removed_at'),
+    /** Set with removedAt when the member left on their own (they may rejoin); null when removed. */
+    leftAt: timestamptz('left_at'),
     joinedAt: timestamptz('joined_at').notNull().defaultNow(),
   },
   (t) => [

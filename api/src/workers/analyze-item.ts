@@ -1,5 +1,6 @@
 import type { PitchType, PostType } from '@fellow-owners/shared';
 import { isPitchType, isPostType } from '../ai/fake.js';
+import { TRIAGE_FEEDBACK_MAX, type TriageFeedbackExample } from '../ai/tasks/triage-item.js';
 import {
   type AiServices,
   type Analyzer,
@@ -8,6 +9,7 @@ import {
   type ItemRef,
   isAiUnavailable,
   type SweepResult,
+  type TriageInput,
 } from '../ai/types.js';
 import type { Logger } from '../lib/logger.js';
 import type { Repos } from '../repositories/index.js';
@@ -15,7 +17,7 @@ import type { AnalysisSubject } from '../repositories/posts.repo.js';
 import { sweepSpace } from './sweep.js';
 
 export interface AnalyzerDeps {
-  repos: Pick<Repos, 'posts' | 'pitches'>;
+  repos: Pick<Repos, 'posts' | 'pitches' | 'feedback'>;
   ai: AiServices;
   background: BackgroundRunner;
   logger: Logger;
@@ -98,6 +100,24 @@ export function createAnalyzer(deps: AnalyzerDeps): Analyzer & {
       refId: subject.id,
     };
     const started = Date.now();
+    // The creator's recent thumbs steer triage; failing to load them never fails the item.
+    const feedback = await deps.repos.feedback
+      .recentExamples(subject.spaceId, { excludeRefId: subject.id, limit: TRIAGE_FEEDBACK_MAX })
+      .catch((error: unknown): TriageFeedbackExample[] => {
+        log.warn({ err: error, ref }, 'feedback examples failed; triaging without them');
+        return [];
+      });
+    const triageInput: TriageInput = {
+      kind: subject.kind,
+      type: subject.type,
+      title: subject.title,
+      body: subject.body,
+      links: subject.links,
+      communityName: subject.communityName,
+      tasteProfile: subject.tasteProfile,
+      creatorName: subject.creatorName,
+      ...(feedback.length > 0 ? { feedback } : {}),
+    };
     try {
       const embeddingTask: Promise<Embedding | undefined> = subject.hasEmbedding
         ? Promise.resolve(undefined)
@@ -106,19 +126,7 @@ export function createAnalyzer(deps: AnalyzerDeps): Analyzer & {
             return undefined;
           });
       const [triage, embedding] = await Promise.all([
-        deps.ai.triageItem(
-          {
-            kind: subject.kind,
-            type: subject.type,
-            title: subject.title,
-            body: subject.body,
-            links: subject.links,
-            communityName: subject.communityName,
-            tasteProfile: subject.tasteProfile,
-            creatorName: subject.creatorName,
-          },
-          ctx,
-        ),
+        deps.ai.triageItem(triageInput, ctx),
         embeddingTask,
       ]);
       const saved = await repo.saveAnalysis(

@@ -1,15 +1,24 @@
 'use client';
 
 import { emailSchema } from '@fellow-owners/shared';
-import { Mail } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { type FormEvent, useRef, useState } from 'react';
 import { CopyButton } from '@/components/shared/copy-button';
 import { Button } from '@/components/ui/button';
 import { Field, TextField } from '@/components/ui/field';
+import { submitSupportRequest } from '@/lib/api/support';
+import { ApiError } from '@/lib/fetcher';
 import { CONTACT, MIN_AGE } from '@/lib/legal';
 import { toastSuccess } from '@/lib/toast';
 
 type Kind = 'delete' | 'export' | 'minor' | 'consent';
+
+const SUPPORT_KIND = {
+  delete: 'privacy_delete',
+  export: 'privacy_export',
+  minor: 'privacy_delete',
+  consent: 'privacy_other',
+} as const;
 
 const KINDS: readonly { value: Kind; label: string; subject: string; ask: string }[] = [
   {
@@ -40,29 +49,45 @@ const KINDS: readonly { value: Kind; label: string; subject: string; ask: string
 
 /**
  * The privacy request writer, inline in the privacy policy (it replaces the old modal). Pick a request,
- * add the account email, and it writes the email to the privacy address: Copy it, or open it in the
- * mail app. Nothing is sent from here. The email is checked with the shared schema before the mail app opens.
+ * add the account email, and it sends the request to the support API (stored, emailed to the team, with
+ * a capped confirmation to the sender). Copy still copies the text. The email is checked with the shared schema.
  */
 export function DataRequest() {
   const [kind, setKind] = useState<Kind>('delete');
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const request = KINDS.find((item) => item.value === kind) ?? KINDS[0];
   const body = `Hello,\n\n${request.ask}\n\nAccount email: ${email.trim() || '[your account email]'}\n\nThank you`;
-  const mailto = `mailto:${CONTACT.privacy}?subject=${encodeURIComponent(request.subject)}&body=${encodeURIComponent(body)}`;
 
-  function send(event: FormEvent<HTMLFormElement>) {
+  async function send(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (pending) return;
     const parsed = emailSchema.safeParse(email);
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? 'Enter a valid email');
       inputRef.current?.focus();
       return;
     }
-    window.location.href = mailto;
-    toastSuccess('Your email app should open with the request. Press send there.');
+    setPending(true);
+    try {
+      await submitSupportRequest({
+        kind: SUPPORT_KIND[kind],
+        email,
+        message: `${request.subject}\n\n${request.ask}`,
+      });
+      toastSuccess('Request received. We will reply to your email.');
+    } catch (err) {
+      setError(
+        err instanceof ApiError && err.code === 'rate_limited'
+          ? 'Too many requests from here. Please try again in an hour.'
+          : `Something went wrong. Copy the request and email it to ${CONTACT.privacy}.`,
+      );
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -73,8 +98,8 @@ export function DataRequest() {
     >
       <h3 className="text-label-strong text-ink">Write a privacy request</h3>
       <p className="mt-1 max-w-[60ch] text-small text-ink-soft">
-        Pick what you need and add the account email. We write the email for you; nothing is sent
-        until you press send in your own email app.
+        Pick what you need and add the account email. We send the request to our privacy team and
+        email you a short confirmation (once a day at most).
       </p>
 
       <fieldset className="mt-5">
@@ -135,8 +160,8 @@ export function DataRequest() {
           value={`To: ${CONTACT.privacy}\nSubject: ${request.subject}\n\n${body}`}
           className="w-full sm:w-auto"
         />
-        <Button type="submit" icon={<Mail />} className="w-full sm:w-auto">
-          Email the request
+        <Button type="submit" icon={<Send />} loading={pending} className="w-full sm:w-auto">
+          Send the request
         </Button>
       </div>
     </form>

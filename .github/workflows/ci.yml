@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: fellow
+          POSTGRES_PASSWORD: fellow
+          POSTGRES_DB: fellow_owners_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fellow -d fellow_owners_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgres://fellow:fellow@localhost:5432/fellow_owners_test
+      TEST_DATABASE_URL: postgres://fellow:fellow@localhost:5432/fellow_owners_test
+    steps:
+      - uses: actions/checkout@v4
+      # The pnpm version comes from package.json "packageManager".
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test:unit
+      - run: pnpm test:integration
+      - name: Migrations match the schema
+        run: |
+          pnpm db:generate
+          git diff --exit-code -- api/src/db/migrations
+      - name: Build the web app
+        run: pnpm --filter @fellow-owners/web build
+        env:
+          API_URL: http://localhost:4000
+      - name: Build the API image
+        run: docker build -f api/Dockerfile .

@@ -94,6 +94,7 @@ export function ChallengeDetailScreen({ id }: { id: string }) {
     <div className="flex flex-col gap-5">
       <Header summary={summary} now={now} communities={communities.data} />
       {summary.status === 'closed' ? <Shortlist summary={summary} /> : null}
+      {summary.aiSummary ? <AiRecap text={summary.aiSummary} /> : null}
       <Entries
         entries={entries}
         open={summary.status === 'open'}
@@ -233,6 +234,23 @@ function Shortlist({ summary }: { summary: ChallengeSummary }) {
         </ol>
       )}
     </section>
+  );
+}
+
+/** The AI's short recap of all entries, written after close (none until then). */
+function AiRecap({ text }: { text: string }) {
+  return (
+    <GlassPanel
+      as="section"
+      strength="strong"
+      aria-labelledby="ai-recap-heading"
+      className="flex flex-col gap-2 rounded-[24px] p-5"
+    >
+      <h2 id="ai-recap-heading" className="text-label-strong text-ink">
+        AI recap of the entries
+      </h2>
+      <p className="text-body whitespace-pre-line text-ink-soft">{text}</p>
+    </GlassPanel>
   );
 }
 

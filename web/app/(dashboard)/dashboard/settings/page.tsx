@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { ReadReceiptsToggle } from '@/components/dashboard/settings/read-receipts-toggle';
 import { SettingsClient } from '@/components/dashboard/settings/settings-client';
 import { routes } from '@/lib/routes';
 import { getStudioSpace } from '@/lib/server-api';
@@ -31,14 +32,17 @@ export default async function Page({ searchParams }: { searchParams: SearchParam
   const { space } = result;
 
   return (
-    <SettingsClient
-      space={space}
-      current={current}
-      tabs={TABS.map((t) => ({
-        href: routes.dashboard.settings({ tab: t.value }),
-        label: t.label,
-        active: t.value === current,
-      }))}
-    />
+    <div className="flex flex-col gap-4">
+      <SettingsClient
+        space={space}
+        current={current}
+        tabs={TABS.map((t) => ({
+          href: routes.dashboard.settings({ tab: t.value }),
+          label: t.label,
+          active: t.value === current,
+        }))}
+      />
+      {current === 'profile' ? <ReadReceiptsToggle space={space} /> : null}
+    </div>
   );
 }

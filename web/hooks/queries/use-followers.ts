@@ -1,16 +1,17 @@
 import type { FollowersPage, UpdateFollowerInput } from '@fellow-owners/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCursorPages } from '@/hooks/use-cursor-list';
+import { studioKeys } from '@/hooks/use-space';
 import {
   autoTagFollowers,
   createFollower,
   deleteFollower,
   getFollowers,
   importFollowers,
+  importYoutube,
   tagFollowers,
   updateFollower,
-} from '@/api/followers';
-import { useCursorPages } from '@/hooks/use-cursor-list';
-import { studioKeys } from '@/hooks/use-space';
+} from '@/lib/api/followers';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 
@@ -102,6 +103,11 @@ export function useDeleteFollower() {
 /** CSV or pasted lines; the import panel shows its own errors inline. */
 export function useImportFollowers() {
   return useFollowerMutation(importFollowers, true);
+}
+
+/** Commenters on a YouTube channel; the import panel shows its own errors inline. */
+export function useImportYoutube() {
+  return useFollowerMutation(importYoutube, true);
 }
 
 /** Add or remove one community on the selected followers. */

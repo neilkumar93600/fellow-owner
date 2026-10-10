@@ -1,6 +1,5 @@
 import type {
   Briefing,
-  CoachResult,
   FeedPage,
   IdeasPage,
   InboxDetail,
@@ -11,7 +10,6 @@ import type {
   PostDetail,
   PromotionComposer,
   PromotionsPage,
-  QuestionGroup,
   Showcase,
   SpacePage,
   StudioCommunity,
@@ -21,7 +19,6 @@ import type {
   ViewerMembership,
 } from '@fellow-owners/shared';
 import briefing from './briefing.json';
-import coach from './coach.json';
 import communities from './communities.json';
 import communityDetail from './community-detail.json';
 import composer from './composer.json';
@@ -37,7 +34,6 @@ import overview from './overview.json';
 import people from './people.json';
 import post from './post.json';
 import promotions from './promotions.json';
-import questionGroups from './question-groups.json';
 import showcase from './showcase.json';
 import spacePage from './space-page.json';
 import studioSpace from './studio-space.json';
@@ -68,7 +64,4 @@ export const fixtures = {
   feed: feed as unknown as FeedPage,
   post: post as unknown as PostDetail,
   showcase: showcase as unknown as Showcase,
-  /** Design-only (2026-10-03, idea loop spec): no API yet, so these were written by hand. */
-  coach: coach as unknown as { pitch: CoachResult; post: CoachResult },
-  questionGroups: questionGroups as unknown as QuestionGroup[],
 } as const;

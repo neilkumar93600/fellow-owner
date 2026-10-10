@@ -218,6 +218,7 @@ describe('GET and PATCH /api/spaces/:handle/me', () => {
       handle: 'mira',
       displayName: mira.space.displayName,
       avatarUrl: null,
+      showReadReceipts: true,
     });
     expect(res.body.caps).toEqual({
       pitchesLeftToday: DAILY_CAPS.pitches,

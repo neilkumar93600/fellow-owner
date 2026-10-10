@@ -1,6 +1,6 @@
 import type { SpacePage } from '@fellow-owners/shared';
 import { useQuery } from '@tanstack/react-query';
-import { getSpacePage } from '@/api/spaces';
+import { getSpacePage } from '@/lib/api/spaces';
 
 export const spacePageKeys = {
   all: ['space-page'] as const,

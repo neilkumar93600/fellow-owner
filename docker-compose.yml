@@ -1,8 +1,8 @@
-# Local stack: Postgres with pgvector, the Express API and the Next.js web app.
-# Production runs on Vercel; this file is for local parity only.
+# Local stack: Postgres with pgvector and the Express API. The web app runs with `pnpm dev`.
+# Production: the API runs on Railway (api/Dockerfile), the web app on Vercel.
 #
 #   docker compose up db          # just the database, run apps with `pnpm dev`
-#   docker compose up --build     # everything in containers
+#   docker compose up --build     # database + API in containers
 
 name: fellow-owners
 
@@ -41,20 +41,6 @@ services:
       WEB_ORIGIN: http://localhost:3000
     ports:
       - "4000:4000"
-
-  web:
-    build:
-      context: .
-      dockerfile: web/Dockerfile
-      args:
-        API_URL: http://api:4000
-        NEXT_PUBLIC_APP_URL: http://localhost:3000
-    depends_on:
-      - api
-    environment:
-      API_URL: http://api:4000
-    ports:
-      - "3000:3000"
 
 volumes:
   db-data:

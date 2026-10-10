@@ -22,6 +22,9 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { feedKeys } from '@/hooks/queries/use-feed';
+import { meKeys } from '@/hooks/queries/use-me';
+import { membershipKeys } from '@/hooks/use-membership';
 import {
   addComment,
   addSignal,
@@ -32,11 +35,8 @@ import {
   removeSignal,
   requestTeamRole,
   updatePost,
-} from '@/api/posts';
-import { createPost } from '@/api/spaces';
-import { feedKeys } from '@/hooks/queries/use-feed';
-import { meKeys } from '@/hooks/queries/use-me';
-import { membershipKeys } from '@/hooks/use-membership';
+} from '@/lib/api/posts';
+import { createPost } from '@/lib/api/spaces';
 import { ApiError } from '@/lib/fetcher';
 import { toastError } from '@/lib/toast';
 

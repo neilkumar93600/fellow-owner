@@ -1,12 +1,21 @@
 import type { TasteProfile } from '@fellow-owners/shared';
-import { eq, inArray, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import type { Db, DbOrTx } from '../db/client.js';
 import { user } from '../db/schema/auth.js';
 import { type NewSpaceRow, type SpaceRow, spaces } from '../db/schema/spaces.js';
 
-/** Profile fields the owner can change (PUT /api/studio/settings `profile`). */
+/** Fields the owner can change (PUT /api/studio/settings `profile` and `showReadReceipts`). */
 export type SpaceProfileUpdate = Partial<
-  Pick<NewSpaceRow, 'displayName' | 'bio' | 'avatarUrl' | 'platforms' | 'aiDailyTokenBudget'>
+  Pick<
+    NewSpaceRow,
+    | 'displayName'
+    | 'bio'
+    | 'avatarUrl'
+    | 'coverUrl'
+    | 'platforms'
+    | 'aiDailyTokenBudget'
+    | 'showReadReceipts'
+  >
 >;
 
 export interface SpaceOwner {
@@ -91,6 +100,15 @@ export function createSpacesRepo(db: Db) {
         .where(eq(spaces.id, id))
         .returning();
       return row ?? null;
+    },
+
+    /** Setup checklist: stamps bio_link_shared_at the first time only. Returns the space. */
+    async markBioLinkShared(spaceId: string, tx: DbOrTx = db): Promise<SpaceRow | null> {
+      await tx
+        .update(spaces)
+        .set({ bioLinkSharedAt: new Date() })
+        .where(and(eq(spaces.id, spaceId), isNull(spaces.bioLinkSharedAt)));
+      return findById(spaceId, tx);
     },
 
     /** The owner's user record (name for StudioSpace.ownerName and AI prompts). Never the email. */

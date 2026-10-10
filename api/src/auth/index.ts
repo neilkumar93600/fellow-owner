@@ -18,11 +18,25 @@ import { account, session, user, verification } from '../db/schema/auth.js';
 import { spaces } from '../db/schema/spaces.js';
 import { logger as defaultLogger, type Logger, maskEmail } from '../lib/logger.js';
 import { connected, redis as defaultRedis, type Redis } from '../lib/redis.js';
+import { createStorage, mediaImageProblem, type Storage } from '../lib/storage.js';
+import { createRepos } from '../repositories/index.js';
+import { createAccountService } from '../services/account.service.js';
 import { isDemoEmail } from './demo.js';
-import { createEmailSender, type EmailSender } from './email.js';
+import {
+  createEmailSender,
+  createSendThrottle,
+  type EmailSender,
+  type OtpMessage,
+} from './email.js';
 
 /** Where Better Auth is mounted (create-app.ts) and what the web client calls through the rewrite. */
 export const AUTH_BASE_PATH = '/api/auth';
+
+/**
+ * The only header Better Auth reads the client IP from: create-app.ts sets it to req.clientIp
+ * (lib/client-ip.ts) on every request, dropping any value the caller sent.
+ */
+export const CLIENT_IP_HEADER = 'x-fo-client-ip';
 
 const DAY_SECONDS = 60 * 60 * 24;
 
@@ -30,6 +44,8 @@ const DAY_SECONDS = 60 * 60 * 24;
 const DEMO_LOCKED_PATHS = new Set([
   '/update-user',
   '/delete-user',
+  '/delete-user/callback',
+  '/change-password',
   '/change-email',
   '/list-sessions',
   '/revoke-session',
@@ -46,6 +62,8 @@ export interface AuthDeps {
   email?: EmailSender;
   /** Rate-limit counters (lib/redis.ts); null keeps them in process memory. */
   redis?: Redis | null;
+  /** Image bucket (lib/storage.ts): checks uploaded avatars, deletes a deleted user's images. */
+  storage?: Storage;
 }
 
 /** One atomic step per request: count the hit; the window's first hit sets the key's expiry. */
@@ -97,10 +115,23 @@ export function redisRateLimitStorage(redis: Redis, logger: Logger): BetterAuthR
  *   password also needs that password (`password` in the verify-email body, 401
  *   INVALID_EMAIL_OR_PASSWORD otherwise; the owner resets it instead), and confirming or resetting
  *   drops every OAuth link and session made before the inbox was proven (`dropUnprovenAccess`).
- * - Codes (emailOTP): 6 digits, 10 minutes, 5 attempts, stored hashed. They also reset a
- *   forgotten password (/email-otp/request-password-reset, /email-otp/reset-password), which ends
- *   every session. The link-based reset and /change-password stay disabled: no email carries a
- *   link. /sign-in/email-otp still works for API clients and the test helpers.
+ * - Codes (emailOTP): 6 digits, 10 minutes, 5 attempts, stored encrypted so a resend can repeat
+ *   the unexpired code (`resendStrategy: 'reuse'`). They also reset a forgotten password
+ *   (/email-otp/request-password-reset, /email-otp/reset-password), which ends every session. The
+ *   link-based reset stays disabled: no email carries a link. /sign-in/email-otp still works for
+ *   API clients and the test helpers.
+ * - In production each address gets at most one code per 60 s and 5 per 15 minutes
+ *   (`createSendThrottle`); above that the email is dropped silently and the earlier code still
+ *   works.
+ * - Signed in: /change-password (current password needed; other sessions end), /list-sessions and
+ *   /revoke-other-sessions (Account tab).
+ * - Deleting an account: /delete-user emails a code (Better Auth's delete token, no link); sending
+ *   it back as `{ token }` deletes the user. `beforeDelete` (services/account.service.ts) first
+ *   deletes the user's own space and their memberships elsewhere ("Former member" posts), then
+ *   their bucket images; it is safe to run again when the delete itself failed.
+ * - An uploaded avatar (`image` = /api/media/<key>) must be a real JPEG, PNG or WebP
+ *   (lib/storage.ts mediaImageProblem); other image links keep their rules.
+ *   The demo accounts can't do either (DEMO_LOCKED_PATHS).
  * - One namespace (spec §11): a username is a handle. Same rules as a space handle (shared
  *   `LIMITS.username`, reserved words refused), and a username that is another person's space
  *   handle answers 409 HANDLE_TAKEN (databaseHooks). Space creation (spaces.service.ts) writes the
@@ -112,10 +143,11 @@ export function redisRateLimitStorage(redis: Redis, logger: Logger): BetterAuthR
  *   cookies are first-party and OAuth callbacks land on the web origin.
  * - Sessions: 7 days, refreshed daily; httpOnly, sameSite=lax, secure in production. They live in
  *   Postgres only.
- * - Rate limits (production): Better Auth's defaults per client IP and path, i.e. sign-in and
+ * - Rate limits (production): Better Auth's defaults per client IP (CLIENT_IP_HEADER) and path, i.e. sign-in and
  *   sign-up 3 per 10 s, the email-code endpoints (send, verify, reset) 3 per 60 s, anything else
  *   100 per 10 s. Counted in Redis when REDIS_URL is set (`redisRateLimitStorage`), in process
- *   memory otherwise.
+ *   memory otherwise. /get-session is not limited: the web's server-side session reads all leave
+ *   from the same few Vercel egress IPs.
  */
 export function createAuth(deps: AuthDeps = {}) {
   const env = deps.env ?? defaultEnv;
@@ -123,6 +155,35 @@ export function createAuth(deps: AuthDeps = {}) {
   const logger = (deps.logger ?? defaultLogger).child({ module: 'auth' });
   const email = deps.email ?? createEmailSender(env, deps.logger ?? defaultLogger);
   const redis = deps.redis === undefined ? defaultRedis : deps.redis;
+  const storage = deps.storage ?? createStorage(env);
+  // Better Auth is built before the container, so its delete hook gets its own account service.
+  const accountService = createAccountService({
+    db,
+    repos: createRepos(db),
+    logger: deps.logger ?? defaultLogger,
+    storage,
+  });
+  const throttle = env.isProduction ? createSendThrottle(redis, logger) : null;
+
+  /**
+   * Sends a code without holding the response (avoids timing leaks; kept alive with waitUntil on
+   * Vercel). Over the per-address throttle it is dropped silently.
+   */
+  const deliver = (message: OtpMessage) => {
+    const delivery = (async () => {
+      if (throttle && !(await throttle.allow(message.to))) {
+        logger.warn({ to: maskEmail(message.to), type: message.type }, 'code email throttled');
+        return;
+      }
+      await email.sendOtp(message);
+    })().catch((error: unknown) => {
+      logger.error(
+        { err: error, to: maskEmail(message.to), type: message.type },
+        'sending the code email failed',
+      );
+    });
+    waitUntil(delivery);
+  };
 
   // The password sent with /email-otp/verify-email, read once the code is accepted.
   const confirmPasswords = new WeakMap<Request, unknown>();
@@ -237,11 +298,35 @@ export function createAuth(deps: AuthDeps = {}) {
           // A user's own space never blocks them; without a session nothing is excluded.
           before: async (data, ctx) => {
             await assertNotSpaceHandle(data.username, ctx?.context.session?.user.id);
+            // An uploaded avatar (/api/media/...) must really be an image; other URLs as before.
+            if (data.image !== undefined && data.image !== ctx?.context.session?.user.image) {
+              const problem = await mediaImageProblem(storage, data.image);
+              if (problem) {
+                throw new APIError('BAD_REQUEST', { code: 'VALIDATION_ERROR', message: problem });
+              }
+            }
           },
         },
       },
     },
     user: {
+      deleteUser: {
+        enabled: true,
+        deleteTokenExpiresIn: LIMITS.otp.expiresInSeconds,
+        // The token is the emailed code: pasted back as POST /delete-user { token }.
+        sendDeleteAccountVerification: async ({ user: owner, token }) => {
+          deliver({ to: owner.email, code: token, type: 'delete-account' });
+        },
+        beforeDelete: async (owner) => {
+          if (isDemoEmail(env, owner.email)) {
+            throw new APIError('FORBIDDEN', {
+              code: 'DEMO_READ_ONLY',
+              message: 'The demo accounts can’t be changed.',
+            });
+          }
+          await accountService.beforeDelete(owner.id);
+        },
+      },
       additionalFields: {
         socialPlatform: {
           type: 'string',
@@ -297,6 +382,7 @@ export function createAuth(deps: AuthDeps = {}) {
       cookieCache: { enabled: true, maxAge: 5 * 60 },
     },
     advanced: {
+      ipAddress: { ipAddressHeaders: [CLIENT_IP_HEADER] },
       useSecureCookies: env.isProduction,
       defaultCookieAttributes: {
         httpOnly: true,
@@ -307,13 +393,9 @@ export function createAuth(deps: AuthDeps = {}) {
     rateLimit: {
       enabled: env.isProduction,
       ...(redis ? { customStorage: redisRateLimitStorage(redis, logger) } : {}),
+      customRules: { '/get-session': false },
     },
-    disabledPaths: [
-      '/change-password',
-      '/request-password-reset',
-      '/reset-password',
-      '/forget-password',
-    ],
+    disabledPaths: ['/request-password-reset', '/reset-password', '/forget-password'],
     telemetry: { enabled: false },
     logger: {
       level: env.isProduction ? 'warn' : 'info',
@@ -330,14 +412,13 @@ export function createAuth(deps: AuthDeps = {}) {
         otpLength: LIMITS.otp.length,
         expiresIn: LIMITS.otp.expiresInSeconds,
         allowedAttempts: LIMITS.otp.allowedAttempts,
-        storeOTP: 'hashed',
+        // Encrypted (not hashed) so a resend inside the 10 minutes repeats the same code: a resend
+        // dropped by the throttle then leaves the code already in the inbox working.
+        storeOTP: 'encrypted',
+        resendStrategy: 'reuse',
         overrideDefaultEmailVerification: true,
-        // Not awaited by the response (avoids timing leaks); kept alive with waitUntil on Vercel.
         sendVerificationOTP: async ({ email: to, otp, type }) => {
-          const delivery = email.sendOtp({ to, code: otp, type }).catch((error: unknown) => {
-            logger.error({ err: error, to: maskEmail(to), type }, 'sending the OTP email failed');
-          });
-          waitUntil(delivery);
+          deliver({ to, code: otp, type });
         },
       }),
       username({

@@ -23,7 +23,8 @@ import { type AiContext, type AiTaskName, AiUnavailableError } from './types.js'
  * Every live AI call goes through here (02-trd "AI tasks"):
  * 1. AI enabled?                                  -> AiUnavailableError('disabled')
  * 2. today's tokens (ai_runs) < ai_daily_token_budget -> AiUnavailableError('budget')
- * 3. per-task cap (shared DAILY_CAPS / HOURLY_CAPS)  -> AiUnavailableError('cap')
+ *    (skipped for BUDGET_EXEMPT_TASKS, whose tokens never count toward it)
+ * 3. per-task cap (TASK_CAPS)                         -> AiUnavailableError('cap')
  * 4. the model call, timed, output validated with zod (+ the task's own check);
  *    one retry with feedback when the output is malformed
  * 5. exactly one ai_runs row (task, model, tokens of all attempts, latency, ok | error)
@@ -62,6 +63,20 @@ export interface TaskCap {
   /** Rolling hour, or the UTC day. */
   window: 'hour' | 'day';
   max: number;
+  /** User-scoped caps only: a ceiling for the whole space in the same window (coach). */
+  spaceMax?: number;
+}
+
+/**
+ * Tasks that write ai_runs rows (caps, accounting) but are neither counted toward nor blocked by
+ * the space's daily token budget: coach, because fans trigger it (C5) and must not drain the
+ * creator's AI; embedItem, because embeddings cost about 1% of chat tokens and a backfill (the
+ * nightly demo reset embeds ~1500 rows) would otherwise pause triage and briefings for the day.
+ */
+export const BUDGET_EXEMPT_TASKS: readonly AiTaskName[] = ['coach', 'embedItem'];
+
+export function isBudgetExempt(task: AiTaskName): boolean {
+  return BUDGET_EXEMPT_TASKS.includes(task);
 }
 
 /**
@@ -85,7 +100,35 @@ export const TASK_CAPS: Partial<Record<AiTaskName, TaskCap>> = {
   tagFollowers: { scope: 'space', window: 'day', max: 50 },
   generateImage: { scope: 'space', window: 'day', max: 20 },
   generateVideo: { scope: 'space', window: 'day', max: 3 },
+  coach: { scope: 'user', window: 'day', max: LIMITS.coach.perDay, spaceMax: 300 },
+  questionGroup: { scope: 'space', window: 'day', max: 50 },
+  challengeSummary: { scope: 'space', window: 'day', max: 20 },
 };
+
+/**
+ * The cap `task` has reached for `ctx`, as a message; null while under every cap. Shared by the
+ * live preflight and the fake (ai/fake.ts), so both refuse at the same count.
+ */
+export async function taskCapReached(
+  accounting: Pick<AiAccounting, 'countByUserTaskSince' | 'countBySpaceTaskSince'>,
+  task: AiTaskName,
+  ctx: { spaceId: string; userId?: string | null },
+  now: Date,
+): Promise<string | null> {
+  const cap = TASK_CAPS[task];
+  if (!cap) return null;
+  const since = cap.window === 'hour' ? hoursAgo(1, now) : startOfUtcDay(now);
+  const spaceMax = cap.scope === 'space' ? cap.max : cap.spaceMax;
+  if (spaceMax !== undefined) {
+    const used = await accounting.countBySpaceTaskSince(ctx.spaceId, task, since);
+    if (used >= spaceMax) return `Limit of ${spaceMax} ${task} calls per ${cap.window} reached`;
+  }
+  if (cap.scope === 'user' && ctx.userId) {
+    const used = await accounting.countByUserTaskSince(ctx.userId, task, since);
+    if (used >= cap.max) return `Limit of ${cap.max} ${task} calls per ${cap.window} reached`;
+  }
+  return null;
+}
 
 /** Checks steps 1-3. Exported for media tasks (ai/media.ts) that call other providers. */
 export async function preflight(
@@ -96,24 +139,17 @@ export async function preflight(
   if (!rt.enabled) throw new AiUnavailableError('disabled', undefined, { task });
   const now = rt.now?.() ?? new Date();
   if (ctx.spaceId === null) return;
-  const budget = await rt.accounting.budgetState(ctx.spaceId, now);
-  if (budget.paused) throw new AiUnavailableError('budget', undefined, { task });
-  const cap = TASK_CAPS[task];
-  if (!cap) return;
-  const since = cap.window === 'hour' ? hoursAgo(1, now) : startOfUtcDay(now);
-  let used: number | null = null;
-  if (cap.scope === 'space') {
-    used = await rt.accounting.countBySpaceTaskSince(ctx.spaceId, task, since);
-  } else if (ctx.userId) {
-    used = await rt.accounting.countByUserTaskSince(ctx.userId, task, since);
+  if (!isBudgetExempt(task)) {
+    const budget = await rt.accounting.budgetState(ctx.spaceId, now);
+    if (budget.paused) throw new AiUnavailableError('budget', undefined, { task });
   }
-  if (used !== null && used >= cap.max) {
-    throw new AiUnavailableError(
-      'cap',
-      `Limit of ${cap.max} ${task} calls per ${cap.window} reached`,
-      { task },
-    );
-  }
+  const reached = await taskCapReached(
+    rt.accounting,
+    task,
+    { spaceId: ctx.spaceId, userId: ctx.userId ?? null },
+    now,
+  );
+  if (reached) throw new AiUnavailableError('cap', reached, { task });
 }
 
 // ---------------------------------------------------------------- accounting

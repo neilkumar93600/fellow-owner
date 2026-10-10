@@ -21,6 +21,7 @@ import type { Repos } from '../repositories/index.js';
 import type { InboxRow } from '../repositories/pitches.repo.js';
 import type { AccessService, OwnerContext } from './access.service.js';
 import type { LimitsService } from './limits.service.js';
+import { reactivateMembership } from './memberships.service.js';
 import type { NotificationsService } from './notifications.service.js';
 
 export type CreatePitchBody = z.output<typeof createPitchSchema>;
@@ -73,7 +74,7 @@ export function createPitchesService(deps: PitchesServiceDeps) {
     );
   }
 
-  async function inboxDetail(owner: OwnerContext, id: string): Promise<InboxDetail> {
+  async function loadDetail(owner: OwnerContext, id: string): Promise<InboxDetail> {
     const { space } = owner;
     const row = await repos.pitches.findDetail(space.id, id);
     if (!row) throw notFound('Pitch');
@@ -116,7 +117,11 @@ export function createPitchesService(deps: PitchesServiceDeps) {
   }
 
   return {
-    inboxDetail,
+    /** GET /api/studio/inbox/:id: the only path that stamps read_at (F31); PATCH does not. */
+    async inboxDetail(owner: OwnerContext, id: string): Promise<InboxDetail> {
+      await repos.pitches.markRead(owner.space.id, id);
+      return loadDetail(owner, id);
+    },
 
     /**
      * POST /api/spaces/:handle/pitches (signed in). Creates a membership without communities when
@@ -127,11 +132,13 @@ export function createPitchesService(deps: PitchesServiceDeps) {
       if (space.ownerUserId === userId) throw forbidden("You can't send a pitch to your own space");
       const pitch: InboundRow = await db.transaction(async (tx) => {
         await limits.lockWrites(space.id, userId, tx);
-        const { row: membership, created } = await repos.memberships.insertOrGet(
+        const inserted = await repos.memberships.insertOrGet(
           { spaceId: space.id, userId, role: 'member' },
           tx,
         );
-        if (membership.removedAt) throw forbidden('You were removed from this space');
+        const created = inserted.created;
+        // A fan who left comes back (like join); one the owner removed gets 403.
+        const { row: membership } = await reactivateMembership(repos, space.id, inserted.row, tx);
         if (!created) await limits.assertDailyCap('pitches', space, membership.id, tx);
         return repos.pitches.insert(
           {
@@ -171,7 +178,14 @@ export function createPitchesService(deps: PitchesServiceDeps) {
         throw forbidden('Only the sender can withdraw this pitch');
       }
       if (pitch.status !== 'new') throw conflict('Only new pitches can be withdrawn');
-      const updated = await repos.pitches.withdraw(pitch.id, membership.id);
+      // A withdrawn pitch leaves its Answer Once group, which is recounted in the same transaction.
+      const updated = await db.transaction(async (tx) => {
+        const result = await repos.pitches.withdraw(pitch.id, membership.id, tx);
+        if (result?.questionGroupId) {
+          await repos.questionGroups.refreshStats(result.questionGroupId, tx);
+        }
+        return result?.row ?? null;
+      });
       if (!updated) throw conflict('Only new pitches can be withdrawn');
       return pitchView(updated);
     },
@@ -179,6 +193,9 @@ export function createPitchesService(deps: PitchesServiceDeps) {
     /** GET /api/studio/inbox: one tab, Fit or Newest, optional status and search, tab counts. */
     async inbox(owner: OwnerContext, query: InboxQuery): Promise<InboxPage> {
       const { space } = owner;
+      const snoozed = query.hideSnoozed
+        ? [...(await repos.snoozes.activeIds(space.id, 'pitch'))]
+        : undefined;
       const [page, counts] = await Promise.all([
         repos.pitches.listInbox(space.id, {
           tab: query.tab,
@@ -187,6 +204,7 @@ export function createPitchesService(deps: PitchesServiceDeps) {
           q: query.q,
           cursor: query.cursor,
           limit: clampLimit(query.limit),
+          excludeIds: snoozed,
         }),
         repos.pitches.tabCounts(space.id, { status: query.status, q: query.q }),
       ]);
@@ -232,7 +250,7 @@ export function createPitchesService(deps: PitchesServiceDeps) {
           break;
         }
       }
-      return inboxDetail(owner, id);
+      return loadDetail(owner, id);
     },
   };
 }

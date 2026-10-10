@@ -1,6 +1,6 @@
 import type { StudioSpace } from '@fellow-owners/shared';
 import { useQuery } from '@tanstack/react-query';
-import { getMySpace } from '@/api/studio';
+import { getMySpace } from '@/lib/api/studio';
 
 // No 'use client' here: server code may import the keys and creatorFirstName; the hooks only
 // run inside client components.

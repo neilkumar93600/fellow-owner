@@ -339,12 +339,19 @@ export function createMembershipsRepo(db: Db) {
     /**
      * Owner removes a member: sets removed_at, leaves every community (member_count kept in sync).
      * Returns false when there was no active membership with that id. Never call it for the owner.
+     * `left`: the member left on their own (left_at set too), so they may join again.
      */
-    async remove(spaceId: string, id: string, tx?: DbOrTx): Promise<boolean> {
+    async remove(
+      spaceId: string,
+      id: string,
+      tx?: DbOrTx,
+      opts: { left?: boolean } = {},
+    ): Promise<boolean> {
       return inTransaction(db, tx, async (t) => {
+        const now = new Date();
         const [row] = await t
           .update(memberships)
-          .set({ removedAt: new Date() })
+          .set({ removedAt: now, ...(opts.left ? { leftAt: now } : {}) })
           .where(and(activeMember(spaceId), eq(memberships.id, id), ne(memberships.role, 'owner')))
           .returning({ id: memberships.id });
         if (!row) return false;
@@ -360,6 +367,25 @@ export function createMembershipsRepo(db: Db) {
         );
         return true;
       });
+    },
+
+    /**
+     * A member who left (left_at set) joins again: active from now. Null when the row is not a
+     * self-left membership (an owner removal stays removed).
+     */
+    async rejoin(spaceId: string, id: string, tx: DbOrTx = db): Promise<MembershipRow | null> {
+      const [row] = await tx
+        .update(memberships)
+        .set({ removedAt: null, leftAt: null, joinedAt: new Date() })
+        .where(
+          and(
+            eq(memberships.spaceId, spaceId),
+            eq(memberships.id, id),
+            isNotNull(memberships.leftAt),
+          ),
+        )
+        .returning();
+      return row ?? null;
     },
 
     /** Joined community ids, in join order. */

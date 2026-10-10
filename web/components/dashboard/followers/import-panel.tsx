@@ -6,20 +6,22 @@ import {
   LIMITS,
   type StudioCommunity,
 } from '@fellow-owners/shared';
-import { Check, ClipboardPaste, FileText, Plus, Sparkles, Upload } from 'lucide-react';
+import { Check, ClipboardPaste, FileText, Link2, Plus, Sparkles, Upload } from 'lucide-react';
 import type * as React from 'react';
 import { useId, useState } from 'react';
 import { SegmentedPill } from '@/components/shared/segmented-pill';
 import { SidePanel } from '@/components/shared/side-panel';
 import { TINT_ROTATION } from '@/components/shared/tint';
 import { Button } from '@/components/ui/button';
-import { Field, FieldError, TextArea } from '@/components/ui/field';
+import { Field, FieldError, TextArea, TextField } from '@/components/ui/field';
 import { useCreateCommunity } from '@/hooks/queries/use-communities';
-import { useImportFollowers } from '@/hooks/queries/use-followers';
+import { useImportFollowers, useImportYoutube } from '@/hooks/queries/use-followers';
+import type { YoutubeImportResult } from '@/lib/api/followers';
 import { formatNumber, pluralize } from '@/lib/format';
 import { errorMessage, toastSuccess } from '@/lib/toast';
 
-type Source = 'paste' | 'csv';
+type Source = 'paste' | 'csv' | 'youtube';
+type Result = ImportResult | YoutubeImportResult;
 
 const F = LIMITS.follower;
 const C = LIMITS.community;
@@ -28,9 +30,10 @@ const SHOWN_ERRORS = 10;
 const SOURCES = [
   { value: 'paste', label: 'Paste', icon: ClipboardPaste },
   { value: 'csv', label: 'CSV file', icon: FileText },
+  { value: 'youtube', label: 'YouTube', icon: Link2 },
 ] as const;
 
-const EXAMPLES: Record<Source, { lead: string; sample: string }> = {
+const EXAMPLES: Record<Exclude<Source, 'youtube'>, { lead: string; sample: string }> = {
   paste: {
     lead: 'One follower per line: a name, @handle or email, then what they said after a dash, colon or tab.',
     sample:
@@ -43,10 +46,15 @@ const EXAMPLES: Record<Source, { lead: string; sample: string }> = {
   },
 };
 
-function Summary({ result }: { result: ImportResult }) {
+function Summary({ result }: { result: Result }) {
   const { created, duplicates, skipped, errors } = result;
   return (
     <div className="flex flex-col gap-2">
+      {'sample' in result && result.sample ? (
+        <p className="self-start rounded-full bg-white/70 px-3 py-1 text-caption text-ink-soft">
+          Sample data: no YouTube key is set, so these commenters are made up.
+        </p>
+      ) : null}
       <p className="text-label-strong text-ink">
         Added {formatNumber(created)} {pluralize(created, 'follower')}.
       </p>
@@ -143,12 +151,14 @@ export function ImportPanel({
   const formId = useId();
   const fileId = useId();
   const importer = useImportFollowers();
+  const youtubeImporter = useImportYoutube();
   const create = useCreateCommunity();
   const [source, setSource] = useState<Source>('paste');
   const [pasted, setPasted] = useState('');
   const [file, setFile] = useState<{ name: string; text: string } | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
-  const [result, setResult] = useState<ImportResult | null>(null);
+  const [channelUrl, setChannelUrl] = useState('');
+  const [result, setResult] = useState<Result | null>(null);
   const [made, setMade] = useState<string[]>([]);
   const [making, setMaking] = useState<string | null>(null);
 
@@ -159,7 +169,9 @@ export function ImportPanel({
     setProblem(null);
     setResult(null);
     setMade([]);
+    setChannelUrl('');
     importer.reset();
+    youtubeImporter.reset();
   }
 
   const text = source === 'paste' ? pasted : (file?.text ?? '');
@@ -180,6 +192,19 @@ export function ImportPanel({
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
+    if (source === 'youtube') {
+      if (!channelUrl.trim()) {
+        setProblem('Paste a YouTube channel link.');
+        return;
+      }
+      setProblem(null);
+      try {
+        setResult(await youtubeImporter.mutateAsync({ channelUrl: channelUrl.trim() }));
+      } catch {
+        // shown below from youtubeImporter.error
+      }
+      return;
+    }
     if (!text.trim()) {
       setProblem(source === 'paste' ? 'Paste at least one follower.' : 'Choose a CSV file.');
       return;
@@ -216,8 +241,11 @@ export function ImportPanel({
     );
   }
 
-  const failure = problem ?? (importer.isError ? errorMessage(importer.error) : null);
-  const example = EXAMPLES[source];
+  const failure =
+    problem ??
+    (importer.isError ? errorMessage(importer.error) : null) ??
+    (youtubeImporter.isError ? errorMessage(youtubeImporter.error) : null);
+  const example = source === 'youtube' ? null : EXAMPLES[source];
 
   return (
     <SidePanel
@@ -248,7 +276,7 @@ export function ImportPanel({
             type="submit"
             form={formId}
             icon={<Upload />}
-            loading={importer.isPending}
+            loading={importer.isPending || youtubeImporter.isPending}
             className="flex-1"
           >
             Import followers
@@ -320,17 +348,38 @@ export function ImportPanel({
             className="self-start"
           />
 
-          <div className="flex flex-col gap-2 rounded-xl bg-white/60 px-4 py-3">
-            <p className="text-small text-ink-soft">{example.lead}</p>
-            <pre className="overflow-x-auto text-caption whitespace-pre text-ink">
-              {example.sample}
-            </pre>
-            <p className="text-caption text-ink-soft">
-              Up to {formatNumber(F.importRows)} rows at a time. Duplicates are skipped.
-            </p>
-          </div>
+          {example ? (
+            <div className="flex flex-col gap-2 rounded-xl bg-white/60 px-4 py-3">
+              <p className="text-small text-ink-soft">{example.lead}</p>
+              <pre className="overflow-x-auto text-caption whitespace-pre text-ink">
+                {example.sample}
+              </pre>
+              <p className="text-caption text-ink-soft">
+                Up to {formatNumber(F.importRows)} rows at a time. Duplicates are skipped.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2 rounded-xl bg-white/60 px-4 py-3">
+              <p className="text-small text-ink-soft">
+                Paste your channel link. We read the comments on your latest{' '}
+                {LIMITS.youtube.maxVideos} videos (up to {formatNumber(LIMITS.youtube.maxComments)}{' '}
+                comments) and add each commenter with what they said. Duplicates are skipped.
+              </p>
+            </div>
+          )}
 
-          {source === 'paste' ? (
+          {source === 'youtube' ? (
+            <Field label="Channel link" helper="For example youtube.com/@yourchannel">
+              <TextField
+                type="url"
+                value={channelUrl}
+                onChange={(event) => setChannelUrl(event.target.value)}
+                placeholder="https://www.youtube.com/@yourchannel"
+                spellCheck={false}
+                autoComplete="off"
+              />
+            </Field>
+          ) : source === 'paste' ? (
             <Field label="Followers" count={{ value: pasted.length, max: F.importChars }}>
               <TextArea
                 value={pasted}

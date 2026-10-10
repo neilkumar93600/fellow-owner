@@ -2,9 +2,18 @@ import { CONTACT, LIMITS, OPERATOR } from '@fellow-owners/shared';
 import { Resend } from 'resend';
 import type { Env } from '../config/env.js';
 import { type Logger, maskEmail } from '../lib/logger.js';
+import { connected, type Redis } from '../lib/redis.js';
 
-/** The OTP purposes Better Auth's emailOTP plugin sends codes for. */
-export type OtpType = 'sign-in' | 'email-verification' | 'forget-password' | 'change-email';
+/**
+ * The purposes we email codes for: Better Auth's emailOTP plugin types, plus `delete-account`
+ * (the token Better Auth's deleteUser sends, auth/index.ts).
+ */
+export type OtpType =
+  | 'sign-in'
+  | 'email-verification'
+  | 'forget-password'
+  | 'change-email'
+  | 'delete-account';
 
 export interface OtpMessage {
   to: string;
@@ -39,7 +48,15 @@ const COPY: Record<OtpType, { subject: string; use: string; reason: string }> = 
     use: 'Enter it to confirm your new email.',
     reason: 'someone asked to move a Fellow Owners account to this address',
   },
+  'delete-account': {
+    subject: 'Confirm deleting your Fellow Owners account',
+    use: 'Paste it on your account page to delete your account. This can’t be undone.',
+    reason: 'someone signed in to your Fellow Owners account asked to delete it',
+  },
 };
+
+/** The delete code is long (Better Auth's 32-character token): shown in groups of 4. */
+const groupCode = (code: string) => code.replace(/(.{4})(?=.)/g, '$1 ');
 
 /**
  * A short plain-text and HTML email with the code, worded for what the code does. No links in the
@@ -61,9 +78,12 @@ export function renderOtpEmail(
 } {
   const minutes = Math.round(LIMITS.otp.expiresInSeconds / 60);
   const copy = COPY[type];
-  const subject = `${code} ${copy.subject}`;
+  const long = type === 'delete-account';
+  const shown = long ? groupCode(code) : code;
+  // The delete code is too long for a subject line.
+  const subject = long ? copy.subject : `${code} ${copy.subject}`;
   const text = [
-    `Your code: ${code}`,
+    `Your code: ${shown}`,
     '',
     `${copy.use} It expires in ${minutes} minutes.`,
     "If you didn't ask for this code, you can ignore this email. Nobody can use it without your inbox.",
@@ -81,7 +101,7 @@ export function renderOtpEmail(
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:440px;margin:0 auto;background:#ffffff;border-radius:16px;padding:32px">
       <tr><td>
         <p style="margin:0 0 8px;font-size:15px">Your Fellow Owners code</p>
-        <p style="margin:0 0 16px;font-size:32px;font-weight:600;letter-spacing:6px">${code}</p>
+        <p style="margin:0 0 16px;font-size:${long ? '20px' : '32px'};font-weight:600;letter-spacing:${long ? '2px' : '6px'};word-break:break-word">${shown}</p>
         <p style="margin:0 0 8px;font-size:14px;color:#52525b">${copy.use} It expires in ${minutes} minutes.</p>
         <p style="margin:0;font-size:13px;color:#52525b">If you didn't ask for this code, you can ignore this email. Nobody can use it without your inbox.</p>
       </td></tr>
@@ -96,6 +116,74 @@ export function renderOtpEmail(
   </body>
 </html>`;
   return { subject, text, html };
+}
+
+// ---------------------------------------------------------------- per-address throttle
+
+export interface SendThrottle {
+  /** True when a code may be emailed to this address now (and counts it). */
+  allow(to: string): Promise<boolean>;
+}
+
+const GAP_SECONDS = 60;
+const WINDOW_SECONDS = 15 * 60;
+const PER_WINDOW = 5;
+
+/**
+ * At most one code per address per 60 s and 5 per 15 minutes, whatever the purpose. Redis when
+ * given (shared by replicas), process memory otherwise or when Redis errors. Above the cap the
+ * caller drops the email silently: the answer to the request stays the same, so nobody learns
+ * anything, and the last code sent stays valid (auth/index.ts reuses unexpired codes).
+ * The window is short on purpose: a daily cap would let anyone lock a person out of sign-in and
+ * password reset for the rest of the day by asking for codes for their address.
+ */
+export function createSendThrottle(
+  redis: Redis | null,
+  logger: Logger,
+  now: () => number = Date.now,
+): SendThrottle {
+  // ponytail: per-process map, pruned by window; Redis shares the counts across replicas.
+  const memory = new Map<string, { last: number; window: number; count: number }>();
+
+  const inMemory = (address: string, at: number, window: number) => {
+    const entry = memory.get(address);
+    if (entry && at - entry.last < GAP_SECONDS * 1000) return false;
+    if (entry?.window === window && entry.count >= PER_WINDOW) return false;
+    if (memory.size > 50_000) {
+      for (const [key, value] of memory) if (value.window !== window) memory.delete(key);
+    }
+    memory.set(address, {
+      last: at,
+      window,
+      count: entry?.window === window ? entry.count + 1 : 1,
+    });
+    return true;
+  };
+
+  return {
+    async allow(to) {
+      const address = to.trim().toLowerCase();
+      const at = now();
+      const window = Math.floor(at / (WINDOW_SECONDS * 1000));
+      if (redis) {
+        try {
+          const client = connected(redis);
+          const gap = await client.set(`otp-gap:${address}`, '1', {
+            condition: 'NX',
+            expiration: { type: 'EX', value: GAP_SECONDS },
+          });
+          if (gap === null) return false;
+          const key = `otp-window:${address}:${window}`;
+          const count = await client.incr(key);
+          if (count === 1) await client.expire(key, WINDOW_SECONDS + 1);
+          return count <= PER_WINDOW;
+        } catch (error) {
+          logger.warn({ err: error }, 'otp throttle: redis failed, counting in memory');
+        }
+      }
+      return inMemory(address, at, window);
+    },
+  };
 }
 
 // ---------------------------------------------------------------- dev/test outbox

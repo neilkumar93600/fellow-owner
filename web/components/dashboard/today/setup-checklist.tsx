@@ -1,7 +1,12 @@
+'use client';
+
+import { useQueryClient } from '@tanstack/react-query';
 import { Check, Circle } from 'lucide-react';
 import Link from 'next/link';
 import { CopyButton } from '@/components/shared/copy-button';
 import { buttonVariants } from '@/components/ui/button';
+import { studioKeys, useStudioSpace } from '@/hooks/use-space';
+import { markChecklistStep } from '@/lib/api/snoozes';
 import { routes } from '@/lib/routes';
 
 export interface SetupChecklistProps {
@@ -12,6 +17,13 @@ export interface SetupChecklistProps {
 
 /** A new space's first steps, ticked from real counts. Today hides it once there are members and communities. */
 export function SetupChecklist({ handle, members, communities }: SetupChecklistProps) {
+  const queryClient = useQueryClient();
+  const space = useStudioSpace();
+  const markShared = () => {
+    markChecklistStep({ step: 'bio_link_shared' })
+      .then(() => queryClient.invalidateQueries({ queryKey: studioKeys.space }))
+      .catch(() => {});
+  };
   const bioLink = `${typeof window === 'undefined' ? '' : window.location.origin}${routes.fan.space(handle)}`;
   const steps = [
     {
@@ -30,15 +42,17 @@ export function SetupChecklist({ handle, members, communities }: SetupChecklistP
     {
       key: 'link',
       label: 'Share your bio link',
-      done: false,
+      done: Boolean(space.data?.bioLinkSharedAt),
       action: (
-        <CopyButton
-          value={bioLink}
-          label="Copy bio link"
-          variant="secondary"
-          surface="card"
-          message="Bio link copied"
-        />
+        <span onClickCapture={markShared}>
+          <CopyButton
+            value={bioLink}
+            label="Copy bio link"
+            variant="secondary"
+            surface="card"
+            message="Bio link copied"
+          />
+        </span>
       ),
     },
     {

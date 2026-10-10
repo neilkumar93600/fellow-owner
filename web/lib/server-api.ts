@@ -19,9 +19,21 @@ function apiUrl(path: string): string {
   return `${base}${path}`;
 }
 
+/**
+ * Every server-side read sends INTERNAL_API_KEY (server-only env, never NEXT_PUBLIC) as x-internal-key
+ * when set: these reads all come from Vercel's IPs, so the API skips its per-IP rate limits for them.
+ */
+function internal(extra: Record<string, string> = {}): Record<string, string> {
+  const key = process.env.INTERNAL_API_KEY;
+  return key ? { ...extra, 'x-internal-key': key } : extra;
+}
+
 async function signedIn<T>(path: string): Promise<T> {
   const cookie = (await headers()).get('cookie');
-  return apiFetch<T>(apiUrl(path), { cache: 'no-store', headers: cookie ? { cookie } : {} });
+  return apiFetch<T>(apiUrl(path), {
+    cache: 'no-store',
+    headers: internal(cookie ? { cookie } : {}),
+  });
 }
 
 /** Unknown or malformed handles and slugs (404, or 400 from the params check) are a missing page. */
@@ -34,7 +46,7 @@ async function cachedOrNull<T>(
   init: RequestInit & { next?: { revalidate: number } } = { next: { revalidate: 60 } },
 ): Promise<T | null> {
   try {
-    return await apiFetch<T>(apiUrl(path), init);
+    return await apiFetch<T>(apiUrl(path), { ...init, headers: internal() });
   } catch (error) {
     if (isMissing(error)) return null;
     throw error;

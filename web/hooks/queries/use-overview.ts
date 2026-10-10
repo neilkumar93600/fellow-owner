@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getOverview, sweep } from '@/api/studio';
 import { studioKeys } from '@/hooks/use-space';
+import { getOverview, sweep } from '@/lib/api/studio';
 
 export const overviewKeys = {
   all: ['studio', 'overview'] as const,

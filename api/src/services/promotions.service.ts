@@ -13,6 +13,7 @@ import {
   type PromotionDrafts,
   type PromotionPlatform,
   type PromotionsPage,
+  type PromotionsQuery,
   type Showcase,
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
@@ -387,12 +388,13 @@ export function createPromotionsService(deps: PromotionsServiceDeps) {
     toPromotions,
 
     /** GET /api/studio/promotions: newest first, (created_at, id) cursor, counts per state. */
-    async list(owner: OwnerContext, query: CursorQuery): Promise<PromotionsPage> {
+    async list(owner: OwnerContext, query: PromotionsQuery): Promise<PromotionsPage> {
       const { space } = owner;
       const [page, totals] = await Promise.all([
         repos.promotions.list(space.id, {
           cursor: decodeTimeCursor(query.cursor),
           limit: clampLimit(query.limit),
+          state: query.state,
         }),
         repos.promotions.stateCounts(space.id),
       ]);

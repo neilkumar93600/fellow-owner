@@ -4,7 +4,6 @@ import {
   createCommunitySchema,
   createPromotionSchema,
   createSpaceSchema,
-  cursorQuerySchema,
   handleCheckQuerySchema,
   ideasQuerySchema,
   idParamsSchema,
@@ -14,8 +13,10 @@ import {
   platformLookupSchema,
   promotionActionSchema,
   promotionPostParamsSchema,
+  promotionsQuerySchema,
   setPersonCommunitiesSchema,
   setupSuggestionsSchema,
+  spotlightSchema,
   studioCommunityParamsSchema,
   studioPitchActionSchema,
   studioPostActionSchema,
@@ -25,7 +26,6 @@ import {
 import { Router } from 'express';
 import type { Container } from '../container.js';
 import { createPlatformController } from '../controllers/platform.controller.js';
-import { spotlightBodySchema } from '../controllers/studio.controller.js';
 import { noStore } from '../lib/http.js';
 import { redis } from '../lib/redis.js';
 import { requireOwner } from '../middlewares/require-owner.js';
@@ -137,7 +137,7 @@ export function createStudioRoutes(container: Container): Router {
   router.put(
     '/people/:membershipId/spotlight',
     owner,
-    validate({ params: membershipParamsSchema, body: spotlightBodySchema }),
+    validate({ params: membershipParamsSchema, body: spotlightSchema }),
     controller.setSpotlight,
   );
   router.delete('/people/:membershipId/spotlight', owner, byMembership, controller.clearSpotlight);
@@ -164,7 +164,12 @@ export function createStudioRoutes(container: Container): Router {
   );
 
   // Promotions
-  router.get('/promotions', owner, validate({ query: cursorQuerySchema }), controller.promotions);
+  router.get(
+    '/promotions',
+    owner,
+    validate({ query: promotionsQuerySchema }),
+    controller.promotions,
+  );
   router.get(
     '/promotions/post/:postId',
     owner,

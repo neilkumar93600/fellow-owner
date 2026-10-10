@@ -8,6 +8,9 @@ import {
   type PitchType,
   POST_TYPE_LABELS,
   type PostType,
+  REPORT_REASON_LABELS,
+  type ReportReason,
+  type ReportTarget,
   type UnreadCount,
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
@@ -37,8 +40,8 @@ export interface NotificationPayloads {
   };
   /** To the space owner when a member sends a pitch. */
   pitch_received: { inboundId: string; subject: string; pitchType: PitchType; actorName: string };
-  /** To the pitch sender when the owner replies. */
-  reply_received: { inboundId: string; subject: string };
+  /** To the pitch sender when the owner replies (questionGroupId: an Answer Once reply, F32). */
+  reply_received: { inboundId: string; subject: string; questionGroupId?: string };
   /** To the post author when the owner publishes a promotion of their post. */
   project_featured: { postId: string; title: string };
   /** To the project lead (post author) when someone requests a role. */
@@ -55,6 +58,8 @@ export interface NotificationPayloads {
   spotlighted: { note: string };
   /** To each author on a closed challenge's shortlist. */
   challenge_shortlisted: { askId: string; postId: string; title: string };
+  /** To the space owner when a member reports a post or comment (F25). */
+  report_filed: { reportId: string; targetType: ReportTarget; reason: ReportReason };
 }
 
 /** notify() input, discriminated by kind. */
@@ -178,6 +183,13 @@ function present(row: NotificationWithSpace): Pick<NotificationItem, 'text' | 'h
       return {
         text: `Your entry made ${creator}'s shortlist: ${cut(v.title)}`,
         href: `${space}/p/${seg(v.postId)}`,
+      };
+    }
+    case 'report_filed': {
+      const v: NotificationPayloads['report_filed'] = p;
+      return {
+        text: `A ${v.targetType} was reported: ${REPORT_REASON_LABELS[v.reason] ?? v.reason}`,
+        href: '/dashboard/communities/reports',
       };
     }
     default:

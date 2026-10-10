@@ -16,7 +16,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY shared/package.json shared/
 COPY api/package.json api/
 COPY web/package.json web/
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+# Railway only allows cache mounts whose id starts with s/<service id>- (the api service's id).
+RUN --mount=type=cache,id=s/aff8dd82-5aa3-41e5-96d4-406bbe0ac277-pnpm,target=/pnpm/store \
     pnpm install --frozen-lockfile --filter "@fellow-owners/api..."
 
 # ---- build shared, then the api
@@ -28,7 +29,7 @@ RUN pnpm --filter @fellow-owners/shared build \
  && cp -r api/src/db/migrations api/dist/db/migrations \
  && cp -r api/src/db/seed/data api/dist/db/seed/data
 # Self-contained production install of the api with the built shared package.
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+RUN --mount=type=cache,id=s/aff8dd82-5aa3-41e5-96d4-406bbe0ac277-pnpm,target=/pnpm/store \
     pnpm --filter @fellow-owners/api deploy --legacy --prod /prod/api \
  && rm -rf /prod/api/dist && cp -r api/dist /prod/api/dist
 

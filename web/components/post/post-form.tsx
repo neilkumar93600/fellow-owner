@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  type CoachResult,
   type CreatePostInput,
   createPostSchema,
   DAILY_CAPS,
@@ -41,11 +40,8 @@ export interface PostFormProps {
   defaultType?: PostType;
   /** MySpace.caps.postsLeftToday */
   postsLeftToday: number;
-  /**
-   * Idea Coach (F30, design-only: it has no API). Omitted, there is no coach panel; only the demo space
-   * gets one. `creatorName` is the creator's first name, for the coach's privacy note.
-   */
-  coach?: { creatorName: string; sample: CoachResult };
+  /** Idea Coach (F30). Omitted, there is no coach panel. `creatorName` is the creator's first name, for the privacy note. */
+  coach?: { creatorName: string };
 }
 
 /**
@@ -150,6 +146,7 @@ export function PostForm({
 
         {coach && type !== 'discussion' ? (
           <CoachPanel
+            handle={handle}
             kind="post"
             creatorName={coach.creatorName}
             draft={{ subject: watch('title'), body: watch('body') }}
@@ -157,7 +154,6 @@ export function PostForm({
               setValue('title', subject, { shouldDirty: true });
               setValue('body', body, { shouldDirty: true });
             }}
-            sample={coach.sample}
           />
         ) : null}
 

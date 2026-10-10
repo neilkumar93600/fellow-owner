@@ -5,13 +5,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Mail, PartyPopper } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { enterDemo } from '@/api/demo';
 import { SocialButtons } from '@/components/auth/social-buttons';
 import { AvatarInitials } from '@/components/shared/avatar-initials';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { cn } from '@/components/ui/cn';
+import { usePublicConfig } from '@/hooks/queries/use-public-config';
 import { membershipKeys, useMembership } from '@/hooks/use-membership';
 import { useUrlEnum, useUrlState } from '@/hooks/use-url-state';
+import { enterDemo } from '@/lib/api/demo';
 import { routes, withQuery } from '@/lib/routes';
 import { toastError, toastSuccess } from '@/lib/toast';
 import { IntroStep, listFormat } from './intro-step';
@@ -19,6 +20,9 @@ import { ProfileStep } from './profile-step';
 
 const STEPS = ['1', '2', '3', 'done'] as const;
 type Step = (typeof STEPS)[number];
+
+/** The demo space (seeded for Mira): the only one that offers "Try the demo as Priya". */
+const DEMO_HANDLE = 'mira';
 
 /** Priya's line in the demo, so Suggest rooms has something to read. */
 const DEMO_INTRO = 'Solo traveler from Austin. I want to eat my way through Lisbon on a budget.';
@@ -58,6 +62,7 @@ export function JoinStepper({
   // Signed in skips step 1; signed out cannot be past it.
   const step: Step = signedIn ? (urlStep === '1' ? '2' : urlStep) : '1';
   const [demoPending, setDemoPending] = useState(false);
+  const demoOffered = usePublicConfig().data?.demoEnabled === true && space.handle === DEMO_HANDLE;
   const [homeSlug, setHomeSlug] = useState<string>();
   const [intro, setIntro] = useState('');
   const [selected, setSelected] = useState<string[]>(() => {
@@ -157,16 +162,18 @@ export function JoinStepper({
               <Mail aria-hidden="true" className="size-5" />
               Continue with email
             </Link>
-            <div className="mt-2 flex justify-center">
-              <button
-                type="button"
-                disabled={demoPending}
-                className={TEXT_BUTTON}
-                onClick={tryDemo}
-              >
-                Try the demo as Priya
-              </button>
-            </div>
+            {demoOffered ? (
+              <div className="mt-2 flex justify-center">
+                <button
+                  type="button"
+                  disabled={demoPending}
+                  className={TEXT_BUTTON}
+                  onClick={tryDemo}
+                >
+                  Try the demo as Priya
+                </button>
+              </div>
+            ) : null}
           </div>
         ) : step === '2' ? (
           <IntroStep

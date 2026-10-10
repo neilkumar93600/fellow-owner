@@ -1,13 +1,16 @@
 'use client';
 
 import type { FanSpotlight } from '@fellow-owners/shared';
-import { useMutation } from '@tanstack/react-query';
-import { Check, RefreshCw, Sparkles } from 'lucide-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Check, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { SidePanel } from '@/components/shared/side-panel';
 import { Button } from '@/components/ui/button';
 import { Field, TextArea } from '@/components/ui/field';
+import { spacePageKeys } from '@/hooks/queries/use-space-page';
+import { studioKeys, useStudioSpace } from '@/hooks/use-space';
+import { getSpacePage } from '@/lib/api/spaces';
 import { ApiError, apiFetch } from '@/lib/fetcher';
 import { toastError, toastSuccess } from '@/lib/toast';
 
@@ -70,7 +73,33 @@ export function SpotlightPanel({ membershipId, name, onClose }: SpotlightPanelPr
     mutationFn: (input: { id: string; note: string }) =>
       apiFetch<FanSpotlight>(base(input.id), { method: 'PUT', json: { note: input.note } }),
     onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: spacePageKeys.all });
       toastSuccess(`${name ?? 'The fan'} is in your spotlight.`);
+      onClose();
+    },
+    onError: (error) => {
+      if (error instanceof ApiError && error.status === 404) return gone();
+      toastError(error);
+    },
+  });
+
+  const queryClient = useQueryClient();
+  // Only a fan who is on the page's "Fans of the week" has a spotlight to remove.
+  const { data: studioSpace } = useStudioSpace();
+  const handle = studioSpace?.handle;
+  const { data: page } = useQuery({
+    queryKey: spacePageKeys.detail(handle ?? ''),
+    queryFn: ({ signal }) => getSpacePage(handle ?? '', signal),
+    enabled: Boolean(handle),
+    staleTime: 60_000,
+  });
+  const hasSpotlight = Boolean(page?.spotlights.some((s) => s.membershipId === membershipId));
+  const clear = useMutation({
+    mutationFn: (id: string) => apiFetch<void>(base(id), { method: 'DELETE' }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: studioKeys.all });
+      void queryClient.invalidateQueries({ queryKey: spacePageKeys.all });
+      toastSuccess(`${name ?? 'The fan'} is no longer in your spotlight.`);
       onClose();
     },
     onError: (error) => {
@@ -105,6 +134,21 @@ export function SpotlightPanel({ membershipId, name, onClose }: SpotlightPanelPr
       title={name ? `Spotlight ${name}` : 'Spotlight a fan'}
       footer={
         <>
+          {hasSpotlight ? (
+            <Button
+              variant="ghost"
+              icon={<Trash2 />}
+              loading={clear.isPending}
+              disabled={!membershipId || clear.isPending || save.isPending}
+              onClick={() => {
+                if (!membershipId) return;
+                if (!window.confirm('Remove this fan from your spotlight?')) return;
+                clear.mutate(membershipId);
+              }}
+            >
+              Remove spotlight
+            </Button>
+          ) : null}
           <Button
             variant="secondary"
             icon={<RefreshCw />}

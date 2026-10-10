@@ -7,10 +7,11 @@ import type {
   StudioPostDetail,
 } from '@fellow-owners/shared';
 import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addComment } from '@/api/posts';
-import { actOnPost, getIdeas, getStudioPost, sendFeedback } from '@/api/studio';
 import { useCursorPages } from '@/hooks/use-cursor-list';
 import { studioKeys } from '@/hooks/use-space';
+import { moderateComment } from '@/lib/api/moderation';
+import { addComment } from '@/lib/api/posts';
+import { actOnPost, getIdeas, getStudioPost, sendFeedback } from '@/lib/api/studio';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 
@@ -73,11 +74,11 @@ export function useIdeas(
   };
 }
 
-/** Today's "Top ideas": the first `limit` ranked posts (hidden ones included, flagged). */
+/** Today's "Top ideas": the first `limit` ranked posts (hidden ones flagged, snoozed ones left out). */
 export function useTopIdeas(limit = 5) {
   return useQuery({
     queryKey: ideasKeys.top(limit),
-    queryFn: ({ signal }) => getIdeas({ limit }, signal),
+    queryFn: ({ signal }) => getIdeas({ limit, hideSnoozed: true }, signal),
     select: (page) => page.items,
   });
 }
@@ -155,4 +156,18 @@ export function useStudioComment(id: string) {
     },
   });
   return mutation;
+}
+
+/** The creator hides (or unhides) a comment from the post panel; the thread and counts refresh. */
+export function useModerateComment(postId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ commentId, action }: { commentId: string; action: 'hide' | 'unhide' }) =>
+      moderateComment(postId, commentId, { action }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ideasKeys.post(postId) });
+      void queryClient.invalidateQueries({ queryKey: ideasKeys.all });
+    },
+    onError: (error) => toastError(error),
+  });
 }

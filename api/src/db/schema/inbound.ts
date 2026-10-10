@@ -1,9 +1,19 @@
 import { LIMITS, type LinkItem } from '@fellow-owners/shared';
 import { sql } from 'drizzle-orm';
-import { boolean, check, index, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import {
+  type AnyPgColumn,
+  boolean,
+  check,
+  index,
+  jsonb,
+  pgTable,
+  text,
+  uuid,
+} from 'drizzle-orm/pg-core';
 import { aiFields, createdAt, timestamptz, updatedAt, uuidPk } from './columns.js';
 import { pitchStatusEnum, pitchTypeEnum } from './enums.js';
 import { memberships } from './memberships.js';
+import { questionGroups } from './question-groups.js';
 import { spaces } from './spaces.js';
 
 const P = LIMITS.pitch;
@@ -29,6 +39,16 @@ export const inbound = pgTable(
     isFiltered: boolean('is_filtered').notNull().default(false),
     creatorReply: text('creator_reply'),
     repliedAt: timestamptz('replied_at'),
+    /** Pitch Tracker (F31): first time the owner opened it; never overwritten. */
+    readAt: timestamptz('read_at'),
+    /** Set once, the first time the status became `shortlisted`. */
+    shortlistedAt: timestamptz('shortlisted_at'),
+    /** F32 Answer Once: the group this pitch was clustered into. */
+    questionGroupId: uuid('question_group_id').references((): AnyPgColumn => questionGroups.id, {
+      onDelete: 'set null',
+    }),
+    /** The creator removed it from its group: grouping never re-adds it. */
+    questionGroupExcluded: boolean('question_group_excluded').notNull().default(false),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
     ...aiFields(),
@@ -40,6 +60,8 @@ export const inbound = pgTable(
     index('inbound_space_analysis_idx')
       .on(t.spaceId, t.analysisStatus)
       .where(sql`${t.analysisStatus} <> 'done'`),
+    index('inbound_embedding_hnsw_idx').using('hnsw', t.embedding.op('vector_cosine_ops')),
+    index('inbound_question_group_idx').on(t.questionGroupId),
     check(
       'inbound_subject_check',
       sql`char_length(${t.subject}) between ${sql.raw(String(P.subject.min))} and ${sql.raw(String(P.subject.max))}`,

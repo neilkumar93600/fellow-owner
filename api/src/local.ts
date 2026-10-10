@@ -13,7 +13,14 @@ const server = app.listen(env.PORT, () => {
     { port: env.PORT, env: env.NODE_ENV, ai: container.ai.mode, version: env.APP_VERSION },
     `API listening on http://localhost:${env.PORT}`,
   );
+  if (env.isProduction && container.ai.mode === 'fake') {
+    logger.warn('AI is running on the fake in production: set OPENROUTER_API_KEY and AI_ENABLED');
+  }
 });
+// Outlive the proxy's idle keep-alive (Railway/load balancers ~60 s) so it never reuses a socket
+// we already closed (intermittent 502s); headersTimeout must exceed keepAliveTimeout.
+server.keepAliveTimeout = 65_000;
+server.headersTimeout = 66_000;
 
 server.on('error', (error) => {
   logger.fatal({ err: error }, 'server failed to start');

@@ -145,15 +145,31 @@ export function createFollowersRepo(db: Db) {
 
     /**
      * Auto-tag targets: followers with no tag in an active community, those with a note first
-     * (so noteless ones never crowd them out of `limit`), then oldest first.
+     * (so noteless ones never crowd them out of `limit`), then oldest first. Followers the model
+     * already saw (ai_tagged_at) are skipped until a community is added or archived after that.
      */
     async listUntagged(spaceId: string, limit: number, tx: DbOrTx = db): Promise<FollowerRow[]> {
       return tx
         .select()
         .from(followers)
-        .where(and(eq(followers.spaceId, spaceId), sql`not ${activeTagExists}`))
+        .where(
+          and(
+            eq(followers.spaceId, spaceId),
+            sql`not ${activeTagExists}`,
+            sql`(${qcol(followers.aiTaggedAt)} is null or ${qcol(followers.aiTaggedAt)} < (
+              select max(greatest(${qcol(communities.createdAt)}, coalesce(${qcol(communities.archivedAt)}, ${qcol(communities.createdAt)})))
+              from ${communities} where ${qcol(communities.spaceId)} = ${qcol(followers.spaceId)}
+            ))`,
+          ),
+        )
         .orderBy(sql`${followers.note} is null`, asc(followers.createdAt), asc(followers.id))
         .limit(limit);
+    },
+
+    /** Stamps followers the model has just seen (auto-tag). */
+    async markAiTagged(ids: string[], tx: DbOrTx = db): Promise<void> {
+      if (ids.length === 0) return;
+      await tx.update(followers).set({ aiTaggedAt: sql`now()` }).where(inArray(followers.id, ids));
     },
 
     async countBySpace(spaceId: string, tx: DbOrTx = db): Promise<number> {

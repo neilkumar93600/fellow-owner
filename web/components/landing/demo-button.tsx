@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { enterDemo } from '@/api/demo';
 import { RainbowButton } from '@/components/ui/rainbow-button';
+import { enterDemo } from '@/lib/api/demo';
 import { setAuthHint } from '@/lib/local-state';
 import { cn } from '@/lib/utils';
 

@@ -17,11 +17,13 @@ import { clampLimit, decodeOffsetCursor } from '../lib/pagination.js';
 import { publicCommunity } from '../lib/present.js';
 import { changePct } from '../lib/ranking.js';
 import { slugify } from '../lib/slug.js';
+import type { Storage } from '../lib/storage.js';
 import type { CommunityUpdate, CommunityWithStats } from '../repositories/communities.repo.js';
 import type { Repos } from '../repositories/index.js';
 import type { OwnerContext } from './access.service.js';
 import type { DiscoveryService } from './discovery.service.js';
 import type { LimitsService } from './limits.service.js';
+import { assertStorableImage } from './uploads.service.js';
 
 export type CreateCommunityBody = z.output<typeof createCommunitySchema>;
 export type UpdateCommunityBody = z.output<typeof updateCommunitySchema>;
@@ -33,6 +35,8 @@ export interface CommunitiesServiceDeps {
   limits: LimitsService;
   discovery: DiscoveryService;
   logger: Logger;
+  /** Uploaded covers are checked in the bucket before they are stored. */
+  storage: Storage;
 }
 
 /** The one-line digest (P1) stored in digests.content.summary, when there is one. */
@@ -64,7 +68,7 @@ export function studioCommunity(
  * archive, stats, detail). Archived communities disappear from fan pages but keep their posts.
  */
 export function createCommunitiesService(deps: CommunitiesServiceDeps) {
-  const { db, repos, limits, discovery } = deps;
+  const { db, repos, limits, discovery, storage } = deps;
   const log = deps.logger.child({ module: 'communities' });
 
   async function withStats(spaceId: string): Promise<StudioCommunity[]> {
@@ -97,6 +101,7 @@ export function createCommunitiesService(deps: CommunitiesServiceDeps) {
     async create(owner: OwnerContext, input: CreateCommunityBody): Promise<StudioCommunity> {
       const { space } = owner;
       const slug = input.slug ?? slugify(input.name, LIMITS.community.slug.max, 'community');
+      await assertStorableImage(storage, ['coverUrl'], input.coverUrl, null);
       const created = await db.transaction(async (tx) => {
         await limits.lockWrites(space.id, owner.userId, tx);
         const total = await repos.communities.countBySpace(space.id, tx);
@@ -114,6 +119,7 @@ export function createCommunitiesService(deps: CommunitiesServiceDeps) {
             description: input.description?.trim() ? input.description : null,
             tint: input.tint,
             icon: input.icon,
+            coverUrl: input.coverUrl ?? null,
             sortOrder: await repos.communities.nextSortOrder(space.id, tx),
           },
           tx,
@@ -132,6 +138,7 @@ export function createCommunitiesService(deps: CommunitiesServiceDeps) {
       const { space } = owner;
       const current = await repos.communities.findById(space.id, id);
       if (!current) throw notFound('Community');
+      await assertStorableImage(storage, ['coverUrl'], input.coverUrl, current.coverUrl);
       const patch: CommunityUpdate = {};
       if (input.name !== undefined) patch.name = input.name;
       if (input.description !== undefined) {
@@ -140,6 +147,7 @@ export function createCommunitiesService(deps: CommunitiesServiceDeps) {
       if (input.tint !== undefined) patch.tint = input.tint;
       if (input.icon !== undefined) patch.icon = input.icon;
       if (input.sortOrder !== undefined) patch.sortOrder = input.sortOrder;
+      if (input.coverUrl !== undefined) patch.coverUrl = input.coverUrl;
       if (input.archived !== undefined) {
         patch.archivedAt = input.archived ? (current.archivedAt ?? new Date()) : null;
       }

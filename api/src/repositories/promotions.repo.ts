@@ -198,7 +198,11 @@ export function createPromotionsRepo(db: Db) {
     /** Studio list: newest first with a (created_at, id) cursor. */
     async list(
       spaceId: string,
-      { cursor, limit }: { cursor: TimeCursor | null; limit: number },
+      {
+        cursor,
+        limit,
+        state,
+      }: { cursor: TimeCursor | null; limit: number; state?: PromotionState },
       tx: DbOrTx = db,
     ): Promise<PageResult<PromotionRow>> {
       const rows = await tx
@@ -207,6 +211,7 @@ export function createPromotionsRepo(db: Db) {
         .where(
           and(
             eq(promotions.spaceId, spaceId),
+            state ? sql`${stateSql} = ${state}` : undefined,
             cursor
               ? sql`(${promotions.createdAt}, ${promotions.id}) < (${cursor.createdAt.toISOString()}::timestamptz, ${cursor.id}::uuid)`
               : undefined,

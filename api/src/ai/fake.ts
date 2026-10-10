@@ -1,6 +1,4 @@
 import {
-  DAILY_CAPS,
-  HOURLY_CAPS,
   LIMITS,
   PITCH_TYPES,
   type PitchType,
@@ -11,9 +9,12 @@ import {
   type PromotionPlatform,
   type TasteProfile,
 } from '@fellow-owners/shared';
-import { hoursAgo, startOfUtcDay } from '../lib/dates.js';
 import type { AiRunsRepo } from '../repositories/ai-runs.repo.js';
-import { TASK_CAPS } from './run.js';
+import { fakeAskAi } from './fakes/ask-ai.js';
+import { fakeChallengeSummary } from './fakes/challenge-summary.js';
+import { fakeCoach } from './fakes/coach.js';
+import { fakeQuestionGroup } from './fakes/question-group.js';
+import { isBudgetExempt, taskCapReached } from './run.js';
 import { SPOTLIGHT_NOTE_MAX } from './tasks/spotlight-note.js';
 import { flattenRecent } from './tasks/suggest-setup.js';
 import {
@@ -743,28 +744,18 @@ export function createFakeAiServices(options: FakeAiOptions = {}): AiServices {
     // Space-less onboarding calls (suggestSetup): no budget, no ai_runs row; the caller caps them.
     const spaceId = ctx.spaceId;
     if (aiRuns && spaceId !== null) {
-      const budget = await aiRuns.budgetState(spaceId);
-      if (budget.paused) throw new AiUnavailableError('budget', undefined, { task });
-      if (task === 'suggestCommunities' && ctx.userId) {
-        const used = await aiRuns.countByUserTaskSince(ctx.userId, task, hoursAgo(1));
-        if (used >= HOURLY_CAPS.suggestCommunities)
-          throw new AiUnavailableError('cap', undefined, { task });
+      if (!isBudgetExempt(task)) {
+        const budget = await aiRuns.budgetState(spaceId);
+        if (budget.paused) throw new AiUnavailableError('budget', undefined, { task });
       }
-      if (
-        task === 'promoteDrafts' ||
-        task === 'askAI' ||
-        task === 'suggestReply' ||
-        task === 'spotlightNote'
-      ) {
-        const used = await aiRuns.countBySpaceTaskSince(spaceId, task, startOfUtcDay());
-        if (used >= DAILY_CAPS[task]) throw new AiUnavailableError('cap', undefined, { task });
-      }
-      if (task === 'tagFollowers' || task === 'clusterImport') {
-        const used = await aiRuns.countBySpaceTaskSince(spaceId, task, startOfUtcDay());
-        if (used >= (TASK_CAPS[task]?.max ?? Infinity)) {
-          throw new AiUnavailableError('cap', undefined, { task });
-        }
-      }
+      // The same caps as the live preflight (ai/run.ts TASK_CAPS).
+      const reached = await taskCapReached(
+        aiRuns,
+        task,
+        { spaceId, userId: ctx.userId ?? null },
+        new Date(),
+      );
+      if (reached) throw new AiUnavailableError('cap', reached, { task });
     }
 
     const started = Date.now();
@@ -802,6 +793,11 @@ export function createFakeAiServices(options: FakeAiOptions = {}): AiServices {
     clusterImport: (input, ctx) => run('clusterImport', ctx, input, () => fakeClusterImport(input)),
     tagFollowers: (input, ctx) => run('tagFollowers', ctx, input, () => fakeTagFollowers(input)),
     suggestSetup: (input, ctx) => run('suggestSetup', ctx, input, () => fakeSuggestSetup(input)),
+    askAI: (input, ctx) => run('askAI', ctx, input, () => fakeAskAi(input)),
+    coach: (input, ctx) => run('coach', ctx, input, () => fakeCoach(input)),
+    questionGroup: (input, ctx) => run('questionGroup', ctx, input, () => fakeQuestionGroup(input)),
+    challengeSummary: (input, ctx) =>
+      run('challengeSummary', ctx, input, () => fakeChallengeSummary(input)),
   };
 }
 

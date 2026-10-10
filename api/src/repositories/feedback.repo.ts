@@ -1,7 +1,11 @@
 import type { FeedbackRefType, FeedbackVerdict } from '@fellow-owners/shared';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNotNull, isNull, ne, or, sql } from 'drizzle-orm';
+import type { TriageFeedbackExample } from '../ai/tasks/triage-item.js';
 import type { Db, DbOrTx } from '../db/client.js';
 import { type AiFeedbackRow, aiFeedback } from '../db/schema/ai.js';
+import { inbound } from '../db/schema/inbound.js';
+import { posts } from '../db/schema/posts.js';
+import { spaces } from '../db/schema/spaces.js';
 
 export interface FeedbackKey {
   spaceId: string;
@@ -97,6 +101,77 @@ export function createFeedbackRepo(db: Db) {
         );
       for (const row of rows) out.set(row.refId, row.verdict);
       return out;
+    },
+
+    /**
+     * The creator's latest thumbs on posts and pitches that still exist, newest first, with the
+     * item's title and AI summary (triage examples). Votes by anyone but the space owner and
+     * briefing highlights are left out; `excludeRefId` drops the item being triaged.
+     */
+    async recentExamples(
+      spaceId: string,
+      { excludeRefId, limit }: { excludeRefId?: string; limit: number },
+      tx: DbOrTx = db,
+    ): Promise<TriageFeedbackExample[]> {
+      const rows = await tx
+        .select({
+          verdict: aiFeedback.verdict,
+          refType: aiFeedback.refType,
+          postTitle: posts.title,
+          postSummary: posts.aiSummary,
+          pitchTitle: inbound.subject,
+          pitchSummary: inbound.aiSummary,
+        })
+        .from(aiFeedback)
+        .innerJoin(
+          spaces,
+          and(
+            eq(spaces.id, aiFeedback.spaceId),
+            eq(spaces.ownerUserId, aiFeedback.createdByUserId),
+          ),
+        )
+        .leftJoin(
+          posts,
+          and(
+            eq(aiFeedback.refType, 'post'),
+            eq(sql`${posts.id}::text`, aiFeedback.refId),
+            eq(posts.spaceId, aiFeedback.spaceId),
+            isNull(posts.deletedAt),
+          ),
+        )
+        .leftJoin(
+          inbound,
+          and(
+            eq(aiFeedback.refType, 'inbound'),
+            eq(sql`${inbound.id}::text`, aiFeedback.refId),
+            eq(inbound.spaceId, aiFeedback.spaceId),
+          ),
+        )
+        .where(
+          and(
+            eq(aiFeedback.spaceId, spaceId),
+            inArray(aiFeedback.refType, ['post', 'inbound']),
+            or(isNotNull(posts.id), isNotNull(inbound.id)),
+            excludeRefId ? ne(aiFeedback.refId, excludeRefId) : undefined,
+          ),
+        )
+        .orderBy(desc(aiFeedback.createdAt), desc(aiFeedback.id))
+        .limit(limit);
+      return rows.map((row) =>
+        row.refType === 'post'
+          ? {
+              verdict: row.verdict,
+              kind: 'post',
+              title: row.postTitle ?? '',
+              summary: row.postSummary,
+            }
+          : {
+              verdict: row.verdict,
+              kind: 'inbound',
+              title: row.pitchTitle ?? '',
+              summary: row.pitchSummary,
+            },
+      );
     },
   };
 }

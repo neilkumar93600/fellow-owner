@@ -1,0 +1,1 @@
+ALTER TABLE "newsletter_subscribers" ADD COLUMN "confirm_sent_at" timestamp (3) with time zone;

@@ -17,13 +17,33 @@ export interface CommunityCoverProps {
   icon: CommunityIcon;
   sizes: string;
   className?: string;
+  /** An uploaded cover (/api/media/<key>) or image link; it wins over the generated photo. */
+  coverUrl?: string | null;
 }
 
 /**
- * A community's photo cover, filling its positioned parent. With no photo for the slug it is the room's
- * tint with its icon, so a creator's own communities still get a cover.
+ * A community's cover, filling its positioned parent: the creator's uploaded image, else the generated
+ * photo for the slug, else the room's tint with its icon, so a creator's own communities still get a cover.
  */
-export function CommunityCover({ slug, name, tint, icon, sizes, className }: CommunityCoverProps) {
+export function CommunityCover({
+  slug,
+  name,
+  tint,
+  icon,
+  sizes,
+  className,
+  coverUrl,
+}: CommunityCoverProps) {
+  if (coverUrl) {
+    return (
+      // biome-ignore lint/performance/noImgElement: uploads come from the bucket, not next/image remotePatterns
+      <img
+        src={coverUrl}
+        alt={`${name} cover`}
+        className={cn('absolute inset-0 size-full object-cover', className)}
+      />
+    );
+  }
   const cover = coverFor(slug);
   if (cover) {
     return (

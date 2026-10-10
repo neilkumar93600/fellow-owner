@@ -10,13 +10,7 @@ import { CREATOR_ASSETS, type CreatorAsset } from '@/lib/creator-assets';
 import { formatNumber, pluralize } from '@/lib/format';
 import { routes } from '@/lib/routes';
 import { PromotionMenu } from './promotion-menu';
-import {
-  dateLine,
-  draftedFor,
-  PromotionsEmpty,
-  type PromotionsTab,
-  TAB_STATE,
-} from './promotions-table';
+import { dateLine, draftedFor, PromotionsEmpty, type PromotionsTab } from './promotions-table';
 
 /** The community's cover photo when one was generated for its slug (the six demo rooms), else none. */
 function coverFor(slug: string): CreatorAsset | null {
@@ -47,8 +41,7 @@ export interface PromotionsListProps {
  * "..." menu. The Table toggle keeps the old rows.
  */
 export function PromotionsList({ items, tab, icons, now }: PromotionsListProps) {
-  const state = TAB_STATE[tab];
-  const rows = state ? items.filter((p) => p.state === state) : items;
+  const rows = items; // the API already filtered by tab
   if (rows.length === 0) {
     return (
       <GlassPanel strength="strong" className="rounded-panel">

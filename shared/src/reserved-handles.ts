@@ -21,6 +21,10 @@ export const RESERVED_HANDLES: ReadonlySet<string> = new Set([
   'start',
   'terms',
   'verify-otp',
+  'account',
+  'kit',
+  'newsletter',
+  'email-preferences',
   // backend paths and platform words
   'api',
   'r',
