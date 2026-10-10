@@ -1,6 +1,5 @@
 # `railway up` uploads the repo root to build the API image (api/Dockerfile). The image needs only
 # the root workspace manifests, shared/, api/ and web/package.json (for pnpm's workspace lockfile).
-video/
 docs/
 .agents/
 .claude/
