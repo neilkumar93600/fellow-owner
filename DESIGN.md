@@ -287,11 +287,11 @@ The radius is 28px for panels (`rounded-panel`) and 999px for chips (`rounded-ch
 
 ## 9. Not this
 
-These belong to the old "Clubhouse" system and to the Starline reference. Do not bring them back:
+These belong to the old "Clubhouse" system. Do not bring them back:
 - The pewter shell: a 40px-radius grey frame around the app, the hazed shell and the header tray.
 - The lime active pill, or any lime fill.
 - The purple (violet) primary button and the purple focus ring.
-- A pill sidebar with text labels plus a "Welcome 🎉" header tray over a tab bar and a table, which is the Starline layout.
+- A pill sidebar with text labels plus a "Welcome 🎉" header tray over a tab bar and a table, which is the old layout.
 - Flat white 45% "glass" with no blur.
 - The clay-diorama sphere canvas, the clay loop video and its frames, and the clay auth/onboarding art.
 - Dense admin tables as the default view, raw fit-score bars and "Export CSV" as a primary button.

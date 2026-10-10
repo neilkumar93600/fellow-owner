@@ -21,7 +21,7 @@ fellow-owners/
 ├─ web/                       Next.js 16 app (fan pages + creator dashboard)
 ├─ api/                       Express 5 backend (all business logic, auth, AI, db)
 ├─ shared/                    zod schemas, enums, limits used by web and api
-├─ docs/                      the build docs + design-reference/
+├─ docs/                      the build docs
 ├─ .github/
 │  ├─ workflows/
 │  │  ├─ ci.yml               install, typecheck, lint, unit + integration tests, build
@@ -254,7 +254,6 @@ web/
 │        └─ import-audience-card.tsx    (built MVP) links to /dashboard/people/followers?import=1
 │
 ├─ hooks/
-│  ├─ use-session.ts                    Better Auth session
 │  ├─ use-space.ts                      creator's own space
 │  ├─ use-membership.ts                 fan's membership in the current space
 │  ├─ use-url-state.ts                  tabs, sort, filters, ?item= in the URL
@@ -523,9 +522,7 @@ docs/
 ├─ 03-app-flow.md
 ├─ 04-ui-ux-brief.md
 ├─ 05-backend-schema.md
-├─ 06-implementation-plan.md            after 01 to 05 are approved
-├─ 07-file-structure.md                 this file
-└─ design-reference/                    9 reference screens
+└─ 07-file-structure.md                 this file
 ```
 
 ## Notes

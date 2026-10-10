@@ -22,8 +22,7 @@ import type {
  *   pnpm --filter @fellow-owners/api exec tsx src/db/seed/generate-content.ts
  *   pnpm --filter @fellow-owners/api exec tsx src/db/seed/generate-content.ts --check
  *
- * The demo world is Mira Lane, a Los Angeles lifestyle and travel vlogger, and six fan communities
- * (docs/superpowers/specs/2026-10-09-creator-pivot-design.md section 3).
+ * The demo world is Mira Lane, a Los Angeles lifestyle and travel vlogger, and six fan communities.
  *
  * Everything comes out of one fixed seed (SEED below), so a run with no changes to this file
  * rewrites the same bytes: the diff shows what the edit actually changed and nothing else.

@@ -1,7 +1,7 @@
 # 01 · Product Requirements Document (PRD)
 
 Status: draft v0.1 for review · Owner: Nilesh · Updated: 2026-10-01
-Inputs: Startupathon brief "Operating System for Fanbases", Persist briefing video (Jack, Vikas), `design-reference/`.
+Inputs: Startupathon brief "Operating System for Fanbases", Persist briefing video (Jack, Vikas).
 
 ## 1. Product name and one-sentence idea
 
@@ -91,7 +91,7 @@ P0 = required for the MVP demo and pilot. P1 = build in this order if time allow
 | F20 | Asks: creator posts a request to one or all communities, members respond, AI summarizes | Coordination runs both ways | P1 |
 | F21 | In-app notifications (reply received, project featured, team request) | Members know when something happened | P1 |
 
-### Pitch loop (designed 2026-10-03, spec `docs/superpowers/specs/2026-10-03-pitch-loop-design.md`)
+### Pitch loop (designed 2026-10-03)
 | # | Feature | User benefit | Priority |
 |---|---------|--------------|----------|
 | F30 | Idea Coach: on-demand clarity checklist and a suggested rewrite on the pitch and post forms; never a score | Fans send clearer pitches; the creator reads better ones | P1 |

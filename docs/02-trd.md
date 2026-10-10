@@ -109,7 +109,7 @@ fellow-owners/
   web/                Next.js 16
   api/                Express 5, including db/ (Drizzle schema, migrations, seed)
   shared/             zod schemas, enums, limits used by both
-  docs/               build docs + design-reference/
+  docs/               build docs
   .github/            CI workflows
   docker-compose.yml  local Postgres + api + web
 ```

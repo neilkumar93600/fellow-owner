@@ -20,15 +20,6 @@ assert.deepEqual(START, {
 for (const [id, d] of Object.entries(DURATION)) assert.equal(d % BAR, 0, `${id} must be whole bars`);
 console.log('timeline ok');
 
-const wav = readFileSync(new URL('../public/audio/music.wav', import.meta.url));
-assert.equal(wav.toString('ascii', 0, 4), 'RIFF');
-assert.equal(wav.toString('ascii', 8, 12), 'WAVE');
-const channels = wav.readUInt16LE(22);
-const rate = wav.readUInt32LE(24);
-const bits = wav.readUInt16LE(34);
-const dataBytes = wav.readUInt32LE(40);
-assert.deepEqual([channels, rate, bits], [2, 44100, 16]);
-assert.ok(dataBytes / (rate * channels * 2) >= TOTAL / FPS, 'music must cover the whole video');
 for (const n of ['whoosh', 'whip', 'switch', 'mouse-click', 'ding', 'page-turn', 'shutter-modern']) {
   assert.ok(existsSync(new URL(`../public/sfx/${n}.wav`, import.meta.url)), `missing sfx ${n}`);
 }

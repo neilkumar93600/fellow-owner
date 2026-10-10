@@ -1,4 +1,4 @@
-// Single source of truth for timing. Read by src/Root.tsx, src/LaunchVideo.tsx and scripts/make-music.ts,
+// Single source of truth for timing. Read by src/Root.tsx, src/LaunchVideo.tsx and scripts/check.ts,
 // so scene cuts and the music's bar lines always agree. Plain TS (no enums) so Node can run it directly.
 export const FPS = 30;
 export const WIDTH = 1920;
