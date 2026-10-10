@@ -1,17 +1,25 @@
 'use client';
 
 import type { QuestionGroup } from '@fellow-owners/shared';
-import { ArrowLeft, Lightbulb, Sparkles } from 'lucide-react';
+import { ArrowLeft, Lightbulb, Sparkles, TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { CommunityChip } from '@/components/shared/community-chip';
 import { EmptyState } from '@/components/shared/empty-state';
+import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { cn } from '@/components/ui/cn';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  useAnswerQuestionGroup,
+  useDismissQuestionGroup,
+  useQuestionGroups,
+  useRemoveQuestionGroupAsker,
+} from '@/hooks/queries/use-question-groups';
 import { formatDate, formatNumber, pluralize } from '@/lib/format';
 import { routes, withQuery } from '@/lib/routes';
-import { toastSuccess } from '@/lib/toast';
+import { errorMessage, toastSuccess } from '@/lib/toast';
 import { type AnswerSend, QuestionGroupPanel } from './question-group-panel';
 
 const people = (n: number) => `${formatNumber(n)} ${pluralize(n, 'fan', 'fans')}`;
@@ -23,22 +31,17 @@ export const makeItHref = (group: QuestionGroup) =>
 /**
  * "What fans want": the things fans keep asking for, as cards with how many fans want each. "Make it"
  * opens the Spotlight composer on that topic; a card also opens its side panel (?item=) to see who asked
- * and answer them all at once. Answered ones sit below.
- * ponytail: still fixture-backed for the demo space and every action is local, confirmed with a toast; an
- * API arrives with Answer Once.
+ * and answer them all at once. Answered ones sit below. Groups come from the Answer Once API; every
+ * action shows at once and reverts with a toast if the server refuses it.
  */
-export function QuestionGroupsView({
-  groups: loaded,
-  handle,
-  now,
-}: {
-  groups: QuestionGroup[];
-  handle: string;
-  now: number;
-}) {
+export function QuestionGroupsView({ handle, now }: { handle: string; now: number }) {
   const params = useSearchParams();
   const itemId = params.get('item');
-  const [groups, setGroups] = useState(loaded);
+  const list = useQuestionGroups();
+  const answerGroup = useAnswerQuestionGroup();
+  const dismissGroup = useDismissQuestionGroup();
+  const removeGroupAsker = useRemoveQuestionGroupAsker();
+  const groups = list.data?.items ?? [];
 
   const go = (item: string | undefined, push = false) =>
     window.history[push ? 'pushState' : 'replaceState'](
@@ -55,43 +58,71 @@ export function QuestionGroupsView({
   const [shown, setShown] = useState(selected);
   if (selected && selected !== shown) setShown(selected);
 
-  const update = (id: string, change: (group: QuestionGroup) => QuestionGroup) =>
-    setGroups((list) => list.map((group) => (group.id === id ? change(group) : group)));
-
   const removeAsker = (group: QuestionGroup, pitchId: string) => {
     const asker = group.askers.find((item) => item.pitchId === pitchId);
-    update(group.id, (current) => ({
-      ...current,
-      askers: current.askers.filter((item) => item.pitchId !== pitchId),
-      askedCount: current.askedCount - 1,
-    }));
-    toastSuccess(
-      `${asker?.member.name ?? 'That fan'}'s message is back in fan mail as a normal one.`,
+    removeGroupAsker.mutate(
+      { group, pitchId },
+      {
+        onSuccess: () =>
+          toastSuccess(
+            `${asker?.member.name ?? 'That fan'}'s message is back in fan mail as a normal one.`,
+          ),
+      },
     );
   };
 
   const send = (group: QuestionGroup, { answer, replyAll, pinIds }: AnswerSend) => {
-    const pinnedIn = group.communities
-      .filter((community) => pinIds.includes(community.id))
-      .map((community) => community.name);
-    update(group.id, (current) => ({
-      ...current,
-      status: 'answered',
-      answer,
-      answeredAt: new Date().toISOString(),
-      pinnedIn,
-    }));
-    const pinned = pinnedIn.length ? ` Pinned in ${pinnedIn.join(' and ')}.` : '';
-    toastSuccess(
-      replyAll ? `Sent to ${people(group.askedCount)}.${pinned}` : `Answer pinned.${pinned}`,
+    answerGroup.mutate(
+      { group, input: { answer, replyAll, pinCommunityIds: pinIds } },
+      {
+        onSuccess: (done) => {
+          const pinned = done.pinnedIn.length ? ` Pinned in ${done.pinnedIn.join(' and ')}.` : '';
+          toastSuccess(
+            replyAll ? `Sent to ${people(done.askedCount)}.${pinned}` : `Answer pinned.${pinned}`,
+          );
+        },
+      },
     );
   };
 
   const dismiss = (group: QuestionGroup) => {
-    update(group.id, (current) => ({ ...current, status: 'dismissed' }));
     go(undefined);
-    toastSuccess('Dismissed. Those messages stay in your fan mail.');
+    dismissGroup.mutate(
+      { group },
+      { onSuccess: () => toastSuccess('Dismissed. Those messages stay in your fan mail.') },
+    );
   };
+
+  if (list.isError && !list.data) {
+    return (
+      <EmptyState
+        icon={TriangleAlert}
+        tint="peach"
+        body={errorMessage(list.error, 'Could not load what fans want.')}
+        action={
+          <Button variant="secondary" onClick={() => list.refetch()}>
+            Try again
+          </Button>
+        }
+        className="glass-strong min-h-80 rounded-panel"
+      />
+    );
+  }
+  if (!list.data) {
+    return (
+      <div aria-busy="true" className="flex flex-col gap-6">
+        <span className="sr-only" role="status">
+          Loading
+        </span>
+        <Skeleton className="h-10 w-2/3" />
+        <div className="grid gap-5 @3xl:grid-cols-2">
+          {[0, 1].map((n) => (
+            <Skeleton key={n} className="h-56 rounded-[24px]" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">

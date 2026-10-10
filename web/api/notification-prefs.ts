@@ -10,5 +10,8 @@ export function getNotificationPrefs(signal?: AbortSignal): Promise<Notification
 
 /** PUT /api/me/notification-prefs */
 export function updateNotificationPrefs(input: NotificationPrefsInput): Promise<NotificationPrefs> {
-  return apiFetch<NotificationPrefs>('/api/me/notification-prefs', { method: 'PUT', json: input });
+  return apiFetch<NotificationPrefs>('/api/me/notification-prefs', {
+    method: 'PUT',
+    json: input,
+  });
 }

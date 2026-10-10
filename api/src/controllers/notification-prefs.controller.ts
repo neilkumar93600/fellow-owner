@@ -28,6 +28,11 @@ export function createNotificationPrefsController(deps: {
       const status = ok ? 'unsubscribed' : 'invalid';
       res.redirect(302, `${deps.env.WEB_ORIGIN}/email-preferences?status=${status}`);
     },
+    /** POST /api/email/unsubscribe?token= : the mail client's one-click POST (RFC 8058); no redirect. */
+    async unsubscribeOneClick(req: Request, res: Response): Promise<void> {
+      const { token } = queryOf(req, newsletterTokenQuerySchema);
+      res.status((await notificationEmails.unsubscribe(token)) ? 200 : 400).json({});
+    },
   };
 }
 

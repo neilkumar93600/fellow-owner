@@ -115,17 +115,23 @@ export function createPostsService(deps: PostsServiceDeps) {
     if (rows.length === 0) return [];
     const ids = rows.map((row) => row.id);
     const projectIds = rows.filter((row) => row.type === 'project').map((row) => row.id);
-    const [communities, authors, teams, viewerSignals, challenges] = await Promise.all([
-      repos.communities.findByIds(space.id, unique(rows.map((row) => row.communityId))),
-      repos.memberships.refs(
-        unique(rows.flatMap((row) => (row.authorMembershipId ? [row.authorMembershipId] : []))),
-      ),
-      repos.teams.listByPosts(projectIds, { statuses: ['accepted'] }),
-      viewer
-        ? repos.signals.viewerSignals(ids, viewer.id)
-        : Promise.resolve(new Map<string, SignalKind[]>()),
-      repos.posts.challengeRefs(unique(rows.flatMap((row) => (row.askId ? [row.askId] : [])))),
-    ]);
+    const [communities, authors, teams, viewerSignals, challenges, askedCounts] = await Promise.all(
+      [
+        repos.communities.findByIds(space.id, unique(rows.map((row) => row.communityId))),
+        repos.memberships.refs(
+          unique(rows.flatMap((row) => (row.authorMembershipId ? [row.authorMembershipId] : []))),
+        ),
+        repos.teams.listByPosts(projectIds, { statuses: ['accepted'] }),
+        viewer
+          ? repos.signals.viewerSignals(ids, viewer.id)
+          : Promise.resolve(new Map<string, SignalKind[]>()),
+        repos.posts.challengeRefs(unique(rows.flatMap((row) => (row.askId ? [row.askId] : [])))),
+        // Answer Once (F32, C1): posts that answer a question group are pinned answer posts.
+        repos.questionGroups.askedCounts(
+          unique(rows.flatMap((row) => (row.questionGroupId ? [row.questionGroupId] : []))),
+        ),
+      ],
+    );
     const communityById = new Map(communities.map((row) => [row.id, row]));
 
     return rows.map((row) => {
@@ -164,6 +170,10 @@ export function createPostsService(deps: PostsServiceDeps) {
         isAuthor: viewer !== null && row.authorMembershipId === viewer.id,
         lovedAt: toIsoOrNull(row.lovedAt),
         challenge: row.askId ? (challenges.get(row.askId) ?? null) : null,
+        pinned: row.questionGroupId !== null,
+        answerGroup: row.questionGroupId
+          ? { id: row.questionGroupId, askedCount: askedCounts.get(row.questionGroupId) ?? 0 }
+          : null,
       };
     });
   }

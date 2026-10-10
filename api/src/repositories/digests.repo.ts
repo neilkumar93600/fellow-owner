@@ -1,6 +1,20 @@
-import { and, desc, eq, isNotNull, isNull, lt, sql } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  exists,
+  gte,
+  isNotNull,
+  isNull,
+  lt,
+  notExists,
+  sql,
+} from 'drizzle-orm';
 import { type Db, type DbOrTx, qcol } from '../db/client.js';
 import { type DigestRow, digests } from '../db/schema/ai.js';
+import { communities } from '../db/schema/communities.js';
+import { posts } from '../db/schema/posts.js';
 
 export interface DigestWrite {
   spaceId: string;
@@ -12,8 +26,102 @@ export interface DigestWrite {
   model: string;
 }
 
+/** A community whose weekly digest is due. */
+export interface DueCommunity {
+  spaceId: string;
+  communityId: string;
+  communityName: string;
+}
+
+/** A post that goes into a community's weekly digest. */
+export interface WeekPost {
+  id: string;
+  title: string;
+  summary: string | null;
+  signals: number;
+}
+
+/** Posts a weekly digest counts: in the window, not deleted, hidden or flagged as spam. */
+function weekPostWhere(since: Date, until: Date) {
+  return and(
+    gte(posts.createdAt, since),
+    lt(posts.createdAt, until),
+    isNull(posts.deletedAt),
+    isNull(posts.hiddenAt),
+    sql`${posts.aiIsSpam} is not true`,
+  );
+}
+
 export function createDigestsRepo(db: Db) {
   return {
+    /**
+     * Non-archived communities (any space) with at least one post in [since, until) and no
+     * digest dated `periodDate` yet.
+     */
+    async dueCommunities(
+      periodDate: string,
+      since: Date,
+      until: Date,
+      tx: DbOrTx = db,
+    ): Promise<DueCommunity[]> {
+      return tx
+        .select({
+          spaceId: communities.spaceId,
+          communityId: communities.id,
+          communityName: communities.name,
+        })
+        .from(communities)
+        .where(
+          and(
+            isNull(communities.archivedAt),
+            exists(
+              tx
+                .select({ one: sql`1` })
+                .from(posts)
+                .where(and(eq(posts.communityId, communities.id), weekPostWhere(since, until))),
+            ),
+            notExists(
+              tx
+                .select({ one: sql`1` })
+                .from(digests)
+                .where(
+                  and(eq(digests.communityId, communities.id), eq(digests.periodDate, periodDate)),
+                ),
+            ),
+          ),
+        )
+        .orderBy(asc(communities.spaceId), asc(communities.id));
+    },
+
+    /** The window's posts in one community, most signals first (capped at `limit`). */
+    async weekPosts(
+      communityId: string,
+      since: Date,
+      until: Date,
+      limit: number,
+      tx: DbOrTx = db,
+    ): Promise<WeekPost[]> {
+      const signals = sql<number>`${posts.useCount} + ${posts.buildCount}`;
+      const rows = await tx
+        .select({
+          id: posts.id,
+          title: posts.title,
+          aiSummary: posts.aiSummary,
+          analysisStatus: posts.analysisStatus,
+          signals,
+        })
+        .from(posts)
+        .where(and(eq(posts.communityId, communityId), weekPostWhere(since, until)))
+        .orderBy(desc(signals), desc(posts.createdAt), desc(posts.id))
+        .limit(limit);
+      return rows.map((row) => ({
+        id: row.id,
+        title: row.title,
+        summary: row.analysisStatus === 'done' ? row.aiSummary : null,
+        signals: Number(row.signals),
+      }));
+    },
+
     /** Today's (or any day's) space briefing. */
     async findBriefing(
       spaceId: string,

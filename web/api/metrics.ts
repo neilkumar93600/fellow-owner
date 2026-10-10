@@ -7,7 +7,9 @@ export function getStudioMetrics(
   params: Params<MetricsQuery> = {},
   signal?: AbortSignal,
 ): Promise<StudioMetrics> {
-  return apiFetch<StudioMetrics>(`/api/studio/metrics${query(params)}`, { signal });
+  return apiFetch<StudioMetrics>(`/api/studio/metrics${query(params)}`, {
+    signal,
+  });
 }
 
 /**
@@ -18,7 +20,11 @@ export function recordVisit(handle: string): void {
   const path = `/api/spaces/${encodeURIComponent(handle)}/visit`;
   try {
     if (typeof navigator !== 'undefined' && navigator.sendBeacon?.(path)) return;
-    void fetch(path, { method: 'POST', keepalive: true, credentials: 'include' }).catch(() => {});
+    void fetch(path, {
+      method: 'POST',
+      keepalive: true,
+      credentials: 'include',
+    }).catch(() => {});
   } catch {
     // Analytics must never break the page.
   }

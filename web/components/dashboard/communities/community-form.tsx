@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 import { CommunityChip } from '@/components/shared/community-chip';
 import { ConfirmDialog } from '@/components/shared/confirm-dialog';
+import { ImageUpload } from '@/components/shared/image-upload';
 import { SidePanel } from '@/components/shared/side-panel';
 import { type CardTint, COMMUNITY_ICON, cardTint, TINT_STYLES } from '@/components/shared/tint';
 import { Button } from '@/components/ui/button';
@@ -27,7 +28,10 @@ const formSchema = createCommunitySchema.omit({ slug: true });
 type FormInput = z.input<typeof formSchema>;
 type FormOutput = z.output<typeof formSchema>;
 
-export type CommunityValues = Pick<StudioCommunity, 'name' | 'description' | 'tint' | 'icon'>;
+export type CommunityValues = Pick<
+  StudioCommunity,
+  'name' | 'description' | 'tint' | 'icon' | 'coverUrl'
+>;
 
 /** Lime is retired, so it is not offered. */
 const TINT_OPTIONS: readonly { value: CardTint; label: string }[] = [
@@ -78,6 +82,7 @@ function CommunityForm({
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(formSchema),
@@ -86,9 +91,16 @@ function CommunityForm({
       description: community?.description ?? '',
       tint: community ? cardTint(community.tint) : defaultTint,
       icon: community?.icon ?? 'users',
+      coverUrl: community?.coverUrl ?? null,
     },
   });
-  const [name = '', description = '', tint, icon] = watch(['name', 'description', 'tint', 'icon']);
+  const [name = '', description = '', tint, icon, coverUrl] = watch([
+    'name',
+    'description',
+    'tint',
+    'icon',
+    'coverUrl',
+  ]);
 
   return (
     <form
@@ -101,6 +113,7 @@ function CommunityForm({
           description: values.description || null,
           tint: values.tint,
           icon: values.icon,
+          coverUrl: values.coverUrl ?? null,
         }),
       )}
       className="flex flex-col gap-6"
@@ -122,6 +135,20 @@ function CommunityForm({
       >
         <TextArea {...register('description')} rows={3} />
       </Field>
+
+      {community ? (
+        <ImageUpload
+          kind="community_cover"
+          communityId={community.id}
+          label="Cover image"
+          value={coverUrl ?? null}
+          onChange={(url) => setValue('coverUrl', url, { shouldDirty: true })}
+        />
+      ) : (
+        <p className="text-small text-ink-muted">
+          Create the community first, then add a cover image from its edit panel.
+        </p>
+      )}
 
       <fieldset>
         <legend className="text-small-strong text-ink">Color</legend>

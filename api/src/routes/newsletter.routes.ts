@@ -11,5 +11,7 @@ export function createNewsletterRoutes(container: Container): Router {
     validate({ body: newsletterSubscribeSchema }),
     container.controllers.newsletter.subscribe,
   );
+  router.get('/confirm', container.controllers.newsletter.confirm);
+  router.get('/unsubscribe', container.controllers.newsletter.unsubscribe);
   return router;
 }

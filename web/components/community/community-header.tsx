@@ -50,6 +50,7 @@ export function CommunityHeader({
           name={community.name}
           tint={community.tint}
           icon={community.icon}
+          coverUrl={community.coverUrl}
           sizes="(min-width: 840px) 792px, 100vw"
         />
       </div>

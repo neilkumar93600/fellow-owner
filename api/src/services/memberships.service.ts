@@ -11,7 +11,7 @@ import type {
   ViewerMembership,
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
-import { type AiServices, isAiUnavailable } from '../ai/types.js';
+import { type AiServices, type BackgroundRunner, isAiUnavailable } from '../ai/types.js';
 import type { Db } from '../db/client.js';
 import type { CommunityRow } from '../db/schema/communities.js';
 import type { MembershipRow } from '../db/schema/memberships.js';
@@ -42,6 +42,8 @@ export interface MembershipsServiceDeps {
   /** Links a matching follower on join (followers.linkMembership). */
   followers: FollowersService;
   ai: AiServices;
+  /** Embeds the member profile after join and profile edits (F17 people who could help). */
+  background: BackgroundRunner;
   logger: Logger;
 }
 
@@ -99,6 +101,29 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
   async function activeCommunities(spaceId: string): Promise<Map<string, CommunityRow>> {
     const rows = await repos.communities.listBySpace(spaceId);
     return new Map(rows.map((row) => [row.id, row]));
+  }
+
+  /**
+   * Background: embeds headline + intro + skills so the member can show up as "people who could
+   * help". Never throws; a failure keeps the old vector and db:embed fills gaps later.
+   */
+  function embedProfile(spaceId: string, membership: MembershipRow): void {
+    const body = [membership.intro, (membership.skills ?? []).join(', ')]
+      .filter((part): part is string => Boolean(part?.trim()))
+      .join('\n');
+    const title = membership.headline?.trim() ?? '';
+    if (!title && !body) return;
+    deps.background.run('embed-membership', async () => {
+      try {
+        const vector = await deps.ai.embedItem(
+          { title, body },
+          { spaceId, userId: membership.userId, refType: 'membership', refId: membership.id },
+        );
+        await repos.memberships.update(spaceId, membership.id, { embedding: vector });
+      } catch (error) {
+        log.warn({ err: error, membershipId: membership.id }, 'membership embedding failed');
+      }
+    });
   }
 
   return {
@@ -187,20 +212,25 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
       assertKnownCommunities(communityIds, active);
       const intro = nullableText(input.intro);
 
-      const { membership, created } = await db.transaction(async (tx) => {
+      const { membership, created, priorIntro } = await db.transaction(async (tx) => {
         const result = await repos.memberships.insertOrGet(
           { spaceId: space.id, userId, role: 'member', intro },
           tx,
         );
         let row = result.row;
+        const priorIntro = row.intro;
         if (row.removedAt) throw forbidden('You were removed from this space');
         if (!result.created && intro !== null && intro !== row.intro) {
           row = (await repos.memberships.update(space.id, row.id, { intro }, tx)) ?? row;
         }
         await repos.memberships.addCommunities(space.id, row.id, communityIds, tx);
-        return { membership: row, created: result.created };
+        return { membership: row, created: result.created, priorIntro };
       });
       if (created) log.info({ spaceId: space.id, membershipId: membership.id }, 'member joined');
+      // New member, or a returning one whose intro just changed.
+      if (membership.role === 'member' && (created || (intro !== null && intro !== priorIntro))) {
+        embedProfile(space.id, membership);
+      }
       // On every member join, not only `created`: a fan who pitched first already holds a
       // membership. A no-op once linked; never throws.
       if (membership.role === 'member') {
@@ -235,6 +265,7 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
           limits.leftToday('pitches', space.id, membership.id),
         ]);
 
+      const answeredGroups = await repos.pitches.answeredGroups(pitches.map((row) => row.id));
       const authoredIds = new Set(authored.map((row) => row.id));
       const teamPosts = await repos.posts.findManyByIds(
         space.id,
@@ -265,7 +296,19 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
             ? [{ post: card, role: row.role, status: row.status, isLead: isLeadRole(row.role) }]
             : [];
         }),
-        pitches: pitches.map((row) => pitchView(row, { showReadReceipts: space.showReadReceipts })),
+        pitches: pitches.map((row) => {
+          const answered = answeredGroups.get(row.id);
+          return pitchView(row, {
+            showReadReceipts: space.showReadReceipts,
+            // Same post href as notifications.service: /<handle>/p/<postId>.
+            answeredGroup: answered
+              ? {
+                  count: answered.count,
+                  postHref: `/${encodeURIComponent(space.handle)}/p/${encodeURIComponent(answered.postId)}`,
+                }
+              : null,
+          });
+        }),
         caps: { pitchesLeftToday: pitchesLeft, postsLeftToday: postsLeft },
       };
     },
@@ -298,6 +341,9 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
         return row;
       });
       if (!updated) throw notFound('Membership');
+      if (input.headline !== undefined || input.intro !== undefined || input.skills !== undefined) {
+        embedProfile(space.id, updated);
+      }
       return ownMembership(updated);
     },
 

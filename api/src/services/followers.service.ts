@@ -12,18 +12,25 @@ import {
   type TagFollowersResult,
   type tagFollowersSchema,
   type updateFollowerSchema,
+  type youtubeImportSchema,
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
 import { type AiServices, TAG_FOLLOWERS_BATCH } from '../ai/types.js';
 import type { Db } from '../db/client.js';
 import type { CommunityRow } from '../db/schema/communities.js';
 import type { FollowerRow } from '../db/schema/followers.js';
-import { parseAudience, type RowError } from '../lib/audience-import.js';
+import { type ParsedImport, parseAudience, type RowError } from '../lib/audience-import.js';
 import { toIso, toIsoOrNull } from '../lib/dates.js';
 import { uniqueViolation } from '../lib/db-errors.js';
-import { conflict, isAppError, notFound, validationError } from '../lib/errors.js';
+import { AppError, conflict, isAppError, notFound, validationError } from '../lib/errors.js';
 import type { Logger } from '../lib/logger.js';
 import { clampLimit, decodeTimeCursor, encodeTimeCursor, toPage } from '../lib/pagination.js';
+import {
+  createYoutubeClient,
+  parseChannelUrl,
+  type YoutubeComments,
+  YoutubeError,
+} from '../lib/youtube.js';
 import type {
   FollowerFilter,
   FollowerTagRow,
@@ -36,6 +43,14 @@ import type { OwnerContext } from './access.service.js';
 export type CreateFollowerBody = z.output<typeof createFollowerSchema>;
 export type UpdateFollowerBody = z.output<typeof updateFollowerSchema>;
 export type ImportFollowersBody = z.output<typeof importFollowersSchema>;
+export type YoutubeImportBody = z.output<typeof youtubeImportSchema>;
+
+/** An import from YouTube comments; `sample` is true when no API key is set (made-up commenters). */
+export type YoutubeImportResult = Omit<ImportResult, 'source'> & {
+  source: 'youtube';
+  sample: boolean;
+};
+type ImportRowSource = 'csv' | 'paste' | 'youtube';
 export type TagFollowersBody = z.output<typeof tagFollowersSchema>;
 export type AutoTagFollowersBody = z.output<typeof autoTagFollowersSchema>;
 
@@ -44,6 +59,8 @@ export interface FollowersServiceDeps {
   repos: Repos;
   ai: AiServices;
   logger: Logger;
+  /** Only YOUTUBE_API_KEY is read: without it the YouTube import answers labelled sample data. */
+  env?: { YOUTUBE_API_KEY?: string | undefined };
 }
 
 const F = LIMITS.follower;
@@ -110,6 +127,7 @@ async function friendlyDuplicates<T>(write: () => Promise<T>): Promise<T> {
 export function createFollowersService(deps: FollowersServiceDeps) {
   const { db, repos, ai } = deps;
   const log = deps.logger.child({ module: 'followers' });
+  const youtube = createYoutubeClient({ apiKey: deps.env?.YOUTUBE_API_KEY });
 
   async function activeCommunities(spaceId: string): Promise<CommunityRow[]> {
     return repos.communities.listBySpace(spaceId);
@@ -176,6 +194,118 @@ export function createFollowersService(deps: FollowersServiceDeps) {
       log.warn({ err: error, spaceId: owner.space.id }, 'import suggestions unavailable');
       return [];
     }
+  }
+
+  async function runImport(
+    owner: OwnerContext,
+    source: ImportRowSource,
+    parsed: ParsedImport,
+    suggest: boolean,
+  ): Promise<ImportResult> {
+    const spaceId = owner.space.id;
+    // followers.source predates YouTube: its commenters are stored as pasted rows.
+    const rowSource = source === 'youtube' ? 'paste' : source;
+    const errors: RowError[] = [...parsed.errors];
+    let skipped = parsed.skipped;
+
+    let outcome: { importId: string; created: number; duplicates: number };
+    try {
+      outcome = await db.transaction(async (tx) => {
+        await repos.followers.lockRoster(spaceId, tx);
+        const clashes = await repos.followers.findClashes(
+          spaceId,
+          parsed.rows.flatMap((row) => (row.email ? [row.email] : [])),
+          parsed.rows.flatMap((row) => (row.handle ? [row.handle] : [])),
+          tx,
+        );
+        const seen = new Set(clashes.flatMap(keysOf));
+        let duplicates = 0;
+        const fresh = parsed.rows.filter((row) => {
+          const keys = keysOf(row);
+          if (keys.some((key) => seen.has(key))) {
+            duplicates += 1;
+            return false;
+          }
+          for (const key of keys) seen.add(key);
+          return true;
+        });
+        const room = Math.max(0, F.perSpace - (await repos.followers.countBySpace(spaceId, tx)));
+        const overflow = fresh.slice(room);
+        if (overflow[0]) errors.push({ line: overflow[0].line, reason: FULL_MESSAGE });
+        skipped += overflow.length;
+
+        const importRow = await repos.followers.insertImport(
+          { spaceId, source: source, status: 'done' },
+          tx,
+        );
+        const inserted = await repos.followers.insertMany(
+          fresh.slice(0, room).map((row) => ({
+            spaceId,
+            name: row.name,
+            handle: row.handle,
+            platform: row.platform,
+            email: row.email,
+            note: row.note,
+            source: rowSource,
+            importId: importRow.id,
+          })),
+          tx,
+        );
+        // Rows that lost a race with a concurrent insert are duplicates too.
+        duplicates += Math.min(room, fresh.length) - inserted.length;
+        await repos.followers.updateImport(
+          importRow.id,
+          {
+            itemCount: inserted.length,
+            result: { created: inserted.length, duplicates, skipped },
+          },
+          tx,
+        );
+        return { importId: importRow.id, created: inserted.length, duplicates };
+      });
+    } catch (error) {
+      if (!isAppError(error)) {
+        log.error({ err: error, spaceId }, 'follower import failed');
+        await repos.followers
+          .insertImport({
+            spaceId,
+            source: source,
+            status: 'failed',
+            result: { error: 'insert failed' },
+          })
+          .catch((err: unknown) => log.error({ err, spaceId }, 'failed import not recorded'));
+      }
+      throw error;
+    }
+
+    if (outcome.created > 0) await linkJoined(spaceId);
+
+    const notes = parsed.rows.flatMap((row) => (row.note ? [row.note] : []));
+    const suggestions =
+      suggest && notes.length >= SUGGEST_MIN_NOTES ? await suggestCommunities(owner, notes) : [];
+    if (suggestions.length > 0) {
+      await repos.followers.updateImport(outcome.importId, {
+        result: {
+          created: outcome.created,
+          duplicates: outcome.duplicates,
+          skipped,
+          suggestions,
+        },
+      });
+    }
+    log.info(
+      { spaceId, importId: outcome.importId, created: outcome.created, skipped },
+      'followers imported',
+    );
+    return {
+      importId: outcome.importId,
+      source: rowSource,
+      created: outcome.created,
+      duplicates: outcome.duplicates,
+      skipped,
+      errors: errors.sort((a, b) => a.line - b.line).slice(0, F.importErrorsMax),
+      suggestions,
+    };
   }
 
   return {
@@ -279,111 +409,71 @@ export function createFollowersService(deps: FollowersServiceDeps) {
 
     /** POST /api/studio/followers/import */
     async importFollowers(owner: OwnerContext, input: ImportFollowersBody): Promise<ImportResult> {
-      const spaceId = owner.space.id;
-      const parsed = parseAudience(input.source, input.text);
-      const errors: RowError[] = [...parsed.errors];
-      let skipped = parsed.skipped;
+      return runImport(owner, input.source, parseAudience(input.source, input.text), input.suggest);
+    },
 
-      let outcome: { importId: string; created: number; duplicates: number };
-      try {
-        outcome = await db.transaction(async (tx) => {
-          await repos.followers.lockRoster(spaceId, tx);
-          const clashes = await repos.followers.findClashes(
-            spaceId,
-            parsed.rows.flatMap((row) => (row.email ? [row.email] : [])),
-            parsed.rows.flatMap((row) => (row.handle ? [row.handle] : [])),
-            tx,
-          );
-          const seen = new Set(clashes.flatMap(keysOf));
-          let duplicates = 0;
-          const fresh = parsed.rows.filter((row) => {
-            const keys = keysOf(row);
-            if (keys.some((key) => seen.has(key))) {
-              duplicates += 1;
-              return false;
-            }
-            for (const key of keys) seen.add(key);
-            return true;
-          });
-          const room = Math.max(0, F.perSpace - (await repos.followers.countBySpace(spaceId, tx)));
-          const overflow = fresh.slice(room);
-          if (overflow[0]) errors.push({ line: overflow[0].line, reason: FULL_MESSAGE });
-          skipped += overflow.length;
-
-          const importRow = await repos.followers.insertImport(
-            { spaceId, source: input.source, status: 'done' },
-            tx,
-          );
-          const inserted = await repos.followers.insertMany(
-            fresh.slice(0, room).map((row) => ({
-              spaceId,
-              name: row.name,
-              handle: row.handle,
-              platform: row.platform,
-              email: row.email,
-              note: row.note,
-              source: input.source,
-              importId: importRow.id,
-            })),
-            tx,
-          );
-          // Rows that lost a race with a concurrent insert are duplicates too.
-          duplicates += Math.min(room, fresh.length) - inserted.length;
-          await repos.followers.updateImport(
-            importRow.id,
-            {
-              itemCount: inserted.length,
-              result: { created: inserted.length, duplicates, skipped },
-            },
-            tx,
-          );
-          return { importId: importRow.id, created: inserted.length, duplicates };
-        });
-      } catch (error) {
-        if (!isAppError(error)) {
-          log.error({ err: error, spaceId }, 'follower import failed');
-          await repos.followers
-            .insertImport({
-              spaceId,
-              source: input.source,
-              status: 'failed',
-              result: { error: 'insert failed' },
-            })
-            .catch((err: unknown) => log.error({ err, spaceId }, 'failed import not recorded'));
-        }
-        throw error;
-      }
-
-      if (outcome.created > 0) await linkJoined(spaceId);
-
-      const notes = parsed.rows.flatMap((row) => (row.note ? [row.note] : []));
-      const suggestions =
-        input.suggest && notes.length >= SUGGEST_MIN_NOTES
-          ? await suggestCommunities(owner, notes)
-          : [];
-      if (suggestions.length > 0) {
-        await repos.followers.updateImport(outcome.importId, {
-          result: {
-            created: outcome.created,
-            duplicates: outcome.duplicates,
-            skipped,
-            suggestions,
+    /**
+     * POST /api/studio/followers/import/youtube: people who commented on the channel's latest
+     * videos, through the same import + clusterImport path. `sample` is true when no
+     * YOUTUBE_API_KEY is set (labelled made-up commenters). 404 unknown channel, 502 YouTube
+     * quota or outage.
+     */
+    async importYoutube(
+      owner: OwnerContext,
+      input: YoutubeImportBody,
+    ): Promise<YoutubeImportResult> {
+      const channel = parseChannelUrl(input.channelUrl);
+      if (!channel) {
+        throw validationError([
+          {
+            location: 'body',
+            path: ['channelUrl'],
+            message: 'Use a YouTube channel link like youtube.com/@name',
+            code: 'custom',
           },
-        });
+        ]);
       }
-      log.info(
-        { spaceId, importId: outcome.importId, created: outcome.created, skipped },
-        'followers imported',
-      );
-      return {
-        importId: outcome.importId,
-        source: input.source,
-        created: outcome.created,
-        duplicates: outcome.duplicates,
-        skipped,
-        errors: errors.sort((a, b) => a.line - b.line).slice(0, F.importErrorsMax),
-        suggestions,
+      let comments: YoutubeComments;
+      try {
+        comments = await youtube.commenters(channel, LIMITS.youtube);
+      } catch (error) {
+        if (!(error instanceof YoutubeError)) throw error;
+        log.warn({ spaceId: owner.space.id, reason: error.reason }, 'youtube import failed');
+        if (error.reason === 'not_found') throw notFound('YouTube channel');
+        throw new AppError(
+          'internal_error',
+          502,
+          error.reason === 'quota'
+            ? 'YouTube is over its daily limit. Try again tomorrow.'
+            : 'YouTube is not responding. Try again in a few minutes.',
+        );
+      }
+      const parsed: ParsedImport = {
+        rows: comments.commenters.map((c, index) => ({
+          line: index + 1,
+          name: c.name,
+          handle: c.handle,
+          platform: 'youtube',
+          email: null,
+          note: c.note,
+        })),
+        errors: [],
+        skipped: 0,
       };
+      if (parsed.rows.length === 0) {
+        return {
+          importId: '',
+          source: 'youtube',
+          created: 0,
+          duplicates: 0,
+          skipped: 0,
+          errors: [],
+          suggestions: [],
+          sample: comments.source === 'sample',
+        };
+      }
+      const result = await runImport(owner, 'youtube', parsed, true);
+      return { ...result, source: 'youtube', sample: comments.source === 'sample' };
     },
 
     /** POST /api/studio/followers/tag */
@@ -441,6 +531,8 @@ export function createFollowersService(deps: FollowersServiceDeps) {
           aiPaused = true;
           break;
         }
+        // Seen by the model: listUntagged skips them until the space's communities change.
+        await repos.followers.markAiTagged(batch.map((row) => row.id));
         // Keep each follower within communitiesPerFollower active tags.
         const current = await repos.followers.tagsFor(batch.map((row) => row.id));
         const pairs = output.tags.flatMap(({ followerId, communityIds }) => {

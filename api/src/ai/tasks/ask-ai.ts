@@ -17,7 +17,8 @@ import type { AiContext, AskAiInput, AskAiOutput } from '../types.js';
  * askAI (P1, smart tier, "Ask your AI"): answers the creator's question from the top 20
  * semantic matches only, citing them. Matches are listed by key (m1..m20); the answer cites
  * them inline as [m3], which become [1], [2] ... indexes into `citations`. Unknown keys are
- * removed. 30 calls per space per day (run.ts). Not wired to a route yet.
+ * removed. 30 calls per space per day (run.ts). Called by POST /api/studio/ask (ask.service.ts),
+ * which passes the nearest posts and pitches and checks the citations again.
  */
 
 export const ASK_MATCHES_MAX = 20;
@@ -41,7 +42,7 @@ export function askAiSchema(keys: readonly string[]): z.ZodType<RawAskAi> {
 
 export function askAiInstructions(creatorName: string): string {
   const creator = plainLine(creatorName) || 'the creator';
-  return `You answer questions from ${creator}, a creator on Fellow Owners, about their own community: posts, pitches and members.
+  return `You answer questions from ${creator}, a creator on Fellow Owners, about their own community: what members posted and pitched.
 
 Rules:
 - Answer only from the items listed, which a search picked for this question. If they do not answer it, say so plainly.

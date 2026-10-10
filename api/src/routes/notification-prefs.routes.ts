@@ -14,6 +14,12 @@ export function createEmailRoutes(container: Container): Router {
     validate({ query: newsletterTokenQuerySchema }),
     container.controllers.notificationPrefs.unsubscribe,
   );
+  router.post(
+    '/unsubscribe',
+    noStore(),
+    validate({ query: newsletterTokenQuerySchema }),
+    container.controllers.notificationPrefs.unsubscribeOneClick,
+  );
   return router;
 }
 

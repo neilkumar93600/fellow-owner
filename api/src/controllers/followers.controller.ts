@@ -6,6 +6,7 @@ import {
   importFollowersSchema,
   tagFollowersSchema,
   updateFollowerSchema,
+  youtubeImportSchema,
 } from '@fellow-owners/shared';
 import type { Request, Response } from 'express';
 import { sessionOf } from '../middlewares/require-session.js';
@@ -55,6 +56,15 @@ export function createFollowersController(deps: {
       const result = await deps.followers.importFollowers(
         ownerOf(req),
         bodyOf(req, importFollowersSchema),
+      );
+      res.status(201).json(result);
+    },
+
+    /** POST /import/youtube -> YoutubeImportResult (201) */
+    async importYoutube(req: Request, res: Response): Promise<void> {
+      const result = await deps.followers.importYoutube(
+        ownerOf(req),
+        bodyOf(req, youtubeImportSchema),
       );
       res.status(201).json(result);
     },

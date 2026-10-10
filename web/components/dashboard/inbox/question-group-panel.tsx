@@ -21,6 +21,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Field, TextArea } from '@/components/ui/field';
+import { useRedraftQuestionGroup } from '@/hooks/queries/use-question-groups';
 import { formatDate, formatNumber, pluralize } from '@/lib/format';
 import { routes, withQuery } from '@/lib/routes';
 
@@ -221,17 +222,11 @@ function AnswerEditor({
   answer: string;
   onAnswer: (answer: string) => void;
 }) {
-  const [redraftsLeft, setRedraftsLeft] = useState(group.redraftsLeft);
-  const [redrafting, setRedrafting] = useState(false);
+  const redraftMutation = useRedraftQuestionGroup();
+  const redraftsLeft = group.redraftsLeft;
 
   function redraft() {
-    setRedrafting(true);
-    // Design phase: a short pause stands in for the AI, and the captured draft comes back.
-    window.setTimeout(() => {
-      onAnswer(group.draft ?? '');
-      setRedraftsLeft((left) => left - 1);
-      setRedrafting(false);
-    }, 900);
+    redraftMutation.mutate(group, { onSuccess: (result) => onAnswer(result.draft) });
   }
 
   return (
@@ -262,7 +257,7 @@ function AnswerEditor({
           variant="secondary"
           size="md"
           icon={<RefreshCw />}
-          loading={redrafting}
+          loading={redraftMutation.isPending}
           disabled={redraftsLeft <= 0}
           onClick={redraft}
         >
@@ -292,7 +287,12 @@ function SendFooter({
 
   const count = group.askedCount;
   const people = `${formatNumber(count)} ${pluralize(count, 'fan', 'fans')}`;
-  const ready = answer.trim().length > 0 && (replyAll || pinIds.length > 0);
+  const length = answer.trim().length;
+  // A pinned answer becomes a post, so it needs a post's minimum length.
+  const ready =
+    length > 0 &&
+    (replyAll || pinIds.length > 0) &&
+    (pinIds.length === 0 || length >= LIMITS.post.body.min);
   const label = replyAll ? `Send to ${people}` : 'Pin answer';
   const pinnedNames = group.communities
     .filter((community) => pinIds.includes(community.id))

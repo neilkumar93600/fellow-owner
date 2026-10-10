@@ -5,7 +5,10 @@ import { ApiError, apiFetch } from '@/lib/fetcher';
 
 /** POST /api/uploads/presign : 503 `uploads_disabled` when no bucket is configured. */
 export function presignUpload(input: PresignUploadInput): Promise<PresignedUpload> {
-  return apiFetch<PresignedUpload>('/api/uploads/presign', { method: 'POST', json: input });
+  return apiFetch<PresignedUpload>('/api/uploads/presign', {
+    method: 'POST',
+    json: input,
+  });
 }
 
 /**

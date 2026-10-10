@@ -12,5 +12,7 @@ export function getSimilar(postId: string, signal?: AbortSignal): Promise<Simila
 
 /** GET /api/studio/posts/:postId/similar : the owner view. */
 export function getStudioSimilar(postId: string, signal?: AbortSignal): Promise<SimilarResult> {
-  return apiFetch<SimilarResult>(`/api/studio/posts/${at(postId)}/similar`, { signal });
+  return apiFetch<SimilarResult>(`/api/studio/posts/${at(postId)}/similar`, {
+    signal,
+  });
 }

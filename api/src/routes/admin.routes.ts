@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import type { Container } from '../container.js';
 import { noStore } from '../lib/http.js';
-import { requireSession } from '../middlewares/require-session.js';
+import { requireAdmin } from '../middlewares/require-admin.js';
 
-/** /api/admin/* (session; F11 adds requireAdmin on ADMIN_EMAILS). */
+/** /api/admin/* (session email in ADMIN_EMAILS). */
 export function createAdminRoutes(container: Container): Router {
   const router = Router();
-  router.use(noStore(), requireSession(container.auth));
+  router.use(noStore(), requireAdmin(container.auth, container.env.ADMIN_EMAILS));
   router.post('/demo-reset', container.controllers.admin.demoReset);
   return router;
 }

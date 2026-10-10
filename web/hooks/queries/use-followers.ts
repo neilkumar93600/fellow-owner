@@ -6,6 +6,7 @@ import {
   deleteFollower,
   getFollowers,
   importFollowers,
+  importYoutube,
   tagFollowers,
   updateFollower,
 } from '@/api/followers';
@@ -102,6 +103,11 @@ export function useDeleteFollower() {
 /** CSV or pasted lines; the import panel shows its own errors inline. */
 export function useImportFollowers() {
   return useFollowerMutation(importFollowers, true);
+}
+
+/** Commenters on a YouTube channel; the import panel shows its own errors inline. */
+export function useImportYoutube() {
+  return useFollowerMutation(importYoutube, true);
 }
 
 /** Add or remove one community on the selected followers. */

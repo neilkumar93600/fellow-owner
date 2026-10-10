@@ -56,6 +56,7 @@ export function CommunityPicker({
                   name={community.name}
                   tint={community.tint}
                   icon={community.icon}
+                  coverUrl={community.coverUrl}
                   sizes="(min-width: 576px) 380px, 100vw"
                 />
                 {on ? (

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type * as React from 'react';
 import { useRef, useState } from 'react';
+import { snooze } from '@/api/snoozes';
 import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -34,7 +35,7 @@ function isTyping(target: EventTarget): boolean {
  * DESIGN.md Decision stack (Today). One card at a time with the next one peeking 12px below at 96%
  * scale. Left and Right (or the chevrons) move through the stack, L loves the top card (ideas only; the
  * mutation is optimistic and rolls back on a failure), R opens its reply (a fan message opens the inline
- * reply sheet with "Draft in my voice"; any other card opens in its list). Later is session-local. Only the top card is a tab stop; after a move focus follows to the new top card, and the polite
+ * reply sheet with "Draft in my voice"; any other card opens in its list). Later is also saved for a day. Only the top card is a tab stop; after a move focus follows to the new top card, and the polite
  * "Card 2 of 5" line announces where you are. Later and Feature take the card off the stack (left and
  * right); once it is empty, "You're all caught up".
  */
@@ -239,7 +240,13 @@ export function DecisionStack({ items }: { items: DecisionItem[] }) {
                   if (item.kind === 'pitch') openReply(item);
                 }}
                 onLove={toggleLove}
-                onLater={(item) => dismiss(item, -1)}
+                onLater={(item) => {
+                  // Later hides the card for a day on the server too; a failed save only means it returns.
+                  if (item.kind !== 'fan') {
+                    snooze({ refType: item.kind, refId: item.refId, days: 1 }).catch(() => {});
+                  }
+                  dismiss(item, -1);
+                }}
               />
             </motion.div>
           </AnimatePresence>

@@ -10,7 +10,8 @@ import { createApiRouter, createRootRouter } from './routes/index.js';
 
 /**
  * The Express app: request id + logging, helmet, Better Auth (before express.json(), it reads
- * the raw body), JSON body parsing (100kb; 1mb for follower imports), /api routes, /r/:code, 404, error handler.
+ * the raw body), JSON body parsing (100kb; 512kb for settings and space creation; 1mb for follower
+ * imports), /api routes, /r/:code, 404, error handler.
  */
 export function createApp(container: Container): Express {
   const app = express();
@@ -26,6 +27,8 @@ export function createApp(container: Container): Express {
 
   // Follower imports send up to LIMITS.follower.importChars (200k) characters of CSV or pasted text.
   app.use('/api/studio/followers/import', express.json({ limit: '1mb' }));
+  // Settings and space creation carry the avatar, which may be a data URL (up to 350k characters).
+  app.use(['/api/studio/settings', '/api/studio/space'], express.json({ limit: '512kb' }));
   app.use(express.json({ limit: '100kb' }));
   app.use('/api', createApiRouter(container));
   app.use(createRootRouter(container));

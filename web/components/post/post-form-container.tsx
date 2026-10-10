@@ -80,6 +80,7 @@ export function PostFormContainer({
       defaultCommunityId={communities.find((item) => item.slug === community)?.id}
       defaultType={type}
       postsLeftToday={caps.postsLeftToday}
+      coach={{ creatorName: me.data.space.displayName.split(' ')[0] ?? 'the creator' }}
     />
   );
 }

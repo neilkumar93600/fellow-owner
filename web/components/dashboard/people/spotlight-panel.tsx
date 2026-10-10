@@ -1,13 +1,14 @@
 'use client';
 
 import type { FanSpotlight } from '@fellow-owners/shared';
-import { useMutation } from '@tanstack/react-query';
-import { Check, RefreshCw, Sparkles } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Check, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { SidePanel } from '@/components/shared/side-panel';
 import { Button } from '@/components/ui/button';
 import { Field, TextArea } from '@/components/ui/field';
+import { studioKeys } from '@/hooks/use-space';
 import { ApiError, apiFetch } from '@/lib/fetcher';
 import { toastError, toastSuccess } from '@/lib/toast';
 
@@ -79,6 +80,20 @@ export function SpotlightPanel({ membershipId, name, onClose }: SpotlightPanelPr
     },
   });
 
+  const queryClient = useQueryClient();
+  const clear = useMutation({
+    mutationFn: (id: string) => apiFetch<void>(base(id), { method: 'DELETE' }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: studioKeys.all });
+      toastSuccess(`${name ?? 'The fan'} is no longer in your spotlight.`);
+      onClose();
+    },
+    onError: (error) => {
+      if (error instanceof ApiError && error.status === 404) return gone();
+      toastError(error);
+    },
+  });
+
   const { mutate: requestDraft } = draft;
   useEffect(() => {
     if (!membershipId) {
@@ -105,6 +120,19 @@ export function SpotlightPanel({ membershipId, name, onClose }: SpotlightPanelPr
       title={name ? `Spotlight ${name}` : 'Spotlight a fan'}
       footer={
         <>
+          <Button
+            variant="ghost"
+            icon={<Trash2 />}
+            loading={clear.isPending}
+            disabled={!membershipId || clear.isPending || save.isPending}
+            onClick={() => {
+              if (!membershipId) return;
+              if (!window.confirm('Remove this fan from your spotlight?')) return;
+              clear.mutate(membershipId);
+            }}
+          >
+            Remove spotlight
+          </Button>
           <Button
             variant="secondary"
             icon={<RefreshCw />}

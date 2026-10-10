@@ -15,12 +15,18 @@ const at = (segment: string) => encodeURIComponent(segment);
 
 /** POST /api/posts/:postId/report : members only; reporting the same post again is a quiet 200. */
 export async function reportPost(postId: string, input: CreateReportInput): Promise<void> {
-  await apiFetch(`/api/posts/${at(postId)}/report`, { method: 'POST', json: input });
+  await apiFetch(`/api/posts/${at(postId)}/report`, {
+    method: 'POST',
+    json: input,
+  });
 }
 
 /** POST /api/comments/:commentId/report */
 export async function reportComment(commentId: string, input: CreateReportInput): Promise<void> {
-  await apiFetch(`/api/comments/${at(commentId)}/report`, { method: 'POST', json: input });
+  await apiFetch(`/api/comments/${at(commentId)}/report`, {
+    method: 'POST',
+    json: input,
+  });
 }
 
 /** DELETE /api/spaces/:handle/me : leave the space (400 for its owner). */
@@ -33,12 +39,17 @@ export function listReports(
   params: Params<ReportsQuery> = {},
   signal?: AbortSignal,
 ): Promise<ReportsPage> {
-  return apiFetch<ReportsPage>(`/api/studio/reports${query(params)}`, { signal });
+  return apiFetch<ReportsPage>(`/api/studio/reports${query(params)}`, {
+    signal,
+  });
 }
 
 /** PATCH /api/studio/reports/:id : resolve, dismiss, or hide the reported post or comment. */
 export function actOnReport(id: string, input: ReportActionInput): Promise<ReportItem> {
-  return apiFetch<ReportItem>(`/api/studio/reports/${at(id)}`, { method: 'PATCH', json: input });
+  return apiFetch<ReportItem>(`/api/studio/reports/${at(id)}`, {
+    method: 'PATCH',
+    json: input,
+  });
 }
 
 /** PATCH /api/studio/posts/:postId/comments/:commentId : hide or unhide a comment. */

@@ -1,4 +1,15 @@
-/** Records one visit to the public bio page (pilot analytics). Filled in by F14. */
-export function VisitBeacon(_props: { handle: string }): null {
+'use client';
+
+import { useEffect, useRef } from 'react';
+import { recordVisit } from '@/api/metrics';
+
+/** Records one visit to the public bio page (pilot analytics); renders nothing. */
+export function VisitBeacon({ handle }: { handle: string }): null {
+  const sent = useRef(false);
+  useEffect(() => {
+    if (sent.current) return;
+    sent.current = true;
+    recordVisit(handle);
+  }, [handle]);
   return null;
 }

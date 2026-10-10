@@ -18,6 +18,7 @@ import type {
   Promotion,
   PromotionAction,
   PromotionComposer,
+  PromotionState,
   PromotionsPage,
   SetPersonCommunitiesInput,
   StudioCommunity,
@@ -202,7 +203,7 @@ export function updateCommunity(id: string, patch: UpdateCommunityInput): Promis
 
 /** GET /promotions : newest first, every state; counts per state and total clicks. */
 export function getPromotions(
-  params: CursorParams = {},
+  params: CursorParams & Params<{ state: PromotionState }> = {},
   signal?: AbortSignal,
 ): Promise<PromotionsPage> {
   return apiFetch<PromotionsPage>(`/api/studio/promotions${query(params)}`, { signal });

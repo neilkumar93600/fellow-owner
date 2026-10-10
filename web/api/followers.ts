@@ -10,6 +10,7 @@ import type {
   TagFollowersInput,
   TagFollowersResult,
   UpdateFollowerInput,
+  YoutubeImportInput,
 } from '@fellow-owners/shared';
 import { type Params, query } from '@/api/studio';
 import { apiFetch } from '@/lib/fetcher';
@@ -46,6 +47,20 @@ export function deleteFollower(id: string): Promise<void> {
 /** POST /import : CSV or pasted lines (201) with AI-proposed communities unless suggest is false. */
 export function importFollowers(input: ImportFollowersInput): Promise<ImportResult> {
   return apiFetch<ImportResult>('/api/studio/followers/import', { method: 'POST', json: input });
+}
+
+/** POST /import/youtube result: `sample` is true when the server has no YouTube key (made-up commenters). */
+export type YoutubeImportResult = Omit<ImportResult, 'source'> & {
+  source: 'youtube';
+  sample: boolean;
+};
+
+/** POST /import/youtube : commenters on a channel's latest videos (201); 404 unknown channel, 502 YouTube down. */
+export function importYoutube(input: YoutubeImportInput): Promise<YoutubeImportResult> {
+  return apiFetch<YoutubeImportResult>('/api/studio/followers/import/youtube', {
+    method: 'POST',
+    json: input,
+  });
 }
 
 /** POST /tag : add or remove one community on up to 500 followers. */

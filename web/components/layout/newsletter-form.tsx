@@ -106,7 +106,7 @@ export function NewsletterForm() {
                 strokeWidth={2}
                 className="mt-0.5 size-4 shrink-0 text-ink"
               />
-              Thanks, you&rsquo;re on the list.
+              Check your inbox to confirm.
             </>
           ) : status.kind === 'error' ? (
             status.message

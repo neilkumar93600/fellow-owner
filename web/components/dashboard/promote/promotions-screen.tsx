@@ -17,7 +17,7 @@ import { formatNumber, pluralize } from '@/lib/format';
 import { routes } from '@/lib/routes';
 import { errorMessage } from '@/lib/toast';
 import { PromotionsList } from './promotions-list';
-import { type PromotionsTab, PromotionsTable } from './promotions-table';
+import { type PromotionsTab, PromotionsTable, TAB_STATE } from './promotions-table';
 
 const VIEWS = ['cards', 'table'] as const;
 const VIEW_OPTIONS = [
@@ -31,7 +31,7 @@ const VIEW_OPTIONS = [
  * list or the table, and its pages.
  */
 export function PromotionsScreen({ tab }: { tab: PromotionsTab }) {
-  const list = usePromotions();
+  const list = usePromotions({ state: TAB_STATE[tab] });
   const communities = useStudioCommunities();
   const [view, setView] = useUrlEnum('view', VIEWS, 'cards');
   // The page's clock, so relative dates are stable between renders.

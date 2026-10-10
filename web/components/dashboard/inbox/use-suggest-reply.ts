@@ -19,8 +19,9 @@ function suggestReply(pitchId: string): Promise<{ reply: string }> {
 function draftError(error: unknown): string {
   if (error instanceof ApiError) {
     if (error.status === 429) return DRAFT_CAP_MESSAGE;
-    // ponytail: 404/501 while the backend task lands; the reply box stays usable by hand.
-    if (error.status === 404 || error.status === 501) return 'Drafting is not available yet.';
+    if (error.status === 404) return 'That pitch could not be found.';
+    // 501 means drafting is switched off; the reply box stays usable by hand.
+    if (error.status === 501) return 'Drafting is not available yet.';
   }
   return errorMessage(error, 'The draft could not be written. Try again.');
 }

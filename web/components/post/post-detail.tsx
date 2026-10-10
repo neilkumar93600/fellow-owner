@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { LoadError } from '@/components/community/load-error';
 import { useMemberRedirect } from '@/components/community/use-member-redirect';
+import { ReportButton } from '@/components/shared/report-button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePost } from '@/hooks/queries/use-post';
 import { useMembership } from '@/hooks/use-membership';
@@ -19,13 +20,16 @@ import { SimilarSection } from './similar-section';
 export function PostDetailView({ handle, post }: { handle: string; post: PostDetail }) {
   return (
     <div className="flex flex-col gap-5">
-      <Link
-        href={routes.fan.community(handle, post.community.slug)}
-        className="press -ml-3 inline-flex h-11 w-fit items-center gap-2 rounded-full px-3 text-label text-ink hover:bg-white/60"
-      >
-        <ArrowLeft aria-hidden="true" strokeWidth={1.5} className="size-5" />
-        Back to {post.community.name}
-      </Link>
+      <div className="flex items-center justify-between gap-3">
+        <Link
+          href={routes.fan.community(handle, post.community.slug)}
+          className="press -ml-3 inline-flex h-11 w-fit items-center gap-2 rounded-full px-3 text-label text-ink hover:bg-white/60"
+        >
+          <ArrowLeft aria-hidden="true" strokeWidth={1.5} className="size-5" />
+          Back to {post.community.name}
+        </Link>
+        <ReportButton target="post" id={post.id} />
+      </div>
       <PostBody handle={handle} post={post} />
       <CommentThread handle={handle} postId={post.id} comments={post.comments} />
       <SimilarSection postId={post.id} scope="member" />

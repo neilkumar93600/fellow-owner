@@ -3,6 +3,7 @@
 import { Info } from 'lucide-react';
 import type * as React from 'react';
 import { useEffect, useState } from 'react';
+import { usePublicConfig } from '@/hooks/queries/use-public-config';
 import { useInAppBrowser } from '@/hooks/use-in-app-browser';
 import { authClient } from '@/lib/auth-client';
 import { cx } from './auth-classes';
@@ -100,6 +101,8 @@ function FacebookMark() {
   );
 }
 
+const COLUMNS = ['', 'grid-cols-1', 'grid-cols-2', 'grid-cols-3'];
+
 const MARKS: Record<SocialProvider, () => React.JSX.Element> = {
   google: GoogleMark,
   apple: AppleMark,
@@ -114,7 +117,8 @@ const MARKS: Record<SocialProvider, () => React.JSX.Element> = {
  * passes its user agent check as `initialInApp`, so the right set renders from the first paint.
  *
  * The labels go visually hidden when the row is too narrow for three of them (container query): the
- * pills stay 48px tall and the accessible names stay whole.
+ * pills stay 48px tall and the accessible names stay whole. Providers this deployment has not
+ * configured (GET /api/config) are left out; with none left the component renders nothing.
  */
 export function SocialButtons({
   page,
@@ -132,9 +136,13 @@ export function SocialButtons({
   const inApp = detected ?? initialInApp;
   const [pending, setPending] = useState<SocialProvider | null>(null);
   const [failed, setFailed] = useState<SocialProvider | null>(null);
-  const providers: SocialProvider[] = inApp
-    ? ['apple', 'facebook']
-    : ['google', 'apple', 'facebook'];
+  // Until the config answers (or if it fails) every pill shows; then only the configured ones.
+  const enabled = usePublicConfig().data?.providers;
+  const providers = (
+    inApp ? (['apple', 'facebook'] as const) : (['google', 'apple', 'facebook'] as const)
+  ).filter((provider) => !enabled || enabled[provider]);
+  const compact = providers.length < 3;
+  const inAppNote = inApp && (!enabled || enabled.google);
 
   // Coming back from the provider with the browser's Back button restores this page from the bfcache.
   useEffect(() => {
@@ -163,10 +171,12 @@ export function SocialButtons({
     }
   }
 
+  if (providers.length === 0 && !inAppNote) return null;
+
   return (
     <div className={className}>
       <div className="@container">
-        <div className={cx('grid gap-2 sm:gap-3', inApp ? 'grid-cols-2' : 'grid-cols-3')}>
+        <div className={cx('grid gap-2 sm:gap-3', COLUMNS[providers.length])}>
           {providers.map((provider) => {
             const Mark = MARKS[provider];
             const busy = pending === provider;
@@ -194,7 +204,9 @@ export function SocialButtons({
                 <span className="sr-only">Continue with </span>
                 <span
                   className={
-                    inApp ? 'sr-only @min-[15rem]:not-sr-only' : 'sr-only @min-[22rem]:not-sr-only'
+                    compact
+                      ? 'sr-only @min-[15rem]:not-sr-only'
+                      : 'sr-only @min-[22rem]:not-sr-only'
                   }
                 >
                   {LABELS[provider]}
@@ -204,7 +216,7 @@ export function SocialButtons({
           })}
         </div>
       </div>
-      {inApp ? (
+      {inAppNote ? (
         <p className="mt-3 flex items-start gap-2 text-small text-ink-muted">
           <Info aria-hidden size={16} strokeWidth={1.5} className="mt-px shrink-0" />
           <span>Google sign-in doesn’t work in this app’s browser.</span>

@@ -12,7 +12,9 @@ export async function snooze(input: SnoozeInput): Promise<void> {
 
 /** DELETE /api/studio/snoozes/:refType/:refId */
 export async function unsnooze(refType: SnoozeRefType, refId: string): Promise<void> {
-  await apiFetch(`/api/studio/snoozes/${at(refType)}/${at(refId)}`, { method: 'DELETE' });
+  await apiFetch(`/api/studio/snoozes/${at(refType)}/${at(refId)}`, {
+    method: 'DELETE',
+  });
 }
 
 /** POST /api/studio/checklist : records a setup step the API cannot see (the bio link was shared). */

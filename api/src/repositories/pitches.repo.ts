@@ -8,11 +8,25 @@ import {
   type PitchType,
   RANKING,
 } from '@fellow-owners/shared';
-import { and, asc, count, desc, eq, gte, inArray, lt, ne, type SQL, sql } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gte,
+  inArray,
+  isNull,
+  lt,
+  ne,
+  type SQL,
+  sql,
+} from 'drizzle-orm';
 import { chunk, type Db, type DbOrTx, likePattern } from '../db/client.js';
 import { user } from '../db/schema/auth.js';
 import { type InboundRow, inbound, type NewInboundRow } from '../db/schema/inbound.js';
 import { memberships } from '../db/schema/memberships.js';
+import { questionGroups } from '../db/schema/question-groups.js';
 import { spaces } from '../db/schema/spaces.js';
 import {
   decodeScoreCursor,
@@ -190,14 +204,53 @@ export function createPitchesRepo(db: Db) {
       status: Extract<PitchStatus, 'new' | 'shortlisted' | 'archived'>,
       tx: DbOrTx = db,
     ): Promise<InboundRow | null> {
+      const now = new Date();
       const [row] = await tx
         .update(inbound)
-        .set({ status, updatedAt: new Date() })
+        .set({
+          status,
+          updatedAt: now,
+          // F31: stamped on the first shortlist only.
+          ...(status === 'shortlisted'
+            ? {
+                shortlistedAt: sql`coalesce(${inbound.shortlistedAt}, ${now.toISOString()}::timestamptz)`,
+              }
+            : {}),
+        })
         .where(
           and(eq(inbound.spaceId, spaceId), eq(inbound.id, id), ne(inbound.status, 'withdrawn')),
         )
         .returning();
       return row ?? null;
+    },
+
+    /** F31: stamps read_at on the first owner view; later views leave it alone. */
+    async markRead(spaceId: string, id: string, tx: DbOrTx = db): Promise<void> {
+      await tx
+        .update(inbound)
+        .set({ readAt: new Date() })
+        .where(and(eq(inbound.spaceId, spaceId), eq(inbound.id, id), isNull(inbound.readAt)));
+    },
+
+    /** F31: answered question groups of these pitches: pitch id -> asked count + pinned post. */
+    async answeredGroups(
+      pitchIds: string[],
+      tx: DbOrTx = db,
+    ): Promise<Map<string, { count: number; postId: string }>> {
+      if (pitchIds.length === 0) return new Map();
+      const rows = await tx
+        .select({
+          pitchId: inbound.id,
+          count: questionGroups.askedCount,
+          postId: questionGroups.postId,
+        })
+        .from(inbound)
+        .innerJoin(questionGroups, eq(questionGroups.id, inbound.questionGroupId))
+        .where(and(inArray(inbound.id, pitchIds), eq(questionGroups.status, 'answered')));
+      const out = new Map<string, { count: number; postId: string }>();
+      for (const row of rows)
+        if (row.postId) out.set(row.pitchId, { count: row.count, postId: row.postId });
+      return out;
     },
 
     /** Creator restores a filtered pitch to All. */

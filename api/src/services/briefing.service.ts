@@ -307,6 +307,10 @@ export function createBriefingService(deps: BriefingServiceDeps) {
     const valid = (ids: string[]) => ids.filter((id) => idSchema.safeParse(id).success);
 
     const refIds = content.highlights.map((_, index) => briefingHighlightRef(digest.id, index));
+    const [snoozedPosts, snoozedPitches] = await Promise.all([
+      repos.snoozes.activeIds(space.id, 'post'),
+      repos.snoozes.activeIds(space.id, 'pitch'),
+    ]);
     const [postRows, pitchRows, people, feedback] = await Promise.all([
       repos.posts.findManyByIds(space.id, valid(idsOf('post'))),
       repos.pitches.findDetailsByIds(space.id, valid(idsOf('inbound'))),
@@ -320,11 +324,13 @@ export function createBriefingService(deps: BriefingServiceDeps) {
       let title: string;
       let fitScore: number | null = null;
       if (highlight.refType === 'post') {
+        if (snoozedPosts.has(highlight.refId)) return [];
         const row = posts.get(highlight.refId);
         if (!row) return [];
         title = row.title;
         fitScore = row.analysisStatus === 'done' ? row.aiFitScore : null;
       } else if (highlight.refType === 'inbound') {
+        if (snoozedPitches.has(highlight.refId)) return [];
         const row = pitches.get(highlight.refId);
         if (!row) return [];
         title = row.subject;

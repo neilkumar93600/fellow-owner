@@ -73,7 +73,7 @@ export function createPitchesService(deps: PitchesServiceDeps) {
     );
   }
 
-  async function inboxDetail(owner: OwnerContext, id: string): Promise<InboxDetail> {
+  async function loadDetail(owner: OwnerContext, id: string): Promise<InboxDetail> {
     const { space } = owner;
     const row = await repos.pitches.findDetail(space.id, id);
     if (!row) throw notFound('Pitch');
@@ -116,7 +116,11 @@ export function createPitchesService(deps: PitchesServiceDeps) {
   }
 
   return {
-    inboxDetail,
+    /** GET /api/studio/inbox/:id: the only path that stamps read_at (F31); PATCH does not. */
+    async inboxDetail(owner: OwnerContext, id: string): Promise<InboxDetail> {
+      await repos.pitches.markRead(owner.space.id, id);
+      return loadDetail(owner, id);
+    },
 
     /**
      * POST /api/spaces/:handle/pitches (signed in). Creates a membership without communities when
@@ -232,7 +236,7 @@ export function createPitchesService(deps: PitchesServiceDeps) {
           break;
         }
       }
-      return inboxDetail(owner, id);
+      return loadDetail(owner, id);
     },
   };
 }

@@ -1,4 +1,4 @@
-import type { StudioSpace, UpdateSettingsInput } from '@fellow-owners/shared';
+import type { UpdateSettingsInput } from '@fellow-owners/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateSettings } from '@/api/studio';
 import { studioKeys } from '@/hooks/use-space';
@@ -13,8 +13,7 @@ import { toastError, toastSuccess } from '@/lib/toast';
 export function useUpdateSettings() {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (input: UpdateSettingsInput) =>
-      updateSettings(withoutSameAvatar(input, queryClient.getQueryData(studioKeys.space))),
+    mutationFn: (input: UpdateSettingsInput) => updateSettings(input),
     onSuccess: (space, input) => {
       queryClient.setQueryData(studioKeys.space, space);
       if (input.tasteProfile) {
@@ -36,17 +35,4 @@ export function useUpdateSettings() {
     },
   });
   return mutation;
-}
-
-/**
- * Leaves an unchanged avatarUrl out of the request: the demo space's avatar is a site path
- * (/demo/mira.jpg), which the profile schema rejects (http or https only), and an absent field
- * keeps the stored value.
- */
-function withoutSameAvatar(
-  input: UpdateSettingsInput,
-  space: StudioSpace | undefined,
-): UpdateSettingsInput {
-  if (!input.profile || !space || input.profile.avatarUrl !== space.avatarUrl) return input;
-  return { ...input, profile: { ...input.profile, avatarUrl: undefined } };
 }

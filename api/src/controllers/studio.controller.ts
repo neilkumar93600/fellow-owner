@@ -4,7 +4,6 @@ import {
   createCommunitySchema,
   createPromotionSchema,
   createSpaceSchema,
-  cursorQuerySchema,
   handleCheckQuerySchema,
   ideasQuerySchema,
   idParamsSchema,
@@ -13,6 +12,7 @@ import {
   peopleQuerySchema,
   promotionActionSchema,
   promotionPostParamsSchema,
+  promotionsQuerySchema,
   setPersonCommunitiesSchema,
   spotlightSchema,
   studioCommunityParamsSchema,
@@ -247,7 +247,7 @@ export function createStudioController(deps: StudioControllerDeps) {
 
     /** GET /promotions -> PromotionsPage */
     async promotions(req: Request, res: Response): Promise<void> {
-      res.json(await deps.promotions.list(ownerOf(req), queryOf(req, cursorQuerySchema)));
+      res.json(await deps.promotions.list(ownerOf(req), queryOf(req, promotionsQuerySchema)));
     },
 
     /** GET /promotions/post/:postId -> PromotionComposer */

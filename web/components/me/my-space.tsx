@@ -17,13 +17,16 @@ import { z } from 'zod';
 import { ChipsInput, LinksField } from '@/components/post/form-parts';
 import { AvatarInitials } from '@/components/shared/avatar-initials';
 import { CommunityChip } from '@/components/shared/community-chip';
+import { ImageUpload } from '@/components/shared/image-upload';
 import { TabBar } from '@/components/shared/tab-bar';
 import { Button } from '@/components/ui/button';
 import { Field, TextArea } from '@/components/ui/field';
 import { useUpdateMe } from '@/hooks/queries/use-me';
+import { authClient, useSession } from '@/lib/auth-client';
 import { formatDate } from '@/lib/format';
 import { routes, withQuery } from '@/lib/routes';
-import { toastSuccess } from '@/lib/toast';
+import { toastError, toastSuccess } from '@/lib/toast';
+import { LeaveSpace } from './leave-space';
 import { MyPitches } from './my-pitches';
 import { MyPosts } from './my-posts';
 import { MyTeams } from './my-teams';
@@ -87,6 +90,7 @@ export function MySpaceView({ handle, data, tab }: MySpaceViewProps) {
           />
         ) : null}
       </section>
+      <LeaveSpace handle={handle} creator={creator} />
     </div>
   );
 }
@@ -108,6 +112,22 @@ function ProfileCard({
   const [editing, setEditing] = useState(false);
   const editRef = useRef<HTMLButtonElement>(null);
   const updateMutation = useUpdateMe(handle);
+  const session = useSession();
+  // The photo lives on the account (Better Auth user.image); a fresh upload shows before the session refetches.
+  const [photo, setPhoto] = useState<string | null | undefined>(undefined);
+  const image = photo !== undefined ? photo : (session.data?.user.image ?? null);
+
+  async function savePhoto(url: string | null) {
+    const previous = image;
+    setPhoto(url);
+    const { error } = await authClient.updateUser({ image: url });
+    if (error) {
+      setPhoto(previous);
+      toastError(error, { fallback: 'Could not save your photo. Try again.' });
+      return;
+    }
+    toastSuccess(url ? 'Photo saved' : 'Photo removed');
+  }
 
   function close(saved?: Profile) {
     if (saved) {
@@ -121,7 +141,7 @@ function ProfileCard({
   return (
     <section aria-labelledby="profile-name" className="min-w-0 glass-strong p-6 sm:p-8">
       <div className="flex flex-wrap items-center gap-4">
-        <AvatarInitials name={membership.name} size={48} />
+        <AvatarInitials name={membership.name} image={image} size={48} />
         <div className="min-w-0 flex-1">
           <h1 id="profile-name" className="text-h1 text-ink">
             {membership.name}
@@ -146,7 +166,18 @@ function ProfileCard({
       </div>
 
       {editing ? (
-        <ProfileForm initial={profile} onDone={close} mutation={updateMutation} />
+        <>
+          <div className="mt-6">
+            <ImageUpload
+              kind="member_avatar"
+              label="Photo"
+              name={membership.name}
+              value={image}
+              onChange={savePhoto}
+            />
+          </div>
+          <ProfileForm initial={profile} onDone={close} mutation={updateMutation} />
+        </>
       ) : (
         <>
           <p className="mt-5 max-w-[68ch] text-body text-ink">

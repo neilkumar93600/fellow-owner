@@ -4,7 +4,6 @@ import {
   createCommunitySchema,
   createPromotionSchema,
   createSpaceSchema,
-  cursorQuerySchema,
   handleCheckQuerySchema,
   ideasQuerySchema,
   idParamsSchema,
@@ -14,6 +13,7 @@ import {
   platformLookupSchema,
   promotionActionSchema,
   promotionPostParamsSchema,
+  promotionsQuerySchema,
   setPersonCommunitiesSchema,
   setupSuggestionsSchema,
   spotlightSchema,
@@ -164,7 +164,12 @@ export function createStudioRoutes(container: Container): Router {
   );
 
   // Promotions
-  router.get('/promotions', owner, validate({ query: cursorQuerySchema }), controller.promotions);
+  router.get(
+    '/promotions',
+    owner,
+    validate({ query: promotionsQuerySchema }),
+    controller.promotions,
+  );
   router.get(
     '/promotions/post/:postId',
     owner,

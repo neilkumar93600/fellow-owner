@@ -6,6 +6,7 @@ import {
   importFollowersSchema,
   tagFollowersSchema,
   updateFollowerSchema,
+  youtubeImportSchema,
 } from '@fellow-owners/shared';
 import { Router } from 'express';
 import type { Container } from '../container.js';
@@ -32,6 +33,12 @@ export function createFollowersRoutes(container: Container): Router {
     owner,
     validate({ body: importFollowersSchema }),
     controller.importFollowers,
+  );
+  router.post(
+    '/import/youtube',
+    owner,
+    validate({ body: youtubeImportSchema }),
+    controller.importYoutube,
   );
   router.post('/tag', owner, validate({ body: tagFollowersSchema }), controller.tag);
   router.post('/auto-tag', owner, validate({ body: autoTagFollowersSchema }), controller.autoTag);
