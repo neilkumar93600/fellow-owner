@@ -24,7 +24,10 @@ export function NewsletterForm() {
     if (pending) return;
     const value = email.trim();
     if (!EMAIL.test(value)) {
-      setStatus({ kind: 'error', message: 'Enter a valid email, like you@example.com.' });
+      setStatus({
+        kind: 'error',
+        message: 'Enter a valid email, like you@example.com.',
+      });
       return;
     }
     setPending(true);
@@ -85,7 +88,7 @@ export function NewsletterForm() {
             onChange={(event) => setEmail(event.target.value)}
             aria-invalid={invalid || undefined}
             aria-describedby={`${id}-status ${id}-fine`}
-            className="h-10 min-w-0 flex-1 border-0 bg-transparent pl-4 pr-2 text-body text-ink placeholder:text-ink-muted outline-none max-sm:text-[1rem]"
+            className="h-10 min-w-0 flex-1 border-0 bg-transparent pr-2 pl-4 text-body text-ink outline-none placeholder:text-ink-muted max-sm:text-[1rem]"
           />
           <Button type="submit" size="md" loading={pending} className="h-10 shrink-0 px-5">
             Subscribe
