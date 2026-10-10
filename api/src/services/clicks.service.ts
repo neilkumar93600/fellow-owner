@@ -10,7 +10,7 @@ import { promotionState } from '../repositories/promotions.repo.js';
 export interface ClickRequest {
   code: string;
   platform: ClickPlatform;
-  /** req.ip (trust proxy is on); hashed, never stored. */
+  /** req.clientIp (lib/client-ip.ts); hashed, never stored. */
   ip: string | null | undefined;
   userAgent: string | null | undefined;
   referer: string | null | undefined;

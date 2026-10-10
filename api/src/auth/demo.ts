@@ -38,7 +38,7 @@ export interface DemoSignInResult {
 
 /**
  * Signs into a demo account server-side with DEMO_PASSWORD (POST /api/demo/session).
- * `requestHeaders` should carry the caller's user-agent and x-forwarded-for so the session row
+ * `requestHeaders` should carry the caller's user-agent and CLIENT_IP_HEADER so the session row
  * records them; never forward the caller's cookies here.
  * Throws 403 demo_disabled when DEMO_ENABLED=false.
  */

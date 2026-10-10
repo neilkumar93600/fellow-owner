@@ -386,18 +386,33 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
                       <p className="text-small">
                         <span className="text-small-strong text-ink">{comment.author.name}</span>{' '}
                         <span className="text-ink-muted">{formatRelative(comment.createdAt)}</span>
+                        {comment.hidden ? (
+                          <span className="text-ink-muted"> · Hidden from fans</span>
+                        ) : null}
                       </p>
-                      <p className="mt-1 max-w-[68ch] text-body text-ink">{comment.body}</p>
+                      <p
+                        className={cn(
+                          'mt-1 max-w-[68ch] text-body',
+                          comment.hidden ? 'text-ink-muted' : 'text-ink',
+                        )}
+                      >
+                        {comment.body}
+                      </p>
                     </div>
                     <Button
                       variant="ghost"
                       size="md"
-                      icon={<EyeOff />}
-                      aria-label={`Hide ${comment.author.name}'s comment`}
+                      icon={comment.hidden ? <Eye /> : <EyeOff />}
+                      aria-label={`${comment.hidden ? 'Unhide' : 'Hide'} ${comment.author.name}'s comment`}
                       disabled={moderating.isPending}
-                      onClick={() => moderating.mutate({ commentId: comment.id, action: 'hide' })}
+                      onClick={() =>
+                        moderating.mutate({
+                          commentId: comment.id,
+                          action: comment.hidden ? 'unhide' : 'hide',
+                        })
+                      }
                     >
-                      Hide
+                      {comment.hidden ? 'Unhide' : 'Hide'}
                     </Button>
                   </li>
                 ))}

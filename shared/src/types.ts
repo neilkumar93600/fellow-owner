@@ -330,6 +330,8 @@ export interface CommentItem {
   author: MemberRef;
   createdAt: ISODate;
   isOwn: boolean;
+  /** Studio post detail only: true for a comment the owner hid (fans never see those). */
+  hidden?: boolean;
 }
 
 export interface RoleSlot {

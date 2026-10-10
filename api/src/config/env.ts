@@ -48,7 +48,6 @@ const originSchema = z
 const rawEnvSchema = z.object({
   NODE_ENV: z.enum(NODE_ENVS).default('development'),
   PORT: z.coerce.number().int().min(1).max(65535).default(4000),
-  TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(2),
   LOG_LEVEL: z.enum(LOG_LEVELS).optional(),
 
   DATABASE_URL: optionalString,
@@ -115,13 +114,6 @@ export interface Env {
   isDevelopment: boolean;
   isTest: boolean;
   PORT: number;
-  /**
-   * Proxies in front of the API whose X-Forwarded-For entries are trusted (Express `trust proxy`).
-   * Default 2: Vercel's edge (the /api rewrite), then Railway's edge. req.ip is the entry before
-   * them, so a forged left-most entry is ignored. Direct callers can still pick req.ip, so every
-   * limit that guards email or rows also has a cap that does not depend on the IP.
-   */
-  TRUST_PROXY_HOPS: number;
   LOG_LEVEL: (typeof LOG_LEVELS)[number];
   /** Short build identifier for GET /api/health. */
   APP_VERSION: string;
@@ -203,7 +195,10 @@ export interface Env {
   ADMIN_EMAILS: string[];
   CRON_SECRET: string;
   CLICK_SALT: string;
-  /** Shared with the web server (server-api.ts): requests sending it as x-internal-key skip rate limits. */
+  /**
+   * Shared with the web server: x-internal-key skips rate limits (server-api.ts); x-edge-key makes
+   * X-Forwarded-For the client IP (web/proxy.ts, lib/client-ip.ts).
+   */
   INTERNAL_API_KEY: string | undefined;
 }
 
@@ -338,7 +333,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     isDevelopment: raw.NODE_ENV === 'development',
     isTest,
     PORT: raw.PORT,
-    TRUST_PROXY_HOPS: raw.TRUST_PROXY_HOPS,
     LOG_LEVEL: raw.LOG_LEVEL ?? (isTest ? 'silent' : isProduction ? 'info' : 'debug'),
     APP_VERSION:
       (raw.VERCEL_GIT_COMMIT_SHA ?? raw.RAILWAY_GIT_COMMIT_SHA)?.slice(0, 7) ??

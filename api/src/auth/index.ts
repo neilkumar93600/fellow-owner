@@ -32,6 +32,12 @@ import {
 /** Where Better Auth is mounted (create-app.ts) and what the web client calls through the rewrite. */
 export const AUTH_BASE_PATH = '/api/auth';
 
+/**
+ * The only header Better Auth reads the client IP from: create-app.ts sets it to req.clientIp
+ * (lib/client-ip.ts) on every request, dropping any value the caller sent.
+ */
+export const CLIENT_IP_HEADER = 'x-fo-client-ip';
+
 const DAY_SECONDS = 60 * 60 * 24;
 
 /** What the shared demo accounts may not do: change themselves, or see and end other visitors' sessions. */
@@ -137,7 +143,7 @@ export function redisRateLimitStorage(redis: Redis, logger: Logger): BetterAuthR
  *   cookies are first-party and OAuth callbacks land on the web origin.
  * - Sessions: 7 days, refreshed daily; httpOnly, sameSite=lax, secure in production. They live in
  *   Postgres only.
- * - Rate limits (production): Better Auth's defaults per client IP and path, i.e. sign-in and
+ * - Rate limits (production): Better Auth's defaults per client IP (CLIENT_IP_HEADER) and path, i.e. sign-in and
  *   sign-up 3 per 10 s, the email-code endpoints (send, verify, reset) 3 per 60 s, anything else
  *   100 per 10 s. Counted in Redis when REDIS_URL is set (`redisRateLimitStorage`), in process
  *   memory otherwise. /get-session is not limited: the web's server-side session reads all leave
@@ -376,6 +382,7 @@ export function createAuth(deps: AuthDeps = {}) {
       cookieCache: { enabled: true, maxAge: 5 * 60 },
     },
     advanced: {
+      ipAddress: { ipAddressHeaders: [CLIENT_IP_HEADER] },
       useSecureCookies: env.isProduction,
       defaultCookieAttributes: {
         httpOnly: true,

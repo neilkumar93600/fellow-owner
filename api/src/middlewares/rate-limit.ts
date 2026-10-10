@@ -11,12 +11,12 @@ export interface RateLimitOptions {
   windowSeconds: number;
   /** Requests allowed per key per window. */
   max: number;
-  /** Who is counted, e.g. `(req) => req.ip ?? 'unknown'`. */
-  key: (req: Request) => string;
+  /** Who is counted. Defaults to the client IP (`req.clientIp`, lib/client-ip.ts). */
+  key?: (req: Request) => string;
   /** Defaults to the process Redis (lib/redis.ts); null forces the in-process store. */
   redis?: Redis | null;
   /**
-   * Requests whose `x-internal-key` header equals it skip the limit (the web server's own reads,
+   * Requests whose `x-internal-key` header equals it skip the limit (`x-edge-key` never does) (the web server's own reads,
    * which all come from Vercel IPs). Defaults to env.INTERNAL_API_KEY; null turns it off.
    */
   internalKey?: string | null;
@@ -55,7 +55,7 @@ export interface CapOptions {
 
 /**
  * Counts one hit and says whether it is still within `max` for the window: the IP-independent
- * caps on email and row-creating endpoints (a direct caller can forge X-Forwarded-For). Redis
+ * caps on email and row-creating endpoints (a caller can rotate IPs). Redis
  * (SET NX EX, then INCR, so the key always has its expiry) when available; the same in-process
  * store as createRateLimit otherwise, or when Redis errors.
  */
@@ -95,6 +95,7 @@ export function createCap(
  */
 export function createRateLimit(options: RateLimitOptions): RequestHandler {
   const { name, windowSeconds, max } = options;
+  const keyOf = options.key ?? ((req: Request) => req.clientIp);
   const client = options.redis === undefined ? defaultRedis : options.redis;
   const windowMs = windowSeconds * 1000;
   const internalKey =
@@ -108,7 +109,7 @@ export function createRateLimit(options: RateLimitOptions): RequestHandler {
     }
     const now = Date.now();
     const windowStart = Math.floor(now / windowMs) * windowMs;
-    const id = `rl:${name}:${options.key(req)}`;
+    const id = `rl:${name}:${keyOf(req)}`;
     let hit: { count: number; resetAt: number } | null = null;
     if (client) {
       try {

@@ -22,7 +22,6 @@ export function createNewsletterRoutes(container: Container): Router {
       name: 'newsletter',
       windowSeconds: 60,
       max: NEWSLETTER_PER_MINUTE,
-      key: (req) => req.ip ?? 'unknown',
     }),
     validate({ body: newsletterSubscribeSchema }),
     controller.subscribe,

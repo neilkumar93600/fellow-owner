@@ -1,7 +1,6 @@
 import {
   DeleteObjectCommand,
   GetObjectCommand,
-  HeadObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
@@ -31,7 +30,6 @@ export interface Storage {
   ): Promise<{ url: string; headers: Record<string, string> }>;
   /** A presigned GET (LIMITS.uploads.readTtlSeconds). */
   presignGet(key: string): Promise<string>;
-  exists(key: string): Promise<boolean>;
   /** The object's first `bytes` bytes (ranged GET); null when the key does not exist. */
   readStart(key: string, bytes: number): Promise<Uint8Array | null>;
   delete(key: string): Promise<void>;
@@ -98,7 +96,6 @@ export function createStorage(env: StorageEnv): Storage {
       enabled: false,
       presignPut: off,
       presignGet: off,
-      exists: off,
       readStart: off,
       delete: off,
       deletePrefix: off,
@@ -130,16 +127,6 @@ export function createStorage(env: StorageEnv): Storage {
       return getSignedUrl(client, new GetObjectCommand({ Bucket, Key: key }), {
         expiresIn: LIMITS.uploads.readTtlSeconds,
       });
-    },
-    async exists(key) {
-      try {
-        await client.send(new HeadObjectCommand({ Bucket, Key: key }));
-        return true;
-      } catch (error) {
-        const meta = (error as { $metadata?: { httpStatusCode?: number } }).$metadata;
-        if (meta?.httpStatusCode === 404) return false;
-        throw error;
-      }
     },
     async readStart(key, bytes) {
       try {

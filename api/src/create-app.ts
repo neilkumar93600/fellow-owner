@@ -1,25 +1,31 @@
 import { toNodeHandler } from 'better-auth/node';
 import express, { type Express } from 'express';
 import helmet from 'helmet';
-import { AUTH_BASE_PATH } from './auth/index.js';
+import { AUTH_BASE_PATH, CLIENT_IP_HEADER } from './auth/index.js';
 import type { Container } from './container.js';
+import { clientIp } from './lib/client-ip.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { notFoundHandler } from './middlewares/not-found.js';
 import { requestId, requestLogger } from './middlewares/request-id.js';
 import { createApiRouter, createRootRouter } from './routes/index.js';
 
 /**
- * The Express app: request id + logging, helmet, Better Auth (before express.json(), it reads
- * the raw body), JSON body parsing (100kb; 512kb for settings and space creation; 1mb for follower
+ * The Express app: client IP, request id + logging, helmet, Better Auth (before express.json(),
+ * it reads the raw body), JSON body parsing (100kb; 512kb for settings and space creation; 1mb for follower
  * imports), /api routes, /r/:code, 404, error handler.
  */
 export function createApp(container: Container): Express {
   const app = express();
   app.disable('x-powered-by');
-  // Behind Vercel's rewrite and Railway's edge: trust exactly that many X-Forwarded-* hops, so
-  // req.ip is the client those proxies saw, not a left-most entry the client wrote itself.
-  app.set('trust proxy', container.env.TRUST_PROXY_HOPS);
 
+  // The client IP once per request (lib/client-ip.ts): req.clientIp for limits, hashes and logs,
+  // and CLIENT_IP_HEADER for Better Auth, replacing whatever the caller sent in it.
+  app.use((req, _res, next) => {
+    req.clientIp = clientIp(req, container.env);
+    delete req.headers[CLIENT_IP_HEADER];
+    req.headers[CLIENT_IP_HEADER] = req.clientIp;
+    next();
+  });
   app.use(requestId(container.logger));
   app.use(requestLogger());
   app.use(helmet());

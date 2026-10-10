@@ -11,6 +11,8 @@ import type { SpaceRow } from '../db/schema/spaces.js';
 declare global {
   namespace Express {
     interface Request {
+      /** The caller's IP (lib/client-ip.ts), set by the first middleware in create-app.ts. */
+      clientIp: string;
       /** Incoming `x-request-id` when well-formed, else a new UUID. Echoed in the response. */
       requestId: string;
       /** Child of the root logger bound to `{ reqId }`. */

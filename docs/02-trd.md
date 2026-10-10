@@ -24,7 +24,7 @@ Status: draft v0.2 for review · Updated: 2026-10-10
 | Toasts | sonner |
 | Hosting | Vercel (project `fellow-owners-web`) |
 
-- `proxy.ts` (Next 16's replacement for middleware) redirects signed-out users away from `/dashboard/*` and member-only pages by checking for the session cookie. It is a convenience only; authorization always happens in the API.
+- `proxy.ts` (Next 16's replacement for middleware) redirects signed-out users away from `/dashboard/*` and member-only pages by checking for the session cookie. It is a convenience only; authorization always happens in the API. On `/api/*` and `/r/*` it only adds `x-edge-key` (`INTERNAL_API_KEY`) to the request the rewrite forwards, so the API may trust the client IP Vercel puts in `X-Forwarded-For` (see Client IP in §3).
 - `next.config` rewrites `/api/:path*` and `/r/:code` to `API_URL`, so the browser only ever talks to the web origin. It also redirects `/sign-up` to `/create-account`, `/refunds` to `/terms#refunds` and `/dashboard/asks` to `/dashboard/challenges` (permanent).
 - Server Components call the API directly at `API_URL` and forward the request cookie. Every such read also sends `INTERNAL_API_KEY` as `x-internal-key`, so the API skips its per-IP rate limits for the web server (all its reads leave from Vercel's IPs).
 - Public pages (`/{handle}`, `/{handle}/s/{slug}`) render on the server with 60-second revalidation and Open Graph images from `next/og`.
@@ -34,7 +34,7 @@ Status: draft v0.2 for review · Updated: 2026-10-10
 |----------|--------------|
 | `API_URL` | Origin of the Railway `api` service. Used by the rewrites in `next.config.ts` and by server-side reads (`lib/server-api.ts`). Required outside development; the web build uses `http://localhost:4000` in CI |
 | `NEXT_PUBLIC_APP_URL` | Public web origin, used to build links people copy or scan (bio link, short link, QR). Optional: falls back to `VERCEL_PROJECT_PRODUCTION_URL` on the server and to the page's own origin in the browser |
-| `INTERNAL_API_KEY` | Server-only secret, 32+ characters, the same value as on the `api` service. Sent as `x-internal-key` on server-side reads to skip the API's per-IP rate limits. Never `NEXT_PUBLIC_*` |
+| `INTERNAL_API_KEY` | Server-only secret, 32+ characters, the same value as on the `api` service. Sent as `x-internal-key` on server-side reads to skip the API's per-IP rate limits, and as `x-edge-key` on rewritten `/api` and `/r` requests (client IP only, no skip). Never `NEXT_PUBLIC_*` |
 
 ## 3. Backend and database
 
@@ -73,7 +73,6 @@ Defined and checked with zod in `api/src/config/env.ts`; a bad or missing value 
 |----------|------|--------------|
 | `NODE_ENV` | | `development`, `test` or `production` (default `development`) |
 | `PORT` | | Listening port, default 4000 |
-| `TRUST_PROXY_HOPS` | | Proxy hops in front of the API whose `X-Forwarded-For` entries are trusted for the client IP (Express `trust proxy`), 0 to 5, default 2 (Vercel's edge for the `/api` rewrite, then Railway's edge). 1 when clients call Railway directly, 0 with no proxy. A forged left-most entry cannot change the IP the per-IP limits count |
 | `LOG_LEVEL` | | `fatal` to `silent`; default `debug` in development, `info` in production, `silent` in test |
 | `DATABASE_URL` | required | `postgres://` or `postgresql://` connection string |
 | `DATABASE_POOL_MAX` | | postgres.js pool size, 1 to 100; default 5 in production, 10 otherwise |
@@ -105,8 +104,17 @@ Defined and checked with zod in `api/src/config/env.ts`; a bad or missing value 
 | `ADMIN_EMAILS` | | Comma-separated platform admin allowlist (lowercased); guards `POST /api/admin/demo-reset` |
 | `CRON_SECRET` | required | Bearer secret for `/api/cron/*` |
 | `CLICK_SALT` | required | Salt for visitor hashes in click and page-visit counts |
-| `INTERNAL_API_KEY` | optional | 32+ characters; requests sending it as `x-internal-key` skip the API's per-IP rate limits. Same value as on the web project |
+| `INTERNAL_API_KEY` | optional | 32+ characters; requests sending it as `x-internal-key` skip the API's per-IP rate limits, and as `x-edge-key` have their `X-Forwarded-For` client IP trusted (see Client IP). Same value as on the web project. Without it every browser request counts as the Vercel IP that forwarded it |
 | `VERCEL_GIT_COMMIT_SHA`, `RAILWAY_GIT_COMMIT_SHA`, `npm_package_version` | | Read for the short build id in `GET /api/health` (`version`) |
+
+### Client IP
+
+Per-IP limits, the click and page-visit visitor hashes, request logs and Better Auth all use one client IP, worked out once per request by the first middleware (`api/src/lib/client-ip.ts`, `req.clientIp`):
+
+- With `x-edge-key` equal to `INTERNAL_API_KEY` (only `web/proxy.ts` sends it, on the rewritten `/api` and `/r` requests): the first `X-Forwarded-For` entry, which Vercel sets to the browser's IP; then `x-vercel-forwarded-for`, then `X-Real-IP`.
+- Otherwise: `X-Real-IP`, which Railway's edge sets to the address that connected to it and callers cannot forge; then the socket address. A forged `X-Forwarded-For` without the key changes nothing.
+- The key is compared in constant time and never skips a limit (only `x-internal-key` does). Express `trust proxy` is off: `req.ip` is not used.
+- Better Auth reads the IP only from `x-fo-client-ip` (`advanced.ipAddress.ipAddressHeaders`); the middleware replaces any value the caller sent.
 
 ### API surface
 
@@ -126,7 +134,7 @@ Web routes live under `/dashboard`; the matching creator API lives under `/api/s
 | Creator: communities and promotion | `GET/POST /api/studio/communities`, `GET /api/studio/communities/:slug`, `PATCH /api/studio/communities/:id`, `GET/POST/PATCH /api/studio/promotions`, `GET /api/studio/promotions/post/:postId` |
 | Creator: audience | `GET/POST /api/studio/followers`, `POST .../import`, `POST .../import/youtube` (live imports of a valid channel link: 3 per space per day, 50 per day in all; sample data and invalid links do not count), `POST .../tag`, `POST .../auto-tag`, `PATCH/DELETE .../:id`; `GET /api/studio/analytics/communities`; `GET /api/studio/export/:kind` (ideas, people, followers, pitches as CSV) |
 | Creator: challenges | `GET/POST /api/studio/challenges`, `GET /api/studio/challenges/:id`, `POST .../:id/close`, `POST .../:id/winner` |
-| Creator: answer once and moderation | `GET /api/studio/question-groups`, `POST .../:id/answer`, `POST .../:id/redraft`, `POST .../:id/dismiss`, `DELETE .../:id/askers/:pitchId`; `GET /api/studio/reports`, `PATCH /api/studio/reports/:id`, `PATCH /api/studio/posts/:postId/comments/:commentId` (hide) |
+| Creator: answer once and moderation | `GET /api/studio/question-groups`, `POST .../:id/answer`, `POST .../:id/redraft`, `POST .../:id/dismiss`, `DELETE .../:id/askers/:pitchId`; `GET /api/studio/reports`, `PATCH /api/studio/reports/:id`, `PATCH /api/studio/posts/:postId/comments/:commentId` (hide or unhide; `GET /api/studio/posts/:id` lists hidden comments too, flagged `hidden: true`, fans never see them) |
 | Admin and cron | `POST /api/admin/demo-reset` (session whose email is in `ADMIN_EMAILS`); `GET/POST /api/cron/tick[?job=<name>]`, `GET /api/cron/status`, `GET/POST /api/cron/demo-reset`, `GET/POST /api/cron/purge`, `GET/POST /api/cron/refresh-followers` (all `Authorization: Bearer $CRON_SECRET`) |
 
 Other limits: platform profile lookups are 5 per minute and 30 per day per user, and 500 per day across the platform; onboarding setup suggestions are 10 per day per user.
@@ -141,7 +149,7 @@ Other limits: platform profile lookups are 5 per minute and 30 per day per user,
 - Passwords: 8 to 128 characters, stored as Better Auth's salted scrypt hash in `account.password`. A reset by code ends every session (`revokeSessionsOnPasswordReset`). The link-based reset is disabled (`/request-password-reset`, `/reset-password`, `/forget-password`). `/change-password` is on: it needs the current password and ends the other sessions. `/list-sessions` and `/revoke-other-sessions` back the Account tab. `/sign-in/email-otp` stays on for API clients and the test helpers. Usernames follow the space-handle rules (shared `usernameSchema`) and are one namespace with space handles: a username that is another person's space handle answers 409 `HANDLE_TAKEN`.
 - Deleting an account: `POST /delete-user` emails a 6-digit code (Better Auth's delete token, no link); sending it back as `{ token }` deletes the user. Before that, `beforeDelete` (`services/account.service.ts`) deletes the user's own space and their memberships elsewhere (their posts stay as "Former member"). The delete token lives as long as an auth code (10 minutes).
 - Demo mode: `POST /api/demo/session { "as": "creator" | "fan" }` signs into the seeded demo accounts on the server and sets the session cookie. Off when `DEMO_ENABLED=false`. The demo accounts cannot change themselves or end other sessions (profile, password, email, delete, sessions and account-linking paths answer 403 `DEMO_READ_ONLY`).
-- Rate limits: Better Auth's defaults per client IP and path, on in production only: sign-in and sign-up 3 per 10 seconds, the email-code endpoints 3 per minute, anything else 100 per 10 seconds; `/get-session` is not limited. With `REDIS_URL` set the counters live in Redis (shared by replicas, kept across deploys, each key expiring with its window; fails open if Redis is unreachable); without it they stay in process memory. Sessions stay in Postgres.
+- Rate limits: Better Auth's defaults per client IP (`x-fo-client-ip`, see Client IP in §3) and path, on in production only: sign-in and sign-up 3 per 10 seconds, the email-code endpoints 3 per minute, anything else 100 per 10 seconds; `/get-session` is not limited. With `REDIS_URL` set the counters live in Redis (shared by replicas, kept across deploys, each key expiring with its window; fails open if Redis is unreachable); without it they stay in process memory. Sessions stay in Postgres.
 - Sessions: httpOnly, secure, `sameSite=lax` cookies; 7-day expiry, refreshed daily, with a 5-minute signed cookie cache so most API calls skip the session query. `baseURL` is the web origin; `trustedOrigins` is `WEB_ORIGIN` plus `TRUSTED_ORIGINS`. Google, Apple and Facebook tokens are stored encrypted with `BETTER_AUTH_SECRET`.
 - Roles are per space: `owner` (the creator) and `member`. Platform `admin` is an email allowlist in env (`ADMIN_EMAILS`: demo reset). In the MVP a user owns at most one space and can be a member of many.
 

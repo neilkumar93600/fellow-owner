@@ -68,7 +68,7 @@ describe('POST /api/support/requests', () => {
   it('acknowledges with fixed text that never repeats the name or message', async () => {
     await request(app)
       .post('/api/support/requests')
-      .set('X-Forwarded-For', '198.51.100.10')
+      .set('X-Real-IP', '198.51.100.10')
       .send({
         ...valid,
         email: 'fixed@example.com',
@@ -86,7 +86,7 @@ describe('POST /api/support/requests', () => {
     for (const ip of ['198.51.100.11', '198.51.100.12', '198.51.100.13']) {
       await request(app)
         .post('/api/support/requests')
-        .set('X-Forwarded-For', ip)
+        .set('X-Real-IP', ip)
         .send({ ...valid, email: 'once@example.com' })
         .expect(202);
     }
@@ -114,7 +114,7 @@ describe('POST /api/support/requests', () => {
     await request(app)
       .post('/api/support/requests')
       .set('Cookie', user.cookie)
-      .set('X-Forwarded-For', '198.51.100.14')
+      .set('X-Real-IP', '198.51.100.14')
       .send({ ...valid, kind: 'privacy_export', email: user.email })
       .expect(202);
     const stored = await db.execute<{ user_id: string | null }>(

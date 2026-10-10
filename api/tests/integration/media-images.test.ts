@@ -28,9 +28,6 @@ function memoryStorage() {
     async presignGet(key) {
       return `https://bucket.test/${key}`;
     },
-    async exists(key) {
-      return objects.has(key);
-    },
     async readStart(key, bytes) {
       return objects.get(key)?.slice(0, bytes) ?? null;
     },

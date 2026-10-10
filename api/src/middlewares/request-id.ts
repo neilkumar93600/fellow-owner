@@ -36,6 +36,7 @@ export function requestLogger(): RequestHandler {
         status: res.statusCode,
         ms,
         userId: req.session?.user.id,
+        ip: req.clientIp,
       };
       if (res.statusCode >= 500) req.log.error(entry, 'request failed');
       else req.log.info(entry, 'request');

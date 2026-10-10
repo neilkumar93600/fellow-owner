@@ -41,18 +41,18 @@ describe('POST /api/newsletter', () => {
     const app = createApp(buildContainer());
     const res = await request(app)
       .post('/api/newsletter')
-      .set('X-Forwarded-For', '203.0.113.51')
+      .set('X-Real-IP', '203.0.113.51')
       .send({ email: 'not-an-email' });
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('validation_error');
     await request(app)
       .post('/api/newsletter')
-      .set('X-Forwarded-For', '203.0.113.51')
+      .set('X-Real-IP', '203.0.113.51')
       .send({})
       .expect(400);
     await request(app)
       .post('/api/newsletter')
-      .set('X-Forwarded-For', '203.0.113.51')
+      .set('X-Real-IP', '203.0.113.51')
       .send({ email: 'a@example.com', source: 'elsewhere' })
       .expect(400);
   });
@@ -62,13 +62,13 @@ describe('POST /api/newsletter', () => {
     for (let i = 0; i < 5; i++) {
       await request(app)
         .post('/api/newsletter')
-        .set('X-Forwarded-For', '203.0.113.52')
+        .set('X-Real-IP', '203.0.113.52')
         .send({ email: `fan${i}@example.com` })
         .expect(200);
     }
     const res = await request(app)
       .post('/api/newsletter')
-      .set('X-Forwarded-For', '203.0.113.52')
+      .set('X-Real-IP', '203.0.113.52')
       .send({ email: 'fan6@example.com' });
     expect(res.status).toBe(429);
     expect(res.body.error.code).toBe('rate_limited');

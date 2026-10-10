@@ -27,7 +27,6 @@ export function createDemoRoutes(container: Container): Router {
       name: 'demo-session',
       windowSeconds: 60,
       max: DEMO_SESSIONS_PER_MINUTE,
-      key: (req) => req.ip ?? 'unknown',
     }),
     createCap({
       name: 'demo-session-hour',

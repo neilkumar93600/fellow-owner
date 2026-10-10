@@ -11,7 +11,7 @@ export function createMetricsController(deps: { metrics: MetricsService }) {
     async visit(req: Request, res: Response): Promise<void> {
       const { handle } = paramsOf(req, handleParamsSchema);
       await deps.metrics.recordVisit(handle, {
-        ip: req.ip ?? 'unknown',
+        ip: req.clientIp,
         userAgent: req.get('user-agent') ?? null,
       });
       res.status(204).end();

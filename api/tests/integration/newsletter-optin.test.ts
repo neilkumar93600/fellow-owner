@@ -30,7 +30,7 @@ function subscribe(app: ReturnType<typeof createApp>, email: string) {
   ipSeq += 1;
   return request(app)
     .post('/api/newsletter')
-    .set('X-Forwarded-For', `198.51.100.${ipSeq}`)
+    .set('X-Real-IP', `198.51.100.${ipSeq}`)
     .send({ email });
 }
 

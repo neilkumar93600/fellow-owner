@@ -32,7 +32,7 @@ let otherOwner: SignedIn;
 const visit = (handle: string, ip: string, userAgent = BROWSER) =>
   request(app)
     .post(`/api/spaces/${handle}/visit`)
-    .set('X-Forwarded-For', ip)
+    .set('X-Real-IP', ip)
     .set('User-Agent', userAgent);
 const metrics = (days: number | string, cookie = owner.cookie) =>
   request(app).get(`/api/studio/metrics?days=${days}`).set('Cookie', cookie);
@@ -75,10 +75,7 @@ describe('POST /api/spaces/:handle/visit', () => {
   it('ignores bots and missing user agents', async () => {
     const before = await db.select().from(pageVisits);
     await visit('mira', '198.51.100.9', 'Googlebot/2.1').expect(204);
-    await request(app)
-      .post('/api/spaces/mira/visit')
-      .set('X-Forwarded-For', '198.51.100.10')
-      .expect(204);
+    await request(app).post('/api/spaces/mira/visit').set('X-Real-IP', '198.51.100.10').expect(204);
     expect(await db.select().from(pageVisits)).toHaveLength(before.length);
   });
 

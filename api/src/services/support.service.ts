@@ -9,7 +9,7 @@ export type SupportServiceDeps = Pick<CoreDeps, 'env' | 'repos' | 'mailer' | 'lo
 const DAY_SECONDS = 86_400;
 
 /**
- * Email caps that do not depend on the caller's IP (a direct caller can forge X-Forwarded-For):
+ * Email caps that do not depend on the caller's IP (a caller can rotate IPs):
  * one acknowledgement per address per 24 h, 50 acknowledgements and 200 admin notices a day in
  * all. Requests over a cap are still stored; only the email is skipped.
  */

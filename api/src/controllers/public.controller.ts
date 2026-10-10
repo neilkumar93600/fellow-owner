@@ -64,7 +64,7 @@ export function createPublicController(deps: PublicControllerDeps) {
       const location = await deps.clicks.resolve({
         code: params.success ? params.data.code : '',
         platform: p,
-        ip: req.ip,
+        ip: req.clientIp,
         userAgent: req.get('user-agent'),
         referer: req.get('referer'),
       });

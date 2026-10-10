@@ -19,7 +19,6 @@ export function createVisitRoutes(container: Container): Router {
       name: 'visit',
       windowSeconds: 60,
       max: VISITS_PER_MINUTE,
-      key: (req) => req.ip ?? 'unknown',
     }),
     validate({ params: handleParamsSchema }),
     container.controllers.metrics.visit,

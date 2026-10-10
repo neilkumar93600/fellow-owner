@@ -37,7 +37,7 @@ Production is one Railway project plus one Vercel project. Details and every var
 
 | Service | Setup |
 |---------|-------|
-| `api` | Build from `api/Dockerfile` (context: repo root; `.railwayignore` trims the upload). Pre-deploy command: `node dist/db/migrate.js`, so migrations run before traffic moves. Health check: `GET /api/health` (503 when the database is down). Set `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` so open requests finish on a deploy. `TRUST_PROXY_HOPS` (default 2: Vercel's edge, then Railway's) is how many proxies' `X-Forwarded-For` entries the per-IP limits trust; set 1 if clients call Railway directly |
+| `api` | Build from `api/Dockerfile` (context: repo root; `.railwayignore` trims the upload). Pre-deploy command: `node dist/db/migrate.js`, so migrations run before traffic moves. Health check: `GET /api/health` (503 when the database is down). Set `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` so open requests finish on a deploy. Per-IP limits use Railway's `X-Real-IP`, or Vercel's `X-Forwarded-For` client when the request carries `x-edge-key` = `INTERNAL_API_KEY` (added by `web/proxy.ts`), so set the same `INTERNAL_API_KEY` on both services |
 | `pgvector` | Postgres with the `vector` extension. `DATABASE_URL` on `api` points at it |
 | Redis | `REDIS_URL` on `api`: rate-limit counters, daily caps, code throttle and live notifications across replicas. Optional |
 | `cron` | Schedule `0 * * * *`. Its start command calls `POST /api/cron/tick` on `api` with `Authorization: Bearer $CRON_SECRET`. The tick runs the hourly jobs (sweep, question grouping, challenge closing, email digests) and the daily and weekly ones (follower refresh 06:00 UTC, demo reset and retention purge 09:00 UTC, community digests Mondays 13:00 UTC). A missed hour catches up on the next tick. `GET /api/cron/status` shows recent runs; `POST /api/cron/tick?job=<name>` runs one job now |
@@ -53,7 +53,7 @@ Project `fellow-owners-web` (the Next.js app in `web/`). Environment variables:
 |----------|------|
 | `API_URL` | Origin of the Railway `api` service. The rewrites and server-side reads use it |
 | `NEXT_PUBLIC_APP_URL` | The public web origin, for links people copy or scan. Optional |
-| `INTERNAL_API_KEY` | Server-only, 32+ characters, the same value as on `api`; lets the web server's reads skip the API's per-IP rate limits |
+| `INTERNAL_API_KEY` | Server-only, 32+ characters, the same value as on `api`; lets the web server's reads skip the API's per-IP rate limits, and `proxy.ts` sends it as `x-edge-key` so the API counts the visitor's IP, not Vercel's |
 
 On `api`, set `WEB_ORIGIN` and `BETTER_AUTH_URL` to the web origin (auth is reached through the web rewrite), and `TRUSTED_ORIGINS` for preview deployments.
 

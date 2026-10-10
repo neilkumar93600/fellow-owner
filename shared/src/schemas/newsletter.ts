@@ -11,7 +11,12 @@ export const newsletterSubscribeSchema = z.object({
 });
 export type NewsletterSubscribeInput = z.input<typeof newsletterSubscribeSchema>;
 
-/** GET /api/newsletter/confirm?token= and /unsubscribe?token= (signed tokens, lib/signed-token.ts). */
+/**
+ * The signed token (api lib/signed-token.ts) of /api/newsletter/confirm and /unsubscribe. Emailed
+ * links open the web pages (/newsletter/confirm, /newsletter/unsubscribe); a GET on the API only
+ * redirects there, and the POST (the page's button, or one-click unsubscribe) changes the state.
+ * /api/email/unsubscribe reads its `?token=` with it too.
+ */
 export const newsletterTokenQuerySchema = z.object({
   token: z.string().min(10).max(500),
 });

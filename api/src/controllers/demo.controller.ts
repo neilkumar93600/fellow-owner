@@ -1,5 +1,6 @@
 import { demoSessionSchema } from '@fellow-owners/shared';
 import type { Request, Response } from 'express';
+import { CLIENT_IP_HEADER } from '../auth/index.js';
 import { bodyOf } from '../middlewares/validate.js';
 import type { DemoService } from '../services/demo.service.js';
 
@@ -12,7 +13,7 @@ function forwardedHeaders(req: Request): Headers {
   const headers = new Headers();
   const userAgent = req.get('user-agent');
   if (userAgent) headers.set('user-agent', userAgent);
-  if (req.ip) headers.set('x-forwarded-for', req.ip);
+  headers.set(CLIENT_IP_HEADER, req.clientIp);
   return headers;
 }
 

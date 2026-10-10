@@ -20,7 +20,6 @@ export function createMediaRoutes(container: Container): Router {
       name: 'media',
       windowSeconds: 60,
       max: MEDIA_READS_PER_MINUTE,
-      key: (req) => req.ip ?? 'unknown',
     }),
     container.controllers.uploads.media,
   );

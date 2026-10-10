@@ -20,7 +20,6 @@ export function createSupportRoutes(container: Container): Router {
       name: 'support',
       windowSeconds: 3600,
       max: 5,
-      key: (req) => req.ip ?? 'unknown',
     }),
     validate({ body: supportRequestSchema }),
     attachSession(container.auth),

@@ -12,7 +12,7 @@ import { closeDb, resetDatabase } from '../helpers/test-db.js';
 /** In-memory bucket: records presigned keys and "stores" them when asked to. */
 function fakeStorage(enabled = true) {
   const present = new Set<string>();
-  let heads = 0;
+  let reads = 0;
   const storage: Storage = {
     enabled,
     async presignPut(key, contentType, size) {
@@ -24,11 +24,8 @@ function fakeStorage(enabled = true) {
     async presignGet(key) {
       return `https://bucket.test/${key}?sig=get`;
     },
-    async exists(key) {
-      heads += 1;
-      return present.has(key);
-    },
     async readStart(key) {
+      reads += 1;
       return present.has(key) ? Uint8Array.from([0x89, 0x50, 0x4e, 0x47]) : null;
     },
     async delete(key) {
@@ -40,7 +37,7 @@ function fakeStorage(enabled = true) {
       return keys.length;
     },
   };
-  return { storage, present, heads: () => heads };
+  return { storage, present, reads: () => reads };
 }
 
 const on = fakeStorage(true);
@@ -189,18 +186,18 @@ describe('image uploads', () => {
       expect(res.headers['cache-control']).toBe('public, max-age=3000');
     });
 
-    it('never HEADs the bucket: a missing object 404s at the bucket after the redirect', async () => {
+    it('never reads the bucket: a missing object 404s at the bucket after the redirect', async () => {
       const key = `avatar/${ownerA.userId}/${randomUUID()}.png`;
       const res = await request(onApp).get(`/api/media/${key}`);
       expect(res.status).toBe(302);
       expect(res.headers.location).toBe(`https://bucket.test/${key}?sig=get`);
-      expect(on.heads()).toBe(0);
+      expect(on.reads()).toBe(0);
     });
 
     it(`is limited to ${MEDIA_READS_PER_MINUTE} reads a minute per IP`, async () => {
       const res = await request(onApp)
         .get(`/api/media/avatar/${ownerA.userId}/${randomUUID()}.png`)
-        .set('X-Forwarded-For', '203.0.113.80');
+        .set('X-Real-IP', '203.0.113.80');
       expect(res.headers['ratelimit-limit']).toBe(String(MEDIA_READS_PER_MINUTE));
       expect(res.headers['ratelimit-remaining']).toBe(String(MEDIA_READS_PER_MINUTE - 1));
     });

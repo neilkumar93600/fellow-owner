@@ -190,17 +190,18 @@ export function createPostsService(deps: PostsServiceDeps) {
   /**
    * Roles, team and comments of one post. `fullTeam`: requested and declined rows too (the
    * author, and the owner in the studio); everyone else sees the accepted team only.
+   * `studio`: hidden comments too, each comment flagged `hidden` (the owner can unhide them).
    */
   async function detailParts(
     post: PostRow,
     viewer: MembershipRow | null,
-    { fullTeam }: { fullTeam: boolean },
+    { fullTeam, studio = false }: { fullTeam: boolean; studio?: boolean },
   ): Promise<DetailParts> {
     const [teamRows, commentRows] = await Promise.all([
       post.type === 'project'
         ? repos.teams.listByPost(post.id)
         : Promise.resolve([] as TeamMemberWithRef[]),
-      repos.comments.listByPost(post.id),
+      repos.comments.listByPost(post.id, { includeHidden: studio }),
     ]);
 
     const roles: RoleSlot[] = post.rolesNeeded.map((role) => {
@@ -232,6 +233,7 @@ export function createPostsService(deps: PostsServiceDeps) {
         : memberRef(null),
       createdAt: toIso(row.createdAt),
       isOwn: viewer !== null && row.authorMembershipId === viewer.id,
+      ...(studio ? { hidden: row.hiddenAt !== null } : {}),
     }));
 
     return {
@@ -296,7 +298,7 @@ export function createPostsService(deps: PostsServiceDeps) {
   async function buildStudioDetail(owner: OwnerContext, post: PostRow): Promise<StudioPostDetail> {
     const [[item], parts, feedback] = await Promise.all([
       buildIdeaItems(owner, [post]),
-      detailParts(post, owner.membership, { fullTeam: true }),
+      detailParts(post, owner.membership, { fullTeam: true, studio: true }),
       repos.feedback.find({
         spaceId: owner.space.id,
         refType: 'post',

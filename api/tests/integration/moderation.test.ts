@@ -186,6 +186,46 @@ describe('comment hide', () => {
     await patch('unhide');
     expect((await repos.comments.findById(post.id, commentId))?.hiddenAt).toBeNull();
   });
+
+  it('the studio post detail keeps a hidden comment, flagged; fans no longer see it', async () => {
+    const fresh = await factories.post(mira.space.id, builders.id, author.membership.id, {
+      title: 'A post with a thread',
+    });
+    const comment = async (body: string) =>
+      (
+        await request(app)
+          .post(`/api/posts/${fresh.id}/comments`)
+          .set('Cookie', fan.cookie)
+          .send({ body })
+          .expect(201)
+      ).body.id as string;
+    const kept = await comment('A kind comment');
+    const hidden = await comment('An unkind comment');
+    await request(app)
+      .patch(`/api/studio/posts/${fresh.id}/comments/${hidden}`)
+      .set('Cookie', owner.cookie)
+      .send({ action: 'hide' })
+      .expect(204);
+
+    const studio = await request(app)
+      .get(`/api/studio/posts/${fresh.id}`)
+      .set('Cookie', owner.cookie)
+      .expect(200);
+    expect(
+      studio.body.comments.map((c: { id: string; hidden: boolean }) => [c.id, c.hidden]),
+    ).toEqual([
+      [kept, false],
+      [hidden, true],
+    ]);
+
+    const fanView = await request(app)
+      .get(`/api/posts/${fresh.id}`)
+      .set('Cookie', fan.cookie)
+      .expect(200);
+    expect(fanView.body.comments).toHaveLength(1);
+    expect(fanView.body.comments[0].id).toBe(kept);
+    expect(fanView.body.comments[0]).not.toHaveProperty('hidden');
+  });
 });
 
 describe('DELETE /api/spaces/:handle/me', () => {
