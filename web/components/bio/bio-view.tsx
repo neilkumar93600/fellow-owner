@@ -36,7 +36,7 @@ export function BioView({ page, joinedIds = [], isOwner = false }: BioViewProps)
 
   return (
     <div className="flex flex-col gap-10">
-      <VisitBeacon handle={space.handle} />
+      {isOwner ? null : <VisitBeacon handle={space.handle} />}
       <CreatorHeader space={space} cta={cta} />
       <CommunityGrid handle={space.handle} communities={communities} joinedIds={joinedIds} />
       {isOwner ? null : <PitchCta handle={space.handle} firstName={first} />}

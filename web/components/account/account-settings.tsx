@@ -12,9 +12,32 @@ import { EmailPrefsCard } from '@/components/account/email-prefs-card';
 import { Button } from '@/components/ui/button';
 import { Field, TextField } from '@/components/ui/field';
 import { authClient, useSession } from '@/lib/auth-client';
+import { ApiError } from '@/lib/fetcher';
 import { toastError, toastSuccess } from '@/lib/toast';
 
-function PasswordCard() {
+const SESSIONS_KEY = ['account', 'sessions'] as const;
+
+const isDemoLock = (error: unknown) => error instanceof ApiError && error.code === 'DEMO_READ_ONLY';
+
+const DEMO_NOTE = 'Not available in the demo.';
+
+/**
+ * The signed-in devices. The shared demo accounts are locked out of this by the API
+ * (DEMO_READ_ONLY), which is also how the page knows it is in the demo without any email list.
+ */
+function useSessionsQuery() {
+  return useQuery({
+    queryKey: SESSIONS_KEY,
+    queryFn: async () => {
+      const result = await authCall(() => authClient.listSessions());
+      if ('error' in result) throw result.error;
+      return result.data ?? [];
+    },
+    retry: (count, error) => !isDemoLock(error) && count < 2,
+  });
+}
+
+function PasswordCard({ demo }: { demo: boolean }) {
   const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');
   const [error, setError] = useState<{ field: 'current' | 'next'; message: string } | null>(null);
@@ -64,6 +87,7 @@ function PasswordCard() {
       <p className="text-body text-ink">
         Changing it signs you out everywhere else. Forgot it? Log out and use “Forgot password”.
       </p>
+      {demo ? <p className="mt-1 text-small text-ink-muted">{DEMO_NOTE}</p> : null}
       <form onSubmit={onSubmit} className="mt-3 flex w-full max-w-md flex-col gap-4" noValidate>
         <Field
           label="Current password"
@@ -74,6 +98,7 @@ function PasswordCard() {
             autoComplete="current-password"
             value={current}
             onChange={(e) => setCurrent(e.target.value)}
+            disabled={demo}
             required
           />
         </Field>
@@ -87,6 +112,7 @@ function PasswordCard() {
             autoComplete="new-password"
             value={next}
             onChange={(e) => setNext(e.target.value)}
+            disabled={demo}
             required
           />
         </Field>
@@ -96,7 +122,7 @@ function PasswordCard() {
           surface="glass"
           icon={<KeyRound />}
           loading={pending}
-          disabled={!current || !next}
+          disabled={demo || !current || !next}
           className="self-start"
         >
           Change password
@@ -132,20 +158,12 @@ function deviceName(userAgent: string | null | undefined): string {
   return os ? `${browser} on ${os}` : browser;
 }
 
-const SESSIONS_KEY = ['account', 'sessions'] as const;
-
 function SessionsCard() {
   const queryClient = useQueryClient();
   const { data: current } = useSession();
   const [pending, setPending] = useState(false);
-  const sessions = useQuery({
-    queryKey: SESSIONS_KEY,
-    queryFn: async () => {
-      const result = await authCall(() => authClient.listSessions());
-      if ('error' in result) throw result.error;
-      return result.data ?? [];
-    },
-  });
+  const sessions = useSessionsQuery();
+  const demo = isDemoLock(sessions.error);
 
   async function signOutOthers() {
     setPending(true);
@@ -171,6 +189,8 @@ function SessionsCard() {
       </p>
       {sessions.isPending ? (
         <p className="mt-2 text-small text-ink-muted">Loading devices…</p>
+      ) : demo ? (
+        <p className="mt-2 text-small text-ink-muted">{DEMO_NOTE}</p>
       ) : sessions.error ? (
         <p className="mt-2 text-small text-danger-deep">Couldn’t load your devices.</p>
       ) : (
@@ -192,7 +212,7 @@ function SessionsCard() {
         surface="glass"
         className="mt-3"
         loading={pending}
-        disabled={others === 0}
+        disabled={demo || others === 0}
         onClick={signOutOthers}
       >
         Sign out other devices
@@ -248,13 +268,14 @@ function DataCard() {
  * emails, data download and deletion. `ownsSpace` changes what deletion says it removes.
  */
 export function AccountSettings({ ownsSpace }: { ownsSpace: boolean }) {
+  const demo = isDemoLock(useSessionsQuery().error);
   return (
     <>
-      <PasswordCard />
+      <PasswordCard demo={demo} />
       <SessionsCard />
       <EmailPrefsCard />
       <DataCard />
-      <DeleteAccountCard ownsSpace={ownsSpace} />
+      <DeleteAccountCard ownsSpace={ownsSpace} demo={demo} />
     </>
   );
 }

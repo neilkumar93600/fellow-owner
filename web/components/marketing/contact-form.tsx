@@ -60,7 +60,8 @@ export function ContactForm() {
       >
         <h2 className="text-h2 text-ink">Message received</h2>
         <p className="mt-2 text-body text-ink">
-          Thank you. We sent a confirmation to your email and will reply there.
+          Thank you. We will reply to your email. A short confirmation goes there too (once a day at
+          most).
         </p>
       </section>
     );

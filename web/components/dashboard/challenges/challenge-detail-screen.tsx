@@ -249,7 +249,7 @@ function AiRecap({ text }: { text: string }) {
       <h2 id="ai-recap-heading" className="text-label-strong text-ink">
         AI recap of the entries
       </h2>
-      <p className="whitespace-pre-line text-body text-ink-soft">{text}</p>
+      <p className="text-body whitespace-pre-line text-ink-soft">{text}</p>
     </GlassPanel>
   );
 }

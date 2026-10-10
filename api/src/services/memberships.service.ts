@@ -12,7 +12,7 @@ import type {
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
 import { type AiServices, type BackgroundRunner, isAiUnavailable } from '../ai/types.js';
-import type { Db } from '../db/client.js';
+import type { Db, DbOrTx } from '../db/client.js';
 import type { CommunityRow } from '../db/schema/communities.js';
 import type { MembershipRow } from '../db/schema/memberships.js';
 import type { PostRow } from '../db/schema/posts.js';
@@ -45,6 +45,30 @@ export interface MembershipsServiceDeps {
   /** Embeds the member profile after join and profile edits (F17 people who could help). */
   background: BackgroundRunner;
   logger: Logger;
+}
+
+/**
+ * Removed vs left, the one rule: `removed_at` alone = the owner removed them (they stay out);
+ * `removed_at` + `left_at` = they left on their own and may come back.
+ */
+export function removedByOwner(row: Pick<MembershipRow, 'removedAt' | 'leftAt'>): boolean {
+  return row.removedAt !== null && row.leftAt === null;
+}
+
+/**
+ * An existing membership made usable for join or a pitch: active stays as is; a member who left
+ * comes back (active from now, no communities); one the owner removed gets 403.
+ */
+export async function reactivateMembership(
+  repos: Repos,
+  spaceId: string,
+  row: MembershipRow,
+  tx?: DbOrTx,
+): Promise<{ row: MembershipRow; rejoined: boolean }> {
+  if (!row.removedAt) return { row, rejoined: false };
+  const back = removedByOwner(row) ? null : await repos.memberships.rejoin(spaceId, row.id, tx);
+  if (!back) throw forbidden('You were removed from this space');
+  return { row: back, rejoined: true };
 }
 
 /** Empty or whitespace-only optional text is stored as null. */
@@ -221,10 +245,9 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
         let row = result.row;
         let created = result.created;
         const priorIntro = row.intro;
-        if (row.removedAt) {
-          const back = row.leftAt ? await repos.memberships.rejoin(space.id, row.id, tx) : null;
-          if (!back) throw forbidden('You were removed from this space');
-          row = back;
+        const back = await reactivateMembership(repos, space.id, row, tx);
+        if (back.rejoined) {
+          row = back.row;
           created = true;
         }
         if (intro !== null && intro !== row.intro) {

@@ -3,7 +3,7 @@ import { createSendThrottle } from '../../src/auth/email.js';
 import { logger } from '../../src/lib/logger.js';
 
 describe('createSendThrottle (memory store)', () => {
-  it('allows one code per address per 60 s and 10 per UTC day', async () => {
+  it('allows one code per address per 60 s and 5 per 15 minutes', async () => {
     let now = Date.parse('2026-10-10T08:00:00Z');
     const throttle = createSendThrottle(null, logger, () => now);
 
@@ -12,15 +12,15 @@ describe('createSendThrottle (memory store)', () => {
     expect(await throttle.allow('priya@example.com')).toBe(false);
     expect(await throttle.allow('raj@example.com')).toBe(true);
 
-    for (let sent = 1; sent < 10; sent += 1) {
+    for (let sent = 1; sent < 5; sent += 1) {
       now += 61_000;
       expect(await throttle.allow('priya@example.com')).toBe(true);
     }
     now += 61_000;
     expect(await throttle.allow('priya@example.com')).toBe(false);
 
-    // The next UTC day starts a new count.
-    now = Date.parse('2026-10-11T00:00:30Z');
+    // The next 15-minute window starts a new count: no day-long lockout.
+    now = Date.parse('2026-10-10T08:15:00Z');
     expect(await throttle.allow('priya@example.com')).toBe(true);
   });
 });

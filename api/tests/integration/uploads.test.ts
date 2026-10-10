@@ -4,6 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
 import type { Storage } from '../../src/lib/storage.js';
+import { MEDIA_READS_PER_MINUTE, PRESIGNS_PER_USER } from '../../src/routes/uploads.routes.js';
 import { type SignedIn, signInWithOtp } from '../helpers/auth.js';
 import { createFactories, type TestSpace } from '../helpers/factories.js';
 import { closeDb, resetDatabase } from '../helpers/test-db.js';
@@ -11,6 +12,7 @@ import { closeDb, resetDatabase } from '../helpers/test-db.js';
 /** In-memory bucket: records presigned keys and "stores" them when asked to. */
 function fakeStorage(enabled = true) {
   const present = new Set<string>();
+  let heads = 0;
   const storage: Storage = {
     enabled,
     async presignPut(key, contentType, size) {
@@ -23,10 +25,22 @@ function fakeStorage(enabled = true) {
       return `https://bucket.test/${key}?sig=get`;
     },
     async exists(key) {
+      heads += 1;
       return present.has(key);
     },
+    async readStart(key) {
+      return present.has(key) ? Uint8Array.from([0x89, 0x50, 0x4e, 0x47]) : null;
+    },
+    async delete(key) {
+      present.delete(key);
+    },
+    async deletePrefix(prefix) {
+      const keys = [...present].filter((key) => key.startsWith(prefix));
+      for (const key of keys) present.delete(key);
+      return keys.length;
+    },
   };
-  return { storage, present };
+  return { storage, present, heads: () => heads };
 }
 
 const on = fakeStorage(true);
@@ -175,11 +189,20 @@ describe('image uploads', () => {
       expect(res.headers['cache-control']).toBe('public, max-age=3000');
     });
 
-    it('answers 404 when the object is missing', async () => {
-      const res = await request(onApp).get(
-        `/api/media/avatar/${ownerA.userId}/${randomUUID()}.png`,
-      );
-      expect(res.status).toBe(404);
+    it('never HEADs the bucket: a missing object 404s at the bucket after the redirect', async () => {
+      const key = `avatar/${ownerA.userId}/${randomUUID()}.png`;
+      const res = await request(onApp).get(`/api/media/${key}`);
+      expect(res.status).toBe(302);
+      expect(res.headers.location).toBe(`https://bucket.test/${key}?sig=get`);
+      expect(on.heads()).toBe(0);
+    });
+
+    it(`is limited to ${MEDIA_READS_PER_MINUTE} reads a minute per IP`, async () => {
+      const res = await request(onApp)
+        .get(`/api/media/avatar/${ownerA.userId}/${randomUUID()}.png`)
+        .set('X-Forwarded-For', '203.0.113.80');
+      expect(res.headers['ratelimit-limit']).toBe(String(MEDIA_READS_PER_MINUTE));
+      expect(res.headers['ratelimit-remaining']).toBe(String(MEDIA_READS_PER_MINUTE - 1));
     });
 
     it('rejects traversal and keys outside the pattern', async () => {
@@ -196,5 +219,17 @@ describe('image uploads', () => {
         expect(res.status, path).toBe(404);
       }
     });
+  });
+
+  it(`limits each user to ${PRESIGNS_PER_USER.hour} presigns an hour`, async () => {
+    const user = await signInWithOtp(onApp, 'many-uploads@uploads.test', 'Many Uploads');
+    const body = { kind: 'avatar', contentType: 'image/png', size: 1000 };
+    for (let i = 0; i < PRESIGNS_PER_USER.hour; i++) {
+      await presign(onApp, user.cookie, body).expect(200);
+    }
+    const res = await presign(onApp, user.cookie, body).expect(429);
+    expect(res.body.error.code).toBe('rate_limited');
+    // Another user is not affected.
+    await presign(onApp, ownerB.cookie, body).expect(200);
   });
 });

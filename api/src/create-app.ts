@@ -16,8 +16,9 @@ import { createApiRouter, createRootRouter } from './routes/index.js';
 export function createApp(container: Container): Express {
   const app = express();
   app.disable('x-powered-by');
-  // Behind Vercel and the Next.js rewrite: req.ip / protocol come from X-Forwarded-*.
-  app.set('trust proxy', true);
+  // Behind Vercel's rewrite and Railway's edge: trust exactly that many X-Forwarded-* hops, so
+  // req.ip is the client those proxies saw, not a left-most entry the client wrote itself.
+  app.set('trust proxy', container.env.TRUST_PROXY_HOPS);
 
   app.use(requestId(container.logger));
   app.use(requestLogger());

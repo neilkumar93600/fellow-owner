@@ -23,7 +23,13 @@ const CONFIRM_WORD = 'delete';
  * Account deletion: typed confirmation, then the code Better Auth emails (pasted back as the
  * deleteUser token). The API removes the space or memberships first (api/src/services/account).
  */
-export function DeleteAccountCard({ ownsSpace }: { ownsSpace: boolean }) {
+export function DeleteAccountCard({
+  ownsSpace,
+  demo = false,
+}: {
+  ownsSpace: boolean;
+  demo?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<'confirm' | 'code'>('confirm');
   const [typed, setTyped] = useState('');
@@ -87,11 +93,13 @@ export function DeleteAccountCard({ ownsSpace }: { ownsSpace: boolean }) {
           ? 'Deletes your account and your space, with its communities and everything fans posted there.'
           : 'Deletes your account and your pitches. Your posts and comments stay, signed “Former member”.'}
       </p>
+      {demo ? <p className="mt-1 text-small text-ink-muted">Not available in the demo.</p> : null}
       <Dialog open={open} onOpenChange={onOpenChange}>
         <Button
           variant="destructive"
           icon={<Trash2 />}
           className="mt-3"
+          disabled={demo}
           onClick={() => setOpen(true)}
         >
           Delete account

@@ -50,7 +50,7 @@ const KINDS: readonly { value: Kind; label: string; subject: string; ask: string
 /**
  * The privacy request writer, inline in the privacy policy (it replaces the old modal). Pick a request,
  * add the account email, and it sends the request to the support API (stored, emailed to the team, with
- * a confirmation to the sender). Copy still copies the text. The email is checked with the shared schema.
+ * a capped confirmation to the sender). Copy still copies the text. The email is checked with the shared schema.
  */
 export function DataRequest() {
   const [kind, setKind] = useState<Kind>('delete');
@@ -78,7 +78,7 @@ export function DataRequest() {
         email,
         message: `${request.subject}\n\n${request.ask}`,
       });
-      toastSuccess('Request received. We sent a confirmation to your email.');
+      toastSuccess('Request received. We will reply to your email.');
     } catch (err) {
       setError(
         err instanceof ApiError && err.code === 'rate_limited'
@@ -99,7 +99,7 @@ export function DataRequest() {
       <h3 className="text-label-strong text-ink">Write a privacy request</h3>
       <p className="mt-1 max-w-[60ch] text-small text-ink-soft">
         Pick what you need and add the account email. We send the request to our privacy team and
-        email you a confirmation.
+        email you a short confirmation (once a day at most).
       </p>
 
       <fieldset className="mt-5">

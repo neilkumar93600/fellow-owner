@@ -88,7 +88,9 @@ export function ProfileStep({ handle, onDone }: { handle: string; onDone: () => 
     updateMe.mutate(
       {
         ...(finalSkills.length > 0 && { skills: finalSkills }),
-        ...(filled.length > 0 && { links: filled.map(({ label, url }) => ({ label, url })) }),
+        ...(filled.length > 0 && {
+          links: filled.map(({ label, url }) => ({ label, url })),
+        }),
       },
       {
         onSuccess: () => {
@@ -155,7 +157,7 @@ export function ProfileStep({ handle, onDone }: { handle: string; onDone: () => 
                   type="button"
                   aria-label={`Remove ${skill}`}
                   onClick={() => setSkills((current) => current.filter((s) => s !== skill))}
-                  className="press relative grid size-7 place-items-center rounded-full hover:bg-white/80 before:absolute before:-inset-2"
+                  className="relative grid size-7 press place-items-center rounded-full before:absolute before:-inset-2 hover:bg-white/80"
                 >
                   <X aria-hidden="true" strokeWidth={1.5} className="size-4" />
                 </button>

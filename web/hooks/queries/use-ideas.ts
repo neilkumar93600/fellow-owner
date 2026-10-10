@@ -7,6 +7,7 @@ import type {
   StudioPostDetail,
 } from '@fellow-owners/shared';
 import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { moderateComment } from '@/api/moderation';
 import { addComment } from '@/api/posts';
 import { actOnPost, getIdeas, getStudioPost, sendFeedback } from '@/api/studio';
 import { useCursorPages } from '@/hooks/use-cursor-list';
@@ -155,4 +156,18 @@ export function useStudioComment(id: string) {
     },
   });
   return mutation;
+}
+
+/** The creator hides (or unhides) a comment from the post panel; the thread and counts refresh. */
+export function useModerateComment(postId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ commentId, action }: { commentId: string; action: 'hide' | 'unhide' }) =>
+      moderateComment(postId, commentId, { action }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ideasKeys.post(postId) });
+      void queryClient.invalidateQueries({ queryKey: ideasKeys.all });
+    },
+    onError: (error) => toastError(error),
+  });
 }

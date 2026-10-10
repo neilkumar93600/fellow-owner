@@ -124,7 +124,7 @@ describe('owner queue', () => {
       reporterName: 'Bea',
       target: { type: 'post', excerpt: 'Buy my followers now', authorName: 'Arjun Mehta' },
     });
-    expect(postReport?.target.href).toBe(`/mira/p/${post.id}`);
+    expect(postReport?.target.href).toBe(`/dashboard/ideas?item=${post.id}`);
 
     const acted = await request(app)
       .patch(`/api/studio/reports/${postReport?.id}`)

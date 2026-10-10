@@ -1,6 +1,6 @@
 # 01 · Product Requirements Document (PRD)
 
-Status: draft v0.1 for review · Owner: Nilesh · Updated: 2026-10-01
+Status: draft v0.2 for review · Owner: Nilesh · Updated: 2026-10-10
 Inputs: Startupathon brief "Operating System for Fanbases", Persist briefing video (Jack, Vikas).
 
 ## 1. Product name and one-sentence idea
@@ -88,8 +88,8 @@ P0 = required for the MVP demo and pilot. P1 = build in this order if time allow
 |---|---------|--------------|----------|
 | F18 | Promote: AI drafts per platform in the creator's voice, editable, copy or open in X | Promotion takes a minute | P0 |
 | F19 | Public showcase page and tracked short link with click counts | The creator sees what their push did; the project gets a real landing page | P0 |
-| F20 | Asks: creator posts a request to one or all communities, members respond, AI summarizes | Coordination runs both ways | P1 |
-| F21 | In-app notifications (reply received, project featured, team request) | Members know when something happened | P1 |
+| F20 | Challenges (first called Asks): creator posts a request to one or all communities with a due date, members enter, closing shortlists entries and an AI recap is stored | Coordination runs both ways | P1 |
+| F21 | In-app notifications (reply received, project featured, team request and more) with live unread count and optional email digest | Members know when something happened | P1 |
 
 ### Pitch loop (designed 2026-10-03)
 | # | Feature | User benefit | Priority |
@@ -153,8 +153,8 @@ P0 = required for the MVP demo and pilot. P1 = build in this order if time allow
 ## 8. Acceptance criteria
 
 - **AC1 (US1)** Given a signed-out visitor on `/mira`, when they tap Join, sign in, write an intro and confirm communities, then they land on their first community feed as a member and the member counts on the bio page include them.
-- **AC2 (US1)** Given the intro "frontend dev who lifts", when suggestions load, then Builders and Fitness Crew are suggested, within 5 seconds; if the AI fails, all communities show unselected with the note "Suggestions unavailable".
-- **AC3 (US2)** Given a member of Builders, when they publish an idea (title 5 to 120 chars, body 20 to 5,000), then it appears at the top of the feed at once, and the creator sees its summary and fit score within 15 seconds (p90). Members never see AI fields (see AC17).
+- **AC2 (US1)** Given the intro "solo traveler who plans every trip around food", when suggestions load, then Solo Travelers and Food Finds are suggested, within 5 seconds; if the AI fails, all communities show unselected with the note "Suggestions unavailable".
+- **AC3 (US2)** Given a member of Budget Travel, when they publish an idea (title 5 to 120 chars, body 20 to 5,000), then it appears at the top of the feed at once, and the creator sees its summary and fit score within 15 seconds (p90). Members never see AI fields (see AC17).
 - **AC4 (US2)** Given an idea, when a member taps "I'd help build", then the count rises by one once per member, and tapping again removes their signal. Members cannot signal their own post.
 - **AC5 (US3)** Given a project needing a Designer, when a member requests that role and the project author accepts, then the member shows in the team and the role is marked filled.
 - **AC6 (US4)** Given a signed-in member, when they submit a Collab pitch, then within 15 seconds it appears in the creator's Inbox under Collabs (or under the AI-corrected type with a "re-categorized" note) with a fit score and reason.
@@ -179,24 +179,31 @@ P0 = required for the MVP demo and pilot. P1 = build in this order if time allow
 | Q3 | LLM provider, and whose key? | Configurable; default OpenAI, since one key covers chat and embeddings |
 | Q4 | Final name and domain (the video mentions a "fellow owners" domain) | "Fellow Owners"; confirm the exact domain with Persist |
 | Q5 | Must fans sign in to pitch? | Yes: cuts spam and gives replies a home |
-| Q6 | Postgres host: Supabase or Neon? | Supabase, used only as Postgres |
+| Q6 | Postgres host: Supabase or Neon? | **Decided:** neither. Postgres with pgvector runs as a service in the Railway project, next to the API (see 02, section 3) |
 | Q7 | Community content public or members-only? | Members-only, except projects the creator promotes (public showcase) |
 | Q8 | Password sign-in as well as email codes? If yes, forgot and reset password pages ship too | **Decided by the product owner, 2026-10-02: yes.** Passwords and usernames ship: log in with email or username + password, a new email account confirms its email with a 6-digit code, and forgot and reset password work by code. The age floor is 18 (`MIN_AGE`) |
 
-## 10. MVP run: built 2026-10-06
+## 10. Build status: 2026-10-10
 
-Every dashboard and fan screen now reads the real API. Built in this run, checked against the code:
-- **F21 In-app notifications.** Kinds: idea_posted, pitch_received, comment_received, reply_received, project_featured, team_request, team_decision (ask_posted is reserved for Asks). Creator and fan bells poll the unread count every 30 seconds; the popover lists newest first with a "Mark all read" action.
-- **F23 Import audience.** Followers roster (owner only) with manual add, CSV upload or pasted lines (up to 500 rows per import), AI community suggestions when at least 5 rows have notes, and tagging into communities by the creator or by the AI (auto-tag from notes).
-- **Community activity analytics.** Score, change against the previous period and counts per community with a 7 or 30 day toggle on Communities, an activity panel on the community detail page, and the top 5 on Today.
-- **CSV export** of ideas, people, followers and pitches from each list's toolbar.
+Every dashboard and fan screen reads the real API, and the backend features that were listed here as not built now exist. Checked against the code (`api/src/routes`, `api/src/workers`, `api/src/ai/tasks`).
 
-Not built, despite the feature table: F25 members report (hide and remove exist; there is no report endpoint). F31 Pitch Tracker is partly built: fan-side statuses yes; the creator's read-receipts setting no, since `showReadReceipts` is not in the API settings schema.
+**Built**
+- **F21 In-app notifications.** Twelve kinds (reply received, project featured, team request, team decision, challenge opened, idea posted, pitch received, comment received, post loved, spotlighted, challenge shortlisted, report filed). The unread count arrives live over Server-Sent Events (Redis pub/sub across replicas when `REDIS_URL` is set), with a 30-second poll as the fallback; the popover lists newest first with "Mark all read". An hourly email digest covers five kinds, with per-person preferences and one-click unsubscribe.
+- **F23 Import audience.** Followers roster (owner only) with manual add, CSV upload or pasted lines (up to 500 rows per import), AI community suggestions when at least 5 rows have notes, and tagging into communities by the creator or by the AI (auto-tag from notes; a follower the AI already looked at is skipped until the communities change).
+- **F24 YouTube comment import.** `POST /api/studio/followers/import/youtube` (up to 10 videos and 500 comments). Without `YOUTUBE_API_KEY` it returns labelled sample data.
+- **F12 Community digests.** A weekly job writes one digest per active community.
+- **F13 Ask your AI.** The creator asks a question; the answer cites the 20 nearest posts and pitches.
+- **F17 Similar ideas and people who could help**, for fans and for the creator.
+- **F20 Challenges.** Create, enter, close (button or automatically after the due date), pick a winner, AI recap.
+- **F25 Moderation.** Members report posts and comments (reasons: spam, harassment, off topic, unsafe, other); the creator resolves or dismisses reports, hides comments and posts, and removes members. Members can leave a space.
+- **F30 Idea Coach.** Clarity checklist and optional rewrite for a pitch or post draft, 10 per member per day, never a score.
+- **F31 Pitch Tracker.** Sent, Read, Shortlisted, Replied on the fan side; the creator's "show read receipts" setting is `spaces.show_read_receipts`.
+- **F32 Answer Once.** Hourly grouping of repeated questions from pitches, an AI-drafted answer the creator edits, one reply to every asker, optional pinned answer posts.
+- **Also built:** Fans of the week (spotlight with an AI-drafted note), "Loved by" on posts, Today "Later" snoozes and setup checklist, image uploads for avatars and covers (Railway bucket), bio-page visit counts, community activity analytics, CSV export of ideas, people, followers and pitches, account page (export, change password, delete account by emailed code, email preferences), support and privacy request forms, newsletter sign-up with double opt-in, public profile lookup and AI setup suggestions in onboarding, and a daily follower-count refresh.
+- **Platform.** The API runs on Railway with an hourly cron tick for background jobs and retention purging; the web app runs on Vercel (see 02).
 
-Follow-ups:
-- **Realtime notifications:** SSE or websocket instead of 30 second polling.
-- **YouTube import (F24):** comment API integration (P2).
-- **Asks (F20):** creator posts requests to one or all communities; members respond; AI summarizes.
-- **Pitch loop backend (F30 to F32):** Idea Coach, Pitch Tracker (creator side), Answer Once.
-- **Promotions tabs** filter only the loaded page; they need a state param on the API.
-- **Auto-tag** re-sends followers the AI left untagged on every run.
+**Still open**
+- **Taste Swipe, Audience Pulse, Away Mode and Team Matchmaker** (reserved F33 to F36) have no routes, jobs or screens: not built. The Weekly Shout-out idea is covered by Fans of the week (spotlight), listed above.
+- **Image and video generation** (`ai/media.ts`, fal.ai) exists for the seed script only; no screen uses it.
+- **Live AI, Apify, YouTube and uploads** each need their keys in the deployed environment; without them the API serves the deterministic fake AI, labelled sample profiles or comments, or answers 503 for uploads (02, section 3, lists every variable).
+- **Backups and uptime** are not configured in the repo; the demo space is reproducible from seed.

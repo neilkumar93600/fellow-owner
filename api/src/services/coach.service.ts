@@ -4,6 +4,7 @@ import { isAiUnavailable } from '../ai/types.js';
 import type { CoreDeps } from '../container.js';
 import { startOfUtcDay } from '../lib/dates.js';
 import { forbidden, notFound, rateLimited } from '../lib/errors.js';
+import { removedByOwner } from './memberships.service.js';
 
 export type CoachServiceDeps = Pick<CoreDeps, 'repos' | 'ai' | 'logger'>;
 
@@ -23,8 +24,13 @@ export function createCoachService({ repos, ai }: CoachServiceDeps) {
       const space = await repos.spaces.findByHandle(handle);
       if (!space) throw notFound('Space');
       const membership = await repos.memberships.findByUser(space.id, userId);
-      if (membership?.removedAt) throw forbidden('You were removed from this space');
-      if (input.kind === 'post' && !membership) throw forbidden('Join this space to check a post');
+      // A fan who left may check a pitch (sending it brings them back); the owner's removal may not.
+      if (membership && removedByOwner(membership)) {
+        throw forbidden('You were removed from this space');
+      }
+      if (input.kind === 'post' && (!membership || membership.removedAt)) {
+        throw forbidden('Join this space to check a post');
+      }
 
       if ((await usedToday(userId)) >= LIMITS.coach.perDay) {
         throw rateLimited(LIMIT_MESSAGE, { checksLeftToday: 0 });

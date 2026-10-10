@@ -196,8 +196,15 @@ function createBaseServices(deps: CoreDeps) {
       notifications,
       logger,
     }),
-    communities: createCommunitiesService({ db, repos, limits, discovery, logger }),
-    spaces: createSpacesService({ db, repos, access, logger }),
+    communities: createCommunitiesService({
+      db,
+      repos,
+      limits,
+      discovery,
+      logger,
+      storage: deps.storage,
+    }),
+    spaces: createSpacesService({ db, repos, access, logger, storage: deps.storage }),
     overview: createOverviewService({ repos, analyzer }),
     briefing: createBriefingService({ repos, ai, limits, discovery, logger }),
     promotions: createPromotionsService({

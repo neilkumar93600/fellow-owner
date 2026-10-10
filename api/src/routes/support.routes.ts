@@ -3,9 +3,14 @@ import { Router } from 'express';
 import type { Container } from '../container.js';
 import { noStore } from '../lib/http.js';
 import { createRateLimit } from '../middlewares/rate-limit.js';
+import { attachSession } from '../middlewares/require-session.js';
 import { validate } from '../middlewares/validate.js';
 
-/** POST /api/support/requests (public, 5 an hour per IP). */
+/**
+ * POST /api/support/requests (public, 5 an hour per IP; the session, when there is one, sets
+ * support_requests.user_id). The emails it sends have their own IP-independent caps
+ * (support.service.ts).
+ */
 export function createSupportRoutes(container: Container): Router {
   const router = Router();
   router.use(noStore());
@@ -18,6 +23,7 @@ export function createSupportRoutes(container: Container): Router {
       key: (req) => req.ip ?? 'unknown',
     }),
     validate({ body: supportRequestSchema }),
+    attachSession(container.auth),
     container.controllers.support.submit,
   );
   return router;

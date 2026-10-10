@@ -18,6 +18,7 @@ import { account, session, user, verification } from '../db/schema/auth.js';
 import { spaces } from '../db/schema/spaces.js';
 import { logger as defaultLogger, type Logger, maskEmail } from '../lib/logger.js';
 import { connected, redis as defaultRedis, type Redis } from '../lib/redis.js';
+import { createStorage, mediaImageProblem, type Storage } from '../lib/storage.js';
 import { createRepos } from '../repositories/index.js';
 import { createAccountService } from '../services/account.service.js';
 import { isDemoEmail } from './demo.js';
@@ -55,6 +56,8 @@ export interface AuthDeps {
   email?: EmailSender;
   /** Rate-limit counters (lib/redis.ts); null keeps them in process memory. */
   redis?: Redis | null;
+  /** Image bucket (lib/storage.ts): checks uploaded avatars, deletes a deleted user's images. */
+  storage?: Storage;
 }
 
 /** One atomic step per request: count the hit; the window's first hit sets the key's expiry. */
@@ -111,14 +114,17 @@ export function redisRateLimitStorage(redis: Redis, logger: Logger): BetterAuthR
  *   (/email-otp/request-password-reset, /email-otp/reset-password), which ends every session. The
  *   link-based reset stays disabled: no email carries a link. /sign-in/email-otp still works for
  *   API clients and the test helpers.
- * - In production each address gets at most one code per 60 s and 10 per day
+ * - In production each address gets at most one code per 60 s and 5 per 15 minutes
  *   (`createSendThrottle`); above that the email is dropped silently and the earlier code still
  *   works.
  * - Signed in: /change-password (current password needed; other sessions end), /list-sessions and
  *   /revoke-other-sessions (Account tab).
  * - Deleting an account: /delete-user emails a code (Better Auth's delete token, no link); sending
  *   it back as `{ token }` deletes the user. `beforeDelete` (services/account.service.ts) first
- *   deletes the user's own space and their memberships elsewhere ("Former member" posts).
+ *   deletes the user's own space and their memberships elsewhere ("Former member" posts), then
+ *   their bucket images; it is safe to run again when the delete itself failed.
+ * - An uploaded avatar (`image` = /api/media/<key>) must be a real JPEG, PNG or WebP
+ *   (lib/storage.ts mediaImageProblem); other image links keep their rules.
  *   The demo accounts can't do either (DEMO_LOCKED_PATHS).
  * - One namespace (spec §11): a username is a handle. Same rules as a space handle (shared
  *   `LIMITS.username`, reserved words refused), and a username that is another person's space
@@ -143,11 +149,13 @@ export function createAuth(deps: AuthDeps = {}) {
   const logger = (deps.logger ?? defaultLogger).child({ module: 'auth' });
   const email = deps.email ?? createEmailSender(env, deps.logger ?? defaultLogger);
   const redis = deps.redis === undefined ? defaultRedis : deps.redis;
+  const storage = deps.storage ?? createStorage(env);
   // Better Auth is built before the container, so its delete hook gets its own account service.
   const accountService = createAccountService({
     db,
     repos: createRepos(db),
     logger: deps.logger ?? defaultLogger,
+    storage,
   });
   const throttle = env.isProduction ? createSendThrottle(redis, logger) : null;
 
@@ -284,6 +292,13 @@ export function createAuth(deps: AuthDeps = {}) {
           // A user's own space never blocks them; without a session nothing is excluded.
           before: async (data, ctx) => {
             await assertNotSpaceHandle(data.username, ctx?.context.session?.user.id);
+            // An uploaded avatar (/api/media/...) must really be an image; other URLs as before.
+            if (data.image !== undefined && data.image !== ctx?.context.session?.user.image) {
+              const problem = await mediaImageProblem(storage, data.image);
+              if (problem) {
+                throw new APIError('BAD_REQUEST', { code: 'VALIDATION_ERROR', message: problem });
+              }
+            }
           },
         },
       },

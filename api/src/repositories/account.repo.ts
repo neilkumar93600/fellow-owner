@@ -139,13 +139,13 @@ export function createAccountRepo(db: Db) {
       };
     },
 
-    /** Deletes the spaces the user owns (everything in them cascades). */
-    async deleteOwnedSpaces(userId: string, tx: DbOrTx = db): Promise<number> {
+    /** Deletes the spaces the user owns (everything in them cascades); returns their ids. */
+    async deleteOwnedSpaces(userId: string, tx: DbOrTx = db): Promise<string[]> {
       const rows = await tx
         .delete(spaces)
         .where(eq(spaces.ownerUserId, userId))
         .returning({ id: spaces.id });
-      return rows.length;
+      return rows.map((row) => row.id);
     },
 
     /** The user's memberships (removed ones included). */

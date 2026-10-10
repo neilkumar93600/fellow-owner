@@ -80,9 +80,13 @@ export function createNotificationEmailsService(deps: NotificationEmailsServiceD
   }
 
   async function sendDigest(userId: string, email: string, name: string, rows: DigestRow[]) {
-    const unsubscribeUrl = `${env.WEB_ORIGIN}/api/email/unsubscribe?token=${encodeURIComponent(
+    const token = encodeURIComponent(
       signToken(UNSUBSCRIBE_PURPOSE, userId, env.BETTER_AUTH_SECRET),
-    )}`;
+    );
+    // The body link opens a page whose button POSTs (link scanners only GET); the header is the
+    // RFC 8058 one-click target the mail client POSTs to (through the web's /api rewrite).
+    const unsubscribePage = `${env.WEB_ORIGIN}/email-preferences?token=${token}`;
+    const oneClickUrl = `${env.WEB_ORIGIN}/api/email/unsubscribe?token=${token}`;
     const shown = rows.slice(0, LIMITS.emails.digestMaxItems);
     const lines = shown.map((row) => {
       const { text, href } = describe(row);
@@ -100,7 +104,7 @@ export function createNotificationEmailsService(deps: NotificationEmailsServiceD
       ...(more > 0 ? ['', `...and ${more} more. Open Fellow Owners to see everything.`] : []),
       '',
       `You get these emails because notification emails are on for your account.`,
-      `Unsubscribe in one click: ${unsubscribeUrl}`,
+      `Unsubscribe: ${unsubscribePage}`,
       `Or choose which emails you get: ${env.WEB_ORIGIN}/email-preferences`,
     ].join('\n');
     await mailer.send({
@@ -109,7 +113,7 @@ export function createNotificationEmailsService(deps: NotificationEmailsServiceD
         count === 1 ? '1 new update on Fellow Owners' : `${count} new updates on Fellow Owners`,
       text,
       headers: {
-        'List-Unsubscribe': `<${unsubscribeUrl}>`,
+        'List-Unsubscribe': `<${oneClickUrl}>`,
         'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
       },
     });

@@ -126,33 +126,36 @@ export interface SendThrottle {
 }
 
 const GAP_SECONDS = 60;
-const PER_DAY = 10;
+const WINDOW_SECONDS = 15 * 60;
+const PER_WINDOW = 5;
 
 /**
- * At most one code per address per 60 s and 10 per UTC day, whatever the purpose. Redis when
+ * At most one code per address per 60 s and 5 per 15 minutes, whatever the purpose. Redis when
  * given (shared by replicas), process memory otherwise or when Redis errors. Above the cap the
  * caller drops the email silently: the answer to the request stays the same, so nobody learns
  * anything, and the last code sent stays valid (auth/index.ts reuses unexpired codes).
+ * The window is short on purpose: a daily cap would let anyone lock a person out of sign-in and
+ * password reset for the rest of the day by asking for codes for their address.
  */
 export function createSendThrottle(
   redis: Redis | null,
   logger: Logger,
   now: () => number = Date.now,
 ): SendThrottle {
-  // ponytail: per-process map, pruned by day; Redis shares the counts across replicas.
-  const memory = new Map<string, { last: number; day: string; count: number }>();
+  // ponytail: per-process map, pruned by window; Redis shares the counts across replicas.
+  const memory = new Map<string, { last: number; window: number; count: number }>();
 
-  const inMemory = (address: string, at: number, day: string) => {
+  const inMemory = (address: string, at: number, window: number) => {
     const entry = memory.get(address);
     if (entry && at - entry.last < GAP_SECONDS * 1000) return false;
-    if (entry?.day === day && entry.count >= PER_DAY) return false;
+    if (entry?.window === window && entry.count >= PER_WINDOW) return false;
     if (memory.size > 50_000) {
-      for (const [key, value] of memory) if (value.day !== day) memory.delete(key);
+      for (const [key, value] of memory) if (value.window !== window) memory.delete(key);
     }
     memory.set(address, {
       last: at,
-      day,
-      count: entry?.day === day ? entry.count + 1 : 1,
+      window,
+      count: entry?.window === window ? entry.count + 1 : 1,
     });
     return true;
   };
@@ -161,7 +164,7 @@ export function createSendThrottle(
     async allow(to) {
       const address = to.trim().toLowerCase();
       const at = now();
-      const day = new Date(at).toISOString().slice(0, 10);
+      const window = Math.floor(at / (WINDOW_SECONDS * 1000));
       if (redis) {
         try {
           const client = connected(redis);
@@ -170,15 +173,15 @@ export function createSendThrottle(
             expiration: { type: 'EX', value: GAP_SECONDS },
           });
           if (gap === null) return false;
-          const key = `otp-day:${address}:${day}`;
+          const key = `otp-window:${address}:${window}`;
           const count = await client.incr(key);
-          if (count === 1) await client.expire(key, 60 * 60 * 24);
-          return count <= PER_DAY;
+          if (count === 1) await client.expire(key, WINDOW_SECONDS + 1);
+          return count <= PER_WINDOW;
         } catch (error) {
           logger.warn({ err: error }, 'otp throttle: redis failed, counting in memory');
         }
       }
-      return inMemory(address, at, day);
+      return inMemory(address, at, window);
     },
   };
 }

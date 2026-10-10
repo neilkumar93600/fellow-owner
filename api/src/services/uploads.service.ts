@@ -6,7 +6,12 @@ import type {
   UploadKind,
 } from '@fellow-owners/shared';
 import type { CoreDeps } from '../container.js';
-import { AppError, badRequest, notFound } from '../lib/errors.js';
+import { AppError, badRequest, notFound, validationError } from '../lib/errors.js';
+import {
+  MEDIA_KEY_PATTERN as KEY_PATTERN,
+  mediaImageProblem,
+  type Storage,
+} from '../lib/storage.js';
 
 export type UploadsServiceDeps = Pick<CoreDeps, 'repos' | 'storage' | 'logger'>;
 
@@ -16,9 +21,26 @@ const EXTENSIONS: Record<UploadContentType, string> = {
   'image/webp': 'webp',
 };
 
-/** `<kind>/<userId or spaceId>/<uuid>.<ext>`: the only keys /api/media serves. */
-const KEY_PATTERN =
-  /^(?:avatar|space_cover|community_cover|member_avatar)\/[A-Za-z0-9_-]{1,64}\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(?:jpg|png|webp)$/;
+/**
+ * 400 validation_error unless `url` may be stored as an avatar or cover (lib/storage.ts
+ * mediaImageProblem: an /api/media upload must really be a JPEG, PNG or WebP). An unchanged value
+ * (`url === current`) was checked when it was first saved, so it is not fetched again.
+ */
+export async function assertStorableImage(
+  storage: Storage,
+  path: string[],
+  url: string | null | undefined,
+  current?: string | null,
+): Promise<void> {
+  if (url === current) return;
+  const problem = await mediaImageProblem(storage, url);
+  if (problem) {
+    throw validationError(
+      [{ location: 'body', path, message: problem, code: 'invalid_image' }],
+      problem,
+    );
+  }
+}
 
 const uploadsDisabled = () => new AppError('uploads_disabled', 503, 'Image uploads are turned off');
 
@@ -48,11 +70,13 @@ export function createUploadsService({ repos, storage }: UploadsServiceDeps) {
       return { uploadUrl: url, method: 'PUT', headers, key, url: `/api/media/${key}` };
     },
 
-    /** A presigned GET for a known key; 404 when missing, 503 when uploads are off. */
+    /**
+     * A presigned GET for a well-formed key; 503 when uploads are off. No HEAD per hit: a missing
+     * object answers 404 at the bucket.
+     */
     async mediaUrl(key: string): Promise<string> {
       if (!KEY_PATTERN.test(key)) throw notFound('Image');
       if (!storage.enabled) throw uploadsDisabled();
-      if (!(await storage.exists(key))) throw notFound('Image');
       return storage.presignGet(key);
     },
   };

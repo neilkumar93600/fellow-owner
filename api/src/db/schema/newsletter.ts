@@ -13,6 +13,8 @@ export const newsletterSubscribers = pgTable(
     unsubscribedAt: timestamptz('unsubscribed_at'),
     /** Set when the link in the confirmation email is opened. */
     confirmedAt: timestamptz('confirmed_at'),
+    /** Last confirmation email sent: at most one per address per 24 h (newsletter.repo.ts). */
+    confirmSentAt: timestamptz('confirm_sent_at'),
   },
   (t) => [uniqueIndex('newsletter_subscribers_email_key').on(t.email)],
 );

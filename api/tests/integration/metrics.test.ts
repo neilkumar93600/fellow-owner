@@ -9,6 +9,8 @@ import { memberships } from '../../src/db/schema/memberships.js';
 import { pageVisits } from '../../src/db/schema/page-visits.js';
 import { promotions } from '../../src/db/schema/promotions.js';
 import { utcDayString } from '../../src/lib/dates.js';
+import { withinCap } from '../../src/middlewares/rate-limit.js';
+import { VISITS_PER_SPACE_PER_DAY } from '../../src/services/metrics.service.js';
 import { type SignedIn, signInWithOtp } from '../helpers/auth.js';
 import { createFactories, type TestSpace } from '../helpers/factories.js';
 import { closeDb, db, resetDatabase } from '../helpers/test-db.js';
@@ -87,6 +89,26 @@ describe('POST /api/spaces/:handle/visit', () => {
   it('limits one IP to 30 visits a minute', async () => {
     for (let i = 0; i < 30; i += 1) await visit('mira', '198.51.100.50').expect(204);
     await visit('mira', '198.51.100.50').expect(429);
+  });
+
+  it(`records at most ${VISITS_PER_SPACE_PER_DAY} visits per space a day, whatever the IPs`, async () => {
+    const zed = await repos.spaces.findByHandle('zed');
+    const key = `${zed?.id}:${utcDayString()}`;
+    for (let i = 0; i < VISITS_PER_SPACE_PER_DAY; i += 1) {
+      await withinCap({
+        name: 'visit-space',
+        key,
+        windowSeconds: 86_400,
+        max: VISITS_PER_SPACE_PER_DAY,
+        redis: null,
+      });
+    }
+    await visit('zed', '198.51.100.60').expect(204);
+    const rows = await db
+      .select()
+      .from(pageVisits)
+      .where(eq(pageVisits.spaceId, zed?.id ?? ''));
+    expect(rows).toHaveLength(0);
   });
 });
 

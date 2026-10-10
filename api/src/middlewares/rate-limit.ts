@@ -22,7 +22,10 @@ export interface RateLimitOptions {
   internalKey?: string | null;
 }
 
-/** ponytail: memory windows are per process; Redis shares them across replicas when set. */
+/**
+ * ponytail: memory windows are per process (createRateLimit and withinCap share the map);
+ * Redis shares them across replicas when set.
+ */
 const memory = new Map<string, { count: number; resetAt: number }>();
 
 function countInMemory(id: string, windowMs: number, now: number) {
@@ -36,6 +39,52 @@ function countInMemory(id: string, windowMs: number, now: number) {
   }
   entry.count += 1;
   return { count: entry.count, resetAt: entry.resetAt };
+}
+
+export interface CapOptions {
+  /** Counter namespace, e.g. 'support-ack'. Keys are `cap:<name>:<key>`. */
+  name: string;
+  /** Who or what is counted: an address, a space id, or 'all' for a global cap. */
+  key: string;
+  /** The window starts at the first hit and lasts this long. */
+  windowSeconds: number;
+  max: number;
+  /** Defaults to the process Redis; null forces the in-process store. */
+  redis?: Redis | null;
+}
+
+/**
+ * Counts one hit and says whether it is still within `max` for the window: the IP-independent
+ * caps on email and row-creating endpoints (a direct caller can forge X-Forwarded-For). Redis
+ * (SET NX EX, then INCR, so the key always has its expiry) when available; the same in-process
+ * store as createRateLimit otherwise, or when Redis errors.
+ */
+export async function withinCap(options: CapOptions): Promise<boolean> {
+  const client = options.redis === undefined ? defaultRedis : options.redis;
+  const id = `cap:${options.name}:${options.key}`;
+  if (client) {
+    try {
+      const redisClient = connected(client);
+      await redisClient.set(id, '0', {
+        condition: 'NX',
+        expiration: { type: 'EX', value: options.windowSeconds },
+      });
+      return (await redisClient.incr(id)) <= options.max;
+    } catch (error) {
+      logger.warn({ err: error, cap: options.name }, 'cap: redis failed, counting in memory');
+    }
+  }
+  return countInMemory(id, options.windowSeconds * 1000, Date.now()).count <= options.max;
+}
+
+/** Middleware form of withinCap: 429 rate_limited once the cap is used up (no internal skip). */
+export function createCap(
+  options: Omit<CapOptions, 'key'> & { key: (req: Request) => string },
+): RequestHandler {
+  return async (req, _res, next) => {
+    if (!(await withinCap({ ...options, key: options.key(req) }))) throw rateLimited();
+    next();
+  };
 }
 
 /**

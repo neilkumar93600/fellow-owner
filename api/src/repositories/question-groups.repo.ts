@@ -305,7 +305,12 @@ export function createQuestionGroupsRepo(db: Db) {
       await tx.delete(questionGroups).where(eq(questionGroups.id, id));
     },
 
-    /** Puts still-eligible pitches into a group. Returns how many moved in. */
+    /**
+     * Puts still-eligible pitches into a group that is still open. Returns how many moved in (0
+     * when the group was answered or dismissed since the job read it). Call it in a transaction:
+     * the group row stays locked until commit, so an answer waits for the join (and replies to
+     * the new askers too) or wins and the join is skipped.
+     */
     async assign(
       spaceId: string,
       groupId: string,
@@ -314,6 +319,18 @@ export function createQuestionGroupsRepo(db: Db) {
       tx: DbOrTx = db,
     ): Promise<number> {
       if (pitchIds.length === 0) return 0;
+      const [open] = await tx
+        .select({ id: questionGroups.id })
+        .from(questionGroups)
+        .where(
+          and(
+            eq(questionGroups.spaceId, spaceId),
+            eq(questionGroups.id, groupId),
+            eq(questionGroups.status, 'open'),
+          ),
+        )
+        .for('update');
+      if (!open) return 0;
       const rows = await tx
         .update(inbound)
         .set({ questionGroupId: groupId })

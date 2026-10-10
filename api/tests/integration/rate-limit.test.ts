@@ -5,6 +5,8 @@ import { env } from '../../src/config/env.js';
 import { buildContainer } from '../../src/container.js';
 import { PLATFORM_LOOKUPS_PER_DAY } from '../../src/controllers/platform.controller.js';
 import { createApp } from '../../src/create-app.js';
+import { withinCap } from '../../src/middlewares/rate-limit.js';
+import { DEMO_SESSIONS_PER_HOUR } from '../../src/routes/demo.routes.js';
 import { signInWithOtp } from '../helpers/auth.js';
 import { closeDb, resetDatabase } from '../helpers/test-db.js';
 
@@ -94,6 +96,45 @@ describe('public limiter', () => {
     await read().expect(429);
     await read().set('x-internal-key', 'w'.repeat(40)).expect(429);
     await read().set('x-internal-key', key).expect(404);
+  });
+});
+
+describe('client IP (TRUST_PROXY_HOPS)', () => {
+  it('with 2 hops a forged left-most X-Forwarded-For entry is ignored', async () => {
+    const hopsApp = createApp(buildContainer({ env: { ...env, TRUST_PROXY_HOPS: 2 } }));
+    // client, then Vercel's edge; the socket is Railway's edge. The left-most entry is forged.
+    const check = (forged: string, client: string) =>
+      request(hopsApp)
+        .get('/api/handle-available?h=freehandle')
+        .set('X-Forwarded-For', `${forged}, ${client}, 10.0.0.1`)
+        .expect(200);
+    const first = await check('6.6.6.1', '203.0.113.60');
+    expect(first.headers['ratelimit-remaining']).toBe('29');
+    // A new forged entry does not make a new client: same bucket.
+    const second = await check('6.6.6.2', '203.0.113.60');
+    expect(second.headers['ratelimit-remaining']).toBe('28');
+    // Another real client has its own bucket.
+    const other = await check('6.6.6.2', '203.0.113.61');
+    expect(other.headers['ratelimit-remaining']).toBe('29');
+  });
+});
+
+describe('demo sessions: global hourly cap', () => {
+  it(`after ${DEMO_SESSIONS_PER_HOUR} an hour in all, any IP gets 429`, async () => {
+    for (let i = 0; i < DEMO_SESSIONS_PER_HOUR; i += 1) {
+      await withinCap({
+        name: 'demo-session-hour',
+        key: 'all',
+        windowSeconds: 3600,
+        max: DEMO_SESSIONS_PER_HOUR,
+        redis: null,
+      });
+    }
+    await request(app)
+      .post('/api/demo/session')
+      .set('X-Forwarded-For', '203.0.113.70')
+      .send({})
+      .expect(429);
   });
 });
 

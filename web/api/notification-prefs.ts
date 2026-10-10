@@ -15,3 +15,14 @@ export function updateNotificationPrefs(input: NotificationPrefsInput): Promise<
     json: input,
   });
 }
+
+/**
+ * POST /api/email/unsubscribe?token= : the button on /email-preferences behind the emailed link
+ * (opening the link changes nothing). 400 for a bad token.
+ */
+export function unsubscribeWithToken(token: string): Promise<{ unsubscribed: true }> {
+  return apiFetch<{ unsubscribed: true }>(
+    `/api/email/unsubscribe?token=${encodeURIComponent(token)}`,
+    { method: 'POST' },
+  );
+}

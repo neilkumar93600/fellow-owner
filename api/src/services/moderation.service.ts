@@ -61,8 +61,7 @@ export function createModerationService(deps: ModerationServiceDeps) {
     }
   }
 
-  async function present(spaceId: string, rows: ReportWithReporter[]): Promise<ReportItem[]> {
-    const space = await repos.spaces.findById(spaceId);
+  async function present(rows: ReportWithReporter[]): Promise<ReportItem[]> {
     const targets = await repos.reports.targets(rows);
     return rows.map((row) => {
       const target = targets.get(row.targetId);
@@ -72,7 +71,8 @@ export function createModerationService(deps: ModerationServiceDeps) {
           type: row.targetType,
           id: row.targetId,
           excerpt: target ? excerpt(target.text) : 'This has been deleted.',
-          href: space && target ? `/${space.handle}/p/${target.postId}` : `/${space?.handle ?? ''}`,
+          // The studio view of the post: the fan route 404s once the post is hidden.
+          href: target ? `/dashboard/ideas?item=${target.postId}` : '/dashboard/ideas',
           authorName: target?.authorName == null ? null : displayName(target.authorName),
           hidden: target?.hidden ?? false,
         },
@@ -113,7 +113,7 @@ export function createModerationService(deps: ModerationServiceDeps) {
       });
       const page = toPage(rows, limit, encodeTimeCursor);
       return {
-        items: await present(spaceId, page.items),
+        items: await present(page.items),
         nextCursor: page.nextCursor,
         openCount: await repos.reports.openCount(spaceId),
       };
@@ -152,7 +152,7 @@ export function createModerationService(deps: ModerationServiceDeps) {
         }
       });
       const fresh = await repos.reports.findInSpace(spaceId, reportId);
-      const [item] = await present(spaceId, fresh ? [fresh] : []);
+      const [item] = await present(fresh ? [fresh] : []);
       if (!item) throw notFound('Report');
       return item;
     },

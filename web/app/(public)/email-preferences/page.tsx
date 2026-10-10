@@ -7,9 +7,11 @@ import { buttonVariants } from '@/components/ui/button-variants';
 import { cn } from '@/components/ui/cn';
 import { DISPLAY_H1 } from '@/lib/constants';
 import { routes } from '@/lib/routes';
+import { UnsubscribeButton } from './unsubscribe-button';
 
-// Where the unsubscribe link in every notification email lands (the API redirects here with
-// ?status=unsubscribed or ?status=invalid). The switches show for a signed-in person.
+// Where the unsubscribe link in every notification email lands, with ?token=. Opening it changes
+// nothing (mail link scanners open every link): the button POSTs the token, then the page shows
+// ?status=unsubscribed or ?status=invalid. The switches show for a signed-in person.
 export const metadata: Metadata = {
   title: 'Email preferences',
   robots: { index: false },
@@ -27,7 +29,7 @@ export default async function Page({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { status } = await searchParams;
+  const { status, token } = await searchParams;
   const notice = typeof status === 'string' ? NOTICES[status] : undefined;
   return (
     <PageFrame>
@@ -40,6 +42,7 @@ export default async function Page({
         </p>
       </header>
       {notice ? <Banner className="mt-6">{notice}</Banner> : null}
+      {typeof token === 'string' && token ? <UnsubscribeButton token={token} /> : null}
       <EmailPrefsPanel />
       <Link href={routes.home()} className={cn(buttonVariants({ variant: 'secondary' }), 'mt-8')}>
         Back to Fellow Owners

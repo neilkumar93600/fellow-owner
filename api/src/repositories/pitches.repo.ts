@@ -23,7 +23,7 @@ import {
   type SQL,
   sql,
 } from 'drizzle-orm';
-import { chunk, type Db, type DbOrTx, likePattern } from '../db/client.js';
+import { chunk, type Db, type DbOrTx, inTransaction, likePattern } from '../db/client.js';
 import { user } from '../db/schema/auth.js';
 import { type InboundRow, inbound, type NewInboundRow } from '../db/schema/inbound.js';
 import { memberships } from '../db/schema/memberships.js';
@@ -185,19 +185,29 @@ export function createPitchesRepo(db: Db) {
       id: string,
       senderMembershipId: string,
       tx: DbOrTx = db,
-    ): Promise<InboundRow | null> {
-      const [row] = await tx
-        .update(inbound)
-        .set({ status: 'withdrawn', updatedAt: new Date() })
-        .where(
-          and(
-            eq(inbound.id, id),
-            eq(inbound.senderMembershipId, senderMembershipId),
-            eq(inbound.status, 'new'),
-          ),
-        )
-        .returning();
-      return row ?? null;
+    ): Promise<{ row: InboundRow; questionGroupId: string | null } | null> {
+      // The pitch also leaves its Answer Once group: the old group id is returned so the caller
+      // can recount it (question-groups.repo refreshStats) in the same transaction.
+      return inTransaction(db, tx, async (t) => {
+        const [current] = await t
+          .select({ questionGroupId: inbound.questionGroupId })
+          .from(inbound)
+          .where(
+            and(
+              eq(inbound.id, id),
+              eq(inbound.senderMembershipId, senderMembershipId),
+              eq(inbound.status, 'new'),
+            ),
+          )
+          .for('update');
+        if (!current) return null;
+        const [row] = await t
+          .update(inbound)
+          .set({ status: 'withdrawn', questionGroupId: null, updatedAt: new Date() })
+          .where(eq(inbound.id, id))
+          .returning();
+        return row ? { row, questionGroupId: current.questionGroupId } : null;
+      });
     },
 
     /** Creator: new / shortlisted / archived. Withdrawn pitches are left alone (returns null). */

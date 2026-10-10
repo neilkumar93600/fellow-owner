@@ -21,7 +21,12 @@ import { SidePanel, type SidePanelProps } from '@/components/shared/side-panel';
 import { StatusPill } from '@/components/shared/status-pill';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/components/ui/cn';
-import { usePostAction, usePostFeedback, useStudioComment } from '@/hooks/queries/use-ideas';
+import {
+  useModerateComment,
+  usePostAction,
+  usePostFeedback,
+  useStudioComment,
+} from '@/hooks/queries/use-ideas';
 import { formatDate, formatNumber, formatRelative, pluralize } from '@/lib/format';
 import { routes } from '@/lib/routes';
 import { toastSuccess } from '@/lib/toast';
@@ -86,6 +91,7 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
   const action = usePostAction();
   const feedback = usePostFeedback(id);
   const commenting = useStudioComment(id);
+  const moderating = useModerateComment(id);
   if (!post) return null;
 
   const full = detail?.id === post.id ? detail : null;
@@ -376,13 +382,23 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
                       image={comment.author.image}
                       size={28}
                     />
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className="text-small">
                         <span className="text-small-strong text-ink">{comment.author.name}</span>{' '}
                         <span className="text-ink-muted">{formatRelative(comment.createdAt)}</span>
                       </p>
                       <p className="mt-1 max-w-[68ch] text-body text-ink">{comment.body}</p>
                     </div>
+                    <Button
+                      variant="ghost"
+                      size="md"
+                      icon={<EyeOff />}
+                      aria-label={`Hide ${comment.author.name}'s comment`}
+                      disabled={moderating.isPending}
+                      onClick={() => moderating.mutate({ commentId: comment.id, action: 'hide' })}
+                    >
+                      Hide
+                    </Button>
                   </li>
                 ))}
               </ul>

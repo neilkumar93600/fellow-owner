@@ -47,6 +47,7 @@ export function SimilarSection({ postId, scope }: SimilarSectionProps) {
                   name={post.community.name}
                   tint={post.community.tint}
                   icon={post.community.icon}
+                  className="self-start"
                 />
                 <Link
                   href={postHref(post.id)}

@@ -1,11 +1,12 @@
 import { newsletterTokenQuerySchema, notificationPrefsSchema } from '@fellow-owners/shared';
 import type { Request, Response } from 'express';
 import type { Env } from '../config/env.js';
+import { badRequest } from '../lib/errors.js';
 import { userIdOf } from '../middlewares/require-session.js';
 import { bodyOf, queryOf } from '../middlewares/validate.js';
 import type { NotificationEmailsService } from '../services/notification-emails.service.js';
 
-/** /api/me/notification-prefs (session) and GET /api/email/unsubscribe (signed token). */
+/** /api/me/notification-prefs (session) and /api/email/unsubscribe (signed token). */
 export function createNotificationPrefsController(deps: {
   env: Pick<Env, 'WEB_ORIGIN'>;
   notificationEmails: NotificationEmailsService;
@@ -21,17 +22,24 @@ export function createNotificationPrefsController(deps: {
       const input = bodyOf(req, notificationPrefsSchema);
       res.json(await notificationEmails.updatePrefs(userIdOf(req), input));
     },
-    /** GET /api/email/unsubscribe?token= -> 302 /email-preferences?status=unsubscribed|invalid */
-    async unsubscribe(req: Request, res: Response): Promise<void> {
-      const { token } = queryOf(req, newsletterTokenQuerySchema);
-      const ok = await notificationEmails.unsubscribe(token);
-      const status = ok ? 'unsubscribed' : 'invalid';
-      res.redirect(302, `${deps.env.WEB_ORIGIN}/email-preferences?status=${status}`);
+    /** GET /api/email/unsubscribe?token= -> 302 /email-preferences?token= (the page's button POSTs). */
+    async unsubscribePage(req: Request, res: Response): Promise<void> {
+      const token = typeof req.query.token === 'string' ? req.query.token : '';
+      res.redirect(
+        302,
+        `${deps.env.WEB_ORIGIN}/email-preferences?token=${encodeURIComponent(token)}`,
+      );
     },
-    /** POST /api/email/unsubscribe?token= : the mail client's one-click POST (RFC 8058); no redirect. */
+    /**
+     * POST /api/email/unsubscribe?token= : the page's button or the mail client's one-click POST
+     * (RFC 8058; the form body is not needed). -> {unsubscribed: true}; 400 for a bad token.
+     */
     async unsubscribeOneClick(req: Request, res: Response): Promise<void> {
       const { token } = queryOf(req, newsletterTokenQuerySchema);
-      res.status((await notificationEmails.unsubscribe(token)) ? 200 : 400).json({});
+      if (!(await notificationEmails.unsubscribe(token))) {
+        throw badRequest('That unsubscribe link did not work. It may be incomplete.');
+      }
+      res.json({ unsubscribed: true });
     },
   };
 }

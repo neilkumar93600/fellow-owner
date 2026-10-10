@@ -1,19 +1,22 @@
 'use client';
 
 import type { StudioCommunity } from '@fellow-owners/shared';
-import { Plus, Users } from 'lucide-react';
+import { Flag, Plus, Users } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 import { CommunityCardSkeleton } from '@/components/shared/card-skeletons';
 import { EmptyState } from '@/components/shared/empty-state';
 import { TINT_ROTATION } from '@/components/shared/tint';
 import { Toolbar } from '@/components/shared/toolbar';
 import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button-variants';
 import {
   useCreateCommunity,
   useStudioCommunities,
   useUpdateCommunity,
 } from '@/hooks/queries/use-communities';
 import { formatNumber, pluralize } from '@/lib/format';
+import { routes } from '@/lib/routes';
 import { toastSuccess } from '@/lib/toast';
 import { CommunityActivityCard } from './community-activity';
 import { CommunityCoverCard } from './community-cover-card';
@@ -117,6 +120,15 @@ export function CommunitiesView() {
           >
             Add community
           </Button>
+        }
+        end={
+          <Link
+            href={routes.dashboard.reports()}
+            className={buttonVariants({ variant: 'secondary', surface: 'glass', size: 'md' })}
+          >
+            <Flag aria-hidden="true" className="size-4" />
+            Reports
+          </Link>
         }
       />
 

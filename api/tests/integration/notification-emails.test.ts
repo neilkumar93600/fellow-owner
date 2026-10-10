@@ -93,7 +93,7 @@ describe('sendDue', () => {
     expect(mail.text).toContain('Mira Lane replied to your idea: Solo Lisbon');
     expect(mail.text).toContain('Mira Lane featured your fan project: Gym log');
     expect(mail.text).toContain(`${env.WEB_ORIGIN}/mira/me?tab=pitches`);
-    expect(mail.text).toContain('/api/email/unsubscribe?token=');
+    expect(mail.text).toContain(`${env.WEB_ORIGIN}/email-preferences?token=`);
     expect(mail.headers?.['List-Unsubscribe']).toMatch(
       /^<http.*\/api\/email\/unsubscribe\?token=.+>$/,
     );
@@ -194,11 +194,19 @@ describe('unsubscribe', () => {
   const link = (userId: string, purpose = 'email-unsubscribe') =>
     `/api/email/unsubscribe?token=${encodeURIComponent(signToken(purpose, userId, env.BETTER_AUTH_SECRET))}`;
 
-  it('a signed link unsubscribes the user, with a redirect to the preferences page', async () => {
-    await notify(fan, 'reply_received', hoursAgo(2));
+  it('a GET (a mail link scanner) only redirects to the page with the token, changing nothing', async () => {
     const res = await request(app).get(link(fan.id)).expect(302);
-    expect(res.headers.location).toBe(`${env.WEB_ORIGIN}/email-preferences?status=unsubscribed`);
+    const token = signToken('email-unsubscribe', fan.id, env.BETTER_AUTH_SECRET);
+    expect(res.headers.location).toBe(
+      `${env.WEB_ORIGIN}/email-preferences?token=${encodeURIComponent(token)}`,
+    );
+    expect((await notificationEmails.getPrefs(fan.id)).unsubscribed).toBe(false);
+  });
 
+  it('the page button POST unsubscribes the user', async () => {
+    await notify(fan, 'reply_received', hoursAgo(2));
+    const res = await request(app).post(link(fan.id)).expect(200);
+    expect(res.body).toEqual({ unsubscribed: true });
     const [row] = await db
       .select()
       .from(notificationPrefs)
@@ -217,29 +225,29 @@ describe('unsubscribe', () => {
     expect((await notificationEmails.getPrefs(fan.id)).unsubscribed).toBe(true);
   });
 
-  it('a tampered token, another purpose or a deleted user is invalid', async () => {
+  it('a tampered token, another purpose or a deleted user is invalid (400)', async () => {
     for (const url of [
       `${link(fan.id)}x`,
       link(fan.id, 'newsletter-unsubscribe'),
       link('no-such-user'),
     ]) {
-      const res = await request(app).get(url).expect(302);
-      expect(res.headers.location).toBe(`${env.WEB_ORIGIN}/email-preferences?status=invalid`);
+      await request(app).post(url).expect(400);
     }
     expect((await notificationEmails.getPrefs(fan.id)).unsubscribed).toBe(false);
-    await request(app).get('/api/email/unsubscribe').expect(400);
+    await request(app).post('/api/email/unsubscribe').expect(400);
   });
 
-  it('the link in a sent digest works', async () => {
+  it('the one-click header in a sent digest works', async () => {
     await notify(fan, 'reply_received', hoursAgo(2));
     await notificationEmails.sendDue(NOW);
-    const url = (sent[0]?.text.match(/https?:\/\/\S+\/api\/email\/unsubscribe\?token=\S+/) ??
-      [])[0];
-    expect(url).toBeTruthy();
-    const res = await request(app).get(
-      new URL(url as string).pathname + new URL(url as string).search,
-    );
-    expect(res.status).toBe(302);
+    const header = sent[0]?.headers?.['List-Unsubscribe'] ?? '';
+    const url = new URL(header.slice(1, -1));
+    expect(url.pathname).toBe('/api/email/unsubscribe');
+    await request(app)
+      .post(url.pathname + url.search)
+      .type('form')
+      .send('List-Unsubscribe=One-Click')
+      .expect(200);
     expect((await notificationEmails.getPrefs(fan.id)).unsubscribed).toBe(true);
   });
 });

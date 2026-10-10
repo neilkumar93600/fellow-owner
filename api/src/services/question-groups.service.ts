@@ -177,7 +177,7 @@ export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
     /**
      * One transaction: marks the group answered (the 409 guard), replies to every asker still
      * waiting (status replied, creator_reply, replied_at), and posts the answer, pinned, in each
-     * chosen community. Notifications go out after commit.
+     * chosen community. Notifications go out after commit, best effort.
      */
     async answer(
       spaceId: string,
@@ -258,15 +258,21 @@ export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
         'question group answered',
       );
       for (const postId of result.postIds) analyzeLater(postId);
+      // The answer is committed: a failed notification is logged, never turned into a 500 (a
+      // retry would only get 409).
       for (const member of result.replied) {
-        const sender = await notifications.member(member.senderMembershipId);
-        if (!sender.userId || sender.userId === userId) continue;
-        await notifications.notify({
-          userId: sender.userId,
-          spaceId,
-          kind: 'reply_received',
-          payload: { inboundId: member.id, subject: member.subject, questionGroupId: groupId },
-        });
+        try {
+          const sender = await notifications.member(member.senderMembershipId);
+          if (!sender.userId || sender.userId === userId) continue;
+          await notifications.notify({
+            userId: sender.userId,
+            spaceId,
+            kind: 'reply_received',
+            payload: { inboundId: member.id, subject: member.subject, questionGroupId: groupId },
+          });
+        } catch (err) {
+          log.warn({ err, spaceId, groupId, pitchId: member.id }, 'answer notification failed');
+        }
       }
       return presentOne(spaceId, result.row);
     },

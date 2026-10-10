@@ -19,7 +19,6 @@ describe('POST /api/newsletter', () => {
   });
 
   it('subscribes a new email, and answers the same for a repeat (one row, no enumeration)', async () => {
-    // A fresh app per test: the rate limiter lives in the controller.
     const app = createApp(buildContainer());
     const first = await request(app)
       .post('/api/newsletter')
@@ -40,12 +39,20 @@ describe('POST /api/newsletter', () => {
 
   it('rejects a malformed email with 400 validation_error', async () => {
     const app = createApp(buildContainer());
-    const res = await request(app).post('/api/newsletter').send({ email: 'not-an-email' });
+    const res = await request(app)
+      .post('/api/newsletter')
+      .set('X-Forwarded-For', '203.0.113.51')
+      .send({ email: 'not-an-email' });
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('validation_error');
-    await request(app).post('/api/newsletter').send({}).expect(400);
     await request(app)
       .post('/api/newsletter')
+      .set('X-Forwarded-For', '203.0.113.51')
+      .send({})
+      .expect(400);
+    await request(app)
+      .post('/api/newsletter')
+      .set('X-Forwarded-For', '203.0.113.51')
       .send({ email: 'a@example.com', source: 'elsewhere' })
       .expect(400);
   });
@@ -55,10 +62,14 @@ describe('POST /api/newsletter', () => {
     for (let i = 0; i < 5; i++) {
       await request(app)
         .post('/api/newsletter')
+        .set('X-Forwarded-For', '203.0.113.52')
         .send({ email: `fan${i}@example.com` })
         .expect(200);
     }
-    const res = await request(app).post('/api/newsletter').send({ email: 'fan6@example.com' });
+    const res = await request(app)
+      .post('/api/newsletter')
+      .set('X-Forwarded-For', '203.0.113.52')
+      .send({ email: 'fan6@example.com' });
     expect(res.status).toBe(429);
     expect(res.body.error.code).toBe('rate_limited');
     expect(await rowsFor('fan6@example.com')).toHaveLength(0);

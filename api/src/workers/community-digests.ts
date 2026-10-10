@@ -13,8 +13,8 @@ export function createDigestWriter(deps: DigestWriterDeps) {
   const log = deps.logger.child({ module: 'community-digests' });
   return {
     /**
-     * Resolves with the digests written. A community whose AI call fails is skipped and retried
-     * on the next run in the same week (its digest is still missing).
+     * Resolves with the digests written. A community whose AI call fails does not stop the
+     * others, but the run then rejects; the next run in the same week retries the missing ones.
      */
     async writeDue(now: Date): Promise<number> {
       const periodDate = utcDayString(weekStart(now));
@@ -58,6 +58,11 @@ export function createDigestWriter(deps: DigestWriterDeps) {
         }
       }
       if (due.length > 0) log.info({ due: due.length, written, periodDate }, 'community digests');
+      // Rejecting marks the tick's job_runs row failed, so the next tick retries this week's slot
+      // (communities written above are no longer due).
+      if (written < due.length) {
+        throw new Error(`${due.length - written} of ${due.length} community digests failed`);
+      }
       return written;
     },
   };

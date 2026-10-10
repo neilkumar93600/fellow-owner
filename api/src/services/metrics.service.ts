@@ -3,7 +3,14 @@ import type { CoreDeps } from '../container.js';
 import { addDays, startOfUtcDay, utcDayString } from '../lib/dates.js';
 import { notFound } from '../lib/errors.js';
 import { visitorHash } from '../lib/hash.js';
+import { withinCap } from '../middlewares/rate-limit.js';
 import { isBot } from './clicks.service.js';
+
+/**
+ * Visits recorded per space per day: the per-IP limit alone can be dodged with forged IPs, so
+ * this bounds how far anyone can inflate a space's visitor count. Visits past it are dropped.
+ */
+export const VISITS_PER_SPACE_PER_DAY = 5000;
 
 export type MetricsServiceDeps = Pick<CoreDeps, 'env' | 'repos' | 'logger'>;
 
@@ -26,12 +33,22 @@ export function createMetricsService(deps: MetricsServiceDeps) {
   const { repos, env } = deps;
 
   return {
-    /** Counts one visitor per UTC day; bots and unknown handles are not counted (404 for unknown). */
+    /**
+     * Counts one visitor per UTC day; bots and unknown handles are not counted (404 for unknown),
+     * nor anything past VISITS_PER_SPACE_PER_DAY.
+     */
     async recordVisit(handle: string, visitor: VisitorInfo): Promise<void> {
       const space = await repos.spaces.findByHandle(handle);
       if (!space) throw notFound('Space');
       if (isBot(visitor.userAgent)) return;
       const day = utcDayString();
+      const counted = await withinCap({
+        name: 'visit-space',
+        key: `${space.id}:${day}`,
+        windowSeconds: 86_400,
+        max: VISITS_PER_SPACE_PER_DAY,
+      });
+      if (!counted) return;
       await repos.pageVisits.record(
         space.id,
         visitorHash(visitor.ip, visitor.userAgent ?? '', day, env.CLICK_SALT),

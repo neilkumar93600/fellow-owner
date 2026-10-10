@@ -7,6 +7,8 @@ import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
 import { followers } from '../../src/db/schema/followers.js';
 import { imports } from '../../src/db/schema/later.js';
+import { withinCap } from '../../src/middlewares/rate-limit.js';
+import { YOUTUBE_IMPORTS_PER_DAY } from '../../src/routes/followers.routes.js';
 import { type SignedIn, signInWithOtp } from '../helpers/auth.js';
 import { createFactories, type TestSpace } from '../helpers/factories.js';
 import { closeDb, db, resetDatabase } from '../helpers/test-db.js';
@@ -32,6 +34,8 @@ const keyedApp = createApp(
 );
 
 let owner: SignedIn;
+// Live imports are capped per space a day: the error-path tests use their own space.
+let other: SignedIn;
 let fan: SignedIn;
 let mira: TestSpace;
 
@@ -89,6 +93,11 @@ beforeAll(async () => {
     displayName: 'Mira Lane',
     communities: [{ name: 'Budget Travel', slug: 'budget-travel' }],
   });
+  other = await signInWithOtp(sampleApp, 'other@yt.test', 'Other Owner');
+  await factories.space({
+    owner: { id: other.userId, email: other.email, name: 'Other Owner' },
+    handle: 'otherowner',
+  });
 });
 
 afterEach(() => {
@@ -138,13 +147,13 @@ describe('POST /api/studio/followers/import/youtube', () => {
     stubYoutube({
       channels: () => json({ error: { errors: [{ reason: 'quotaExceeded' }] } }, 403),
     });
-    const quota = await post(keyedApp, owner.cookie, {
+    const quota = await post(keyedApp, other.cookie, {
       channelUrl: 'https://www.youtube.com/@quotatest',
     }).expect(502);
     expect(quota.body.error.message).toMatch(/YouTube/);
 
     stubYoutube({ channels: () => json({}) });
-    await post(keyedApp, owner.cookie, {
+    await post(keyedApp, other.cookie, {
       channelUrl: 'https://www.youtube.com/@nobodyhere',
     }).expect(404);
   });
@@ -162,6 +171,45 @@ describe('POST /api/studio/followers/import/youtube', () => {
       .post('/api/studio/followers/import/youtube')
       .send({ channelUrl: 'https://www.youtube.com/@x1x' })
       .expect(401);
+  });
+
+  it(`allows ${YOUTUBE_IMPORTS_PER_DAY.space} live imports per space a day, then 429`, async () => {
+    stubYoutube();
+    // `other` used 2 of its 3 above (the quota error and the unknown channel).
+    await post(keyedApp, other.cookie, { channelUrl: 'https://www.youtube.com/@third' }).expect(
+      201,
+    );
+    const over = await post(keyedApp, other.cookie, {
+      channelUrl: 'https://www.youtube.com/@fourth',
+    }).expect(429);
+    expect(over.body.error.code).toBe('rate_limited');
+    // Sample imports (no key) cost no quota and are not capped.
+    await post(sampleApp, other.cookie, {
+      channelUrl: 'https://www.youtube.com/@samplechannel',
+    }).expect(201);
+    // Nor are links that are not a channel (a typo costs no quota).
+    await post(keyedApp, other.cookie, { channelUrl: 'https://example.com/@x1x' }).expect(400);
+  });
+
+  // Last in this describe: it uses up the shared daily cap.
+  it(`stops every space after ${YOUTUBE_IMPORTS_PER_DAY.all} live imports a day in all`, async () => {
+    stubYoutube();
+    for (let i = 0; i < YOUTUBE_IMPORTS_PER_DAY.all; i++) {
+      await withinCap({
+        name: 'youtube-import-day',
+        key: 'all',
+        windowSeconds: 86_400,
+        max: YOUTUBE_IMPORTS_PER_DAY.all,
+        redis: null,
+      });
+    }
+    // A space that has not imported today is stopped too.
+    const late = await signInWithOtp(sampleApp, 'late@yt.test', 'Late Owner');
+    await factories.space({
+      owner: { id: late.userId, email: late.email, name: 'Late Owner' },
+      handle: 'lateowner',
+    });
+    await post(keyedApp, late.cookie, { channelUrl: 'https://www.youtube.com/@late' }).expect(429);
   });
 });
 

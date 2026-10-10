@@ -1,7 +1,7 @@
 import { LIMITS, type QuestionGroup } from '@fellow-owners/shared';
 import { and, eq } from 'drizzle-orm';
 import request from 'supertest';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { createFakeAiServices } from '../../src/ai/fake.js';
 import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
@@ -292,6 +292,68 @@ describe('Answer Once without AI', () => {
     expect(await grouper.groupDueSpaces(new Date())).toBeGreaterThanOrEqual(1);
     const [row] = await db.select().from(questionGroups).where(eq(questionGroups.id, pending.id));
     expect(row?.draft).toEqual(expect.any(String));
+  });
+});
+
+describe('Answer Once data integrity', () => {
+  let groupId: string;
+
+  it('a withdrawn pitch leaves its group (count and askers recomputed)', async () => {
+    const fanPitch = await pitchAt(mira, vec(60), { membershipId: fanMembershipId });
+    await pitchAt(mira, vec(60, 0.1));
+    await pitchAt(mira, vec(60, 0.2));
+    await pitchAt(mira, vec(60, 0.15));
+    expect(await grouper.groupSpace(mira.space.id)).toEqual({ created: 1, joined: 0 });
+    const [row] = await db.select().from(inbound).where(eq(inbound.id, fanPitch.id));
+    groupId = row?.questionGroupId as string;
+    expect(groupId).toEqual(expect.any(String));
+
+    await request(app)
+      .patch(`/api/pitches/${fanPitch.id}`)
+      .set('Cookie', fan.cookie)
+      .send({ status: 'withdrawn' })
+      .expect(200);
+    const [after] = await db.select().from(inbound).where(eq(inbound.id, fanPitch.id));
+    expect(after).toMatchObject({ status: 'withdrawn', questionGroupId: null });
+    const group = (await openGroups()).find((item) => item.id === groupId);
+    expect(group?.askedCount).toBe(3);
+    expect(group?.askers.map((asker) => asker.pitchId)).not.toContain(fanPitch.id);
+  });
+
+  it('a failing notification after the answer commits still returns the answered group', async () => {
+    const spy = vi
+      .spyOn(container.services.notifications, 'notify')
+      .mockRejectedValue(new Error('notifications down'));
+    try {
+      const res = await request(app)
+        .post(`/api/studio/question-groups/${groupId}/answer`)
+        .set('Cookie', owner.cookie)
+        .send({ answer: 'Packing cubes, one bag, done.', replyAll: true })
+        .expect(200);
+      expect(res.body).toMatchObject({ id: groupId, status: 'answered' });
+      expect(spy).toHaveBeenCalledTimes(3);
+    } finally {
+      spy.mockRestore();
+    }
+    const members = await db.select().from(inbound).where(eq(inbound.questionGroupId, groupId));
+    expect(members.map((pitch) => pitch.status)).toEqual(['replied', 'replied', 'replied']);
+  });
+
+  it('the grouping job never joins a group answered after it read the open groups', async () => {
+    const late = await pitchAt(mira, vec(60, 0.05));
+    // The job read the group as open just before the answer committed.
+    const stale = vi
+      .spyOn(container.repos.questionGroups, 'openCentroids')
+      .mockResolvedValueOnce([{ id: groupId, centroid: vec(60), size: 3 }]);
+    try {
+      expect(await grouper.groupSpace(mira.space.id)).toEqual({ created: 0, joined: 0 });
+    } finally {
+      stale.mockRestore();
+    }
+    const [row] = await db.select().from(inbound).where(eq(inbound.id, late.id));
+    expect(row?.questionGroupId).toBeNull();
+    const [group] = await db.select().from(questionGroups).where(eq(questionGroups.id, groupId));
+    expect(group?.askedCount).toBe(3);
   });
 });
 

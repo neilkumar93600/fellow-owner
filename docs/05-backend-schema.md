@@ -1,6 +1,6 @@
 # 05 · Backend Schema
 
-Status: draft v0.1 for review · Updated: 2026-10-01
+Status: draft v0.2 for review · Updated: 2026-10-10
 Database: Postgres 15+ with the `vector` extension. ORM: Drizzle. All timestamps are `timestamptz`. Our primary keys are `uuid` with `gen_random_uuid()`; Better Auth tables use `text` ids and our foreign keys to them are `text`.
 
 ## 1. Entities
@@ -22,7 +22,17 @@ Database: Postgres 15+ with the `vector` extension. ORM: Drizzle. All timestamps
 | `digests` | Cached AI briefings and community digests |
 | `ai_runs` | One row per AI call: cost, latency, errors, budget checks |
 | `ai_feedback` | Creator thumbs up or down on AI picks |
-| `asks` (P1), `notifications` (P1), `imports` (P1) | Creator asks, in-app notifications, audience imports |
+| `followers`, `follower_communities` | The creator's follower roster and which communities each follower is tagged into |
+| `asks` | Creator challenges (UI word: challenge) |
+| `notifications`, `notification_prefs` | In-app notifications; per-user email settings |
+| `imports` | Audience imports |
+| `question_groups` | Answer Once: pitches that asked the same thing |
+| `reports` | Member reports of posts and comments |
+| `studio_snoozes` | Today "Later": a pitch or post hidden until a date |
+| `page_visits` | Bio-page visits, one row per hashed visitor per day |
+| `support_requests` | Contact and privacy request forms |
+| `newsletter_subscribers` | Landing-page newsletter sign-ups |
+| `job_runs` | One row per scheduled job per slot |
 
 ## 2. Tables
 
@@ -44,6 +54,7 @@ AI fields (present on `posts` and `inbound`, written only by the AI module):
 | `analysis_status` | analysis_status | yes | `pending` | |
 | `analysis_attempts` | smallint | yes | 0 | `failed` after 3 |
 | `analysis_error` | text | no | | last error |
+| `analysis_claimed_at` | timestamptz | no | | sweep lease: a claimed row is skipped by other sweeps for a few minutes |
 | `content_hash` | text | yes | | sha256 of title + body; rerun triage only if it changes |
 | `scored_taste_version` | int | no | | taste version used for the score |
 | `ai_summary` | text | no | | <= 140 chars |
@@ -78,9 +89,12 @@ Better Auth's generated columns (`id`, `name`, `email` unique, `email_verified`,
 | taste_version | int | yes | 1 | +1 on each save |
 | ai_daily_token_budget | int | yes | 200000 | |
 | is_demo | boolean | yes | false | demo reset only touches these |
+| cover_url | text | no | | uploaded cover (`/api/media/<key>`) or an image link |
+| show_read_receipts | boolean | yes | true | Pitch Tracker: fans see when their pitch was read |
+| bio_link_shared_at | timestamptz | no | | setup checklist: first time the owner copied the bio link (set once) |
 | created_at, updated_at | timestamptz | yes | now() | |
 
-Indexes: unique(handle), unique(owner_user_id).
+Indexes: unique(handle), unique(owner_user_id). CHECKs: handle pattern and length, display name length, `taste_version >= 1`, `ai_daily_token_budget >= 0`.
 
 ### communities
 | Field | Type | Required | Default | Notes |
@@ -95,6 +109,7 @@ Indexes: unique(handle), unique(owner_user_id).
 | sort_order | int | yes | 0 | |
 | member_count | int | yes | 0 | updated in the join/leave transaction |
 | archived_at | timestamptz | no | | |
+| cover_url | text | no | | uploaded cover or an image link |
 | created_at | timestamptz | yes | now() | |
 
 Indexes: unique(space_id, slug), (space_id, sort_order).
@@ -110,11 +125,14 @@ Indexes: unique(space_id, slug), (space_id, sort_order).
 | intro | text | no | | <= 280 |
 | skills | text[] | yes | `{}` | <= 10, each <= 30, lowercase |
 | links | jsonb | yes | `[]` | <= 5 `{ label, url }` |
-| embedding | vector(1536) | no | | P1: from headline + intro + skills, filled once F17 ships |
-| removed_at | timestamptz | no | | set when the owner removes a member |
+| embedding | vector(1536) | no | | from headline + intro + skills; used by "people who could help" |
+| spotlight_at | timestamptz | no | | "Fans of the week": set when the owner approves a shout-out |
+| spotlight_note | text | no | | <= 280 (CHECK) |
+| removed_at | timestamptz | no | | set when the owner removes a member, or when the member leaves |
+| left_at | timestamptz | no | | set with `removed_at` when the member left on their own (they may rejoin); null when the owner removed them |
 | joined_at | timestamptz | yes | now() | |
 
-Indexes: unique(space_id, user_id), (space_id, joined_at desc), GIN(skills), HNSW(embedding vector_cosine_ops).
+Indexes: unique(space_id, user_id), unique(space_id) where role = 'owner' (one owner membership per space), (space_id, joined_at desc), (user_id), GIN(skills), HNSW(embedding vector_cosine_ops). Thirty days after `removed_at`, the daily purge clears `intro`, `links`, `skills` and `embedding` (see section 8).
 
 ### community_members
 | Field | Type | Required | Default | Notes |
@@ -132,7 +150,8 @@ PK (community_id, membership_id). Index (membership_id).
 | space_id | uuid | yes | | FK spaces, cascade |
 | community_id | uuid | yes | | FK communities |
 | author_membership_id | uuid | no | | FK memberships, on delete set null ("Former member") |
-| ask_id | uuid | no | | FK asks (P1) |
+| ask_id | uuid | no | | FK asks, set null: the challenge this post is an entry to |
+| question_group_id | uuid | no | | FK question_groups, set null: a pinned Answer Once answer post |
 | type | post_type | yes | | |
 | title | text | yes | | 5..120 |
 | body | text | yes | | 20..5000 |
@@ -141,12 +160,13 @@ PK (community_id, membership_id). Index (membership_id).
 | links | jsonb | yes | `[]` | <= 5 `{ label, url }` |
 | use_count, build_count, comment_count | int | yes | 0 | denormalized, updated in the same transaction |
 | featured_at | timestamptz | no | | set when a promotion is published |
+| loved_at | timestamptz | no | | set by the owner: "Loved by {creator}" |
 | hidden_at | timestamptz | no | | set by the owner |
 | deleted_at | timestamptz | no | | set by the author |
 | created_at, updated_at | timestamptz | yes | now() | |
 | + AI fields | | | | see above |
 
-Indexes: (community_id, created_at desc) where deleted_at is null; (space_id, created_at desc); (space_id, ai_fit_score desc) where analysis_status = 'done'; (space_id, analysis_status) where analysis_status <> 'done'; (space_id, featured_at) where featured_at is not null; HNSW(embedding vector_cosine_ops).
+Indexes: (community_id, created_at desc) where deleted_at is null; (space_id, created_at desc); (space_id, ai_fit_score desc) where analysis_status = 'done'; (space_id, analysis_status) where analysis_status <> 'done'; (space_id, featured_at) where featured_at is not null; (ask_id); (author_membership_id, created_at); (deleted_at) where deleted_at is not null; (question_group_id); (created_at) where embedding is null and deleted_at is null (embedding backfill); HNSW(embedding vector_cosine_ops). CHECKs: title and body length, `cardinality(roles_needed) <= 5`, counts `>= 0`, fit score 0..100, `analysis_attempts >= 0`.
 
 ### comments
 | Field | Type | Required | Default | Notes |
@@ -159,7 +179,7 @@ Indexes: (community_id, created_at desc) where deleted_at is null; (space_id, cr
 | hidden_at, deleted_at | timestamptz | no | | |
 | created_at | timestamptz | yes | now() | |
 
-Indexes: (post_id, created_at), (author_membership_id, created_at).
+Indexes: (post_id, created_at), (space_id), (author_membership_id, created_at), (deleted_at) where deleted_at is not null.
 
 ### signals
 | Field | Type | Required | Default | Notes |
@@ -169,7 +189,7 @@ Indexes: (post_id, created_at), (author_membership_id, created_at).
 | kind | signal_kind | yes | | |
 | created_at | timestamptz | yes | now() | |
 
-PK (post_id, membership_id, kind).
+PK (post_id, membership_id, kind). Indexes (membership_id), (created_at).
 
 ### team_members
 | Field | Type | Required | Default | Notes |
@@ -181,7 +201,7 @@ PK (post_id, membership_id, kind).
 | created_at | timestamptz | yes | now() | |
 | decided_at | timestamptz | no | | |
 
-PK (post_id, membership_id). Index (post_id, status). The project author is inserted as `Lead`, `accepted`, when the project is created.
+PK (post_id, membership_id). Indexes (post_id, status), (membership_id, created_at). The project author is inserted as `Lead`, `accepted`, when the project is created.
 
 ### inbound (pitches)
 | Field | Type | Required | Default | Notes |
@@ -197,10 +217,14 @@ PK (post_id, membership_id). Index (post_id, status). The project author is inse
 | is_filtered | boolean | yes | false | true when the AI flags spam; cleared on Restore |
 | creator_reply | text | no | | 1..2000 |
 | replied_at | timestamptz | no | | |
+| read_at | timestamptz | no | | Pitch Tracker: first time the owner opened it; never overwritten |
+| shortlisted_at | timestamptz | no | | set once, the first time the status became `shortlisted` |
+| question_group_id | uuid | no | | FK question_groups, set null: the Answer Once group this pitch was clustered into |
+| question_group_excluded | boolean | yes | false | the creator removed it from its group; grouping never re-adds it |
 | created_at, updated_at | timestamptz | yes | now() | |
 | + AI fields | | | | see above |
 
-Indexes: (space_id, status, ai_fit_score desc), (space_id, created_at desc), (sender_membership_id, created_at), (space_id, analysis_status) where analysis_status <> 'done'.
+Indexes: (space_id, status, ai_fit_score desc), (space_id, created_at desc), (sender_membership_id, created_at), (space_id, analysis_status) where analysis_status <> 'done', (question_group_id), HNSW(embedding vector_cosine_ops).
 
 ### promotions
 | Field | Type | Required | Default | Notes |
@@ -210,6 +234,7 @@ Indexes: (space_id, status, ai_fit_score desc), (space_id, created_at desc), (se
 | post_id | uuid | yes | | FK posts, cascade; unique |
 | headline | text | no | | <= 100 |
 | drafts | jsonb | yes | `{}` | `{ x, instagram, linkedin, youtube }`, each `{ text, hashtags }` |
+| draft_errors | text[] | yes | `{}` | platforms the AI could not draft last time ("Couldn't draft" + Retry) |
 | showcase_slug | text | no | | set on publish; unique per space |
 | short_code | text | no | | 8 chars base62, set on publish; globally unique |
 | click_count | int | yes | 0 | |
@@ -217,7 +242,7 @@ Indexes: (space_id, status, ai_fit_score desc), (space_id, created_at desc), (se
 | created_by_user_id | text | yes | | FK user.id |
 | created_at, updated_at | timestamptz | yes | now() | |
 
-Indexes: unique(post_id), unique(space_id, showcase_slug), unique(short_code).
+Indexes: unique(post_id), unique(space_id, showcase_slug), unique(short_code), (space_id, created_at desc), (created_by_user_id).
 
 ### click_events
 | Field | Type | Required | Default | Notes |
@@ -229,7 +254,7 @@ Indexes: unique(post_id), unique(space_id, showcase_slug), unique(short_code).
 | visitor_hash | text | no | | sha256(ip + user agent + day + secret salt) for unique counts; raw IP never stored |
 | created_at | timestamptz | yes | now() | |
 
-Index (promotion_id, created_at).
+Indexes (promotion_id, created_at), (created_at). CHECK: `platform` is one of x, instagram, linkedin, youtube, other.
 
 ### digests
 | Field | Type | Required | Default | Notes |
@@ -242,16 +267,17 @@ Index (promotion_id, created_at).
 | model | text | yes | | |
 | regenerations | smallint | yes | 0 | max 5 a day |
 | created_at | timestamptz | yes | now() | |
+| updated_at | timestamptz | yes | now() | when the content was last (re)generated |
 
-Unique (space_id, community_id, period_date) NULLS NOT DISTINCT.
+`community_id` is a FK to communities, on delete cascade. Unique (space_id, community_id, period_date) NULLS NOT DISTINCT. Indexes (period_date), (community_id). A community digest's `period_date` is the Monday of its week.
 
 ### ai_runs
 | Field | Type | Required | Default | Notes |
 |-------|------|----------|---------|-------|
 | id | bigserial | yes | | PK |
-| space_id | uuid | yes | | |
-| user_id | text | no | | who triggered it, for per-user limits |
-| task | text | yes | | triageItem, embedItem, briefing... |
+| space_id | uuid | yes | | FK spaces, cascade |
+| user_id | text | no | | FK user.id, set null: who triggered it, for per-user limits |
+| task | text | yes | | triageItem, embedItem, briefing... (list in 02, "AI tasks") |
 | ref_type, ref_id | text, uuid | no | | |
 | model | text | yes | | |
 | input_tokens, output_tokens, latency_ms | int | yes | 0 | |
@@ -259,40 +285,62 @@ Unique (space_id, community_id, period_date) NULLS NOT DISTINCT.
 | error | text | no | | |
 | created_at | timestamptz | yes | now() | |
 
-Indexes: (space_id, created_at), (user_id, task, created_at).
+Indexes: (space_id, created_at), (user_id, task, created_at), (created_at).
 
 ### ai_feedback
 | Field | Type | Required | Default | Notes |
 |-------|------|----------|---------|-------|
 | id | uuid | yes | gen_random_uuid() | PK |
-| space_id | uuid | yes | | |
-| ref_type | text | yes | | post, inbound, briefing_highlight |
+| space_id | uuid | yes | | FK spaces, cascade |
+| ref_type | text | yes | | post, inbound, briefing_highlight (CHECK) |
 | ref_id | text | yes | | item id, or `{digest_id}:{index}` |
-| verdict | text | yes | | up or down |
-| created_by_user_id | text | yes | | |
+| verdict | text | yes | | up or down (CHECK) |
+| created_by_user_id | text | yes | | FK user.id, cascade |
 | created_at | timestamptz | yes | now() | |
 
-Unique (ref_type, ref_id, created_by_user_id).
+Unique (ref_type, ref_id, created_by_user_id). Indexes (space_id, ref_type), (created_by_user_id).
 
-### followers and follower_communities (built in MVP pass)
+### followers and follower_communities
 
-**followers:** id, space_id (fk spaces cascade), name (1..80), handle (null, <= 60), platform (null, CHECK in shared `PLATFORMS`), email (null, lowercased, <= 254), note (null, <= 500), source (manual|csv|paste, default manual), import_id (fk imports, set null), membership_id (fk memberships, set null, unique), created_at.
+**followers:** id, space_id (fk spaces cascade), name (1..80), handle (null, <= 60), platform (null, CHECK in shared `PLATFORMS`), email (null, lowercased, <= 254), note (null, <= 500), source (manual|csv|paste, default manual), import_id (fk imports, set null), membership_id (fk memberships, set null, unique), ai_tagged_at (null: last time auto-tag sent this follower to the model, skipped until communities change), created_at.
 - unique `(space_id, email) where email is not null`
 - unique `(space_id, coalesce(platform,''), lower(handle)) where handle is not null`
 - unique `membership_id where not null`
-- index `(space_id, created_at desc)`
+- index `(space_id, created_at desc)`, index `(import_id)`
 
 **follower_communities:** (follower_id fk cascade, community_id fk cascade) pk, tagged_by (creator|ai, default creator), created_at. Index on community_id.
 
-Both tables created by migration 0003_followers_notifications.sql. Row types: `FollowerRow`, `FollowersPage`, `FollowerCommunityRow`.
+### notifications, notification_prefs and imports
 
-### notifications and imports (used by the MVP pass)
-**notifications:** kinds now include idea_posted, pitch_received and comment_received besides reply_received, project_featured, team_request, team_decision and ask_posted (reserved for Asks); migration 0003 replaces the `notifications_kind` CHECK. Columns: id, user_id, space_id, kind, payload jsonb, read_at, created_at. Index (user_id, read_at, created_at desc).
+**notifications:** id, user_id (fk user cascade), space_id (fk spaces cascade), kind, payload jsonb, read_at, created_at. `kind` is CHECKed against the shared `NOTIFICATION_KINDS`: reply_received, project_featured, team_request, team_decision, ask_posted (a challenge opened), idea_posted, pitch_received, comment_received, post_loved, spotlighted, challenge_shortlisted, report_filed. Indexes: (user_id, read_at, created_at desc), (user_id, created_at desc, id desc) for the bell list, (created_at) where read_at is not null for the purge, (space_id).
 
-**imports:** id, space_id, source (paste, csv, youtube), status (pending, done, failed), item_count, result jsonb, created_at. The follower import writes one row per import (source paste or csv, result with created, duplicates and skipped); `followers.import_id` points at it.
+**notification_prefs:** user_id (pk, fk user cascade), email_enabled (default true), kinds jsonb (default `{}`; only the kinds the user changed), unsubscribed_at (one-click unsubscribe from an email footer), last_digest_at (the hourly digest's watermark), updated_at. No row means defaults: email on, every kind on. Email goes out only for reply_received, project_featured, spotlighted, challenge_shortlisted and team_decision.
 
-### P1 tables
-- **asks:** id, space_id, community_id (null = all communities), title 5..120, body <= 2000, due_at, status (open, closed), response_summary jsonb, created_at.
+**imports:** id, space_id, source (paste, csv, youtube), status (pending, done, failed), item_count, result jsonb, created_at. The follower import writes one row per import (result with created, duplicates and skipped); `followers.import_id` points at it. Index (space_id, created_at desc).
+
+### asks (challenges)
+id, space_id (fk spaces cascade), community_id (fk communities, set null; null = all communities), title 5..120, body (null, <= 2000), due_at, status (open, closed), response_summary jsonb (the shortlist, the winner post id and the AI recap, written when the challenge closes), created_at. Entries are `posts` rows with `ask_id` set. Indexes (space_id, created_at desc), (community_id).
+
+### question_groups (Answer Once)
+id, space_id (fk spaces cascade), question (the AI's one-line version), status (open, answered, dismissed), draft (AI draft in the creator's voice; null while pending or failed), answer, embedding vector(1536) (centroid of the member pitches), asked_count, first_asked_at, last_asked_at, answered_at, post_id (fk posts, set null: the first pinned answer post), pinned_community_ids uuid[], redrafts_date and redrafts_used (5 redrafts per group per UTC day), created_at, updated_at. Member pitches are the `inbound` rows with this `question_group_id`; asker quotes are cut from their bodies at read time. Index (space_id, status, last_asked_at desc).
+
+### reports
+id, space_id (fk spaces cascade), reporter_user_id (fk user, set null), target_type (post|comment), target_id (a posts.id or comments.id, no FK because it is either table), reason (spam, harassment, off_topic, unsafe, other), note (<= 500), status (open, resolved, dismissed; default open), resolved_by_user_id (fk user, set null), resolved_at, created_at. Unique (reporter_user_id, target_type, target_id): one report per reporter and target. Index (space_id, status, created_at desc).
+
+### studio_snoozes
+space_id (fk spaces cascade), ref_type (pitch|post), ref_id (an inbound.id or posts.id), until. PK (space_id, ref_type, ref_id). Hides the item from the Today decision cards until `until`.
+
+### page_visits
+space_id (fk spaces cascade), visitor_hash (salted with `CLICK_SALT`; the raw IP is never stored), day (UTC date), visits (>= 1). PK (space_id, visitor_hash, day).
+
+### support_requests
+id, kind (contact, privacy_export, privacy_delete, privacy_other), name (null), email (lowercased), message (10..4000), user_id (fk user, set null; set when the sender was signed in), status (default `new`), created_at. Index (created_at).
+
+### newsletter_subscribers
+id, email (unique, trimmed and lowercased), source (default `footer`), created_at, confirmed_at (set when the button on the page the confirmation email links to is pressed, a POST: double opt-in; opening the link alone changes nothing), unsubscribed_at, confirm_sent_at (when the last confirmation email went out; a sign-up gets a new one only when none went out in the last 24 hours, checked and stamped in one UPDATE).
+
+### job_runs
+job (text), slot (timestamptz), started_at, finished_at, status (running, ok, failed, skipped), error. PK (job, slot). One row per scheduled job per slot (the hour start for hourly jobs; the scheduled hour for daily and weekly ones). The tick treats a slot as done when it has an `ok` row. Job names and schedule are in 02, "Scheduled jobs".
 
 ## 3. Relationships
 
@@ -302,6 +350,9 @@ Both tables created by migration 0003_followers_notifications.sql. Row types: `F
 - communities 1..n posts; posts 1..n comments, signals, team_members; posts 1..0/1 promotions.
 - memberships 1..n posts (author), comments, signals, team_members, inbound (sender).
 - promotions 1..n click_events.
+- asks 1..n posts (entries); question_groups 1..n inbound (askers) and 1..n posts (pinned answers).
+- followers n..n communities through follower_communities; followers 0..1 memberships.
+- spaces 1..n reports, studio_snoozes, page_visits, question_groups, asks, followers, imports.
 
 ## 4. User ownership
 
@@ -311,14 +362,18 @@ Both tables created by migration 0003_followers_notifications.sql. Row types: `F
 
 ## 5. Authentication flow
 
-- **Create account:** name, email, username, password and an optional social profile (Better Auth `emailAndPassword` + `username`), or Google, Apple or Facebook. An email sign-up creates `user` with `email_verified = false` and emails a 6-digit `email-verification` code (Better Auth `emailOTP`; 10-minute expiry, 5 attempts, stored hashed in `verification`). Confirming the code sets `email_verified` but opens no session: the web then logs in with the password just typed. An email that already has an account gets the same answer and no email. The first social sign-in creates `user` + `account` directly.
+Details of the Better Auth setup are in `api/src/auth/index.ts` and 02, section 4.
+
+- **Create account:** name, email, username, password and an optional social profile (Better Auth `emailAndPassword` + `username`), or Google, Apple or Facebook. An email sign-up creates `user` with `email_verified = false` and emails a 6-digit `email-verification` code (Better Auth `emailOTP`; 10-minute expiry, 5 attempts). Codes live in `verification` encrypted (not hashed), so a resend inside the 10 minutes repeats the same code. Confirming the code needs the account's password too (`password` in the verify body), sets `email_verified`, drops every OAuth link and session made before the inbox was proven, and opens no session: the web then logs in with the password just typed. An email that already has an account gets the same answer and no email. The first social sign-in creates `user` + `account` directly (tokens stored encrypted).
+- **Per-address throttle:** in production each address gets at most one code email per 60 seconds and 5 per 15 minutes; above that the email is dropped silently and the earlier code still works.
 - **Log in:** email or username + password (`account.password` holds the salted scrypt hash, `provider_id = 'credential'`), or Google, Apple, Facebook. Logging in to an unconfirmed account answers 403 `EMAIL_NOT_VERIFIED` and emails a fresh code.
-- **Password reset:** a 6-digit `forget-password` code (`/email-otp/request-password-reset`, then `/email-otp/reset-password`) sets the new hash and deletes every session of the user. No reset links; `/change-password` is disabled.
-- **Session:** Better Auth `session` row + httpOnly cookie, 7 days, refreshed daily. Sign out deletes the session.
-- **Demo accounts:** two ordinary, already confirmed password accounts (emails and password from env: `DEMO_CREATOR_EMAIL`, `DEMO_FAN_EMAIL`, `DEMO_PASSWORD`), created or repaired by `ensureDemoUsers()` during seed and the demo reset. The demo buttons sign into them through `POST /api/demo/session`.
-- **Becoming an owner:** completing onboarding creates `spaces` + an `owner` membership in one transaction.
-- **Becoming a member:** confirming Join, or sending a first pitch, creates a `member` membership.
-- **Account deletion:** deletes the user's memberships and profile; their posts and comments keep `author_membership_id = null`.
+- **Password reset:** a 6-digit `forget-password` code (`/email-otp/request-password-reset`, then `/email-otp/reset-password`) sets the new hash and deletes every session of the user. No reset links.
+- **Change password:** `/change-password` is on for a signed-in user: the current password is required and the other sessions end. `/list-sessions` and `/revoke-other-sessions` list and end sessions.
+- **Session:** Better Auth `session` row + httpOnly cookie, 7 days, refreshed daily. Sign out deletes the session. Expired sessions are purged daily.
+- **Demo accounts:** two ordinary, already confirmed password accounts (emails and password from env: `DEMO_CREATOR_EMAIL`, `DEMO_FAN_EMAIL`, `DEMO_PASSWORD`), created or repaired by `ensureDemoUsers()` during seed and the demo reset. The demo buttons sign into them through `POST /api/demo/session`. They cannot be edited or deleted, and cannot see or end other sessions.
+- **Becoming an owner:** completing onboarding creates `spaces` + an `owner` membership in one transaction, and sets the user's `username` to the handle.
+- **Becoming a member:** confirming Join, or sending a first pitch, creates a `member` membership. A member can leave (`DELETE /api/spaces/:handle/me`): the membership gets `removed_at` and `left_at` and the member may rejoin. Joining again or sending a pitch brings a member who left back (the pitch Idea Coach also works for them; the post Coach needs an active membership). A member the owner removed (`removed_at` set, `left_at` null) gets 403 "You were removed from this space" on join, pitch and Coach.
+- **Account deletion:** `POST /delete-user` emails a 6-digit code; sending it back as `{ token }` deletes the user. The user's own space is deleted (cascade) and their memberships elsewhere are deleted; their posts and comments keep `author_membership_id = null` ("Former member").
 
 ## 6. Authorization rules
 
@@ -335,6 +390,14 @@ Both tables created by migration 0003_followers_notifications.sql. Row types: `F
 | promotions | read published | read published | | create, edit, publish, unpublish |
 | click_events | created through `/r/{code}` | | | read aggregates |
 | digests, ai_runs, ai_feedback | | | | read; create feedback |
+| followers, follower_communities, imports | | | | full control; emails never leave the studio |
+| asks (challenges) | list open challenges | enter with a post | | create, close, pick the winner |
+| question_groups | | | | read; answer, redraft, dismiss, remove an asker |
+| reports | | create (one per target) | | read; resolve or dismiss; hide the comment |
+| notifications, notification_prefs | | read and mark own; edit own prefs | | same, as a user |
+| studio_snoozes | | | | create, delete |
+| page_visits | write only (the visit beacon) | | | read aggregates (`GET /api/studio/metrics`) |
+| job_runs, support_requests | `support_requests`: write only (contact forms) | | | `job_runs`: read through `GET /api/cron/status` (cron secret). No read endpoint for support requests |
 
 Every service call resolves the caller's membership for the space first. Members never receive another member's email or any AI field.
 
@@ -344,7 +407,8 @@ Every service call resolves the caller's membership for the space first. Members
 - Links: `http` or `https` only, max 2,048 chars.
 - Handle: lowercase, `^[a-z0-9_.]{3,30}$`, unique, not in the reserved list.
 - Skills: trimmed, lowercased, deduplicated.
-- Daily caps per user per space (UTC day, counted from `created_at`): pitches 5, posts 20, comments 100. Community suggestions 10 per hour (counted in `ai_runs`).
+- Daily caps per user per space (UTC day, counted from `created_at`): pitches 5, posts 20, comments 100. Reports 20 per user per day. Community suggestions 10 per hour (counted in `ai_runs`). AI caps per task are in 02, "AI tasks".
+- Uploads: JPEG, PNG or WebP, at most 5 MB, with a server-made key `<kind>/<userId or spaceId>/<uuid>.<ext>`.
 - A member cannot signal their own post, request a role that is not open, or post in a community they have not joined.
 - A pitch can only be withdrawn while `new`. A reply moves status to `replied`.
 - Only `project` posts can have teams. A role is filled when one accepted team member holds it.
@@ -352,30 +416,38 @@ Every service call resolves the caller's membership for the space first. Members
 
 ## 8. Retention and deletion
 
+Enforced by `api/src/workers/purge.ts` (the `purge` job, daily at 09:00 UTC through the tick, or `POST /api/cron/purge`). Each rule is its own statement, so a failing rule does not roll back the others, and a run is idempotent. The numbers for the first four rules are in `RETENTION_DAYS` (shared).
+
 | Data | Rule |
 |------|------|
 | Posts, comments | Soft delete (`deleted_at`); kept for moderation history; hard-deleted 30 days later |
-| Pitches | Kept until the creator deletes the space or the sender deletes their account |
+| Pitches | Kept until the creator deletes the space or the sender deletes their account (never purged on a timer) |
 | click_events | 180 days |
 | ai_runs | 90 days |
-| digests | 30 days |
+| digests | 30 days (by `period_date`) |
+| Read notifications | 90 days |
+| Unread notifications | 180 days |
+| Expired sessions and verifications (codes, delete tokens) | At expiry |
+| support_requests | 365 days |
+| page_visits | 400 days (by `day`) |
+| Removed or departed members | 30 days after `removed_at`, `intro`, `links`, `skills` and `embedding` are cleared; the membership row stays so their posts keep a stable author |
+| job_runs | 30 days (by `started_at`) |
 | Space deletion | Cascades to everything with its `space_id` |
-| Export | P2: JSON export of a member's own content |
-
-A daily job (same Vercel cron as the demo reset) purges expired rows.
+| Export | `GET /api/me/export` returns the signed-in person's own data; `GET /api/studio/export/:kind` gives the creator CSVs of ideas, people, followers and pitches |
 
 ## 9. Migration and seed data
 
-- `drizzle-kit generate` produces SQL migrations committed under `api/src/db/migrations`. The first migration enables `vector` and creates enums. Migration 0003_followers_notifications creates the followers and follower_communities tables and replaces the notifications_kind CHECK with the expanded kind list. Migrations are additive in v1; any destructive change ships as two migrations.
-- `pnpm db:migrate` runs before each API deploy.
+- `drizzle-kit generate` produces SQL migrations committed under `api/src/db/migrations`; CI fails if `pnpm db:generate` would change them. Current files: `0000_enable_vector` (the `vector` extension), `0001_schema`, `0002_auth_username_social`, `0003_followers_notifications`, `0004_creator_pivot`, `0005_newsletter`, `0006_backend_complete` (adds `job_runs`, `reports`, `notification_prefs`, `page_visits`, `question_groups`, `studio_snoozes`, `support_requests` and the new columns and indexes above, and widens the notification kinds), `0007_membership_left_at`, `0008_newsletter_confirm_sent_at` (adds `newsletter_subscribers.confirm_sent_at`). Migrations are additive in v1; any destructive change ships as two migrations.
+- On Railway the `api` service's pre-deploy command runs `node dist/db/migrate.js` (it reads only `DATABASE_URL`) before the new container takes traffic. Locally: `pnpm db:migrate` (and `pnpm db:migrate:test` for the test database).
 - `pnpm db:seed` loads `api/src/db/seed/data/*.json` into a demo space:
-  - Creator Mira Kapoor (`/mira`), 740K followers across YouTube 410K, Instagram 260K, X 70K; taste profile and three voice samples.
-  - 6 communities: Builders, Designers, Investors & Operators, Music & Creators, Fitness Crew, Local Impact.
-  - About 1,200 members generated with a fixed random seed (names, headlines, skills, join dates over 12 weeks).
-  - About 140 posts, 400 comments, signals and teams; about 180 pitches with realistic noise (spam, fan mail, real collab and investment offers).
+  - Creator Mira Lane (`/mira`), a travel creator with 620K on YouTube, 380K on Instagram and 140K on TikTok; taste profile and three voice samples.
+  - 6 communities: Budget Travel, Solo Travelers, Travel Photography, Food Finds, Road Trips & Van Life, Slow Living.
+  - 1,200 members (names, headlines, skills, join dates), including the demo fan Priya Shah.
+  - 140 posts (77 ideas, 44 projects, 19 discussions), 400 comments, signals and teams; 180 pitches with realistic noise (spam, fan mail, real collab and press offers).
   - 2 published promotions with click history.
-  - About 30 followers with notes, some tagged by creator and AI, a few linked to demo members including Arjun.
-  - AI fields (summary, category, fit score, reason, tags, skills, spam flag) prefilled in the JSON, so every P0 screen works with no API key. `pnpm db:seed --reanalyze` reruns live triage.
-  - Embeddings are not committed (about 1,500 vectors of 1,536 floats would bloat the repo). `pnpm db:embed` backfills them when an API key is set. Only P1 features (similar ideas, people who could help, Ask your AI) need them; P0 people search uses skills and text search.
+  - 31 followers with notes, some tagged by creator and AI, a few linked to demo members.
+  - 2 challenges and 4 Answer Once question groups, plus notifications, spotlights and pitch-tracker states for the demo fan.
+  - AI fields (summary, category, fit score, reason, tags, skills, spam flag) prefilled in the JSON, so every screen works with no API key. `pnpm db:seed --reanalyze` reruns live triage.
+  - Embeddings are not committed (about 1,500 vectors of 1,536 floats would bloat the repo). `pnpm db:embed` backfills them when an API key is set. Similar ideas, people who could help, Ask your AI and Answer Once need them; people search uses skills and text search.
 - Seed text is written once by `api/src/db/seed/generate-content.ts` (uses the LLM) and committed. Seeding itself never calls the LLM.
-- Demo reset: delete the space where `is_demo = true` (cascade) and reseed. Runs daily at 00:00 UTC and on admin request.
+- Demo reset: delete the space where `is_demo = true` (cascade) and reseed. The `demo_reset` job runs it daily at 09:00 UTC through the tick, and on request through `POST /api/cron/demo-reset` or, for an allowlisted admin, `POST /api/admin/demo-reset`. It refuses when `DEMO_ENABLED=false`.
