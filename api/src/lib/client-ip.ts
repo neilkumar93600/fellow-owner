@@ -20,9 +20,12 @@ export function clientIp(req: Request, env: Pick<Env, 'INTERNAL_API_KEY'>): stri
   const key = env.INTERNAL_API_KEY;
   const given = req.get('x-edge-key');
   if (key && given && safeEqual(given, key)) {
+    // x-edge-client-ip is what web/proxy.ts read from Vercel's own client headers; Railway rewrites
+    // X-Forwarded-For on the way in, so that one can already be Vercel's IP.
     const forwarded =
-      firstIp(req.get('x-forwarded-for')) ??
+      firstIp(req.get('x-edge-client-ip')) ??
       firstIp(req.get('x-vercel-forwarded-for')) ??
+      firstIp(req.get('x-forwarded-for')) ??
       firstIp(req.get('x-real-ip'));
     if (forwarded) return forwarded;
   }

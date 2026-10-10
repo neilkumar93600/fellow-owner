@@ -14,6 +14,21 @@ function req(headers: Record<string, string>, socket = '10.0.0.9'): Request {
 }
 
 describe('clientIp', () => {
+  it('with the edge key: x-edge-client-ip from the web proxy wins over a rewritten X-Forwarded-For', () => {
+    const r = req({
+      'x-edge-key': KEY,
+      'x-edge-client-ip': '203.0.113.9',
+      'x-forwarded-for': '13.127.127.107',
+      'x-real-ip': '13.127.127.107',
+    });
+    expect(clientIp(r, env)).toBe('203.0.113.9');
+  });
+
+  it('without the key: x-edge-client-ip is ignored', () => {
+    const r = req({ 'x-edge-client-ip': '6.6.6.6', 'x-real-ip': '198.51.100.2' });
+    expect(clientIp(r, env)).toBe('198.51.100.2');
+  });
+
   it('with the edge key: the first X-Forwarded-For entry', () => {
     const r = req({
       'x-edge-key': KEY,
