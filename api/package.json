@@ -21,6 +21,8 @@
     "db:migrate:test": "tsx --env-file-if-exists=.env src/db/migrate.ts --test"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1149.0",
+    "@aws-sdk/s3-request-presigner": "^3.1149.0",
     "@fellow-owners/shared": "workspace:*",
     "@openrouter/ai-sdk-provider": "^3.1.0",
     "@vercel/functions": "^3.9.9",
