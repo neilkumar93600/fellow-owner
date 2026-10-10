@@ -105,3 +105,6 @@ export const loveParamsSchema = z.object({ id: idSchema });
 
 /** POST /api/studio/inbox/:id/suggest-reply: an AI draft in the creator's voice (never sent). */
 export const suggestReplyParamsSchema = z.object({ id: idSchema });
+
+/** /api/posts/:postId/report, /api/posts/:postId/similar, /api/studio/posts/:postId/similar */
+export const postIdParamsSchema = z.object({ postId: idSchema });

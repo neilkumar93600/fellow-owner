@@ -1,4 +1,5 @@
-import { and, count, eq, gte, lt, sql } from 'drizzle-orm';
+import { and, count, eq, gte, lt, notInArray, sql } from 'drizzle-orm';
+import { BUDGET_EXEMPT_TASKS } from '../ai/run.js';
 import type { Db, DbOrTx } from '../db/client.js';
 import { aiRuns, type NewAiRunRow } from '../db/schema/ai.js';
 import { spaces } from '../db/schema/spaces.js';
@@ -23,7 +24,14 @@ export function createAiRunsRepo(db: Db) {
           ),
       })
       .from(aiRuns)
-      .where(and(eq(aiRuns.spaceId, spaceId), gte(aiRuns.createdAt, since)));
+      .where(
+        and(
+          eq(aiRuns.spaceId, spaceId),
+          gte(aiRuns.createdAt, since),
+          // Fan-triggered tasks never count toward the creator's budget (ai/run.ts).
+          notInArray(aiRuns.task, [...BUDGET_EXEMPT_TASKS]),
+        ),
+      );
     return row?.tokens ?? 0;
   }
 

@@ -12,10 +12,13 @@ import { useOverview } from '@/hooks/queries/use-overview';
 import { usePeople } from '@/hooks/queries/use-people';
 import { useStudioSpace } from '@/hooks/use-space';
 import { errorMessage } from '@/lib/toast';
+import { AskCard } from './ask-card';
 import { buildDecisionItems, pulseSentence } from './decision-items';
 import { DecisionStack, DecisionStackSkeleton } from './decision-stack';
 import { FansToThank, FansToThankSkeleton } from './fans-to-thank';
+import { MetricsCard } from './metrics-card';
 import { PulsePanel, PulsePanelSkeleton } from './pulse-panel';
+import { ReportsNotice } from './reports-notice';
 import { SetupChecklist } from './setup-checklist';
 import { CommunityTiles, CommunityTilesSkeleton, TodayGreeting, TodayView } from './today-view';
 
@@ -68,6 +71,12 @@ export function TodayContainer() {
 
   return (
     <TodayView
+      extras={
+        <>
+          <AskCard />
+          <MetricsCard />
+        </>
+      }
       banner={
         <>
           {data?.aiPaused ? (
@@ -75,6 +84,7 @@ export function TodayContainer() {
               AI paused until tomorrow. New items will be read then.
             </Banner>
           ) : null}
+          <ReportsNotice />
           {showSetup ? (
             <SetupChecklist
               handle={space.data.handle}

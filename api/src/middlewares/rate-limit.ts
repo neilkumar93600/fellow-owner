@@ -1,0 +1,72 @@
+import type { Request, RequestHandler } from 'express';
+import { rateLimited } from '../lib/errors.js';
+import { logger } from '../lib/logger.js';
+import { connected, redis as defaultRedis, type Redis } from '../lib/redis.js';
+
+export interface RateLimitOptions {
+  /** Counter namespace, e.g. 'public' or 'support'. Keys are `rl:<name>:<key>:<window>`. */
+  name: string;
+  windowSeconds: number;
+  /** Requests allowed per key per window. */
+  max: number;
+  /** Who is counted, e.g. `(req) => req.ip ?? 'unknown'`. */
+  key: (req: Request) => string;
+  /** Defaults to the process Redis (lib/redis.ts); null forces the in-process store. */
+  redis?: Redis | null;
+}
+
+/** ponytail: memory windows are per process; Redis shares them across replicas when set. */
+const memory = new Map<string, { count: number; resetAt: number }>();
+
+function countInMemory(id: string, windowMs: number, now: number) {
+  if (memory.size > 50_000) {
+    for (const [key, entry] of memory) if (entry.resetAt <= now) memory.delete(key);
+  }
+  let entry = memory.get(id);
+  if (!entry || entry.resetAt <= now) {
+    entry = { count: 0, resetAt: now + windowMs };
+    memory.set(id, entry);
+  }
+  entry.count += 1;
+  return { count: entry.count, resetAt: entry.resetAt };
+}
+
+/**
+ * Fixed-window rate limit: INCR + EXPIRE on Redis when available, an in-process Map otherwise
+ * (or when Redis errors: the limit keeps working per process instead of failing open).
+ * Sets `RateLimit-Limit`, `RateLimit-Remaining`, `RateLimit-Reset` (seconds); over the limit it
+ * also sets `Retry-After` and throws 429 rate_limited.
+ */
+export function createRateLimit(options: RateLimitOptions): RequestHandler {
+  const { name, windowSeconds, max } = options;
+  const client = options.redis === undefined ? defaultRedis : options.redis;
+  const windowMs = windowSeconds * 1000;
+
+  return async (req, res, next) => {
+    const now = Date.now();
+    const windowStart = Math.floor(now / windowMs) * windowMs;
+    const id = `rl:${name}:${options.key(req)}`;
+    let hit: { count: number; resetAt: number } | null = null;
+    if (client) {
+      try {
+        const key = `${id}:${windowStart}`;
+        const count = await connected(client).incr(key);
+        if (count === 1) await client.expire(key, windowSeconds + 1);
+        hit = { count, resetAt: windowStart + windowMs };
+      } catch (error) {
+        logger.warn({ err: error, limiter: name }, 'rate limit: redis failed, counting in memory');
+      }
+    }
+    hit ??= countInMemory(id, windowMs, now);
+
+    const resetSeconds = Math.max(1, Math.ceil((hit.resetAt - now) / 1000));
+    res.set('RateLimit-Limit', String(max));
+    res.set('RateLimit-Remaining', String(Math.max(0, max - hit.count)));
+    res.set('RateLimit-Reset', String(resetSeconds));
+    if (hit.count > max) {
+      res.set('Retry-After', String(resetSeconds));
+      throw rateLimited();
+    }
+    next();
+  };
+}

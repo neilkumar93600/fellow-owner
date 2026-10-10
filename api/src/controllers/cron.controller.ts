@@ -21,7 +21,7 @@ export function createCronController(deps: CoreDeps) {
 
     /** GET|POST /api/cron/purge -> { ok, ...rows deleted per retention rule } */
     async purge(_req: Request, res: Response): Promise<void> {
-      const result = await purgeExpired({ repos: deps.repos, logger: deps.logger });
+      const result = await purgeExpired(deps);
       res.json({ ok: true, ...result });
     },
 

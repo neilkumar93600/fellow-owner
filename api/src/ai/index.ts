@@ -6,10 +6,13 @@ import { type AiModels, createAiModels, modelIdsFrom, type ProviderOptions } fro
 import type { AiAccounting, AiRuntime } from './run.js';
 import { askAI } from './tasks/ask-ai.js';
 import { briefing } from './tasks/briefing.js';
+import { challengeSummary } from './tasks/challenge-summary.js';
 import { clusterImport } from './tasks/cluster-import.js';
+import { coach } from './tasks/coach.js';
 import { communityDigest } from './tasks/community-digest.js';
 import { embedItem } from './tasks/embed-item.js';
 import { promoteDrafts } from './tasks/promote-drafts.js';
+import { questionGroup } from './tasks/question-group.js';
 import { spotlightNote } from './tasks/spotlight-note.js';
 import { suggestCommunities } from './tasks/suggest-communities.js';
 import { suggestReply } from './tasks/suggest-reply.js';
@@ -51,6 +54,9 @@ export function createLiveAiServices(rt: AiRuntime): AiServices {
     askAI: (input, ctx) => askAI(rt, input, ctx),
     tagFollowers: (input, ctx) => tagFollowers(rt, input, ctx),
     suggestSetup: (input, ctx) => suggestSetup(rt, input, ctx),
+    coach: (input, ctx) => coach(rt, input, ctx),
+    questionGroup: (input, ctx) => questionGroup(rt, input, ctx),
+    challengeSummary: (input, ctx) => challengeSummary(rt, input, ctx),
   };
 }
 

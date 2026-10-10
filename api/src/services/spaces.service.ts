@@ -12,7 +12,7 @@ import type { z } from 'zod';
 import type { Db } from '../db/client.js';
 import { user as users } from '../db/schema/auth.js';
 import type { SpaceRow } from '../db/schema/spaces.js';
-import { toIso } from '../lib/dates.js';
+import { toIso, toIsoOrNull } from '../lib/dates.js';
 import { uniqueViolation } from '../lib/db-errors.js';
 import { conflict, handleTaken, notFound } from '../lib/errors.js';
 import { handleCandidates, handleProblem } from '../lib/handles.js';
@@ -62,6 +62,7 @@ export function publicSpace(space: SpaceRow, memberCount: number): PublicSpace {
     totalFollowers: totalFollowers(space.platforms),
     memberCount,
     isDemo: space.isDemo,
+    coverUrl: space.coverUrl,
   };
 }
 
@@ -113,6 +114,8 @@ export function createSpacesService(deps: SpacesServiceDeps) {
       createdAt: toIso(space.createdAt),
       communityCount: communities.length,
       ownerName: displayName(owner?.name),
+      showReadReceipts: space.showReadReceipts,
+      bioLinkSharedAt: toIsoOrNull(space.bioLinkSharedAt),
     };
   }
 
@@ -255,13 +258,16 @@ export function createSpacesService(deps: SpacesServiceDeps) {
     async updateSettings(owner: OwnerContext, input: UpdateSettingsBody): Promise<StudioSpace> {
       const updated = await db.transaction(async (tx) => {
         let row: SpaceRow | null = owner.space;
+        const patch: SpaceProfileUpdate = {};
         if (input.profile) {
-          const patch: SpaceProfileUpdate = {
-            displayName: input.profile.displayName,
-            platforms: input.profile.platforms,
-          };
+          patch.displayName = input.profile.displayName;
+          patch.platforms = input.profile.platforms;
           if (input.profile.bio !== undefined) patch.bio = nullableText(input.profile.bio);
           if (input.profile.avatarUrl !== undefined) patch.avatarUrl = input.profile.avatarUrl;
+          if (input.profile.coverUrl !== undefined) patch.coverUrl = input.profile.coverUrl;
+        }
+        if (input.showReadReceipts !== undefined) patch.showReadReceipts = input.showReadReceipts;
+        if (Object.keys(patch).length > 0) {
           row = await repos.spaces.update(owner.space.id, patch, tx);
         }
         if (input.tasteProfile) {

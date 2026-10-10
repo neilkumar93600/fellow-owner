@@ -10,3 +10,8 @@ export const newsletterSubscribeSchema = z.object({
   source: z.enum(NEWSLETTER_SOURCES).default('footer'),
 });
 export type NewsletterSubscribeInput = z.input<typeof newsletterSubscribeSchema>;
+
+/** GET /api/newsletter/confirm?token= and /unsubscribe?token= (signed tokens, lib/signed-token.ts). */
+export const newsletterTokenQuerySchema = z.object({
+  token: z.string().min(10).max(500),
+});

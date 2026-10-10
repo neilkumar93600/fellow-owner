@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { PLATFORMS } from '../enums.js';
 import { LIMITS } from '../limits.js';
 import { emailSchema } from './auth.js';
-import { cursorQuerySchema, idSchema } from './space.js';
+import { cursorQuerySchema, httpUrlSchema, idSchema } from './space.js';
 
 const F = LIMITS.follower;
 
@@ -104,3 +104,9 @@ export const autoTagFollowersSchema = z.object({
   followerIds: followerIdsSchema.optional(),
 });
 export type AutoTagFollowersInput = z.input<typeof autoTagFollowersSchema>;
+
+/** POST /api/studio/followers/import/youtube: a channel link (/@handle or /channel/ID). */
+export const youtubeImportSchema = z.object({
+  channelUrl: httpUrlSchema.max(300, 'Link is too long'),
+});
+export type YoutubeImportInput = z.input<typeof youtubeImportSchema>;

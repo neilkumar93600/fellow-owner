@@ -61,6 +61,7 @@ export const promotions = pgTable(
     uniqueIndex('promotions_space_showcase_slug_uidx').on(t.spaceId, t.showcaseSlug),
     uniqueIndex('promotions_short_code_uidx').on(t.shortCode),
     index('promotions_space_created_idx').on(t.spaceId, t.createdAt.desc().nullsFirst()),
+    index('promotions_created_by_idx').on(t.createdByUserId),
     check('promotions_click_count_check', sql`${t.clickCount} >= 0`),
   ],
 );

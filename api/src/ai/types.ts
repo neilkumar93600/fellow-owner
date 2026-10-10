@@ -53,6 +53,9 @@ export type AiTaskName =
   | 'askAI'
   | 'tagFollowers'
   | 'suggestSetup'
+  | 'coach'
+  | 'questionGroup'
+  | 'challengeSummary'
   /** fal.ai media (ai/media.ts): no v1 route uses these yet. */
   | 'generateImage'
   | 'generateVideo';
@@ -366,6 +369,57 @@ export interface SuggestSetupOutput {
   model: string;
 }
 
+/** F30 Idea Coach (fast): clarity checks on a pitch or post draft. Never a score or prediction. */
+export interface CoachInput {
+  kind: 'pitch' | 'post';
+  creatorName: string;
+  /** Pitch subject or post title; may be empty. Untrusted. */
+  subject: string;
+  /** Untrusted. */
+  body: string;
+}
+
+export interface CoachOutput {
+  /** Pitch keys: audience, ask, proof, length. Post keys: problem, audience, help, next. */
+  checks: Array<{
+    key: string;
+    label: string;
+    ok: boolean;
+    found: string | null;
+    tip: string | null;
+  }>;
+  suggestion: { subject: string; body: string } | null;
+}
+
+/** F32 Answer Once (smart): names a group of similar pitches and drafts one answer. */
+export interface QuestionGroupInput {
+  creatorName: string;
+  voice: string | null;
+  /** The askers' own words (untrusted), cut to LIMITS.answerOnce.quoteMax. */
+  quotes: string[];
+  /** Redraft: the draft the creator wants replaced. */
+  previousDraft?: string | null;
+}
+
+export interface QuestionGroupOutput {
+  /** False when the quotes do not share one real question: the group is not created. */
+  isQuestion: boolean;
+  /** One line. */
+  question: string;
+  /** In the creator's voice. */
+  draft: string;
+}
+
+/** Challenge close (fast): a short summary of the entries, stored in asks.response_summary. */
+export interface ChallengeSummaryInput {
+  title: string;
+  entries: Array<{ title: string; summary: string | null }>;
+}
+
+export interface ChallengeSummaryOutput {
+  summary: string;
+}
+
 // ---------------------------------------------------------------- services
 
 /** What domain services call. Implementations: live (OpenRouter) and fake (ai/fake.ts). */
@@ -380,20 +434,26 @@ export interface AiServices {
   ): Promise<SuggestCommunitiesOutput>;
   briefing(input: BriefingInput, ctx: AiContext): Promise<BriefingOutput>;
   promoteDrafts(input: PromoteDraftsInput, ctx: AiContext): Promise<PromoteDraftsOutput>;
-  /** P1, not wired to routes yet. */
-  communityDigest?(input: CommunityDigestInput, ctx: AiContext): Promise<CommunityDigestOutput>;
+  /** Weekly community digests (workers/community-digests.ts). */
+  communityDigest(input: CommunityDigestInput, ctx: AiContext): Promise<CommunityDigestOutput>;
   /** F1 "Reply in my voice" (POST /api/studio/inbox/:id/suggest-reply). */
   suggestReply?(input: SuggestReplyInput, ctx: AiContext): Promise<SuggestReplyOutput>;
   /** F6 spotlight draft (POST /api/studio/people/:membershipId/spotlight/draft). */
   spotlightNote?(input: SpotlightNoteInput, ctx: AiContext): Promise<SpotlightNoteOutput>;
   /** P1, not wired to routes yet. */
   clusterImport?(input: ClusterImportInput, ctx: AiContext): Promise<ClusterImportOutput>;
-  /** P1, not wired to routes yet. */
-  askAI?(input: AskAiInput, ctx: AiContext): Promise<AskAiOutput>;
+  /** F13 Ask your AI (POST /api/studio/ask). */
+  askAI(input: AskAiInput, ctx: AiContext): Promise<AskAiOutput>;
   /** F23 auto-tag (POST /api/studio/followers/auto-tag). */
   tagFollowers?(input: TagFollowersInput, ctx: AiContext): Promise<TagFollowersOutput>;
   /** Onboarding setup suggestions (POST /api/studio/setup-suggestions); ctx.spaceId is null. */
   suggestSetup?(input: SuggestSetupInput, ctx: AiContext): Promise<SuggestSetupOutput>;
+  /** F30 Idea Coach (POST /api/spaces/:handle/coach); budget-exempt, capped per user and space. */
+  coach(input: CoachInput, ctx: AiContext): Promise<CoachOutput>;
+  /** F32 Answer Once naming + draft (workers/group-questions.ts, redraft route). */
+  questionGroup(input: QuestionGroupInput, ctx: AiContext): Promise<QuestionGroupOutput>;
+  /** Challenge close summary (workers/close-challenges.ts). */
+  challengeSummary(input: ChallengeSummaryInput, ctx: AiContext): Promise<ChallengeSummaryOutput>;
 }
 
 // ---------------------------------------------------------------- background work

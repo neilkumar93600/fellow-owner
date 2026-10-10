@@ -9,7 +9,7 @@ import {
 } from '@fellow-owners/shared';
 import { sql } from 'drizzle-orm';
 import { check, index, pgTable, primaryKey, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
-import { createdAt, uuidPk } from './columns.js';
+import { createdAt, timestamptz, uuidPk } from './columns.js';
 import { communities } from './communities.js';
 import { imports } from './later.js';
 import { memberships } from './memberships.js';
@@ -44,9 +44,12 @@ export const followers = pgTable(
     membershipId: uuid('membership_id').references(() => memberships.id, {
       onDelete: 'set null',
     }),
+    /** Last time auto-tag sent this follower to the model (skipped until communities change). */
+    aiTaggedAt: timestamptz('ai_tagged_at'),
     createdAt: createdAt(),
   },
   (t) => [
+    index('followers_import_idx').on(t.importId),
     index('followers_space_created_idx').on(t.spaceId, t.createdAt.desc().nullsFirst()),
     uniqueIndex('followers_space_email_uidx')
       .on(t.spaceId, t.email)

@@ -77,6 +77,7 @@ export function publicCommunity(row: {
   icon: PublicCommunity['icon'];
   memberCount: number;
   sortOrder: number;
+  coverUrl: string | null;
 }): PublicCommunity {
   return {
     id: row.id,
@@ -87,6 +88,7 @@ export function publicCommunity(row: {
     icon: row.icon,
     memberCount: row.memberCount,
     sortOrder: row.sortOrder,
+    coverUrl: row.coverUrl,
   };
 }
 
@@ -243,17 +245,31 @@ export function aiInsight(row: AiFieldsRow, tasteVersion: number): AiInsight {
 
 // ---------------------------------------------------------------- pitches
 
-export function pitchView(row: {
-  id: string;
-  type: Pitch['type'];
-  subject: string;
-  body: string;
-  links: LinkItem[];
-  status: Pitch['status'];
-  creatorReply: string | null;
-  repliedAt: Date | null;
-  createdAt: Date;
-}): Pitch {
+/** What a pitch row alone cannot tell (F31 tracker). The services that know it pass it. */
+export interface PitchViewOptions {
+  /** The space's spaces.show_read_receipts. Default false: readAt stays hidden unless known on. */
+  showReadReceipts?: boolean;
+  /** Set when the pitch's question group (F32) is answered. */
+  answeredGroup?: Pitch['answeredGroup'];
+}
+
+/** A pitch as its sender sees it. */
+export function pitchView(
+  row: {
+    id: string;
+    type: Pitch['type'];
+    subject: string;
+    body: string;
+    links: LinkItem[];
+    status: Pitch['status'];
+    creatorReply: string | null;
+    repliedAt: Date | null;
+    readAt: Date | null;
+    shortlistedAt: Date | null;
+    createdAt: Date;
+  },
+  options: PitchViewOptions = {},
+): Pitch {
   return {
     id: row.id,
     type: row.type,
@@ -265,6 +281,9 @@ export function pitchView(row: {
     repliedAt: toIsoOrNull(row.repliedAt),
     createdAt: toIso(row.createdAt),
     canWithdraw: row.status === 'new',
+    readAt: options.showReadReceipts ? toIsoOrNull(row.readAt) : null,
+    shortlistedAt: toIsoOrNull(row.shortlistedAt),
+    answeredGroup: options.answeredGroup ?? null,
   };
 }
 

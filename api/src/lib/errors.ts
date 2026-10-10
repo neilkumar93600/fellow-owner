@@ -72,3 +72,10 @@ export const aiUnavailable = (message = 'AI is unavailable right now', details?:
 
 export const internalError = (message = 'Something went wrong') =>
   new AppError('internal_error', 500, message);
+
+/**
+ * Scaffolding only: a route or method whose feature is not built yet answers 501. Nothing ships
+ * calling it (T21 checks `rg notImplemented api/src` finds only this helper).
+ */
+export const notImplemented = (what = 'This feature') =>
+  new AppError('internal_error', 501, `${what} is not available yet`);

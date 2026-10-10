@@ -130,8 +130,54 @@ export const NOTIFICATION_KINDS = [
   'post_loved',
   'spotlighted',
   'challenge_shortlisted',
+  /** To the space owner when a member reports a post or comment (F25). */
+  'report_filed',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
+
+/** Kinds that can also go out by email (hourly digest, notification_prefs.kinds). */
+export const EMAIL_NOTIFICATION_KINDS = [
+  'reply_received',
+  'project_featured',
+  'spotlighted',
+  'challenge_shortlisted',
+  'team_decision',
+] as const satisfies readonly NotificationKind[];
+export type EmailNotificationKind = (typeof EMAIL_NOTIFICATION_KINDS)[number];
+
+/** question_groups.status (F32 Answer Once, text + CHECK). */
+export const QUESTION_GROUP_STATUSES = ['open', 'answered', 'dismissed'] as const;
+export type QuestionGroupStatus = (typeof QUESTION_GROUP_STATUSES)[number];
+
+/** What a member can report (reports.target_type, F25). */
+export const REPORT_TARGETS = ['post', 'comment'] as const;
+export type ReportTarget = (typeof REPORT_TARGETS)[number];
+
+export const REPORT_REASONS = ['spam', 'harassment', 'off_topic', 'unsafe', 'other'] as const;
+export type ReportReason = (typeof REPORT_REASONS)[number];
+
+export const REPORT_STATUSES = ['open', 'resolved', 'dismissed'] as const;
+export type ReportStatus = (typeof REPORT_STATUSES)[number];
+
+/** POST /api/support/requests: the contact form and the privacy request form. */
+export const SUPPORT_KINDS = [
+  'contact',
+  'privacy_export',
+  'privacy_delete',
+  'privacy_other',
+] as const;
+export type SupportKind = (typeof SUPPORT_KINDS)[number];
+
+/** Today "Later": what a creator can snooze (studio_snoozes.ref_type). */
+export const SNOOZE_REF_TYPES = ['pitch', 'post'] as const;
+export type SnoozeRefType = (typeof SNOOZE_REF_TYPES)[number];
+
+/** POST /api/uploads/presign: what the image is for (the first segment of its storage key). */
+export const UPLOAD_KINDS = ['avatar', 'space_cover', 'community_cover', 'member_avatar'] as const;
+export type UploadKind = (typeof UPLOAD_KINDS)[number];
+
+export const UPLOAD_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
+export type UploadContentType = (typeof UPLOAD_CONTENT_TYPES)[number];
 
 /** GET /api/studio/export/:kind */
 export const EXPORT_KINDS = ['ideas', 'people', 'followers', 'pitches'] as const;
@@ -207,6 +253,14 @@ export const PLATFORM_LABELS: Record<Platform, string> = {
   tiktok: 'TikTok',
   linkedin: 'LinkedIn',
   other: 'Website',
+};
+
+export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
+  spam: 'Spam',
+  harassment: 'Harassment',
+  off_topic: 'Off topic',
+  unsafe: 'Unsafe',
+  other: 'Something else',
 };
 
 export const PROMOTION_STATE_LABELS: Record<PromotionState, string> = {

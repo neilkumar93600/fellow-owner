@@ -1,11 +1,21 @@
 import { LIMITS, type LinkItem } from '@fellow-owners/shared';
 import { sql } from 'drizzle-orm';
-import { check, index, integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import {
+  type AnyPgColumn,
+  check,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  uuid,
+} from 'drizzle-orm/pg-core';
 import { aiFields, createdAt, timestamptz, updatedAt, uuidPk } from './columns.js';
 import { communities } from './communities.js';
 import { postStatusEnum, postTypeEnum } from './enums.js';
 import { asks } from './later.js';
 import { memberships } from './memberships.js';
+import { questionGroups } from './question-groups.js';
 import { spaces } from './spaces.js';
 
 const P = LIMITS.post;
@@ -27,6 +37,10 @@ export const posts = pgTable(
     }),
     /** The creator challenge (ask) this post is an entry to. */
     askId: uuid('ask_id').references(() => asks.id, { onDelete: 'set null' }),
+    /** F32: a pinned Answer Once answer post (one per chosen community). */
+    questionGroupId: uuid('question_group_id').references((): AnyPgColumn => questionGroups.id, {
+      onDelete: 'set null',
+    }),
     type: postTypeEnum('type').notNull(),
     title: text('title').notNull(),
     body: text('body').notNull(),
@@ -66,6 +80,11 @@ export const posts = pgTable(
     index('posts_author_created_idx').on(t.authorMembershipId, t.createdAt),
     index('posts_deleted_idx').on(t.deletedAt).where(sql`${t.deletedAt} is not null`),
     index('posts_embedding_hnsw_idx').using('hnsw', t.embedding.op('vector_cosine_ops')),
+    index('posts_question_group_idx').on(t.questionGroupId),
+    /** Embedding backfill (db:embed): live posts without an embedding. */
+    index('posts_missing_embedding_idx')
+      .on(t.createdAt)
+      .where(sql`${t.embedding} is null and ${t.deletedAt} is null`),
     check(
       'posts_title_check',
       sql`char_length(${t.title}) between ${sql.raw(String(P.title.min))} and ${sql.raw(String(P.title.max))}`,

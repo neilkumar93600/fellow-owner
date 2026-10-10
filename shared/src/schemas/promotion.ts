@@ -1,7 +1,12 @@
 import { z } from 'zod';
-import { CLICK_PLATFORMS, PROMOTION_PLATFORMS, type PromotionPlatform } from '../enums.js';
+import {
+  CLICK_PLATFORMS,
+  PROMOTION_PLATFORMS,
+  PROMOTION_STATES,
+  type PromotionPlatform,
+} from '../enums.js';
 import { LIMITS } from '../limits.js';
-import { idSchema } from './space.js';
+import { cursorQuerySchema, idSchema } from './space.js';
 
 const P = LIMITS.promotion;
 
@@ -81,3 +86,9 @@ export function hasPublishableDraft(drafts: PromotionDraftsInput | null | undefi
   if (!drafts) return false;
   return PROMOTION_PLATFORMS.some((platform) => (drafts[platform]?.text ?? '').trim().length > 0);
 }
+
+/** GET /api/studio/promotions?state=: filters server-side (PROMOTION_STATES). */
+export const promotionsQuerySchema = cursorQuerySchema.extend({
+  state: z.enum(PROMOTION_STATES).optional(),
+});
+export type PromotionsQuery = z.output<typeof promotionsQuerySchema>;

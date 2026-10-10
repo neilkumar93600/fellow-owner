@@ -5,6 +5,7 @@ import { CreatorHeader } from './creator-header';
 import { FansOfTheWeek } from './fans-of-the-week';
 import { FeaturedProjects } from './featured-projects';
 import { PitchCta } from './pitch-cta';
+import { VisitBeacon } from './visit-beacon';
 
 export interface BioViewProps {
   page: SpacePage;
@@ -35,6 +36,7 @@ export function BioView({ page, joinedIds = [], isOwner = false }: BioViewProps)
 
   return (
     <div className="flex flex-col gap-10">
+      <VisitBeacon handle={space.handle} />
       <CreatorHeader space={space} cta={cta} />
       <CommunityGrid handle={space.handle} communities={communities} joinedIds={joinedIds} />
       {isOwner ? null : <PitchCta handle={space.handle} firstName={first} />}

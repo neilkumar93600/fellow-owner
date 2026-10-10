@@ -80,7 +80,15 @@ export type PlatformEntryInput = z.input<typeof platformEntrySchema>;
 const AVATAR_DATA_URL_MAX = 350_000;
 const AVATAR_DATA_URL = /^data:image\/(?:jpeg|png|webp|gif|avif);base64,[A-Za-z0-9+/]+={0,2}$/;
 
-/** An http(s) link, a site path (/demo/mira.jpg), or a small base64 image. Nothing else. */
+/** An http(s) link or a same-site path: /api/media/<key> (uploads) or /demo/mira.jpg. */
+function isImageLink(value: string): boolean {
+  return (
+    value.length <= LIMITS.link.urlMax &&
+    (isHttpUrl(value) || (/^\/(?!\/)[^\s\\]*$/.test(value) && !value.includes('..')))
+  );
+}
+
+/** An http(s) link, a site path (/api/media/..., /demo/mira.jpg), or a small base64 image. */
 export const avatarUrlSchema = z
   .string()
   .trim()
@@ -88,10 +96,15 @@ export const avatarUrlSchema = z
     (value) =>
       value.startsWith('data:')
         ? value.length <= AVATAR_DATA_URL_MAX && AVATAR_DATA_URL.test(value)
-        : value.length <= LIMITS.link.urlMax &&
-          (isHttpUrl(value) || (/^\/(?!\/)[^\s\\]*$/.test(value) && !value.includes('..'))),
+        : isImageLink(value),
     'Use an image link or upload a small picture',
   );
+
+/** A cover image (space or community): an uploaded /api/media/<key> path or an http(s) link. */
+export const coverUrlSchema = z
+  .string()
+  .trim()
+  .refine(isImageLink, 'Upload an image or use an image link');
 
 export const displayNameSchema = z
   .string()
@@ -108,6 +121,7 @@ export const spaceProfileSchema = z.object({
     .nullable()
     .optional(),
   avatarUrl: avatarUrlSchema.nullable().optional(),
+  coverUrl: coverUrlSchema.nullable().optional(),
   platforms: z
     .array(platformEntrySchema)
     .max(LIMITS.space.platforms.max, `Up to ${LIMITS.space.platforms.max} platforms`),
@@ -145,13 +159,14 @@ export const createSpaceSchema = z.object({
 });
 export type CreateSpaceInput = z.input<typeof createSpaceSchema>;
 
-/** PUT /api/studio/settings. Send either part or both. */
+/** PUT /api/studio/settings. Send any part. `showReadReceipts`: fans see when a pitch was read (F31). */
 export const updateSettingsSchema = z
   .object({
     profile: spaceProfileSchema.optional(),
     tasteProfile: tasteProfileSchema.optional(),
+    showReadReceipts: z.boolean().optional(),
   })
-  .refine((value) => value.profile !== undefined || value.tasteProfile !== undefined, {
+  .refine((value) => Object.values(value).some((v) => v !== undefined), {
     message: 'Nothing to save',
   });
 export type UpdateSettingsInput = z.input<typeof updateSettingsSchema>;

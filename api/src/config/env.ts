@@ -83,6 +83,14 @@ const rawEnvSchema = z.object({
   APIFY_TOKEN: optionalString,
   APIFY_ENABLED: booleanFlag,
 
+  YOUTUBE_API_KEY: optionalString,
+
+  BUCKET_ENDPOINT: optionalString.pipe(z.url().optional()),
+  BUCKET_REGION: optionalString,
+  BUCKET_NAME: optionalString,
+  BUCKET_ACCESS_KEY_ID: optionalString,
+  BUCKET_SECRET_ACCESS_KEY: optionalString,
+
   DEMO_ENABLED: booleanFlag,
   DEMO_CREATOR_EMAIL: optionalString.pipe(z.email().optional()),
   DEMO_FAN_EMAIL: optionalString.pipe(z.email().optional()),
@@ -93,6 +101,7 @@ const rawEnvSchema = z.object({
   CLICK_SALT: optionalString,
 
   VERCEL_GIT_COMMIT_SHA: optionalString,
+  RAILWAY_GIT_COMMIT_SHA: optionalString,
   npm_package_version: optionalString,
 });
 
@@ -160,6 +169,21 @@ export interface Env {
   APIFY_TOKEN: string | undefined;
   /** Live Apify lookups. Defaults to "APIFY_TOKEN is set"; simulated sample profiles otherwise. */
   APIFY_ENABLED: boolean;
+
+  /** YouTube Data API v3 key for comment imports (lib/youtube.ts). Never logged. */
+  YOUTUBE_API_KEY: string | undefined;
+  /** Live YouTube imports. False without a key: imports return labelled sample data. */
+  YOUTUBE_ENABLED: boolean;
+
+  /** S3-compatible bucket for image uploads (Railway bucket). All four values, or none. */
+  BUCKET_ENDPOINT: string | undefined;
+  /** Default `auto`. */
+  BUCKET_REGION: string;
+  BUCKET_NAME: string | undefined;
+  BUCKET_ACCESS_KEY_ID: string | undefined;
+  BUCKET_SECRET_ACCESS_KEY: string | undefined;
+  /** True when the bucket is configured: uploads on, /api/media serves objects. */
+  UPLOADS_ENABLED: boolean;
 
   DEMO_ENABLED: boolean;
   DEMO_CREATOR_EMAIL: string;
@@ -268,6 +292,19 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
   const appleEnabled = credentialPair('APPLE_CLIENT_ID', 'APPLE_CLIENT_SECRET');
   const facebookEnabled = credentialPair('FACEBOOK_CLIENT_ID', 'FACEBOOK_CLIENT_SECRET');
 
+  /** The bucket comes as a full set: a partial one is a typo, so it stops the boot. */
+  const bucketKeys = [
+    'BUCKET_ENDPOINT',
+    'BUCKET_NAME',
+    'BUCKET_ACCESS_KEY_ID',
+    'BUCKET_SECRET_ACCESS_KEY',
+  ] as const;
+  const bucketSet = bucketKeys.filter((key) => Boolean(raw[key]));
+  if (bucketSet.length > 0 && bucketSet.length < bucketKeys.length) {
+    issues.push(`Set all of ${bucketKeys.join(', ')}, or none`);
+  }
+  const uploadsEnabled = bucketSet.length === bucketKeys.length;
+
   const aiEnabled = raw.AI_ENABLED ?? Boolean(raw.OPENROUTER_API_KEY);
   if (aiEnabled && !raw.OPENROUTER_API_KEY) {
     issues.push('AI_ENABLED=true needs OPENROUTER_API_KEY');
@@ -291,7 +328,10 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     isTest,
     PORT: raw.PORT,
     LOG_LEVEL: raw.LOG_LEVEL ?? (isTest ? 'silent' : isProduction ? 'info' : 'debug'),
-    APP_VERSION: raw.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? raw.npm_package_version ?? '0.1.0',
+    APP_VERSION:
+      (raw.VERCEL_GIT_COMMIT_SHA ?? raw.RAILWAY_GIT_COMMIT_SHA)?.slice(0, 7) ??
+      raw.npm_package_version ??
+      '0.1.0',
 
     DATABASE_URL: databaseUrl,
     DATABASE_POOL_MAX: raw.DATABASE_POOL_MAX ?? (isProduction ? 5 : 10),
@@ -333,6 +373,16 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
 
     APIFY_TOKEN: raw.APIFY_TOKEN,
     APIFY_ENABLED: (raw.APIFY_ENABLED ?? true) && Boolean(raw.APIFY_TOKEN),
+
+    YOUTUBE_API_KEY: raw.YOUTUBE_API_KEY,
+    YOUTUBE_ENABLED: Boolean(raw.YOUTUBE_API_KEY),
+
+    BUCKET_ENDPOINT: raw.BUCKET_ENDPOINT,
+    BUCKET_REGION: raw.BUCKET_REGION ?? 'auto',
+    BUCKET_NAME: raw.BUCKET_NAME,
+    BUCKET_ACCESS_KEY_ID: raw.BUCKET_ACCESS_KEY_ID,
+    BUCKET_SECRET_ACCESS_KEY: raw.BUCKET_SECRET_ACCESS_KEY,
+    UPLOADS_ENABLED: uploadsEnabled,
 
     DEMO_ENABLED: demoEnabled,
     DEMO_CREATOR_EMAIL: demoCreatorEmail.toLowerCase(),

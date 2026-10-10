@@ -114,6 +114,7 @@ export function createCommunitiesService(deps: CommunitiesServiceDeps) {
             description: input.description?.trim() ? input.description : null,
             tint: input.tint,
             icon: input.icon,
+            coverUrl: input.coverUrl ?? null,
             sortOrder: await repos.communities.nextSortOrder(space.id, tx),
           },
           tx,
@@ -140,6 +141,7 @@ export function createCommunitiesService(deps: CommunitiesServiceDeps) {
       if (input.tint !== undefined) patch.tint = input.tint;
       if (input.icon !== undefined) patch.icon = input.icon;
       if (input.sortOrder !== undefined) patch.sortOrder = input.sortOrder;
+      if (input.coverUrl !== undefined) patch.coverUrl = input.coverUrl;
       if (input.archived !== undefined) {
         patch.archivedAt = input.archived ? (current.archivedAt ?? new Date()) : null;
       }

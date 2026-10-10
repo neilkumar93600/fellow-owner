@@ -18,13 +18,20 @@ export * from './communities.js';
 export * from './enums.js';
 export * from './followers.js';
 export * from './inbound.js';
+export * from './jobs.js';
 export * from './later.js';
 export * from './memberships.js';
+export * from './moderation.js';
 export * from './newsletter.js';
+export * from './notification-prefs.js';
+export * from './page-visits.js';
 export * from './posts.js';
 export * from './promotions.js';
+export * from './question-groups.js';
+export * from './snoozes.js';
 export * from './social.js';
 export * from './spaces.js';
+export * from './support.js';
 
 // relations() for drizzle's relational query builder (db.query.*). They add no SQL constraints.
 

@@ -126,7 +126,25 @@ export const LIMITS = {
     minGroupSize: 3,
     windowDays: 30,
     redraftsPerDay: 5,
+    /** A pitch joins a group whose centroid is within this cosine distance. */
+    maxDistance: 0.3,
+    /** Asker quotes: the first sentence of the pitch body, cut to this many characters. */
+    quoteMax: 160,
   },
+  /** F13 Ask your AI. perDay is the same cap as DAILY_CAPS.askAI (per space). */
+  ask: { questionMax: 300, perDay: 30, matches: 20 },
+  /** F17 similar ideas and people who could help (cosine distance). */
+  similar: { postsMax: 5, peopleMax: 5, maxDistance: 0.35 },
+  /** F25 reports. */
+  reports: { noteMax: 500, perUserPerDay: 20 },
+  /** Contact and privacy request forms. */
+  support: { nameMax: 100, messageMin: 10, messageMax: 4000 },
+  /** Image uploads to the bucket: presigned PUT, then reads through /api/media/<key>. */
+  uploads: { maxBytes: 5 * 1024 * 1024, urlTtlSeconds: 600, readTtlSeconds: 3600 },
+  /** YouTube comment import (F24). */
+  youtube: { maxComments: 500, maxVideos: 10 },
+  /** Notification digest emails. */
+  emails: { digestMaxItems: 10 },
   sweep: {
     /** Items claimed per sweep call. */
     claimMax: 25,

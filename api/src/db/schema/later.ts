@@ -33,6 +33,7 @@ export const asks = pgTable(
   },
   (t) => [
     index('asks_space_created_idx').on(t.spaceId, t.createdAt.desc().nullsFirst()),
+    index('asks_community_idx').on(t.communityId),
     check(
       'asks_title_check',
       sql`char_length(${t.title}) between ${sql.raw(String(LIMITS.post.title.min))} and ${sql.raw(String(LIMITS.post.title.max))}`,
@@ -65,6 +66,15 @@ export const notifications = pgTable(
       t.readAt,
       t.createdAt.desc().nullsFirst(),
     ),
+    /** The bell list: newest first, keyset on (created_at, id). */
+    index('notifications_user_created_idx').on(
+      t.userId,
+      t.createdAt.desc().nullsFirst(),
+      t.id.desc().nullsFirst(),
+    ),
+    /** Purge of old read notifications. */
+    index('notifications_read_created_idx').on(t.createdAt).where(sql`${t.readAt} is not null`),
+    index('notifications_space_idx').on(t.spaceId),
     check('notifications_kind_check', sql`${t.kind} in (${inList(NOTIFICATION_KINDS)})`),
   ],
 );

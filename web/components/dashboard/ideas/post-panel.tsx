@@ -11,6 +11,7 @@ import Link from 'next/link';
 import type * as React from 'react';
 import { useId, useState } from 'react';
 import { CommentForm } from '@/components/post/comment-form';
+import { SimilarSection } from '@/components/post/similar-section';
 import { AiChip } from '@/components/shared/ai-chip';
 import { AvatarInitials } from '@/components/shared/avatar-initials';
 import { CommunityChip } from '@/components/shared/community-chip';
@@ -400,6 +401,7 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
               />
             ) : null}
           </Section>
+          {full ? <SimilarSection postId={postId} scope="studio" /> : null}
         </div>
       </SidePanel>
 

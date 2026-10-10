@@ -31,6 +31,7 @@ export const LIVE_SPACE: PublicSpace = {
   totalFollowers: DEMO.followers.total,
   memberCount: DEMO.members,
   isDemo: true,
+  coverUrl: null,
 };
 
 export const LIVE_ROOMS: PublicCommunity[] = DEMO.rooms.map((room, index) => ({
@@ -42,6 +43,7 @@ export const LIVE_ROOMS: PublicCommunity[] = DEMO.rooms.map((room, index) => ({
   icon: room.icon,
   memberCount: room.members,
   sortOrder: index,
+  coverUrl: null,
 }));
 
 const budgetTravel = LIVE_ROOMS.find((room) => room.slug === DEMO.idea.communitySlug);

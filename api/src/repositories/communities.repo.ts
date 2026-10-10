@@ -13,7 +13,7 @@ import { posts } from '../db/schema/posts.js';
 export type CommunityUpdate = Partial<
   Pick<
     NewCommunityRow,
-    'name' | 'slug' | 'description' | 'tint' | 'icon' | 'sortOrder' | 'archivedAt'
+    'name' | 'slug' | 'description' | 'tint' | 'icon' | 'sortOrder' | 'archivedAt' | 'coverUrl'
   >
 >;
 
@@ -183,6 +183,7 @@ export function createCommunitiesRepo(db: Db) {
           sortOrder: communities.sortOrder,
           memberCount: communities.memberCount,
           archivedAt: communities.archivedAt,
+          coverUrl: communities.coverUrl,
           createdAt: communities.createdAt,
           postCount: sql<number>`(
             select count(*)::int from ${posts}

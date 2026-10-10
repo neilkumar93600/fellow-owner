@@ -13,6 +13,7 @@ import { ApiError } from '@/lib/fetcher';
 import { routes } from '@/lib/routes';
 import { CommentThread } from './comment-thread';
 import { PostBody } from './post-body';
+import { SimilarSection } from './similar-section';
 
 /** /{handle}/p/{postId}: back to the community, the post card, then the comments card. */
 export function PostDetailView({ handle, post }: { handle: string; post: PostDetail }) {
@@ -27,6 +28,7 @@ export function PostDetailView({ handle, post }: { handle: string; post: PostDet
       </Link>
       <PostBody handle={handle} post={post} />
       <CommentThread handle={handle} postId={post.id} comments={post.comments} />
+      <SimilarSection postId={post.id} scope="member" />
     </div>
   );
 }

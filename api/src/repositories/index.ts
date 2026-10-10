@@ -1,4 +1,5 @@
 import type { Db } from '../db/client.js';
+import { createAccountRepo } from './account.repo.js';
 import { createAiRunsRepo } from './ai-runs.repo.js';
 import { createAsksRepo } from './asks.repo.js';
 import { createClicksRepo } from './clicks.repo.js';
@@ -10,12 +11,19 @@ import { createFollowersRepo } from './followers.repo.js';
 import { createInsightsRepo } from './insights.repo.js';
 import { createMembershipsRepo } from './memberships.repo.js';
 import { createNewsletterRepo } from './newsletter.repo.js';
+import { createNotificationPrefsRepo } from './notification-prefs.repo.js';
 import { createNotificationsRepo } from './notifications.repo.js';
+import { createPageVisitsRepo } from './page-visits.repo.js';
 import { createPitchesRepo } from './pitches.repo.js';
 import { createPostsRepo } from './posts.repo.js';
 import { createPromotionsRepo } from './promotions.repo.js';
+import { createQuestionGroupsRepo } from './question-groups.repo.js';
+import { createReportsRepo } from './reports.repo.js';
+import { createSearchRepo } from './search.repo.js';
 import { createSignalsRepo } from './signals.repo.js';
+import { createSnoozesRepo } from './snoozes.repo.js';
 import { createSpacesRepo } from './spaces.repo.js';
+import { createSupportRepo } from './support.repo.js';
 import { createTeamsRepo } from './teams.repo.js';
 
 /** Every repository over one db handle. Built once in container.ts. */
@@ -39,6 +47,14 @@ export function createRepos(db: Db) {
     insights: createInsightsRepo(db),
     asks: createAsksRepo(db),
     newsletter: createNewsletterRepo(db),
+    search: createSearchRepo(db),
+    questionGroups: createQuestionGroupsRepo(db),
+    reports: createReportsRepo(db),
+    support: createSupportRepo(db),
+    snoozes: createSnoozesRepo(db),
+    notificationPrefs: createNotificationPrefsRepo(db),
+    pageVisits: createPageVisitsRepo(db),
+    account: createAccountRepo(db),
   };
 }
 

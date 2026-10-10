@@ -247,7 +247,12 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
       const joined = new Set(own.communityIds);
 
       return {
-        space: { handle: space.handle, displayName: space.displayName, avatarUrl: space.avatarUrl },
+        space: {
+          handle: space.handle,
+          displayName: space.displayName,
+          avatarUrl: space.avatarUrl,
+          showReadReceipts: space.showReadReceipts,
+        },
         membership: own,
         communities: communities.filter((row) => joined.has(row.id)).map(publicCommunity),
         posts: authored.flatMap((row) => {
@@ -260,7 +265,7 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
             ? [{ post: card, role: row.role, status: row.status, isLead: isLeadRole(row.role) }]
             : [];
         }),
-        pitches: pitches.map(pitchView),
+        pitches: pitches.map((row) => pitchView(row, { showReadReceipts: space.showReadReceipts })),
         caps: { pitchesLeftToday: pitchesLeft, postsLeftToday: postsLeft },
       };
     },
