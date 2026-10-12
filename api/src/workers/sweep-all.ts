@@ -14,7 +14,8 @@ const leaseExpired = (
   sql`(${claimedAt} is null or ${claimedAt} < now() - make_interval(secs => ${ANALYSIS_LEASE_SECONDS}))`;
 
 /**
- * Sweeps every space with pending, postponed or expired-lease items, 5 spaces at a time, so
+ * Sweeps every space with pending or expired-lease items, 5 spaces at a time (each sweep waits
+ * for its analyses, so at most 5 spaces x LIMITS.sweep.batchSize AI calls run at once), so
  * analyses finish even when the owner never opens the studio. Resolves with the spaces swept.
  * ponytail: one analyzer.sweep per space per tick (25 items/hour/space); loop on `remaining` if
  * a space ever piles up more than that between dashboard visits.
@@ -41,7 +42,9 @@ export async function sweepAll(deps: SweepAllDeps): Promise<number> {
   const spaceIds = rows.map((row) => row.spaceId);
   for (let i = 0; i < spaceIds.length; i += BATCH) {
     const batch = spaceIds.slice(i, i + BATCH);
-    const results = await Promise.allSettled(batch.map((spaceId) => analyzer.sweep(spaceId)));
+    const results = await Promise.allSettled(
+      batch.map((spaceId) => analyzer.sweep(spaceId, { wait: true })),
+    );
     results.forEach((result, index) => {
       if (result.status === 'rejected') {
         logger.error({ err: result.reason, spaceId: batch[index] }, 'sweep-all: space failed');

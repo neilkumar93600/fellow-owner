@@ -1,6 +1,8 @@
 import type {
+  BeforeQuery,
   CommentItem,
   CreateCommentInput,
+  Page,
   PostDetail,
   SignalKind,
   SignalState,
@@ -30,6 +32,27 @@ export function updatePost(id: string, input: UpdatePostInput): Promise<PostDeta
 /** DELETE (author): soft delete, 204. */
 export function deletePost(id: string): Promise<void> {
   return apiFetch<void>(postPath(id), { method: 'DELETE' });
+}
+
+/** `?before=&limit=` for the "Show more" lists (beforeQuerySchema). */
+export function beforeSearch({ before, limit }: BeforeQuery): string {
+  const search = new URLSearchParams();
+  if (before) search.set('before', before);
+  if (limit) search.set('limit', String(limit));
+  const query = search.toString();
+  return query ? `?${query}` : '';
+}
+
+/**
+ * GET /comments?before=: comments older than `before` (the oldest one held), oldest first. The
+ * detail holds the newest page; `nextCursor` is the next `before`, null when none are older.
+ */
+export function getComments(
+  id: string,
+  query: BeforeQuery,
+  signal?: AbortSignal,
+): Promise<Page<CommentItem>> {
+  return apiFetch<Page<CommentItem>>(`${postPath(id)}/comments${beforeSearch(query)}`, { signal });
 }
 
 /** POST /comments (201): 100 a day per space. */

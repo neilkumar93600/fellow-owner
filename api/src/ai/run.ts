@@ -25,9 +25,13 @@ import { type AiContext, type AiTaskName, AiUnavailableError } from './types.js'
  * 2. today's tokens (ai_runs) < ai_daily_token_budget -> AiUnavailableError('budget')
  *    (skipped for BUDGET_EXEMPT_TASKS, whose tokens never count toward it)
  * 3. per-task cap (TASK_CAPS)                         -> AiUnavailableError('cap')
+ *    counted and reserved atomically: under an advisory lock on the cap's user/space key, the
+ *    count and an ai_runs row for this call are written in one transaction, so parallel calls
+ *    cannot all read the same count and pass
  * 4. the model call, timed, output validated with zod (+ the task's own check);
  *    one retry with feedback when the output is malformed
- * 5. exactly one ai_runs row (task, model, tokens of all attempts, latency, ok | error)
+ * 5. exactly one ai_runs row (task, model, tokens of all attempts, latency, ok | error): the
+ *    reserved row filled in, or a new one for uncapped tasks
  * Model or validation failures throw AiUnavailableError('provider'); callers degrade.
  * Refusals in steps 1-3 never reach the model and write no row (so they never count toward a cap).
  * Space-less calls (ctx.spaceId null: suggestSetup in onboarding, before a space exists) skip the
@@ -37,12 +41,25 @@ import { type AiContext, type AiTaskName, AiUnavailableError } from './types.js'
 
 // ---------------------------------------------------------------- dependencies
 
+/** What a finished call writes into its ai_runs row. */
+export type AiRunResult = Pick<
+  NewAiRunRow,
+  'model' | 'inputTokens' | 'outputTokens' | 'latencyMs' | 'status' | 'error'
+>;
+
 /** The ai_runs repository surface run.ts needs (createAiRunsRepo satisfies it). */
 export interface AiAccounting {
   insert(values: NewAiRunRow): Promise<number>;
   budgetState(spaceId: string, now?: Date): Promise<AiBudgetState>;
   countByUserTaskSince(userId: string, task: string, since: Date): Promise<number>;
   countBySpaceTaskSince(spaceId: string, task: string, since: Date): Promise<number>;
+  /**
+   * Runs `fn` with the accounting bound to one transaction that holds an advisory lock per key:
+   * a cap count and the insert that reserves the slot cannot interleave with another call's.
+   */
+  locked<T>(keys: readonly string[], fn: (accounting: AiAccounting) => Promise<T>): Promise<T>;
+  /** Fills in the row preflight reserved, once the call is done. */
+  complete(id: number, values: AiRunResult): Promise<void>;
 }
 
 export interface AiRuntime {
@@ -69,11 +86,16 @@ export interface TaskCap {
 
 /**
  * Tasks that write ai_runs rows (caps, accounting) but are neither counted toward nor blocked by
- * the space's daily token budget: coach, because fans trigger it (C5) and must not drain the
- * creator's AI; embedItem, because embeddings cost about 1% of chat tokens and a backfill (the
- * nightly demo reset embeds ~1500 rows) would otherwise pause triage and briefings for the day.
+ * the space's daily token budget: coach and suggestCommunities, because fans trigger them (C5)
+ * and must not drain the creator's AI (their user and space caps bound them instead); embedItem,
+ * because embeddings cost about 1% of chat tokens and a backfill (the nightly demo reset embeds
+ * ~1500 rows) would otherwise pause triage and briefings for the day.
  */
-export const BUDGET_EXEMPT_TASKS: readonly AiTaskName[] = ['coach', 'embedItem'];
+export const BUDGET_EXEMPT_TASKS: readonly AiTaskName[] = [
+  'coach',
+  'suggestCommunities',
+  'embedItem',
+];
 
 export function isBudgetExempt(task: AiTaskName): boolean {
   return BUDGET_EXEMPT_TASKS.includes(task);
@@ -85,7 +107,14 @@ export function isBudgetExempt(task: AiTaskName): boolean {
  * community a day); the values here are safety nets against retry loops, not product limits.
  */
 export const TASK_CAPS: Partial<Record<AiTaskName, TaskCap>> = {
-  suggestCommunities: { scope: 'user', window: 'hour', max: HOURLY_CAPS.suggestCommunities },
+  suggestCommunities: {
+    scope: 'user',
+    window: 'hour',
+    max: HOURLY_CAPS.suggestCommunities,
+    spaceMax: 200,
+  },
+  // Only calls with a user (profile edits, Ask your AI); workers and backfills pass none.
+  embedItem: { scope: 'user', window: 'hour', max: HOURLY_CAPS.embedItem },
   promoteDrafts: { scope: 'space', window: 'day', max: DAILY_CAPS.promoteDrafts },
   askAI: { scope: 'space', window: 'day', max: DAILY_CAPS.askAI },
   suggestReply: { scope: 'space', window: 'day', max: DAILY_CAPS.suggestReply },
@@ -130,26 +159,51 @@ export async function taskCapReached(
   return null;
 }
 
-/** Checks steps 1-3. Exported for media tasks (ai/media.ts) that call other providers. */
+/** Advisory lock keys for the counts taskCapReached reads (user first, then space: no deadlock). */
+export function capLockKeys(task: AiTaskName, spaceId: string, userId: string | null): string[] {
+  const cap = TASK_CAPS[task];
+  if (!cap) return [];
+  const keys: string[] = [];
+  if (cap.scope === 'user' && userId) keys.push(`ai-cap:${task}:user:${userId}`);
+  if (cap.scope === 'space' || cap.spaceMax !== undefined) {
+    keys.push(`ai-cap:${task}:space:${spaceId}`);
+  }
+  return keys;
+}
+
+/**
+ * Checks steps 1-3. For a capped call it returns the id of the ai_runs row reserved for it (pass
+ * it to recordRun), else null. Exported for media tasks (ai/media.ts) and the fake (ai/fake.ts).
+ * ponytail: the budget check is not atomic (a reservation has no tokens yet), so a burst can
+ * overshoot the budget by the calls in flight; the task caps bound that burst.
+ */
 export async function preflight(
   rt: Pick<AiRuntime, 'enabled' | 'accounting' | 'now'>,
   task: AiTaskName,
   ctx: AiContext,
-): Promise<void> {
+): Promise<number | null> {
   if (!rt.enabled) throw new AiUnavailableError('disabled', undefined, { task });
   const now = rt.now?.() ?? new Date();
-  if (ctx.spaceId === null) return;
+  const spaceId = ctx.spaceId;
+  if (spaceId === null) return null;
   if (!isBudgetExempt(task)) {
-    const budget = await rt.accounting.budgetState(ctx.spaceId, now);
+    const budget = await rt.accounting.budgetState(spaceId, now);
     if (budget.paused) throw new AiUnavailableError('budget', undefined, { task });
   }
-  const reached = await taskCapReached(
-    rt.accounting,
-    task,
-    { spaceId: ctx.spaceId, userId: ctx.userId ?? null },
-    now,
-  );
-  if (reached) throw new AiUnavailableError('cap', reached, { task });
+  const userId = ctx.userId ?? null;
+  const keys = capLockKeys(task, spaceId, userId);
+  if (keys.length === 0) return null;
+  return rt.accounting.locked(keys, async (accounting) => {
+    const reached = await taskCapReached(accounting, task, { spaceId, userId }, now);
+    if (reached) throw new AiUnavailableError('cap', reached, { task });
+    // A row that is never completed (the process died mid-call) still counts and reads as an error.
+    return accounting.insert({
+      ...runRef(task, { ...ctx, spaceId }),
+      model: 'pending',
+      status: 'error',
+      error: 'in progress',
+    });
+  });
 }
 
 // ---------------------------------------------------------------- accounting
@@ -160,9 +214,22 @@ export function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
 }
 
+/** The ai_runs columns that identify a call. */
+export function runRef(task: AiTaskName, ctx: AiContext & { spaceId: string }) {
+  return {
+    spaceId: ctx.spaceId,
+    userId: ctx.userId ?? null,
+    task,
+    refType: ctx.refType ?? null,
+    refId: ctx.refId && UUID.test(ctx.refId) ? ctx.refId : null,
+  };
+}
+
 export interface RunRecord {
   task: AiTaskName;
   ctx: AiContext;
+  /** The row preflight reserved (capped tasks): filled in instead of inserting a new one. */
+  reservation?: number | null;
   model: string;
   inputTokens: number;
   outputTokens: number;
@@ -180,19 +247,16 @@ export async function recordRun(
   const spaceId = run.ctx.spaceId;
   try {
     if (spaceId !== null) {
-      await rt.accounting.insert({
-        spaceId,
-        userId: run.ctx.userId ?? null,
-        task: run.task,
-        refType: run.ctx.refType ?? null,
-        refId: run.ctx.refId && UUID.test(run.ctx.refId) ? run.ctx.refId : null,
+      const result: AiRunResult = {
         model: run.model.slice(0, 200),
         inputTokens: Math.max(0, Math.round(run.inputTokens)),
         outputTokens: Math.max(0, Math.round(run.outputTokens)),
         latencyMs: Math.max(0, Math.round(run.latencyMs)),
         status: run.status,
         error: run.error ? run.error.slice(0, 500) : null,
-      });
+      };
+      if (run.reservation) await rt.accounting.complete(run.reservation, result);
+      else await rt.accounting.insert({ ...runRef(run.task, { ...run.ctx, spaceId }), ...result });
     }
   } catch (error) {
     rt.logger.error(
@@ -370,7 +434,7 @@ export async function runAiTask<S extends z.ZodType>(
   options: RunAiTaskOptions<S>,
 ): Promise<AiTaskResult<z.output<S>>> {
   const { task, tier, ctx } = options;
-  await preflight(rt, task, ctx);
+  const reservation = await preflight(rt, task, ctx);
 
   const ref = rt.models[tier];
   const timeoutMs = options.timeoutMs ?? TIER_DEFAULTS[tier].timeoutMs;
@@ -392,6 +456,7 @@ export async function runAiTask<S extends z.ZodType>(
     await recordRun(rt, {
       task,
       ctx,
+      reservation,
       model,
       inputTokens: usage.inputTokens,
       outputTokens: usage.outputTokens,
@@ -439,6 +504,7 @@ export async function runAiTask<S extends z.ZodType>(
         await recordRun(rt, {
           task,
           ctx,
+          reservation,
           model,
           inputTokens: usage.inputTokens,
           outputTokens: usage.outputTokens,
@@ -512,7 +578,7 @@ export async function runEmbeddingTask(
 ): Promise<AiTaskResult<number[]>> {
   const task = options.task ?? 'embedItem';
   const { ctx } = options;
-  await preflight(rt, task, ctx);
+  const reservation = await preflight(rt, task, ctx);
 
   const ref = rt.models.embedding;
   const timeoutMs = options.timeoutMs ?? 15_000;
@@ -537,6 +603,7 @@ export async function runEmbeddingTask(
     await recordRun(rt, {
       task,
       ctx,
+      reservation,
       model: ref.id,
       inputTokens,
       outputTokens: 0,
@@ -556,6 +623,7 @@ export async function runEmbeddingTask(
     await recordRun(rt, {
       task,
       ctx,
+      reservation,
       model: ref.id,
       inputTokens,
       outputTokens: 0,

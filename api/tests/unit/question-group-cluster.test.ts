@@ -54,6 +54,27 @@ describe('clusterCandidates', () => {
     expect(clusters.map((cluster) => cluster.ids)).toEqual([['other']]);
   });
 
+  it('moves centroids without touching the inputs', () => {
+    const groupCentroid = vec(2);
+    const near = vec(2, 0.1);
+    const seed = vec(6);
+    const { joins, clusters } = clusterCandidates(
+      [
+        { id: 'near', vector: near },
+        { id: 'seed', vector: seed },
+        { id: 'next', vector: vec(6, 0.1) },
+      ],
+      [{ id: 'g1', centroid: groupCentroid, size: 1 }],
+      MAX,
+    );
+    expect(joins.get('g1')).toEqual(['near']);
+    expect(clusters[0]?.ids).toEqual(['seed', 'next']);
+    expect(clusters[0]?.centroid[7]).toBeCloseTo(0.05);
+    expect(groupCentroid).toEqual(vec(2));
+    expect(near).toEqual(vec(2, 0.1));
+    expect(seed).toEqual(vec(6));
+  });
+
   it('never joins anything beyond the max distance', () => {
     const { joins, clusters } = clusterCandidates(
       [{ id: 'x', vector: vec(1) }],

@@ -518,7 +518,8 @@ describe('link on join', () => {
     expect(joined.body.items[0].communities).toEqual([]);
   });
 
-  it('links by social platform + handle when no email matches', async () => {
+  it('never links by a self-declared social handle', async () => {
+    // Zoe says she is @Ana.V on Instagram; nothing proves it, so Ana's row stays unlinked.
     const zoe = await signInWithOtp(app, 'zoe@followers.test', 'Zoe');
     await db
       .update(user)
@@ -529,8 +530,8 @@ describe('link on join', () => {
       .set('Cookie', zoe.cookie)
       .send({ communityIds: [fitness.id] })
       .expect(200);
-    const [linked] = await db.select().from(followers).where(eq(followers.handle, 'ana.v'));
-    expect(linked?.membershipId).toEqual(expect.any(String));
+    const [listed] = await db.select().from(followers).where(eq(followers.handle, 'ana.v'));
+    expect(listed?.membershipId).toBeNull();
   });
 
   it('joins normally when nothing matches', async () => {
@@ -540,8 +541,9 @@ describe('link on join', () => {
       .set('Cookie', nobody.cookie)
       .send({ communityIds: [builders.id] })
       .expect(200);
+    // Only Arjun (by email); the handle claim above linked nobody.
     const joined = await as(owner.cookie).get('?joined=yes').expect(200);
-    expect(joined.body.total).toBe(2);
+    expect(joined.body.total).toBe(1);
   });
 
   it('links a fan who sent a pitch before joining', async () => {
@@ -599,7 +601,7 @@ describe('link fans who joined before they were listed', () => {
     expect(row?.membershipId).toBe(kim.membershipId);
   });
 
-  it('links on manual add, by email or by social handle', async () => {
+  it('links on manual add by email, never by social handle', async () => {
     const pat = await joined('pat@followers.test');
     const added = await as(owner.cookie)
       .post('', { name: 'Pat', email: 'pat@followers.test' })
@@ -617,7 +619,7 @@ describe('link fans who joined before they were listed', () => {
     const byHandle = await as(owner.cookie)
       .post('', { name: 'Ivy', handle: 'ivy.moves', platform: 'tiktok' })
       .expect(201);
-    expect(byHandle.body.membershipId).toBe(ivy.membershipId);
+    expect(byHandle.body.membershipId).toBeNull();
   });
 
   it('PATCH email links, then unlinks when it stops matching', async () => {
@@ -642,7 +644,7 @@ describe('link fans who joined before they were listed', () => {
     expect(relinked.body.membershipId).toBe(quinn.membershipId);
   });
 
-  it('links one follower per member when two rows match, never failing', async () => {
+  it('links one follower per member, never by handle, never failing', async () => {
     const rae = await joined('rae@followers.test');
     await db
       .update(user)
@@ -660,16 +662,27 @@ describe('link fans who joined before they were listed', () => {
     expect(await membershipOf(byHandle?.id ?? '')).toBeNull();
     expect(await repos.followers.linkJoined(mira.space.id)).toBe(0);
 
-    // Through the API too: the member is taken, so a second match is added unlinked.
+    // Through the API too: a handle-only row stays unlinked, so it never blocks the email match.
     const uma = await joined('uma@followers.test');
     await db
       .update(user)
       .set({ socialPlatform: 'youtube', socialHandle: 'uma' })
       .where(eq(user.id, uma.userId));
-    const first = await addFollower({ name: 'Uma (YT)', handle: 'uma', platform: 'youtube' });
-    expect(await membershipOf(first.id)).toBe(uma.membershipId);
-    const second = await addFollower({ name: 'Uma', email: 'uma@followers.test' });
-    expect(await membershipOf(second.id)).toBeNull();
+    const byHandleOnly = await addFollower({
+      name: 'Uma (YT)',
+      handle: 'uma',
+      platform: 'youtube',
+    });
+    expect(await membershipOf(byHandleOnly.id)).toBeNull();
+    const byUmaEmail = await addFollower({ name: 'Uma', email: 'uma@followers.test' });
+    expect(await membershipOf(byUmaEmail.id)).toBe(uma.membershipId);
+  });
+
+  it('never links on an unverified email', async () => {
+    const vic = await joined('vic@followers.test');
+    await db.update(user).set({ emailVerified: false }).where(eq(user.id, vic.userId));
+    const listed = await addFollower({ name: 'Vic', email: 'vic@followers.test' });
+    expect(await membershipOf(listed.id)).toBeNull();
   });
 
   it("never links a removed member or another space's member", async () => {

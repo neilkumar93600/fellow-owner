@@ -64,6 +64,13 @@
       "when": 1791625219413,
       "tag": "0008_newsletter_confirm_sent_at",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791788857885,
+      "tag": "0009_hardening_indexes",
+      "breakpoints": true
     }
   ]
 }

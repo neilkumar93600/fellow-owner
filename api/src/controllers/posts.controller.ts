@@ -1,4 +1,5 @@
 import {
+  beforeQuerySchema,
   commentParamsSchema,
   createCommentSchema,
   idParamsSchema,
@@ -10,7 +11,7 @@ import {
 } from '@fellow-owners/shared';
 import type { Request, Response } from 'express';
 import { userIdOf } from '../middlewares/require-session.js';
-import { bodyOf, paramsOf } from '../middlewares/validate.js';
+import { bodyOf, paramsOf, queryOf } from '../middlewares/validate.js';
 import type { CommentsService } from '../services/comments.service.js';
 import type { PostsService } from '../services/posts.service.js';
 import type { SignalsService } from '../services/signals.service.js';
@@ -46,6 +47,12 @@ export function createPostsController(deps: PostsControllerDeps) {
       const { id } = paramsOf(req, idParamsSchema);
       await deps.posts.remove(id, userIdOf(req));
       res.status(204).end();
+    },
+
+    /** GET /:id/comments?before= -> Page<CommentItem> (older comments, oldest first) */
+    async comments(req: Request, res: Response): Promise<void> {
+      const { id } = paramsOf(req, idParamsSchema);
+      res.json(await deps.posts.comments(id, userIdOf(req), queryOf(req, beforeQuerySchema)));
     },
 
     /** POST /:id/comments -> CommentItem (201) */

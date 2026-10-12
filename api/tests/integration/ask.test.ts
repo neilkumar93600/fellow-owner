@@ -8,6 +8,7 @@ import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
 import { inbound, posts } from '../../src/db/schema/index.js';
 import { startOfUtcDay } from '../../src/lib/dates.js';
+import { ASK_REF_TYPE } from '../../src/services/ask.service.js';
 import { type SignedIn, signInWithOtp } from '../helpers/auth.js';
 import { createFactories, type TestSpace } from '../helpers/factories.js';
 import { closeDb, db, resetDatabase } from '../helpers/test-db.js';
@@ -45,14 +46,16 @@ async function embedPitch(id: string, text: string) {
 async function fillAskCap(spaceId: string, userId: string) {
   const used = await container.repos.aiRuns.countBySpaceTaskSince(
     spaceId,
-    'askAI',
+    'embedItem',
     startOfUtcDay(new Date()),
+    { refType: ASK_REF_TYPE },
   );
   for (let i = used; i < LIMITS.ask.perDay; i += 1) {
     await container.repos.aiRuns.insert({
       spaceId,
       userId,
-      task: 'askAI',
+      task: 'embedItem',
+      refType: ASK_REF_TYPE,
       model: 'fake',
       status: 'ok',
     });
@@ -189,8 +192,14 @@ describe('POST /api/studio/ask', () => {
     expect(res.body).toEqual({
       answer: expect.stringMatching(/nothing in your space mentions that yet/i),
       citations: [],
-      asksLeftToday: LIMITS.ask.perDay,
+      asksLeftToday: LIMITS.ask.perDay - 1,
     });
+
+    // Unanswered questions still use up the day's asks (each one is a paid embedding).
+    await fillAskCap(space.space.id, lonely.userId);
+    const embed = vi.spyOn(container.ai, 'embedItem');
+    await ask(lonely).expect(429);
+    expect(embed).not.toHaveBeenCalled();
   });
 
   it("another owner's ask never sees this space", async () => {

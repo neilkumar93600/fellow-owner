@@ -65,6 +65,18 @@ export const feedQuerySchema = cursorQuerySchema.extend({
 });
 export type FeedQuery = z.output<typeof feedQuerySchema>;
 
+/**
+ * "Show more" on lists whose first page comes inside a bigger read: a post's comments
+ * (GET /api/posts/:id/comments, first page in PostDetail) and My space posts and pitches
+ * (GET /api/spaces/:handle/me/posts|pitches, first page in MySpace). `before` is the id of the
+ * oldest item the client holds; each page's `nextCursor` is the next `before` (null: no more).
+ */
+export const beforeQuerySchema = z.object({
+  before: idSchema.optional(),
+  limit: cursorQuerySchema.shape.limit,
+});
+export type BeforeQuery = z.output<typeof beforeQuerySchema>;
+
 /** GET /api/studio/ideas: ranked by the idea score in 02-trd. */
 export const ideasQuerySchema = cursorQuerySchema.extend({
   community: z.string().trim().toLowerCase().max(LIMITS.community.slug.max).optional(),

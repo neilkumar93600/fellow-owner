@@ -35,6 +35,8 @@ export interface Storage {
   delete(key: string): Promise<void>;
   /** Deletes every object under `prefix`; resolves with how many. */
   deletePrefix(prefix: string): Promise<number>;
+  /** Keys under `prefix` last modified before `before` (workers/purge.ts orphan sweep). */
+  listBefore(prefix: string, before: Date): Promise<string[]>;
 }
 
 /** Where uploads are served: the site path stored in avatar_url / cover_url / user.image. */
@@ -59,15 +61,22 @@ export function isImageBytes(bytes: Uint8Array): boolean {
 
 /**
  * Why an uploaded image URL may not be stored, or null when it may. Only `/api/media/<key>` URLs
- * are checked (other URLs keep their schema rules): the key must be a server-made one and the
- * object's first 16 bytes must be a JPEG, PNG or WebP. The browser declared the type at presign
- * time, so the bytes are what is trusted here; an object that fails is deleted.
+ * are checked (other URLs keep their schema rules): the key must be a server-made one under one of
+ * `prefixes` (the caller's own `<kind>/<owner>/`, as presign made it), and the object's first 16
+ * bytes must be a JPEG, PNG or WebP. The browser declared the type at presign time, so the bytes
+ * are what is trusted here; an object that fails is deleted.
  * ponytail: magic bytes only, no decode/re-encode; add a sharp re-encode if polyglots matter.
  */
-export async function mediaImageProblem(storage: Storage, url: unknown): Promise<string | null> {
+export async function mediaImageProblem(
+  storage: Storage,
+  url: unknown,
+  prefixes: readonly string[],
+): Promise<string | null> {
   if (typeof url !== 'string' || !url.startsWith(MEDIA_PATH)) return null;
   const key = url.slice(MEDIA_PATH.length);
   if (!MEDIA_KEY_PATTERN.test(key)) return 'That image link is not an upload';
+  // Someone else's upload (or another kind): its owner's account deletion would break it here.
+  if (!prefixes.some((prefix) => key.startsWith(prefix))) return 'That image was not uploaded here';
   if (!storage.enabled) return 'Image uploads are turned off';
   const head = await storage.readStart(key, 16);
   if (!head) return 'That upload was not found. Upload the image again.';
@@ -76,11 +85,14 @@ export async function mediaImageProblem(storage: Storage, url: unknown): Promise
   return 'That file is not a JPEG, PNG or WebP image';
 }
 
+/** Per attempt (the SDK retries twice): a stalled bucket fails a request instead of holding it. */
+export const STORAGE_TIMEOUTS = { connectionTimeout: 3_000, requestTimeout: 5_000 };
+
 /**
  * S3-compatible bucket (Railway). The SDK default (virtual-hosted style) is kept on purpose:
  * buckets created now are served that way, so `forcePathStyle` stays unset.
  */
-export function createStorage(env: StorageEnv): Storage {
+export function createStorage(env: StorageEnv, timeouts = STORAGE_TIMEOUTS): Storage {
   const { BUCKET_ENDPOINT, BUCKET_NAME, BUCKET_ACCESS_KEY_ID, BUCKET_SECRET_ACCESS_KEY } = env;
   if (
     !env.UPLOADS_ENABLED ||
@@ -99,6 +111,7 @@ export function createStorage(env: StorageEnv): Storage {
       readStart: off,
       delete: off,
       deletePrefix: off,
+      listBefore: off,
     };
   }
 
@@ -106,6 +119,8 @@ export function createStorage(env: StorageEnv): Storage {
     endpoint: BUCKET_ENDPOINT,
     region: env.BUCKET_REGION,
     credentials: { accessKeyId: BUCKET_ACCESS_KEY_ID, secretAccessKey: BUCKET_SECRET_ACCESS_KEY },
+    // The SDK default has no timeouts; requestTimeout only throws with throwOnRequestTimeout.
+    requestHandler: { ...timeouts, throwOnRequestTimeout: true },
   });
   const Bucket = BUCKET_NAME;
 
@@ -162,6 +177,20 @@ export function createStorage(env: StorageEnv): Storage {
         ContinuationToken = page.IsTruncated ? page.NextContinuationToken : undefined;
       } while (ContinuationToken);
       return deleted;
+    },
+    async listBefore(prefix, before) {
+      const keys: string[] = [];
+      let ContinuationToken: string | undefined;
+      do {
+        const page = await client.send(
+          new ListObjectsV2Command({ Bucket, Prefix: prefix, ContinuationToken }),
+        );
+        for (const { Key, LastModified } of page.Contents ?? []) {
+          if (Key && LastModified && LastModified < before) keys.push(Key);
+        }
+        ContinuationToken = page.IsTruncated ? page.NextContinuationToken : undefined;
+      } while (ContinuationToken);
+      return keys;
     },
   };
 }

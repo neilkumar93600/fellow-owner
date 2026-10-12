@@ -150,6 +150,8 @@ export function createNotificationEmailsService(deps: NotificationEmailsServiceD
         kinds: EMAIL_NOTIFICATION_KINDS,
         olderThan,
         since: new Date(now.getTime() - LOOKBACK_MS),
+        // Anyone can act as the demo accounts, so their notifications are never emailed.
+        excludeEmails: [env.DEMO_CREATOR_EMAIL, env.DEMO_FAN_EMAIL],
       });
       const byUser = new Map<string, DigestRow[]>();
       for (const row of rows) byUser.set(row.userId, [...(byUser.get(row.userId) ?? []), row]);

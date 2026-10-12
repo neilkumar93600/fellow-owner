@@ -391,9 +391,11 @@ export function createFollowersRepo(db: Db) {
     },
 
     /**
-     * Links the first unlinked follower matching the user (same email, else same platform +
-     * handle from user.social_platform / social_handle) to the membership, unless the membership
-     * is already linked. Returns the linked follower, or null.
+     * Links the oldest unlinked follower with the user's verified email to the membership, unless
+     * the membership is already linked. Returns the linked follower, or null.
+     * ponytail: email only. user.social_handle is self-declared (no proof the user owns it), so a
+     * handle match would let anyone claim a listed follower; match handles once they are proven
+     * (a linked OAuth account for that platform) or confirmed by the creator.
      */
     async linkMembership(
       spaceId: string,
@@ -401,8 +403,6 @@ export function createFollowersRepo(db: Db) {
       userId: string,
       tx: DbOrTx = db,
     ): Promise<FollowerRow | null> {
-      const emailMatch = sql`${qcol(followers.email)} = lower(${qcol(user.email)})`;
-      const handleMatch = sql`(${qcol(user.socialHandle)} is not null and ${qcol(followers.platform)} = ${qcol(user.socialPlatform)} and lower(${qcol(followers.handle)}) = lower(ltrim(${qcol(user.socialHandle)}, '@')))`;
       const [row] = await tx
         .update(followers)
         .set({ membershipId })
@@ -412,9 +412,10 @@ export function createFollowersRepo(db: Db) {
             where ${qcol(user.id)} = ${userId}
               and ${qcol(followers.spaceId)} = ${spaceId}
               and ${qcol(followers.membershipId)} is null
-              and (${emailMatch} or ${handleMatch})
+              and ${qcol(user.emailVerified)}
+              and ${qcol(followers.email)} = lower(${qcol(user.email)})
               and not exists (select 1 from ${followers} linked where linked.membership_id = ${membershipId})
-            order by (${emailMatch}) desc, ${qcol(followers.createdAt)}
+            order by ${qcol(followers.createdAt)}
             limit 1
           )`,
         )
@@ -425,10 +426,10 @@ export function createFollowersRepo(db: Db) {
     /**
      * Backfill of linkMembership for fans who joined before they were listed: links every unlinked
      * follower of the space to an unlinked active member (role member, not removed, joined at
-     * least one community, so a pitch-only membership stays private) with the same match rule.
-     * One link per follower and per membership: each follower takes its best membership (email
-     * first, then earliest joined), each membership its best follower (email first, then oldest),
-     * so the unique membership index never trips. Returns how many followers were linked.
+     * least one community, so a pitch-only membership stays private) with the same match rule
+     * (verified email only). One link per follower and per membership: each follower takes the
+     * earliest joined membership, each membership the oldest follower, so the unique membership
+     * index never trips. Returns how many followers were linked.
      */
     async linkJoined(spaceId: string, tx: DbOrTx = db): Promise<number> {
       const rows = await tx.execute<{ id: string }>(sql`
@@ -436,22 +437,19 @@ export function createFollowersRepo(db: Db) {
         from (
           select distinct on (c.membership_id) c.follower_id, c.membership_id
           from (
-            select distinct on (f.id) f.id as follower_id, m.id as membership_id,
-              f.created_at, (f.email = lower(u.email)) as by_email
+            select distinct on (f.id) f.id as follower_id, m.id as membership_id, f.created_at
             from ${followers} f
             join ${memberships} m on m.space_id = f.space_id
               and m.role = 'member' and m.removed_at is null
             join ${user} u on u.id = m.user_id
             where f.space_id = ${spaceId}
               and f.membership_id is null
-              and (f.email = lower(u.email)
-                or (u.social_handle is not null and f.platform = u.social_platform
-                  and lower(f.handle) = lower(ltrim(u.social_handle, '@'))))
+              and u.email_verified and f.email = lower(u.email)
               and exists (select 1 from ${communityMembers} cm where cm.membership_id = m.id)
               and not exists (select 1 from ${followers} l where l.membership_id = m.id)
-            order by f.id, (f.email = lower(u.email)) is true desc, m.joined_at, m.id
+            order by f.id, m.joined_at, m.id
           ) c
-          order by c.membership_id, c.by_email is true desc, c.created_at, c.follower_id
+          order by c.membership_id, c.created_at, c.follower_id
         ) pick
         where ${qcol(followers.id)} = pick.follower_id
         returning ${qcol(followers.id)} as id
@@ -460,8 +458,9 @@ export function createFollowersRepo(db: Db) {
     },
 
     /**
-     * Drops a follower's link when its own email and platform + handle no longer match the linked
-     * member (after the creator edits them). Returns true when a link was dropped.
+     * Drops a follower's link when its email no longer matches the linked member's verified email
+     * (after the creator edits it; also drops links made by handle before linking was email-only).
+     * Returns true when a link was dropped.
      */
     async unlinkMismatch(spaceId: string, id: string, tx: DbOrTx = db): Promise<boolean> {
       const rows = await tx.execute<{ id: string }>(sql`
@@ -470,9 +469,7 @@ export function createFollowersRepo(db: Db) {
         where ${qcol(followers.id)} = ${id}
           and ${qcol(followers.spaceId)} = ${spaceId}
           and m.id = ${qcol(followers.membershipId)}
-          and not coalesce(${qcol(followers.email)} = lower(u.email), false)
-          and not coalesce(u.social_handle is not null and ${qcol(followers.platform)} = u.social_platform
-            and lower(${qcol(followers.handle)}) = lower(ltrim(u.social_handle, '@')), false)
+          and not coalesce(u.email_verified and ${qcol(followers.email)} = lower(u.email), false)
         returning ${qcol(followers.id)} as id
       `);
       return rows.length > 0;

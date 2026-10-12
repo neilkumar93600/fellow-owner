@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { createServer, type Server } from 'node:http';
+import type { AddressInfo } from 'node:net';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createStorage } from '../../src/lib/storage.js';
 
 const env = {
@@ -32,5 +34,48 @@ describe('createStorage', () => {
     const storage = createStorage({ ...env, UPLOADS_ENABLED: false, BUCKET_NAME: undefined });
     expect(storage.enabled).toBe(false);
     await expect(storage.presignGet('avatar/u1/a.png')).rejects.toThrow();
+  });
+});
+
+describe('createStorage against a real HTTP endpoint', () => {
+  let server: Server | undefined;
+  afterEach(() => {
+    server?.closeAllConnections();
+    server?.close();
+  });
+
+  /** A local "bucket" (an IP endpoint, so the SDK uses path style); returns its endpoint. */
+  async function bucket(handler: Parameters<typeof createServer>[1]): Promise<string> {
+    server = createServer(handler);
+    await new Promise<void>((resolve) => server?.listen(0, '127.0.0.1', resolve));
+    return `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  }
+
+  it('gives up on a bucket that never answers instead of hanging', async () => {
+    // Accepts the request and never responds.
+    const endpoint = await bucket(() => {});
+    const storage = createStorage(
+      { ...env, BUCKET_ENDPOINT: endpoint },
+      { connectionTimeout: 200, requestTimeout: 200 },
+    );
+    const started = Date.now();
+    await expect(storage.readStart('avatar/u1/a.png', 16)).rejects.toThrow();
+    expect(Date.now() - started).toBeLessThan(5_000);
+  }, 10_000);
+
+  it('listBefore keeps only objects modified before the cutoff', async () => {
+    const endpoint = await bucket((_req, res) => {
+      res.setHeader('Content-Type', 'application/xml');
+      res.end(`<?xml version="1.0" encoding="UTF-8"?>
+<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <Name>media-test</Name><Prefix>avatar/</Prefix><KeyCount>2</KeyCount><IsTruncated>false</IsTruncated>
+  <Contents><Key>avatar/u1/old.png</Key><LastModified>2026-10-01T00:00:00.000Z</LastModified><Size>10</Size></Contents>
+  <Contents><Key>avatar/u1/new.png</Key><LastModified>2026-10-11T00:00:00.000Z</LastModified><Size>10</Size></Contents>
+</ListBucketResult>`);
+    });
+    const storage = createStorage({ ...env, BUCKET_ENDPOINT: endpoint });
+    expect(await storage.listBefore('avatar/', new Date('2026-10-10T00:00:00Z'))).toEqual([
+      'avatar/u1/old.png',
+    ]);
   });
 });

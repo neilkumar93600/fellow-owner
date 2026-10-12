@@ -1,5 +1,5 @@
 import { LIMITS } from '@fellow-owners/shared';
-import type { BackgroundRunner, ItemRef, SweepResult } from '../ai/types.js';
+import type { BackgroundRunner, ItemRef, SweepOptions, SweepResult } from '../ai/types.js';
 import type { Logger } from '../lib/logger.js';
 import type { Repos } from '../repositories/index.js';
 
@@ -15,13 +15,15 @@ export interface SweepDeps {
  * at once, and analyzes them LIMITS.sweep.batchSize (5) at a time in the background.
  * Safe to call repeatedly: claimed items are skipped by other sweeps until their lease expires.
  * When the AI is paused (budget used up or disabled), the rest of the batch is released at once
- * instead of being tried one by one.
+ * instead of being tried one by one. `options.wait` analyzes in place and resolves when done
+ * (the cron sweep, which throttles spaces).
  */
 export async function sweepSpace(
   deps: SweepDeps,
   spaceId: string,
   /** Analyzes one claimed item; resolves with its outcome (analyze-item.ts AnalyzeOutcome). */
   analyzeClaimed: (ref: ItemRef) => Promise<unknown>,
+  options: SweepOptions = {},
 ): Promise<SweepResult> {
   const { claimMax, batchSize } = LIMITS.sweep;
   const { posts, pitches } = deps.repos;
@@ -39,33 +41,35 @@ export async function sweepSpace(
   const remaining =
     (await posts.remainingPending(spaceId)) + (await pitches.remainingPending(spaceId));
 
-  if (refs.length > 0) {
-    deps.background.run(`sweep:${spaceId}`, async () => {
-      const started = Date.now();
-      const tally: Record<string, number> = {};
-      for (let i = 0; i < refs.length; i += batchSize) {
-        const batch = refs.slice(i, i + batchSize);
-        const outcomes = await Promise.all(batch.map((ref) => analyzeClaimed(ref)));
-        for (const outcome of outcomes) {
-          const key = typeof outcome === 'string' ? outcome : 'unknown';
-          tally[key] = (tally[key] ?? 0) + 1;
-        }
-        if (outcomes.includes('postponed')) {
-          const rest = refs.slice(i + batchSize);
-          await Promise.all(
-            rest.map((ref) =>
-              (ref.kind === 'post' ? posts : pitches).releaseClaim(ref.id).catch(() => undefined),
-            ),
-          );
-          tally.released = rest.length;
-          break;
-        }
+  const analyzeAll = async () => {
+    const started = Date.now();
+    const tally: Record<string, number> = {};
+    for (let i = 0; i < refs.length; i += batchSize) {
+      const batch = refs.slice(i, i + batchSize);
+      const outcomes = await Promise.all(batch.map((ref) => analyzeClaimed(ref)));
+      for (const outcome of outcomes) {
+        const key = typeof outcome === 'string' ? outcome : 'unknown';
+        tally[key] = (tally[key] ?? 0) + 1;
       }
-      deps.logger.info(
-        { spaceId, claimed: refs.length, ms: Date.now() - started, ...tally },
-        'sweep done',
-      );
-    });
+      if (outcomes.includes('postponed')) {
+        const rest = refs.slice(i + batchSize);
+        await Promise.all(
+          rest.map((ref) =>
+            (ref.kind === 'post' ? posts : pitches).releaseClaim(ref.id).catch(() => undefined),
+          ),
+        );
+        tally.released = rest.length;
+        break;
+      }
+    }
+    deps.logger.info(
+      { spaceId, claimed: refs.length, ms: Date.now() - started, ...tally },
+      'sweep done',
+    );
+  };
+  if (refs.length > 0) {
+    if (options.wait) await analyzeAll();
+    else deps.background.run(`sweep:${spaceId}`, analyzeAll);
   }
   deps.logger.debug({ spaceId, claimed: refs.length, remaining }, 'sweep started');
   return { claimed: refs.length, remaining };

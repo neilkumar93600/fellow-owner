@@ -8,28 +8,46 @@ import { ConfirmDialog } from '@/components/shared/confirm-dialog';
 import { ReportButton } from '@/components/shared/report-button';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/components/ui/cn';
-import { isPendingComment, useAddComment, useDeleteComment } from '@/hooks/queries/use-post';
+import {
+  isPendingComment,
+  useAddComment,
+  useDeleteComment,
+  useEarlierComments,
+} from '@/hooks/queries/use-post';
 import { formatNumber, formatRelative } from '@/lib/format';
 import { toastSuccess } from '@/lib/toast';
 import { CommentForm } from './comment-form';
 
 /**
- * The comments card: the thread oldest first, then the comment box. A new comment joins the thread at
- * once (muted until the API has it); its author can delete it, after a confirmation.
+ * The comments card: the thread oldest first, then the comment box. The post holds the newest comments;
+ * Show earlier comments adds older ones on top while `commentCount` says some are missing. A new comment
+ * joins the thread at once (muted until the API has it); its author can delete it, after a confirmation.
  */
 export function CommentThread({
   handle,
   postId,
   comments,
+  commentCount,
 }: {
   handle: string;
   postId: string;
   comments: CommentItem[];
+  /** PostDetail.commentCount: every comment members can see, loaded or not. */
+  commentCount: number;
 }) {
   const add = useAddComment(handle);
   const remove = useDeleteComment();
+  const earlier = useEarlierComments(postId);
   const [removing, setRemoving] = useState<CommentItem | null>(null);
+  // The oldest id when a page said nothing older is left (a refetch of the post shows the button again).
+  const [doneBefore, setDoneBefore] = useState<string | null>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const oldest = comments[0];
+  const canLoadEarlier =
+    oldest !== undefined &&
+    !isPendingComment(oldest) &&
+    comments.length < commentCount &&
+    oldest.id !== doneBefore;
 
   return (
     <section aria-labelledby="comments-title" className="min-w-0 glass-strong p-6 sm:p-8">
@@ -40,8 +58,27 @@ export function CommentThread({
         className="flex items-baseline gap-2 text-h2 text-ink outline-none"
       >
         Comments
-        <span className="text-ink-soft tabular-nums">{formatNumber(comments.length)}</span>
+        <span className="text-ink-soft tabular-nums">
+          {formatNumber(Math.max(commentCount, comments.length))}
+        </span>
       </h2>
+      {canLoadEarlier ? (
+        <Button
+          variant="ghost"
+          surface="glass"
+          className="mt-2 -ml-4"
+          loading={earlier.isPending}
+          onClick={() =>
+            earlier.mutate(oldest.id, {
+              onSuccess: (page) => {
+                if (!page.nextCursor) setDoneBefore(page.items[0]?.id ?? oldest.id);
+              },
+            })
+          }
+        >
+          Show earlier comments
+        </Button>
+      ) : null}
       {comments.length ? (
         <ol className="mt-2 divide-y divide-ink/10">
           {comments.map((comment) => {

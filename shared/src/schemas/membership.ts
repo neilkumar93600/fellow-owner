@@ -60,6 +60,12 @@ export const updateMembershipSchema = z
   });
 export type UpdateMembershipInput = z.input<typeof updateMembershipSchema>;
 
+/**
+ * GET /api/spaces/:handle/me lists at most this many own posts and pitches; a full list means
+ * there may be more: GET /me/posts and /me/pitches with `before` (beforeQuerySchema) page on.
+ */
+export const MY_SPACE_FIRST_PAGE = 100;
+
 /** GET /api/studio/people */
 export const peopleQuerySchema = cursorQuerySchema.extend({
   q: z.string().trim().max(LIMITS.search.queryMax).optional(),

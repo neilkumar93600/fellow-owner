@@ -148,6 +148,16 @@ export function createAccountRepo(db: Db) {
       return rows.map((row) => row.id);
     },
 
+    /** The user's sign-in email, or null when the user is gone (demo-account checks). */
+    async emailOf(userId: string, tx: DbOrTx = db): Promise<string | null> {
+      const [row] = await tx
+        .select({ email: user.email })
+        .from(user)
+        .where(eq(user.id, userId))
+        .limit(1);
+      return row?.email ?? null;
+    },
+
     /** The user's memberships (removed ones included). */
     async membershipsOf(userId: string, tx: DbOrTx = db) {
       return tx
@@ -194,7 +204,7 @@ export function createAccountRepo(db: Db) {
           .set({
             useCount: sql`(select count(*)::int from signals s where s.post_id = ${qcol(posts.id)} and s.kind = 'use')`,
             buildCount: sql`(select count(*)::int from signals s where s.post_id = ${qcol(posts.id)} and s.kind = 'build')`,
-            commentCount: sql`(select count(*)::int from comments c where c.post_id = ${qcol(posts.id)} and c.deleted_at is null)`,
+            commentCount: sql`(select count(*)::int from comments c where c.post_id = ${qcol(posts.id)} and c.deleted_at is null and c.hidden_at is null)`,
           })
           .where(inArray(posts.id, postIds));
       }

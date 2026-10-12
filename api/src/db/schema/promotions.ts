@@ -84,6 +84,12 @@ export const clickEvents = pgTable(
   (t) => [
     index('click_events_promotion_created_idx').on(t.promotionId, t.createdAt),
     index('click_events_created_idx').on(t.createdAt),
+    /** One click per visitor per platform per day (the hash already includes the UTC day). */
+    uniqueIndex('click_events_promotion_visitor_platform_uidx').on(
+      t.promotionId,
+      t.visitorHash,
+      t.platform,
+    ),
     check(
       'click_events_platform_check',
       sql`${t.platform} in (${sql.raw(CLICK_PLATFORMS.map((p) => `'${p}'`).join(', '))})`,

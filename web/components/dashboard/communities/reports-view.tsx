@@ -22,7 +22,16 @@ const TABS: { value: ReportStatus; label: string }[] = [
 /** /dashboard/communities/reports: what members flagged, with Hide, Resolve and Dismiss. */
 export function ReportsView() {
   const [status, setStatus] = useState<ReportStatus>('open');
-  const { data, isPending, isError, error, refetch } = useReports(status);
+  const {
+    items,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useReports(status);
   const act = useActOnReport();
 
   return (
@@ -34,7 +43,7 @@ export function ReportsView() {
           <SegmentedPill label="Report status" value={status} onChange={setStatus} options={TABS} />
         }
       />
-      {isPending ? (
+      {isLoading ? (
         <div aria-busy="true" className="flex flex-col gap-3">
           <span className="sr-only" role="status">
             Loading reports
@@ -44,7 +53,7 @@ export function ReportsView() {
         </div>
       ) : isError ? (
         <QueryError error={error} onRetry={() => void refetch()} />
-      ) : data.items.length === 0 ? (
+      ) : items.length === 0 ? (
         <EmptyState
           icon={Flag}
           body={
@@ -54,16 +63,29 @@ export function ReportsView() {
           }
         />
       ) : (
-        <ul className="flex flex-col gap-3">
-          {data.items.map((item) => (
-            <ReportRow
-              key={item.id}
-              item={item}
-              busy={act.isPending && act.variables?.id === item.id}
-              onAct={(action) => act.mutate({ id: item.id, action })}
-            />
-          ))}
-        </ul>
+        <>
+          <ul className="flex flex-col gap-3">
+            {items.map((item) => (
+              <ReportRow
+                key={item.id}
+                item={item}
+                busy={act.isPending && act.variables?.id === item.id}
+                onAct={(action) => act.mutate({ id: item.id, action })}
+              />
+            ))}
+          </ul>
+          {hasNextPage ? (
+            <Button
+              variant="secondary"
+              size="md"
+              loading={isFetchingNextPage}
+              onClick={fetchNextPage}
+              className="self-center"
+            >
+              Load more
+            </Button>
+          ) : null}
+        </>
       )}
     </div>
   );

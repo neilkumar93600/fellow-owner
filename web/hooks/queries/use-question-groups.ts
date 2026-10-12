@@ -87,6 +87,7 @@ export function useAnswerQuestionGroup() {
         status: 'answered',
         answer: input.answer,
         answeredAt: new Date().toISOString(),
+        repliedCount: input.replyAll ? current.askedCount : current.repliedCount,
         pinnedIn: group.communities
           .filter((community) => input.pinCommunityIds?.includes(community.id))
           .map((community) => community.name),

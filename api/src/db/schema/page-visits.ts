@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { check, date, integer, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core';
+import { check, date, index, integer, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core';
 import { spaces } from './spaces.js';
 
 /**
@@ -19,6 +19,8 @@ export const pageVisits = pgTable(
   },
   (t) => [
     primaryKey({ name: 'page_visits_pk', columns: [t.spaceId, t.visitorHash, t.day] }),
+    /** Studio metrics: a space's visitors in a day range. */
+    index('page_visits_space_day_idx').on(t.spaceId, t.day),
     check('page_visits_visits_check', sql`${t.visits} >= 1`),
   ],
 );

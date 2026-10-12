@@ -1,0 +1,121 @@
+{
+  "task": "questionGroup",
+  "description": "Answer Once drafts (hand-written answers in OpenRouter's wire format, no re-recording).",
+  "cases": [
+    {
+      "name": "names the shared question and drafts one answer",
+      "input": {
+        "creatorName": "Mira Lane",
+        "voice": "Honestly the cheapest trips are the slow ones.\n\nI never book the first flight I see.",
+        "quotes": [
+          "What camera do you use for the Lisbon videos?",
+          "which camera is that?? the colours are so good",
+          "Can you tell us your camera setup for travel vlogs?"
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "isQuestion": true,
+            "question": "  What camera do you use for your travel videos?  ",
+            "draft": "I shoot almost everything on one small mirrorless camera and a cheap wide lens. I'll do a full kit breakdown soon so you can see every piece."
+          },
+          "usage": { "prompt_tokens": 640, "completion_tokens": 70 }
+        }
+      ],
+      "expect": {
+        "isQuestion": true,
+        "question": "What camera do you use for your travel videos?",
+        "requests": 1
+      }
+    },
+    {
+      "name": "retries once when the first draft contains an email address",
+      "input": {
+        "creatorName": "Mira Lane",
+        "voice": null,
+        "quotes": [
+          "Do you take brand deals?",
+          "how can brands work with you?",
+          "Are you open to sponsorships?"
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "isQuestion": true,
+            "question": "How can brands work with you?",
+            "draft": "Yes! Email me at mira@x.com and I'll send my rates."
+          }
+        },
+        {
+          "content": {
+            "isQuestion": true,
+            "question": "How can brands work with you?",
+            "draft": "I'm open to partnerships that fit how I travel. I'll share how to reach my team in an update soon."
+          }
+        }
+      ],
+      "expect": {
+        "isQuestion": true,
+        "question": "How can brands work with you?",
+        "requests": 2
+      }
+    },
+    {
+      "name": "retries once when the first draft contains a link",
+      "input": {
+        "creatorName": "Mira Lane",
+        "voice": null,
+        "quotes": [
+          "Where do you find cheap flights?",
+          "what site do you use for flights?",
+          "how do you book such cheap flights"
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "isQuestion": true,
+            "question": "Where do you find cheap flights?",
+            "draft": "I always start at https://x.co and set price alerts."
+          }
+        },
+        {
+          "content": {
+            "isQuestion": true,
+            "question": "Where do you find cheap flights?",
+            "draft": "I set price alerts a few months out and stay flexible on dates. That flexibility saves me more than any single site."
+          }
+        }
+      ],
+      "expect": {
+        "isQuestion": true,
+        "question": "Where do you find cheap flights?",
+        "requests": 2
+      }
+    },
+    {
+      "name": "messages that share no question come back as not a question",
+      "input": {
+        "creatorName": "Mira Lane",
+        "voice": null,
+        "quotes": ["love your videos!", "you are the best", "great content as always"]
+      },
+      "responses": [
+        {
+          "content": {
+            "isQuestion": false,
+            "question": "Fans love the videos",
+            "draft": "Thank you all so much!"
+          }
+        }
+      ],
+      "expect": {
+        "isQuestion": false,
+        "question": "",
+        "requests": 1
+      }
+    }
+  ]
+}

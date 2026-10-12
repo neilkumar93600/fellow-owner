@@ -76,9 +76,9 @@ export function QuestionGroupsView({ handle, now }: { handle: string; now: numbe
       { group, input: { answer, replyAll, pinCommunityIds: pinIds } },
       {
         onSuccess: (done) => {
-          const pinned = done.pinnedIn.length ? ` Pinned in ${done.pinnedIn.join(' and ')}.` : '';
+          const posted = done.pinnedIn.length ? ` Posted in ${done.pinnedIn.join(' and ')}.` : '';
           toastSuccess(
-            replyAll ? `Sent to ${people(done.askedCount)}.${pinned}` : `Answer pinned.${pinned}`,
+            replyAll ? `Sent to ${people(done.askedCount)}.${posted}` : `Answer posted.${posted}`,
           );
         },
       },
@@ -179,9 +179,11 @@ export function QuestionGroupsView({ handle, now }: { handle: string; now: numbe
                 >
                   <span className="text-label-strong text-ink">{group.question}</span>
                   <span className="text-small text-ink-soft">
-                    Sent to {people(group.askedCount)}
+                    {group.repliedCount > 0
+                      ? `Sent to ${people(group.repliedCount)}`
+                      : 'Posted, no replies sent'}
                     {group.answeredAt ? ` · ${formatDate(group.answeredAt, now)}` : ''}
-                    {group.pinnedIn.length ? ` · Pinned in ${group.pinnedIn.join(' and ')}` : ''}
+                    {group.pinnedIn.length ? ` · Posted in ${group.pinnedIn.join(' and ')}` : ''}
                   </span>
                 </button>
               </li>

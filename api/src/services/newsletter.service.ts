@@ -30,7 +30,8 @@ export function createNewsletterService(deps: NewsletterServiceDeps) {
      * Double opt-in: stores the sign-up and mails a confirm link when the address still has to
      * confirm, at most once per address per 24 h and NEWSLETTER_CONFIRMS_PER_DAY in all. Never
      * says whether the email was already on the list or was skipped, and a mail failure is only
-     * logged, so the answer is the same for every address.
+     * logged, so the answer is the same for every address. When no email goes out (cap, failed
+     * send) the address's 24 h claim is given back, so trying again later that day can send it.
      */
     async subscribe(email: string, source: NewsletterSource): Promise<void> {
       if (!(await deps.repos.newsletter.requestOptIn(email, source))) return;
@@ -42,6 +43,7 @@ export function createNewsletterService(deps: NewsletterServiceDeps) {
       });
       if (!allowed) {
         deps.logger.warn({ to: maskEmail(email) }, 'newsletter confirm email skipped: daily cap');
+        await deps.repos.newsletter.releaseOptIn(email);
         return;
       }
       const confirm = signToken(CONFIRM, email, env.BETTER_AUTH_SECRET, CONFIRM_TTL_SECONDS);
@@ -58,6 +60,7 @@ export function createNewsletterService(deps: NewsletterServiceDeps) {
         });
       } catch (err) {
         deps.logger.warn({ err, to: maskEmail(email) }, 'newsletter confirm email failed');
+        await deps.repos.newsletter.releaseOptIn(email);
       }
     },
 

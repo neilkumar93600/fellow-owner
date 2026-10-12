@@ -1,5 +1,5 @@
 import type { EmailNotificationKind } from '@fellow-owners/shared';
-import { and, asc, eq, gt, inArray, isNull, lt, notLike, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, inArray, isNull, lt, notInArray, notLike, sql } from 'drizzle-orm';
 import type { Db } from '../db/client.js';
 import { user } from '../db/schema/auth.js';
 import { notifications } from '../db/schema/later.js';
@@ -79,12 +79,14 @@ export function createNotificationPrefsRepo(db: Db) {
      * Unread notifications of `kinds` that belong in a digest: created after the user's watermark
      * (and after `since`, so a first run does not mail a backlog) but before `olderThan` (so
      * people reading live are not emailed), for users with email on, not unsubscribed, and the
-     * kind not switched off. Demo and seed addresses (@example.com) never match. Oldest first.
+     * kind not switched off. Seed addresses (@example.com) and `excludeEmails` (the shared demo
+     * accounts, lowercased) never match. Oldest first.
      */
     async dueDigestRows(opts: {
       kinds: readonly EmailNotificationKind[];
       olderThan: Date;
       since: Date;
+      excludeEmails: readonly string[];
     }): Promise<DigestRow[]> {
       const rows = await db
         .select({
@@ -112,6 +114,7 @@ export function createNotificationPrefsRepo(db: Db) {
             isNull(notificationPrefs.unsubscribedAt),
             sql`coalesce((${notificationPrefs.kinds} ->> ${notifications.kind})::boolean, true)`,
             notLike(sql`lower(${user.email})`, '%@example.com'),
+            notInArray(sql`lower(${user.email})`, [...opts.excludeEmails]),
           ),
         )
         .orderBy(asc(notifications.userId), asc(notifications.createdAt), asc(notifications.id))

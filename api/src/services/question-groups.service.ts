@@ -7,9 +7,11 @@ import {
   type QuestionGroupsPage,
   type RedraftResult,
 } from '@fellow-owners/shared';
+import { and, eq, notInArray } from 'drizzle-orm';
 import { isAiUnavailable, type QuestionGroupInput } from '../ai/types.js';
 import type { CoreDeps } from '../container.js';
 import type { CommunityRow } from '../db/schema/communities.js';
+import { inbound } from '../db/schema/inbound.js';
 import type { QuestionGroupRow } from '../db/schema/question-groups.js';
 import type { SpaceRow } from '../db/schema/spaces.js';
 import { toIso, toIsoOrNull, utcDayString } from '../lib/dates.js';
@@ -24,16 +26,17 @@ import {
 import { contentHash } from '../lib/hash.js';
 import { excerpt, memberRef, unique } from '../lib/present.js';
 import type { GroupMemberRow } from '../repositories/question-groups.repo.js';
-import type { NotificationsService } from './notifications.service.js';
 
 export type QuestionGroupsServiceDeps = Pick<
   CoreDeps,
-  'db' | 'repos' | 'ai' | 'logger' | 'background' | 'analyzer'
-> & { notifications: NotificationsService };
+  'db' | 'repos' | 'ai' | 'logger' | 'background' | 'analyzer' | 'pubsub'
+>;
 
 /** The studio shows at most this many askers per group ("See the N latest"). */
 const ASKERS_SHOWN = 50;
 const A = LIMITS.answerOnce;
+/** Notification rows per insert when an answer goes to many askers. */
+const NOTIFY_CHUNK = 500;
 
 /** The first sentence of a pitch body, cut to LIMITS.answerOnce.quoteMax (asker quotes). */
 export function askerQuote(body: string): string {
@@ -73,7 +76,7 @@ type CommunityPick = Pick<PublicCommunity, 'id' | 'slug' | 'name' | 'tint' | 'ic
  * query is scoped by the owner's space, so another space's ids are 404.
  */
 export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
-  const { db, repos, ai, notifications } = deps;
+  const { db, repos, ai } = deps;
   const log = deps.logger.child({ module: 'question-groups' });
 
   /** QuestionGroups for rows of one space, batch-loaded (askers, their communities). */
@@ -129,6 +132,8 @@ export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
         id: row.id,
         question: row.question,
         askedCount: row.askedCount,
+        // ponytail: counts every reply in the group, including one given before the group was answered.
+        repliedCount: groupMembers.filter((member) => member.status === 'replied').length,
         askers,
         communities: [...picks.values()],
         draft: row.draft,
@@ -159,6 +164,43 @@ export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
     throw conflict(`This group is already ${row.status}`);
   }
 
+  /** reply_received for each replied asker: one refs lookup, chunked inserts, then the live bells. */
+  async function notifyReplied(
+    spaceId: string,
+    ownerUserId: string,
+    groupId: string,
+    replied: Array<{ id: string; senderMembershipId: string; subject: string }>,
+  ): Promise<void> {
+    const refs = await repos.memberships.refs(replied.map((item) => item.senderMembershipId));
+    const rows = replied.flatMap((item) => {
+      const ref = refs.get(item.senderMembershipId);
+      // A removed member hears nothing more from the space.
+      if (!ref || ref.removed || !ref.userId || ref.userId === ownerUserId) return [];
+      return [
+        {
+          userId: ref.userId,
+          spaceId,
+          kind: 'reply_received' as const,
+          payload: { inboundId: item.id, subject: item.subject, questionGroupId: groupId },
+        },
+      ];
+    });
+    for (let i = 0; i < rows.length; i += NOTIFY_CHUNK) {
+      const chunk = rows.slice(i, i + NOTIFY_CHUNK);
+      try {
+        await repos.notifications.insertMany(chunk);
+      } catch (err) {
+        log.warn({ err, spaceId, groupId }, 'answer notifications failed');
+        continue;
+      }
+      for (const userId of unique(chunk.map((row) => row.userId))) {
+        await deps.pubsub.publish({ userId, spaceId }).catch((err: unknown) => {
+          log.warn({ err, spaceId, groupId }, 'answer notification publish failed');
+        });
+      }
+    }
+  }
+
   function analyzeLater(postId: string): void {
     deps.background.run(`analyze:post:${postId}`, () =>
       deps.analyzer.analyzeItem({ kind: 'post', id: postId }),
@@ -176,8 +218,8 @@ export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
 
     /**
      * One transaction: marks the group answered (the 409 guard), replies to every asker still
-     * waiting (status replied, creator_reply, replied_at), and posts the answer, pinned, in each
-     * chosen community. Notifications go out after commit, best effort.
+     * waiting (status replied, creator_reply, replied_at), and posts the answer in each chosen
+     * community. Notifications go out after commit, in the background, best effort.
      */
     async answer(
       spaceId: string,
@@ -188,7 +230,7 @@ export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
       const answer = input.answer.trim();
       const pinIds = unique(input.pinCommunityIds ?? []);
       if (!input.replyAll && pinIds.length === 0) {
-        throw badRequest('Reply to everyone who asked, or pin the answer in a community');
+        throw badRequest('Reply to everyone who asked, or post the answer in a community');
       }
       if (pinIds.length > 0 && answer.length < LIMITS.post.body.min) {
         throw validationError(
@@ -196,11 +238,11 @@ export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
             {
               location: 'body',
               path: ['answer'],
-              message: `A pinned answer needs at least ${LIMITS.post.body.min} characters`,
+              message: `A posted answer needs at least ${LIMITS.post.body.min} characters`,
               code: 'too_small',
             },
           ],
-          'The answer is too short to pin',
+          'The answer is too short to post',
         );
       }
       const pins = await repos.communities.findByIds(spaceId, pinIds);
@@ -218,12 +260,25 @@ export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
           tx,
         );
         if (!claimed) return null;
-        const replied: GroupMemberRow[] = [];
-        if (input.replyAll) {
-          for (const member of await repos.questionGroups.unreplied(groupId, tx)) {
-            if (await repos.pitches.reply(spaceId, member.id, answer, tx)) replied.push(member);
-          }
-        }
+        // One statement for every asker still waiting (a reply they already got is kept).
+        const now = new Date();
+        const replied = input.replyAll
+          ? await tx
+              .update(inbound)
+              .set({ creatorReply: answer, repliedAt: now, status: 'replied', updatedAt: now })
+              .where(
+                and(
+                  eq(inbound.spaceId, spaceId),
+                  eq(inbound.questionGroupId, groupId),
+                  notInArray(inbound.status, ['replied', 'withdrawn']),
+                ),
+              )
+              .returning({
+                id: inbound.id,
+                senderMembershipId: inbound.senderMembershipId,
+                subject: inbound.subject,
+              })
+          : [];
         const postIds: string[] = [];
         if (pinned.length > 0) {
           const author = await repos.memberships.findOwner(spaceId, tx);
@@ -258,22 +313,11 @@ export function createQuestionGroupsService(deps: QuestionGroupsServiceDeps) {
         'question group answered',
       );
       for (const postId of result.postIds) analyzeLater(postId);
-      // The answer is committed: a failed notification is logged, never turned into a 500 (a
-      // retry would only get 409).
-      for (const member of result.replied) {
-        try {
-          const sender = await notifications.member(member.senderMembershipId);
-          if (!sender.userId || sender.userId === userId) continue;
-          await notifications.notify({
-            userId: sender.userId,
-            spaceId,
-            kind: 'reply_received',
-            payload: { inboundId: member.id, subject: member.subject, questionGroupId: groupId },
-          });
-        } catch (err) {
-          log.warn({ err, spaceId, groupId, pitchId: member.id }, 'answer notification failed');
-        }
-      }
+      // The answer is committed: the notifications run off the request, best effort (a failure is
+      // logged, never turned into a 500, since a retry would only get 409).
+      deps.background.run(`answer:notify:${groupId}`, () =>
+        notifyReplied(spaceId, userId, groupId, result.replied),
+      );
       return presentOne(spaceId, result.row);
     },
 

@@ -2,13 +2,16 @@ import { LIMITS, type PromotionPlatform } from '@fellow-owners/shared';
 import { describe, expect, it } from 'vitest';
 import { xWeightedLength } from '../../src/ai/guard.js';
 import { createAiServices, createLiveAiServices, isLiveAiConfigured } from '../../src/ai/index.js';
+import { CHALLENGE_SUMMARY_MAX } from '../../src/ai/tasks/challenge-summary.js';
 import { triageResultSchema } from '../../src/ai/tasks/triage-item.js';
 import type {
   AskAiInput,
   BriefingInput,
+  ChallengeSummaryInput,
   ClusterImportInput,
   CommunityDigestInput,
   PromoteDraftsInput,
+  QuestionGroupInput,
   SuggestCommunitiesInput,
   SuggestReplyInput,
   TriageInput,
@@ -358,6 +361,109 @@ describe('P1 task fixtures', () => {
       expect(mock.requests).toHaveLength(testCase.expect.requests);
       expect(rows[0]).toMatchObject({ task: 'askAI', status: 'ok' });
     }
+  });
+});
+
+describe('questionGroup fixtures', () => {
+  const fixture = loadAiFixture<
+    QuestionGroupInput,
+    { isQuestion: boolean; question: string; requests: number }
+  >('question-group');
+
+  for (const testCase of fixture.cases) {
+    it(testCase.name, async () => {
+      const { runtime, mock, rows } = createFixtureRuntime(testCase.responses);
+      const result = await createLiveAiServices(runtime).questionGroup(testCase.input, ctx);
+      expect(result.isQuestion).toBe(testCase.expect.isQuestion);
+      expect(result.question).toBe(testCase.expect.question);
+      if (result.isQuestion) {
+        expect(result.draft.length).toBeGreaterThan(0);
+        expect(result.draft).not.toMatch(/@|https?:\/\//);
+      } else {
+        expect(result.draft).toBe('');
+      }
+      expect(mock.requests).toHaveLength(testCase.expect.requests);
+      expect(mock.remaining()).toBe(0);
+      expect(mock.requests[0]?.body.model).toBe(TEST_AI_ENV.AI_MODEL_SMART);
+      expect(rows).toHaveLength(1);
+      expect(rows[0]).toMatchObject({ task: 'questionGroup', status: 'ok' });
+    });
+  }
+
+  const input: QuestionGroupInput = {
+    creatorName: 'Mira Lane',
+    voice: null,
+    quotes: ['Do you take brand deals?', 'how can brands reach you?', 'open to sponsors?'],
+  };
+
+  it('fails with an error row when both drafts carry contact details', async () => {
+    const risky = (draft: string) => ({
+      content: { isQuestion: true, question: 'How can brands reach you?', draft },
+    });
+    const { runtime, mock, rows } = createFixtureRuntime([
+      risky('Email me at mira@x.com.'),
+      risky('Call me on +1 415 555 0100 or DM @miralane.'),
+    ]);
+    const error = await createLiveAiServices(runtime)
+      .questionGroup(input, ctx)
+      .catch((e: unknown) => e);
+    expect(error).toMatchObject({ name: 'AiUnavailableError', reason: 'provider' });
+    expect(mock.requests).toHaveLength(2);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ task: 'questionGroup', status: 'error' });
+    expect(rows[0]?.error).toMatch(/^output check failed: /);
+  });
+
+  it('cuts the question and the draft to the stored limits', async () => {
+    const { runtime } = createFixtureRuntime([
+      {
+        content: {
+          isQuestion: true,
+          question: `What ${'really '.repeat(40)}matters?`,
+          draft: 'Slow travel. '.repeat(300),
+        },
+      },
+    ]);
+    const result = await createLiveAiServices(runtime).questionGroup(input, ctx);
+    expect(result.question.length).toBeLessThanOrEqual(LIMITS.post.title.max);
+    expect(result.draft.length).toBeLessThanOrEqual(LIMITS.pitch.reply.max);
+    expect(result.draft.length).toBeGreaterThan(0);
+  });
+});
+
+describe('challengeSummary fixtures', () => {
+  const fixture = loadAiFixture<ChallengeSummaryInput, { summary: string; requests: number }>(
+    'challenge-summary',
+  );
+
+  for (const testCase of fixture.cases) {
+    it(testCase.name, async () => {
+      const { runtime, mock, rows } = createFixtureRuntime(testCase.responses);
+      const result = await createLiveAiServices(runtime).challengeSummary(testCase.input, ctx);
+      expect(result.summary).toBe(testCase.expect.summary);
+      expect(mock.requests).toHaveLength(testCase.expect.requests);
+      expect(mock.remaining()).toBe(0);
+      expect(mock.requests[0]?.body.model).toBe(TEST_AI_ENV.AI_MODEL_FAST);
+      expect(rows).toHaveLength(1);
+      expect(rows[0]).toMatchObject({ task: 'challengeSummary', status: 'ok' });
+    });
+  }
+
+  it('cuts a long summary and fails when both answers are empty', async () => {
+    const input: ChallengeSummaryInput = { title: 'Packing light', entries: [] };
+    const long = createFixtureRuntime([{ content: { summary: 'Carry-on only. '.repeat(60) } }]);
+    const result = await createLiveAiServices(long.runtime).challengeSummary(input, ctx);
+    expect(result.summary.length).toBeLessThanOrEqual(CHALLENGE_SUMMARY_MAX);
+
+    const empty = createFixtureRuntime([
+      { content: { summary: '' } },
+      { content: { summary: ' ' } },
+    ]);
+    const error = await createLiveAiServices(empty.runtime)
+      .challengeSummary(input, ctx)
+      .catch((e: unknown) => e);
+    expect(error).toMatchObject({ name: 'AiUnavailableError', reason: 'provider' });
+    expect(empty.rows[0]).toMatchObject({ task: 'challengeSummary', status: 'error' });
   });
 });
 

@@ -7,12 +7,15 @@ import { validate } from '../middlewares/validate.js';
 
 /** Demo sign-ins one IP may start per minute. */
 export const DEMO_SESSIONS_PER_MINUTE = 10;
+/** Demo sign-ins one IP may start per hour, so one client can use only a small share of the cap. */
+export const DEMO_SESSIONS_PER_IP_PER_HOUR = 20;
 /** Demo sign-ins per hour in all: the per-IP limit alone can be dodged with a forged IP. */
 export const DEMO_SESSIONS_PER_HOUR = 300;
 
 /**
- * POST /api/demo/session (DEMO_* env, forwards Better Auth Set-Cookie), rate limited per IP and
- * capped per hour for everyone.
+ * POST /api/demo/session (DEMO_* env, forwards Better Auth Set-Cookie), rate limited per IP (per
+ * minute and per hour) and capped per hour for everyone. Malformed bodies are rejected before the
+ * cap, so they never use it up.
  * Mounted by routes/index.ts. Handlers: validate(...) with the shared schemas, guards from
  * middlewares/, then one controller method from container.controllers.
  */
@@ -28,13 +31,18 @@ export function createDemoRoutes(container: Container): Router {
       windowSeconds: 60,
       max: DEMO_SESSIONS_PER_MINUTE,
     }),
+    createRateLimit({
+      name: 'demo-session-ip-hour',
+      windowSeconds: 3600,
+      max: DEMO_SESSIONS_PER_IP_PER_HOUR,
+    }),
+    validate({ body: demoSessionSchema }),
     createCap({
       name: 'demo-session-hour',
       windowSeconds: 3600,
       max: DEMO_SESSIONS_PER_HOUR,
       key: () => 'all',
     }),
-    validate({ body: demoSessionSchema }),
     controller.session,
   );
   return router;

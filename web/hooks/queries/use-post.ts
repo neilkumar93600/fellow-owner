@@ -31,6 +31,7 @@ import {
   decideTeamRole,
   deleteComment,
   deletePost,
+  getComments,
   getPost,
   removeSignal,
   requestTeamRole,
@@ -334,6 +335,27 @@ export function useAddComment(handle: string) {
       },
     });
   return add;
+}
+
+/**
+ * "Show earlier comments": the page older than `before` (the oldest comment held) joins the top of
+ * the cached thread, so adds and deletes keep patching one list. Failures toast.
+ */
+export function useEarlierComments(postId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (before: string) => getComments(postId, { before }),
+    onSuccess: (page) =>
+      queryClient.setQueryData<PostDetail>(postKeys.detail(postId), (old) => {
+        if (!old) return old;
+        const held = new Set(old.comments.map((item) => item.id));
+        return {
+          ...old,
+          comments: [...page.items.filter((item) => !held.has(item.id)), ...old.comments],
+        };
+      }),
+    onError: (error) => toastError(error),
+  });
 }
 
 /** The comment's author deletes it; the thread and every count update. Failures toast. */

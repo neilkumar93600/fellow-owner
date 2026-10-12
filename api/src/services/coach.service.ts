@@ -4,9 +4,12 @@ import { isAiUnavailable } from '../ai/types.js';
 import type { CoreDeps } from '../container.js';
 import { startOfUtcDay } from '../lib/dates.js';
 import { forbidden, notFound, rateLimited } from '../lib/errors.js';
+import type { AccessService } from './access.service.js';
 import { removedByOwner } from './memberships.service.js';
 
-export type CoachServiceDeps = Pick<CoreDeps, 'repos' | 'ai' | 'logger'>;
+export type CoachServiceDeps = Pick<CoreDeps, 'repos' | 'ai' | 'logger'> & {
+  access: AccessService;
+};
 
 const LIMIT_MESSAGE = 'You have used all of today’s coach checks. They reset tomorrow.';
 
@@ -15,7 +18,7 @@ const LIMIT_MESSAGE = 'You have used all of today’s coach checks. They reset t
  * (their first pitch creates the membership); only members may check a post. Per-user cap
  * LIMITS.coach.perDay (ai_runs, task `coach`); the call never touches the space's AI budget.
  */
-export function createCoachService({ repos, ai }: CoachServiceDeps) {
+export function createCoachService({ repos, ai, access }: CoachServiceDeps) {
   const usedToday = (userId: string) =>
     repos.aiRuns.countByUserTaskSince(userId, 'coach', startOfUtcDay(new Date()));
 
@@ -23,6 +26,7 @@ export function createCoachService({ repos, ai }: CoachServiceDeps) {
     async check(handle: string, userId: string, input: CoachRequestInput): Promise<CoachResult> {
       const space = await repos.spaces.findByHandle(handle);
       if (!space) throw notFound('Space');
+      await access.assertCanEnter(space, userId);
       const membership = await repos.memberships.findByUser(space.id, userId);
       // A fan who left may check a pitch (sending it brings them back); the owner's removal may not.
       if (membership && removedByOwner(membership)) {

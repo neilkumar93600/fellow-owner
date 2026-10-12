@@ -1,18 +1,21 @@
-import type {
-  CommentItem,
-  createPostSchema,
-  FeedPage,
-  FeedQuery,
-  IdeaItem,
-  LinkItem,
-  PostCard,
-  PostDetail,
-  RoleSlot,
-  SignalKind,
-  StudioPostAction,
-  StudioPostDetail,
-  TeamMember,
-  updatePostSchema,
+import {
+  type BeforeQuery,
+  type CommentItem,
+  type createPostSchema,
+  type FeedPage,
+  type FeedQuery,
+  type IdeaItem,
+  LIMITS,
+  type LinkItem,
+  type Page,
+  type PostCard,
+  type PostDetail,
+  type RoleSlot,
+  type SignalKind,
+  type StudioPostAction,
+  type StudioPostDetail,
+  type TeamMember,
+  type updatePostSchema,
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
 import type { Analyzer, BackgroundRunner } from '../ai/types.js';
@@ -42,6 +45,7 @@ import {
   unique,
 } from '../lib/present.js';
 import { ideaScore } from '../lib/ranking.js';
+import type { CommentWithAuthor } from '../repositories/comments.repo.js';
 import type { Repos } from '../repositories/index.js';
 import type { TeamMemberWithRef } from '../repositories/teams.repo.js';
 import type { AccessService, MemberContext, OwnerContext, PostAccess } from './access.service.js';
@@ -65,6 +69,32 @@ export interface PostsServiceDeps {
 
 /** Card preview stacks show at most this many accepted team members. */
 const TEAM_PREVIEW_MAX = 4;
+
+/** Comments per page of a member's thread: the newest in PostDetail, older ones on "Show more". */
+const COMMENTS_PAGE = LIMITS.pagination.maxPageSize;
+
+/** CommentItem for a viewer; `studio` adds the owner's `hidden` flag. */
+function commentItem(
+  row: CommentWithAuthor,
+  viewer: MembershipRow | null,
+  studio = false,
+): CommentItem {
+  return {
+    id: row.id,
+    body: row.body,
+    author: row.authorMembershipId
+      ? memberRef({
+          membershipId: row.authorMembershipId,
+          name: row.authorName,
+          headline: row.authorHeadline,
+          image: row.authorImage,
+        })
+      : memberRef(null),
+    createdAt: toIso(row.createdAt),
+    isOwn: viewer !== null && row.authorMembershipId === viewer.id,
+    ...(studio ? { hidden: row.hiddenAt !== null } : {}),
+  };
+}
 
 function issue(path: Array<string | number>, message: string) {
   return validationError([{ location: 'body', path, message, code: 'custom' }]);
@@ -201,7 +231,9 @@ export function createPostsService(deps: PostsServiceDeps) {
       post.type === 'project'
         ? repos.teams.listByPost(post.id)
         : Promise.resolve([] as TeamMemberWithRef[]),
-      repos.comments.listByPost(post.id, { includeHidden: studio }),
+      studio
+        ? repos.comments.listByPost(post.id, { includeHidden: true })
+        : repos.comments.listPage(post.id, { limit: COMMENTS_PAGE }).then((page) => page.items),
     ]);
 
     const roles: RoleSlot[] = post.rolesNeeded.map((role) => {
@@ -220,21 +252,7 @@ export function createPostsService(deps: PostsServiceDeps) {
     const visibleTeam = fullTeam ? teamRows : teamRows.filter((row) => row.status === 'accepted');
     const own = viewer ? teamRows.find((row) => row.membershipId === viewer.id) : undefined;
 
-    const comments: CommentItem[] = commentRows.map((row) => ({
-      id: row.id,
-      body: row.body,
-      author: row.authorMembershipId
-        ? memberRef({
-            membershipId: row.authorMembershipId,
-            name: row.authorName,
-            headline: row.authorHeadline,
-            image: row.authorImage,
-          })
-        : memberRef(null),
-      createdAt: toIso(row.createdAt),
-      isOwn: viewer !== null && row.authorMembershipId === viewer.id,
-      ...(studio ? { hidden: row.hiddenAt !== null } : {}),
-    }));
+    const comments = commentRows.map((row) => commentItem(row, viewer, studio));
 
     return {
       roles,
@@ -453,6 +471,19 @@ export function createPostsService(deps: PostsServiceDeps) {
     async detail(postId: string, userId: string): Promise<PostDetail> {
       const ctx = await access.requirePostAccess(postId, userId);
       return buildDetail(ctx.space, ctx.post, ctx.membership);
+    },
+
+    /** GET /api/posts/:id/comments (member): older comments than `before`, oldest first. */
+    async comments(postId: string, userId: string, query: BeforeQuery): Promise<Page<CommentItem>> {
+      const ctx = await access.requirePostAccess(postId, userId);
+      const page = await repos.comments.listPage(ctx.post.id, {
+        before: query.before,
+        limit: clampLimit(query.limit ?? COMMENTS_PAGE),
+      });
+      return {
+        items: page.items.map((row) => commentItem(row, ctx.membership)),
+        nextCursor: page.nextCursor,
+      };
     },
 
     /**

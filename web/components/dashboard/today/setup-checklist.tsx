@@ -44,15 +44,14 @@ export function SetupChecklist({ handle, members, communities }: SetupChecklistP
       label: 'Share your bio link',
       done: Boolean(space.data?.bioLinkSharedAt),
       action: (
-        <span onClickCapture={markShared}>
-          <CopyButton
-            value={bioLink}
-            label="Copy bio link"
-            variant="secondary"
-            surface="card"
-            message="Bio link copied"
-          />
-        </span>
+        <CopyButton
+          value={bioLink}
+          label="Copy bio link"
+          variant="secondary"
+          surface="card"
+          message="Bio link copied"
+          onCopied={markShared}
+        />
       ),
     },
     {

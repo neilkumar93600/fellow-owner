@@ -7,7 +7,20 @@ import {
   type PostType,
   type TasteProfile,
 } from '@fellow-owners/shared';
-import { and, asc, count, desc, eq, gte, inArray, isNotNull, isNull, lt, sql } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  getTableColumns,
+  gte,
+  inArray,
+  isNotNull,
+  isNull,
+  lt,
+  sql,
+} from 'drizzle-orm';
 import { chunk, type Db, type DbOrTx, likePattern } from '../db/client.js';
 import { communities } from '../db/schema/communities.js';
 import { asks } from '../db/schema/later.js';
@@ -112,6 +125,13 @@ export interface WeeklyCount {
   count: number;
 }
 
+/**
+ * Every posts column for list reads except the 1536-float embedding, which lists never use and
+ * which costs ~15 KB of text per row: `embedding` comes back null. findById / findInSpace still
+ * load it (similar.service reads it there).
+ */
+export const postListColumns = { ...getTableColumns(posts), embedding: sql<null>`null` };
+
 const notDeleted = isNull(posts.deletedAt);
 const visible = and(isNull(posts.deletedAt), isNull(posts.hiddenAt));
 const leaseExpired = sql`(${posts.analysisClaimedAt} is null or ${posts.analysisClaimedAt} < now() - make_interval(secs => ${ANALYSIS_LEASE_SECONDS}))`;
@@ -140,10 +160,11 @@ export function createPostsRepo(db: Db) {
       return row ?? null;
     },
 
+    /** Posts of the space by id, without the embedding (postListColumns). */
     async findManyByIds(spaceId: string, ids: string[], tx: DbOrTx = db): Promise<PostRow[]> {
       if (ids.length === 0) return [];
       return tx
-        .select()
+        .select(postListColumns)
         .from(posts)
         .where(and(eq(posts.spaceId, spaceId), inArray(posts.id, ids)));
     },
@@ -337,7 +358,7 @@ export function createPostsRepo(db: Db) {
         update posts p set
           use_count = (select count(*)::int from signals s where s.post_id = p.id and s.kind = 'use'),
           build_count = (select count(*)::int from signals s where s.post_id = p.id and s.kind = 'build'),
-          comment_count = (select count(*)::int from comments c where c.post_id = p.id and c.deleted_at is null)
+          comment_count = (select count(*)::int from comments c where c.post_id = p.id and c.deleted_at is null and c.hidden_at is null)
         where p.space_id = ${spaceId}
       `);
     },
@@ -346,7 +367,7 @@ export function createPostsRepo(db: Db) {
     async listFeed(filter: FeedFilter, tx: DbOrTx = db): Promise<PageResult<PostRow>> {
       const { spaceId, communityId, type, cursor, limit } = filter;
       const rows = await tx
-        .select()
+        .select(postListColumns)
         .from(posts)
         .where(
           and(
@@ -395,18 +416,33 @@ export function createPostsRepo(db: Db) {
         .limit(limit);
     },
 
-    /** The author's own posts (not deleted; hidden included), newest first. */
+    /**
+     * The author's own posts (not deleted; hidden included unless `visibleOnly`), newest first,
+     * without the embedding. `before`: only posts older than that post of the space (My space
+     * "Show more").
+     */
     async listByAuthor(
       spaceId: string,
       membershipId: string,
-      { limit = 100 }: { limit?: number } = {},
+      {
+        limit = 100,
+        before,
+        visibleOnly = false,
+      }: { limit?: number; before?: string | undefined; visibleOnly?: boolean } = {},
       tx: DbOrTx = db,
     ): Promise<PostRow[]> {
       return tx
-        .select()
+        .select(postListColumns)
         .from(posts)
         .where(
-          and(eq(posts.spaceId, spaceId), eq(posts.authorMembershipId, membershipId), notDeleted),
+          and(
+            eq(posts.spaceId, spaceId),
+            eq(posts.authorMembershipId, membershipId),
+            visibleOnly ? visible : notDeleted,
+            before
+              ? sql`(${posts.createdAt}, ${posts.id}) < (select p.created_at, p.id from posts p where p.id = ${before}::uuid and p.space_id = ${spaceId}::uuid)`
+              : undefined,
+          ),
         )
         .orderBy(desc(posts.createdAt), desc(posts.id))
         .limit(limit);

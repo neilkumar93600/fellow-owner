@@ -181,6 +181,8 @@ export const DAILY_CAPS = {
 /** Rolling-hour caps per user, counted from ai_runs. */
 export const HOURLY_CAPS = {
   suggestCommunities: 10,
+  /** Embeddings a user triggers (profile edits, Ask your AI questions). */
+  embedItem: 30,
 } as const;
 
 /** Retention rules from 05-backend-schema section 8. */

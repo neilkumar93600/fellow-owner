@@ -1,4 +1,4 @@
-import { DAILY_CAPS } from '@fellow-owners/shared';
+import { DAILY_CAPS, LIMITS } from '@fellow-owners/shared';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildContainer } from '../../src/container.js';
@@ -229,6 +229,68 @@ describe('comments', () => {
       .send({ body: 'one too many' })
       .expect(429);
     expect(res.body.error.code).toBe('daily_cap_reached');
+  });
+
+  it('counts only comments members can see: hide, unhide and delete keep comment_count right', async () => {
+    const say = async (body: string): Promise<string> =>
+      (
+        await request(app)
+          .post(`/api/posts/${idea.id}/comments`)
+          .set('Cookie', fan.cookie)
+          .send({ body })
+          .expect(201)
+      ).body.id;
+    const count = async () => (await repos.posts.findById(idea.id))?.commentCount;
+    const first = await say('First thought');
+    const second = await say('Second thought');
+    expect(await count()).toBe(2);
+
+    await repos.comments.setHidden(mira.space.id, first, true);
+    await repos.comments.setHidden(mira.space.id, first, true); // already hidden: no change
+    expect(await count()).toBe(1);
+    const detail = await request(app)
+      .get(`/api/posts/${idea.id}`)
+      .set('Cookie', third.cookie)
+      .expect(200);
+    expect(detail.body.comments).toHaveLength(1);
+    expect(detail.body.commentCount).toBe(1);
+
+    await repos.comments.setHidden(mira.space.id, first, false);
+    expect(await count()).toBe(2);
+
+    // A hidden comment is already out of the count, so deleting it changes nothing.
+    await repos.comments.setHidden(mira.space.id, second, true);
+    expect(await count()).toBe(1);
+    await request(app)
+      .delete(`/api/posts/${idea.id}/comments/${second}`)
+      .set('Cookie', fan.cookie)
+      .expect(204);
+    expect(await count()).toBe(1);
+
+    await repos.posts.recountCounters(mira.space.id);
+    expect(await count()).toBe(1);
+  });
+});
+
+describe('list reads', () => {
+  it('leave the embedding out; the single-post read keeps it', async () => {
+    const vector = Array.from({ length: LIMITS.ai.embeddingDimensions }, () => 0.01);
+    await repos.posts.setEmbedding(idea.id, vector);
+    const [listed] = await repos.posts.findManyByIds(mira.space.id, [idea.id]);
+    expect(listed?.id).toBe(idea.id);
+    expect(listed?.embedding).toBeNull();
+    const feed = await repos.posts.listFeed({
+      spaceId: mira.space.id,
+      communityId: builders.id,
+      cursor: null,
+      limit: 50,
+    });
+    expect(feed.items.every((row) => row.embedding === null)).toBe(true);
+    const authored = await repos.posts.listByAuthor(mira.space.id, author.membership.id);
+    expect(authored.every((row) => row.embedding === null)).toBe(true);
+    expect((await repos.posts.findById(idea.id))?.embedding).toHaveLength(
+      LIMITS.ai.embeddingDimensions,
+    );
   });
 });
 

@@ -17,6 +17,9 @@ export type AskServiceDeps = Pick<CoreDeps, 'repos' | 'ai' | 'logger'>;
 export const NOTHING_YET =
   'Nothing in your space mentions that yet. Ask again once fans have posted or pitched about it.';
 
+/** ai_runs.ref_type of the question embedding: one per question asked. */
+export const ASK_REF_TYPE = 'ask';
+
 type Match = AskAiInput['matches'][number];
 const key = (refType: string, refId: string) => `${refType}:${refId}`;
 
@@ -24,11 +27,14 @@ const key = (refType: string, refId: string) => `${refType}:${refId}`;
  * F13 Ask your AI (owner only): embeds the question, takes the LIMITS.ask.matches nearest posts
  * and pitches of the caller's space, and has the smart model answer from those alone. Citations
  * are checked against the matched set (anything else is dropped and the answer renumbered).
- * LIMITS.ask.perDay questions a day, counted from ai_runs (task askAI).
+ * LIMITS.ask.perDay questions a day, counted from ai_runs as the question embeddings (task
+ * embedItem, ref_type 'ask'): every question costs one, answered or not.
  */
 export function createAskService({ repos, ai }: AskServiceDeps) {
   const usedToday = (spaceId: string, now: Date) =>
-    repos.aiRuns.countBySpaceTaskSince(spaceId, 'askAI', startOfUtcDay(now));
+    repos.aiRuns.countBySpaceTaskSince(spaceId, 'embedItem', startOfUtcDay(now), {
+      refType: ASK_REF_TYPE,
+    });
 
   async function nearestMatches(spaceId: string, vector: number[]): Promise<Match[]> {
     const k = LIMITS.ask.matches;
@@ -88,10 +94,13 @@ export function createAskService({ repos, ai }: AskServiceDeps) {
 
       const question = input.question.trim();
       const ctx = { spaceId: space.id, userId };
-      const vector = await ai.embedItem({ title: question, body: '' }, ctx);
+      const vector = await ai.embedItem(
+        { title: question, body: '' },
+        { ...ctx, refType: ASK_REF_TYPE },
+      );
       const matches = await nearestMatches(space.id, vector);
       if (matches.length === 0) {
-        return { answer: NOTHING_YET, citations: [], asksLeftToday: limit - used };
+        return { answer: NOTHING_YET, citations: [], asksLeftToday: Math.max(0, limit - used - 1) };
       }
 
       const output = await ai.askAI(

@@ -496,5 +496,13 @@ export interface Analyzer {
    */
   analyzeItem(ref: ItemRef): Promise<void>;
   /** Claims up to 25 pending items of the space and analyzes them 5 at a time in the background. */
-  sweep(spaceId: string): Promise<SweepResult>;
+  sweep(spaceId: string, options?: SweepOptions): Promise<SweepResult>;
+}
+
+export interface SweepOptions {
+  /**
+   * Analyze in place and resolve when done, instead of in the background. The cron sweep
+   * (workers/sweep-all.ts) uses it so its 5-spaces-at-a-time limit holds and job_runs times the work.
+   */
+  wait?: boolean;
 }

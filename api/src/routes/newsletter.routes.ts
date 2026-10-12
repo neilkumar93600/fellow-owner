@@ -8,6 +8,12 @@ import { validate } from '../middlewares/validate.js';
 export const NEWSLETTER_PER_MINUTE = 5;
 
 /**
+ * Sign-ups one client (IP) may make per UTC day: a small share of the service's daily confirm cap,
+ * so one IP cannot use it all up and leave real sign-ups without a confirm email.
+ */
+export const NEWSLETTER_PER_IP_PER_DAY = 20;
+
+/**
  * POST /api/newsletter (public, per IP; confirm emails also have IP-independent caps in the
  * service). Confirm and unsubscribe change state on POST only: a GET redirects to the web page
  * with the button, so mail link scanners change nothing. POST /unsubscribe is also the RFC 8058
@@ -22,6 +28,11 @@ export function createNewsletterRoutes(container: Container): Router {
       name: 'newsletter',
       windowSeconds: 60,
       max: NEWSLETTER_PER_MINUTE,
+    }),
+    createRateLimit({
+      name: 'newsletter-day',
+      windowSeconds: 86_400,
+      max: NEWSLETTER_PER_IP_PER_DAY,
     }),
     validate({ body: newsletterSubscribeSchema }),
     controller.subscribe,

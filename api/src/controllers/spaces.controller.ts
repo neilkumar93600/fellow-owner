@@ -1,4 +1,5 @@
 import {
+  beforeQuerySchema,
   communityParamsSchema,
   createPitchSchema,
   createPostSchema,
@@ -60,6 +61,18 @@ export function createSpacesController(deps: SpacesControllerDeps) {
     /** GET /:handle/me -> MySpace */
     async me(req: Request, res: Response): Promise<void> {
       res.json(await deps.memberships.me(memberContextOf(access, req)));
+    },
+
+    /** GET /:handle/me/posts?before= -> Page<PostCard> (My space "Show more") */
+    async myPosts(req: Request, res: Response): Promise<void> {
+      const ctx = memberContextOf(access, req);
+      res.json(await deps.memberships.myPosts(ctx, queryOf(req, beforeQuerySchema)));
+    },
+
+    /** GET /:handle/me/pitches?before= -> Page<Pitch> (My space "Show more") */
+    async myPitches(req: Request, res: Response): Promise<void> {
+      const ctx = memberContextOf(access, req);
+      res.json(await deps.memberships.myPitches(ctx, queryOf(req, beforeQuerySchema)));
     },
 
     /** PATCH /:handle/me -> OwnMembership */

@@ -297,7 +297,7 @@ export function createMediaServices(deps: MediaServicesDeps) {
     model: string,
     produce: (fal: FalClient) => Promise<T>,
   ): Promise<T> {
-    await preflight(rt, task, ctx);
+    const reservation = await preflight(rt, task, ctx);
     if (!deps.fal) throw new AiUnavailableError('disabled', 'fal.ai is not configured', { task });
     const started = Date.now();
     try {
@@ -305,6 +305,7 @@ export function createMediaServices(deps: MediaServicesDeps) {
       await recordRun(rt, {
         task,
         ctx,
+        reservation,
         model: output.model,
         inputTokens: 0,
         outputTokens: 0,
@@ -317,6 +318,7 @@ export function createMediaServices(deps: MediaServicesDeps) {
       await recordRun(rt, {
         task,
         ctx,
+        reservation,
         model,
         inputTokens: 0,
         outputTokens: 0,

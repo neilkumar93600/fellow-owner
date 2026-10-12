@@ -4,8 +4,12 @@ import { utcDayString } from '../lib/dates.js';
 import { visitorHash } from '../lib/hash.js';
 import type { Logger } from '../lib/logger.js';
 import { isShortCode } from '../lib/short-code.js';
+import { withinCap } from '../middlewares/rate-limit.js';
 import type { Repos } from '../repositories/index.js';
 import { promotionState } from '../repositories/promotions.repo.js';
+
+/** IP-independent ceiling on counted clicks (a caller can rotate IPs); past it, clicks still redirect. */
+export const CLICKS_PER_PROMOTION_PER_DAY = 5000;
 
 export interface ClickRequest {
   code: string;
@@ -39,7 +43,8 @@ export function referrerHost(referer: string | null | undefined): string | null 
 }
 
 /**
- * GET /r/:code (02-trd data flow 5): records a click for a live promotion (platform from ?p=,
+ * GET /r/:code (02-trd data flow 5): records a click for a live promotion, once per visitor per
+ * platform per day and at most CLICKS_PER_PROMOTION_PER_DAY a day (platform from ?p=,
  * referrer host, visitor_hash = sha256(ip + ua + UTC day + CLICK_SALT); the raw IP is never stored)
  * and returns where to redirect: the showcase on the web origin. Unpublished promotions still
  * redirect to their showcase ("No longer featured") without counting; unknown codes go to "/".
@@ -63,6 +68,14 @@ export function createClicksService(deps: { env: Env; repos: Repos; logger: Logg
 
       if (promotionState(promotion) === 'live' && !isBot(click.userAgent)) {
         try {
+          const day = utcDayString();
+          const counted = await withinCap({
+            name: 'click-promotion',
+            key: `${promotion.id}:${day}`,
+            windowSeconds: 86_400,
+            max: CLICKS_PER_PROMOTION_PER_DAY,
+          });
+          if (!counted) return target;
           await repos.clicks.record({
             promotionId: promotion.id,
             platform: click.platform,
@@ -70,7 +83,7 @@ export function createClicksService(deps: { env: Env; repos: Repos; logger: Logg
             visitorHash: visitorHash(
               click.ip ?? '',
               click.userAgent ?? '',
-              utcDayString(),
+              day,
               deps.env.CLICK_SALT,
             ),
           });

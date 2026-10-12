@@ -17,14 +17,24 @@ const emptyPlatforms = (): Record<ClickPlatform, number> =>
 
 export function createClicksRepo(db: Db) {
   return {
-    /** Inserts the click event and increments promotions.click_count in one transaction. */
-    async record(click: NewClick, tx?: DbOrTx): Promise<void> {
-      await inTransaction(db, tx, async (t) => {
-        await t.insert(clickEvents).values(click);
+    /**
+     * Inserts the click event and increments promotions.click_count in one transaction. A repeat
+     * (same promotion, visitor hash and platform; the hash includes the UTC day) is dropped:
+     * false, and the count is left alone.
+     */
+    async record(click: NewClick, tx?: DbOrTx): Promise<boolean> {
+      return inTransaction(db, tx, async (t) => {
+        const inserted = await t
+          .insert(clickEvents)
+          .values(click)
+          .onConflictDoNothing()
+          .returning({ id: clickEvents.id });
+        if (inserted.length === 0) return false;
         await t
           .update(promotions)
           .set({ clickCount: sql`${promotions.clickCount} + 1` })
           .where(eq(promotions.id, click.promotionId));
+        return true;
       });
     },
 

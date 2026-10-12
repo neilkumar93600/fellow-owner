@@ -36,6 +36,9 @@ function fakeStorage(enabled = true) {
       for (const key of keys) present.delete(key);
       return keys.length;
     },
+    async listBefore(prefix) {
+      return [...present].filter((key) => key.startsWith(prefix));
+    },
   };
   return { storage, present, reads: () => reads };
 }

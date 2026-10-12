@@ -31,7 +31,12 @@ export function PostDetailView({ handle, post }: { handle: string; post: PostDet
         <ReportButton target="post" id={post.id} />
       </div>
       <PostBody handle={handle} post={post} />
-      <CommentThread handle={handle} postId={post.id} comments={post.comments} />
+      <CommentThread
+        handle={handle}
+        postId={post.id}
+        comments={post.comments}
+        commentCount={post.commentCount}
+      />
       <SimilarSection postId={post.id} scope="member" />
     </div>
   );

@@ -51,7 +51,7 @@ const PILL =
 /**
  * One thing fans keep asking for: who asked and in their words, "Make it" (the Spotlight composer on this
  * topic), an AI draft in the creator's voice, and a sticky footer that sends one answer to every fan who
- * asked and pins it where they gather. A wrong match comes out with "Not this one" before anything is
+ * asked and posts it where they gather. A wrong match comes out with "Not this one" before anything is
  * sent. Answered groups open read-only. Key it by group id, so a draft never carries over to another.
  */
 export function QuestionGroupPanel(props: QuestionGroupPanelProps) {
@@ -189,7 +189,9 @@ function Answered({ group, handle }: { group: QuestionGroup; handle: string }) {
     <Section title="Your answer">
       <p className="max-w-[68ch] text-body whitespace-pre-line text-ink">{group.answer}</p>
       <p className="mt-3 text-small text-ink-muted">
-        Sent to {formatNumber(group.askedCount)} {pluralize(group.askedCount, 'fan', 'fans')}
+        {group.repliedCount > 0
+          ? `Sent to ${formatNumber(group.repliedCount)} ${pluralize(group.repliedCount, 'fan', 'fans')}`
+          : 'Posted, no replies sent'}
         {group.answeredAt ? (
           <>
             {' '}
@@ -199,7 +201,7 @@ function Answered({ group, handle }: { group: QuestionGroup; handle: string }) {
             </time>
           </>
         ) : null}
-        {group.pinnedIn.length ? `. Pinned in ${group.pinnedIn.join(' and ')}.` : '.'}
+        {group.pinnedIn.length ? `. Posted in ${group.pinnedIn.join(' and ')}.` : '.'}
       </p>
       {group.postId ? (
         <Link
@@ -288,12 +290,18 @@ function SendFooter({
   const count = group.askedCount;
   const people = `${formatNumber(count)} ${pluralize(count, 'fan', 'fans')}`;
   const length = answer.trim().length;
-  // A pinned answer becomes a post, so it needs a post's minimum length.
-  const ready =
-    length > 0 &&
-    (replyAll || pinIds.length > 0) &&
-    (pinIds.length === 0 || length >= LIMITS.post.body.min);
-  const label = replyAll ? `Send to ${people}` : 'Pin answer';
+  // A posted answer becomes a post, so it needs a post's minimum length.
+  const tooShortToPost = pinIds.length > 0 && length < LIMITS.post.body.min;
+  const ready = length > 0 && (replyAll || pinIds.length > 0) && !tooShortToPost;
+  const hint =
+    length === 0
+      ? null
+      : tooShortToPost
+        ? `Posting needs at least ${LIMITS.post.body.min} characters. Write a bit more, or unselect the communities to just reply.`
+        : !replyAll && pinIds.length === 0
+          ? 'Reply to everyone who asked, or pick a community to post in.'
+          : null;
+  const label = replyAll ? `Send to ${people}` : 'Post answer';
   const pinnedNames = group.communities
     .filter((community) => pinIds.includes(community.id))
     .map((community) => community.name)
@@ -317,7 +325,7 @@ function SendFooter({
           Reply to all {people}
         </label>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-small text-ink-muted">Pin in</span>
+          <span className="text-small text-ink-muted">Post in</span>
           {group.communities.map((community) => {
             const on = pinIds.includes(community.id);
             return (
@@ -340,6 +348,7 @@ function SendFooter({
         </div>
       </fieldset>
 
+      {hint ? <p className="text-small text-ink-muted">{hint}</p> : null}
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="destructive" icon={<X />} onClick={() => setDismissing(true)}>
           Dismiss
@@ -357,13 +366,13 @@ function SendFooter({
       <Dialog open={confirming} onOpenChange={setConfirming}>
         <DialogContent>
           <DialogTitle>
-            {replyAll ? `Send this answer to ${people}?` : 'Pin this answer?'}
+            {replyAll ? `Send this answer to ${people}?` : 'Post this answer?'}
           </DialogTitle>
           <DialogDescription>
             {replyAll
               ? 'Each fan gets it as your reply, and their trackers show Replied.'
-              : 'It goes up as a pinned post. Their messages stay in your fan mail as they are.'}
-            {pinnedNames ? ` Pinned in ${pinnedNames}.` : ''}
+              : 'It goes up as a post. Their messages stay in your fan mail as they are.'}
+            {pinnedNames ? ` Posted in ${pinnedNames}.` : ''}
           </DialogDescription>
           <DialogFooter>
             <DialogClose render={<Button variant="secondary" />}>Cancel</DialogClose>

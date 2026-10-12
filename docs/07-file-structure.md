@@ -150,8 +150,8 @@ web/
 ├─ e2e/smoke.spec.ts                    Playwright smoke test (pnpm test:e2e; not run in CI)
 ├─ scripts/                             contrast and sidebar-cookie checks, creator media generation
 ├─ public/                              logo, favicon, demo/, creator/ images, frames/
-├─ proxy.ts                             Next 16 proxy: cookie check for (dashboard) routes
-├─ next.config.ts                       rewrites /api/* and /r/* to API_URL; redirects
+├─ proxy.ts                             Next 16 proxy: cookie check for (dashboard) routes; on /api/* and /r/* sets x-edge-key + x-edge-client-ip and rewrites to API_URL
+├─ next.config.ts                       fallback rewrites of /api/* and /r/* to API_URL; redirects
 ├─ components.json                      shadcn config
 ├─ playwright.config.ts
 ├─ tsconfig.json

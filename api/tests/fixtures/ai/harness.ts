@@ -140,10 +140,20 @@ export function createOpenRouterMock(responses: RecordedResponse[]) {
 export function createMemoryAccounting(options: { budget?: number; usedToday?: number } = {}) {
   const rows: Array<NewAiRunRow & { createdAt: Date }> = [];
   const budget = options.budget ?? 200_000;
+  // One lock for every key, like the advisory locks: the next holder waits for the previous one.
+  let held: Promise<unknown> = Promise.resolve();
   const accounting: AiAccounting = {
     async insert(values) {
       rows.push({ ...values, createdAt: new Date() });
       return rows.length;
+    },
+    locked(_keys, fn) {
+      const next = held.then(() => fn(accounting));
+      held = next.catch(() => undefined);
+      return next;
+    },
+    async complete(id, values) {
+      Object.assign(rows[id - 1] ?? {}, values);
     },
     async budgetState(spaceId) {
       const used =

@@ -113,7 +113,7 @@ async function friendlyDuplicates<T>(write: () => Promise<T>): Promise<T> {
   } catch (error) {
     const index = uniqueViolation(error);
     const message = index ? DUPLICATE_MESSAGES[index] : undefined;
-    if (message) throw conflict(message, { constraint: index });
+    if (message) throw conflict(message);
     throw error;
   }
 }
@@ -372,7 +372,7 @@ export function createFollowersService(deps: FollowersServiceDeps) {
         }
         return inserted;
       });
-      if (row.email || row.handle) await linkJoined(spaceId);
+      if (row.email) await linkJoined(spaceId);
       return load(spaceId, row.id);
     },
 
@@ -551,8 +551,8 @@ export function createFollowersService(deps: FollowersServiceDeps) {
     },
 
     /**
-     * After a join: links the unlinked follower matching the new member's email or social
-     * profile (user.social_platform + user.social_handle) to the membership. Never throws.
+     * After a join: links the unlinked follower with the new member's verified email to the
+     * membership (never by social handle: that one is unproven). Never throws.
      */
     async linkMembership(spaceId: string, membershipId: string, userId: string): Promise<void> {
       try {

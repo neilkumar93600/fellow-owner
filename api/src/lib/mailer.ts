@@ -1,4 +1,4 @@
-import { Resend } from 'resend';
+import { type CreateEmailRequestOptions, Resend } from 'resend';
 import type { Env } from '../config/env.js';
 import { type Logger, maskEmail } from './logger.js';
 
@@ -16,6 +16,13 @@ export interface Mailer {
   /** Resolves once Resend accepted the message; rejects when Resend refuses it. */
   send(message: MailMessage): Promise<void>;
 }
+
+/** How long one Resend send may take before it is abandoned (the SDK sets no timeout). */
+export const RESEND_TIMEOUT_MS = 8_000;
+
+/** Request options for resend.emails.send: the SDK spreads them into fetch, so a signal works. */
+export const resendRequestOptions = (): CreateEmailRequestOptions =>
+  ({ signal: AbortSignal.timeout(RESEND_TIMEOUT_MS) }) as RequestInit as CreateEmailRequestOptions;
 
 /**
  * The one way the API sends email (OTP codes stay in auth/email.ts). Sender: env.EMAIL_FROM.
@@ -39,15 +46,18 @@ export function createMailer(deps: {
   const resend = new Resend(key);
   return {
     async send({ to, subject, text, html, headers, replyTo }) {
-      const { data, error } = await resend.emails.send({
-        from: deps.env.EMAIL_FROM,
-        to: [to],
-        subject,
-        text,
-        ...(html ? { html } : {}),
-        ...(headers ? { headers } : {}),
-        ...(replyTo ? { replyTo } : {}),
-      });
+      const { data, error } = await resend.emails.send(
+        {
+          from: deps.env.EMAIL_FROM,
+          to: [to],
+          subject,
+          text,
+          ...(html ? { html } : {}),
+          ...(headers ? { headers } : {}),
+          ...(replyTo ? { replyTo } : {}),
+        },
+        resendRequestOptions(),
+      );
       if (error) {
         log.error({ to: maskEmail(to), subject, err: error }, 'email failed');
         throw new Error(`Resend rejected the email: ${error.message}`);

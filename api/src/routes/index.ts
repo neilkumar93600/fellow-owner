@@ -17,6 +17,7 @@ import {
   createModerationStudioRoutes,
   createModerationTargetRoutes,
 } from './moderation.routes.js';
+import { createMySpaceRoutes } from './my-space.routes.js';
 import { createNewsletterRoutes } from './newsletter.routes.js';
 import { createEmailRoutes, createNotificationPrefsRoutes } from './notification-prefs.routes.js';
 import { createNotificationsRoutes } from './notifications.routes.js';
@@ -47,7 +48,7 @@ import { createMediaRoutes, createUploadsRoutes } from './uploads.routes.js';
  *   /api/config  config         /api/support  support        /api/admin  admin
  *   /api/email   email (unsubscribe)          /api/me       account + notification prefs
  *   /api/media   media          /api/uploads  uploads
- *   /api/spaces  coach, visit, leave (DELETE /:handle/me)
+ *   /api/spaces  coach, visit, leave (DELETE /:handle/me), my-space (GET /:handle/me/posts|pitches)
  *   /api         reports on posts/comments, similar (member + studio)
  *   /api/studio  reports queue + comment hide; /api/studio/{question-groups, ask, snoozes,
  *                checklist, metrics}
@@ -71,6 +72,7 @@ export function createApiRouter(container: Container): Router {
   router.use('/spaces', createCoachRoutes(container));
   router.use('/spaces', createVisitRoutes(container));
   router.use('/spaces', createModerationMemberRoutes(container));
+  router.use('/spaces', createMySpaceRoutes(container));
   router.use('/', createModerationTargetRoutes(container));
   router.use('/', createSimilarRoutes(container));
   router.use('/studio', createModerationStudioRoutes(container));

@@ -1,4 +1,5 @@
 import {
+  beforeQuerySchema,
   commentParamsSchema,
   createCommentSchema,
   idParamsSchema,
@@ -35,6 +36,12 @@ export function createPostsRoutes(container: Container): Router {
   );
   router.delete('/:id', session, byId, controller.remove);
 
+  router.get(
+    '/:id/comments',
+    session,
+    validate({ params: idParamsSchema, query: beforeQuerySchema }),
+    controller.comments,
+  );
   router.post(
     '/:id/comments',
     session,

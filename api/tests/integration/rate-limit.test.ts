@@ -165,7 +165,7 @@ describe('demo sessions: global hourly cap', () => {
     await request(app)
       .post('/api/demo/session')
       .set('X-Real-IP', '203.0.113.70')
-      .send({})
+      .send({ as: 'creator' })
       .expect(429);
   });
 });

@@ -220,11 +220,11 @@ PK (post_id, membership_id). Indexes (post_id, status), (membership_id, created_
 | read_at | timestamptz | no | | Pitch Tracker: first time the owner opened it; never overwritten |
 | shortlisted_at | timestamptz | no | | set once, the first time the status became `shortlisted` |
 | question_group_id | uuid | no | | FK question_groups, set null: the Answer Once group this pitch was clustered into |
-| question_group_excluded | boolean | yes | false | the creator removed it from its group; grouping never re-adds it |
+| question_group_excluded | boolean | yes | false | the creator removed it from its group, or the AI said its cluster is not a question; grouping never re-adds it |
 | created_at, updated_at | timestamptz | yes | now() | |
 | + AI fields | | | | see above |
 
-Indexes: (space_id, status, ai_fit_score desc), (space_id, created_at desc), (sender_membership_id, created_at), (space_id, analysis_status) where analysis_status <> 'done', (question_group_id), HNSW(embedding vector_cosine_ops).
+Indexes: (space_id, status, ai_fit_score desc), (space_id, created_at desc), (sender_membership_id, created_at), (space_id, analysis_status) where analysis_status <> 'done', (question_group_id), (created_at) where question_group_id is null and question_group_excluded = false (the hourly Answer Once scan), HNSW(embedding vector_cosine_ops).
 
 ### promotions
 | Field | Type | Required | Default | Notes |
@@ -251,10 +251,10 @@ Indexes: unique(post_id), unique(space_id, showcase_slug), unique(short_code), (
 | promotion_id | uuid | yes | | FK promotions, cascade |
 | platform | text | yes | `other` | from `?p=`: x, instagram, linkedin, youtube, other |
 | referrer_host | text | no | | host only, no path |
-| visitor_hash | text | no | | sha256(ip + user agent + day + secret salt) for unique counts; raw IP never stored |
+| visitor_hash | text | no | | sha256(ip + user agent + day + secret salt) for unique counts; raw IP never stored. A repeat click (same promotion, visitor and platform) is not stored again |
 | created_at | timestamptz | yes | now() | |
 
-Indexes (promotion_id, created_at), (created_at). CHECK: `platform` is one of x, instagram, linkedin, youtube, other.
+Indexes (promotion_id, created_at), (created_at); unique (promotion_id, visitor_hash, platform): one click per visitor per platform per day, since the hash includes the UTC day (0009 first deleted existing duplicates, keeping the oldest; `click_count` keeps its lifetime total). CHECK: `platform` is one of x, instagram, linkedin, youtube, other.
 
 ### digests
 | Field | Type | Required | Default | Notes |
@@ -282,7 +282,7 @@ Indexes (promotion_id, created_at), (created_at). CHECK: `platform` is one of x,
 | model | text | yes | | |
 | input_tokens, output_tokens, latency_ms | int | yes | 0 | |
 | status | text | yes | | ok or error |
-| error | text | no | | |
+| error | text | no | | `in progress` while a capped call's reserved row waits for the model (`model` is `pending`); a row never filled in stays an error and still counts toward the cap |
 | created_at | timestamptz | yes | now() | |
 
 Indexes: (space_id, created_at), (user_id, task, created_at), (created_at).
@@ -298,7 +298,7 @@ Indexes: (space_id, created_at), (user_id, task, created_at), (created_at).
 | created_by_user_id | text | yes | | FK user.id, cascade |
 | created_at | timestamptz | yes | now() | |
 
-Unique (ref_type, ref_id, created_by_user_id). Indexes (space_id, ref_type), (created_by_user_id).
+Unique (ref_type, ref_id, created_by_user_id). Indexes (space_id, ref_type), (space_id, created_at) for the triage examples (newest votes first), (created_by_user_id).
 
 ### followers and follower_communities
 
@@ -312,7 +312,7 @@ Unique (ref_type, ref_id, created_by_user_id). Indexes (space_id, ref_type), (cr
 
 ### notifications, notification_prefs and imports
 
-**notifications:** id, user_id (fk user cascade), space_id (fk spaces cascade), kind, payload jsonb, read_at, created_at. `kind` is CHECKed against the shared `NOTIFICATION_KINDS`: reply_received, project_featured, team_request, team_decision, ask_posted (a challenge opened), idea_posted, pitch_received, comment_received, post_loved, spotlighted, challenge_shortlisted, report_filed. Indexes: (user_id, read_at, created_at desc), (user_id, created_at desc, id desc) for the bell list, (created_at) where read_at is not null for the purge, (space_id).
+**notifications:** id, user_id (fk user cascade), space_id (fk spaces cascade), kind, payload jsonb, read_at, created_at. `kind` is CHECKed against the shared `NOTIFICATION_KINDS`: reply_received, project_featured, team_request, team_decision, ask_posted (a challenge opened), idea_posted, pitch_received, comment_received, post_loved, spotlighted, challenge_shortlisted, report_filed. Indexes: (user_id, read_at, created_at desc), (user_id, created_at desc, id desc) for the bell list, (created_at) where read_at is not null for the purge, (created_at) where read_at is null for the hourly email digest and the unread purge, (space_id).
 
 **notification_prefs:** user_id (pk, fk user cascade), email_enabled (default true), kinds jsonb (default `{}`; only the kinds the user changed), unsubscribed_at (one-click unsubscribe from an email footer), last_digest_at (the hourly digest's watermark), updated_at. No row means defaults: email on, every kind on. Email goes out only for reply_received, project_featured, spotlighted, challenge_shortlisted and team_decision.
 
@@ -331,7 +331,7 @@ id, space_id (fk spaces cascade), reporter_user_id (fk user, set null), target_t
 space_id (fk spaces cascade), ref_type (pitch|post), ref_id (an inbound.id or posts.id), until. PK (space_id, ref_type, ref_id). Hides the item from the Today decision cards until `until`.
 
 ### page_visits
-space_id (fk spaces cascade), visitor_hash (salted with `CLICK_SALT`; the raw IP is never stored), day (UTC date), visits (>= 1). PK (space_id, visitor_hash, day).
+space_id (fk spaces cascade), visitor_hash (salted with `CLICK_SALT`; the raw IP is never stored), day (UTC date), visits (>= 1). PK (space_id, visitor_hash, day). Index (space_id, day) for studio metrics and the purge.
 
 ### support_requests
 id, kind (contact, privacy_export, privacy_delete, privacy_other), name (null), email (lowercased), message (10..4000), user_id (fk user, set null; set when the sender was signed in), status (default `new`), created_at. Index (created_at).
@@ -432,12 +432,13 @@ Enforced by `api/src/workers/purge.ts` (the `purge` job, daily at 09:00 UTC thro
 | page_visits | 400 days (by `day`) |
 | Removed or departed members | 30 days after `removed_at`, `intro`, `links`, `skills` and `embedding` are cleared; the membership row stays so their posts keep a stable author |
 | job_runs | 30 days (by `started_at`) |
+| Bucket uploads (`avatar/`, `member_avatar/`, `space_cover/`, `community_cover/`) | Deleted 24 hours after upload when no `spaces.avatar_url`, `spaces.cover_url`, `communities.cover_url` or `user.image` points at them (presigned uploads never saved, and images since replaced). Best effort: a bucket failure is logged and the next run continues |
 | Space deletion | Cascades to everything with its `space_id` |
 | Export | `GET /api/me/export` returns the signed-in person's own data; `GET /api/studio/export/:kind` gives the creator CSVs of ideas, people, followers and pitches |
 
 ## 9. Migration and seed data
 
-- `drizzle-kit generate` produces SQL migrations committed under `api/src/db/migrations`; CI fails if `pnpm db:generate` would change them. Current files: `0000_enable_vector` (the `vector` extension), `0001_schema`, `0002_auth_username_social`, `0003_followers_notifications`, `0004_creator_pivot`, `0005_newsletter`, `0006_backend_complete` (adds `job_runs`, `reports`, `notification_prefs`, `page_visits`, `question_groups`, `studio_snoozes`, `support_requests` and the new columns and indexes above, and widens the notification kinds), `0007_membership_left_at`, `0008_newsletter_confirm_sent_at` (adds `newsletter_subscribers.confirm_sent_at`). Migrations are additive in v1; any destructive change ships as two migrations.
+- `drizzle-kit generate` produces SQL migrations committed under `api/src/db/migrations`; CI fails if `pnpm db:generate` would change them. Current files: `0000_enable_vector` (the `vector` extension), `0001_schema`, `0002_auth_username_social`, `0003_followers_notifications`, `0004_creator_pivot`, `0005_newsletter`, `0006_backend_complete` (adds `job_runs`, `reports`, `notification_prefs`, `page_visits`, `question_groups`, `studio_snoozes`, `support_requests` and the new columns and indexes above, and widens the notification kinds), `0007_membership_left_at`, `0008_newsletter_confirm_sent_at` (adds `newsletter_subscribers.confirm_sent_at`), `0009_hardening_indexes` (deletes duplicate `click_events`, then adds the click unique index and the `ai_feedback`, `inbound`, `notifications` and `page_visits` indexes above; no new columns). Migrations are additive in v1; any destructive change ships as two migrations.
 - On Railway the `api` service's pre-deploy command runs `node dist/db/migrate.js` (it reads only `DATABASE_URL`) before the new container takes traffic. Locally: `pnpm db:migrate` (and `pnpm db:migrate:test` for the test database).
 - `pnpm db:seed` loads `api/src/db/seed/data/*.json` into a demo space:
   - Creator Mira Lane (`/mira`), a travel creator with 620K on YouTube, 380K on Instagram and 140K on TikTok; taste profile and three voice samples.

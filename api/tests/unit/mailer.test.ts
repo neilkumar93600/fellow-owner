@@ -1,7 +1,15 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createEmailSender } from '../../src/auth/email.js';
 import type { Env } from '../../src/config/env.js';
 import type { Logger } from '../../src/lib/logger.js';
 import { createMailer } from '../../src/lib/mailer.js';
+
+const send = vi.hoisted(() => vi.fn());
+vi.mock('resend', () => ({
+  Resend: class {
+    emails = { send };
+  },
+}));
 
 function fakeLogger() {
   const logger = {
@@ -36,5 +44,74 @@ describe('createMailer without RESEND_API_KEY', () => {
     expect(fields).toMatchObject({ subject: 'Your weekly digest' });
     // The address is masked in logs.
     expect(JSON.stringify(fields)).not.toContain('priya@example.com');
+  });
+});
+
+describe('createMailer with RESEND_API_KEY', () => {
+  const keyed = { ...env, RESEND_API_KEY: 're_test' } as Env;
+  beforeEach(() => {
+    send.mockReset();
+    send.mockResolvedValue({ data: { id: 'em_1' }, error: null });
+  });
+
+  it('passes from, to, headers, replyTo and html to Resend, with a timeout signal', async () => {
+    const mailer = createMailer({ env: keyed, logger: fakeLogger() as unknown as Logger });
+    await mailer.send({
+      to: 'priya@example.com',
+      subject: 'Your weekly digest',
+      text: 'Hello',
+      html: '<p>Hello</p>',
+      headers: {
+        'List-Unsubscribe': '<https://example.com/u>',
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
+      replyTo: 'raj@example.com',
+    });
+    expect(send).toHaveBeenCalledWith(
+      {
+        from: env.EMAIL_FROM,
+        to: ['priya@example.com'],
+        subject: 'Your weekly digest',
+        text: 'Hello',
+        html: '<p>Hello</p>',
+        headers: {
+          'List-Unsubscribe': '<https://example.com/u>',
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+        },
+        replyTo: 'raj@example.com',
+      },
+      { signal: expect.any(AbortSignal) },
+    );
+  });
+
+  it('leaves out html, headers and replyTo when absent', async () => {
+    const mailer = createMailer({ env: keyed, logger: fakeLogger() as unknown as Logger });
+    await mailer.send({ to: 'priya@example.com', subject: 'Hi', text: 'Hello' });
+    expect(send.mock.calls[0]?.[0]).toEqual({
+      from: env.EMAIL_FROM,
+      to: ['priya@example.com'],
+      subject: 'Hi',
+      text: 'Hello',
+    });
+  });
+
+  it('rejects when Resend refuses the message', async () => {
+    send.mockResolvedValue({ data: null, error: { message: 'domain not verified' } });
+    const mailer = createMailer({ env: keyed, logger: fakeLogger() as unknown as Logger });
+    await expect(
+      mailer.send({ to: 'priya@example.com', subject: 'Hi', text: 'x' }),
+    ).rejects.toThrow(/Resend rejected the email: domain not verified/);
+  });
+
+  it('OTP emails go through Resend with a timeout signal too', async () => {
+    const sender = createEmailSender(keyed, fakeLogger() as unknown as Logger);
+    await sender.sendOtp({ to: 'priya@example.com', code: '123456', type: 'sign-in' });
+    expect(send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: ['priya@example.com'],
+        subject: expect.stringContaining('123456'),
+      }),
+      { signal: expect.any(AbortSignal) },
+    );
   });
 });

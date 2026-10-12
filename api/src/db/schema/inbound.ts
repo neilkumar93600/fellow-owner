@@ -62,6 +62,10 @@ export const inbound = pgTable(
       .where(sql`${t.analysisStatus} <> 'done'`),
     index('inbound_embedding_hnsw_idx').using('hnsw', t.embedding.op('vector_cosine_ops')),
     index('inbound_question_group_idx').on(t.questionGroupId),
+    /** Hourly Answer Once scan (question-groups.repo dueSpaceIds): recent ungrouped pitches. */
+    index('inbound_ungrouped_created_idx')
+      .on(t.createdAt)
+      .where(sql`${t.questionGroupId} is null and ${t.questionGroupExcluded} = false`),
     check(
       'inbound_subject_check',
       sql`char_length(${t.subject}) between ${sql.raw(String(P.subject.min))} and ${sql.raw(String(P.subject.max))}`,

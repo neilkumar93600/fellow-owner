@@ -1,5 +1,5 @@
 import { LIMITS, type PitchType } from '@fellow-owners/shared';
-import { and, asc, desc, eq, gte, inArray, isNull, notInArray, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNull, lte, notInArray, or, sql } from 'drizzle-orm';
 import type { Db, DbOrTx } from '../db/client.js';
 import { inbound } from '../db/schema/inbound.js';
 import {
@@ -93,22 +93,41 @@ export function createQuestionGroupsRepo(db: Db) {
         .limit(100);
     },
 
-    /** The pitches in these groups, newest first. */
-    async members(groupIds: string[], tx: DbOrTx = db): Promise<GroupMemberRow[]> {
+    /**
+     * The newest `perGroup` pitches of each group, newest first. 50 is what the studio shows
+     * (naming reads 20); askedCount comes from the group row, so the tail is never needed.
+     */
+    async members(groupIds: string[], tx: DbOrTx = db, perGroup = 50): Promise<GroupMemberRow[]> {
       if (groupIds.length === 0) return [];
-      return tx
+      const ranked = tx
         .select({
           id: inbound.id,
-          questionGroupId: sql<string>`${inbound.questionGroupId}`,
+          questionGroupId: sql<string>`${inbound.questionGroupId}`.as('question_group_id'),
           senderMembershipId: inbound.senderMembershipId,
           subject: inbound.subject,
           body: inbound.body,
           status: inbound.status,
           createdAt: inbound.createdAt,
+          rank: sql<number>`row_number() over (partition by ${inbound.questionGroupId} order by ${inbound.createdAt} desc, ${inbound.id} desc)`.as(
+            'rank',
+          ),
         })
         .from(inbound)
         .where(inArray(inbound.questionGroupId, groupIds))
-        .orderBy(desc(inbound.createdAt), desc(inbound.id));
+        .as('ranked');
+      return tx
+        .select({
+          id: ranked.id,
+          questionGroupId: ranked.questionGroupId,
+          senderMembershipId: ranked.senderMembershipId,
+          subject: ranked.subject,
+          body: ranked.body,
+          status: ranked.status,
+          createdAt: ranked.createdAt,
+        })
+        .from(ranked)
+        .where(lte(ranked.rank, perGroup))
+        .orderBy(desc(ranked.createdAt), desc(ranked.id));
     },
 
     /** askedCount per group id (post cards, C1). */
@@ -208,6 +227,7 @@ export function createQuestionGroupsRepo(db: Db) {
         .where(and(eq(questionGroups.id, id), eq(questionGroups.redraftsDate, today)));
     },
 
+    /** Sets the AI's question and/or draft. Null when the group is no longer open. */
     async setNaming(
       id: string,
       values: { question?: string; draft: string },
@@ -216,7 +236,7 @@ export function createQuestionGroupsRepo(db: Db) {
       const [row] = await tx
         .update(questionGroups)
         .set({ ...values, updatedAt: new Date() })
-        .where(eq(questionGroups.id, id))
+        .where(and(eq(questionGroups.id, id), eq(questionGroups.status, 'open')))
         .returning();
       return row ?? null;
     },
@@ -244,8 +264,14 @@ export function createQuestionGroupsRepo(db: Db) {
 
     // ------------------------------------------------------------ grouping job
 
-    async candidates(spaceId: string, since: Date, tx: DbOrTx = db): Promise<GroupCandidateRow[]> {
-      return tx
+    /** The newest `limit` candidates, returned oldest first (the order the job clusters them). */
+    async candidates(
+      spaceId: string,
+      since: Date,
+      limit: number,
+      tx: DbOrTx = db,
+    ): Promise<GroupCandidateRow[]> {
+      const rows = await tx
         .select({
           id: inbound.id,
           subject: inbound.subject,
@@ -255,7 +281,23 @@ export function createQuestionGroupsRepo(db: Db) {
         })
         .from(inbound)
         .where(candidateWhere(spaceId, since))
-        .orderBy(asc(inbound.createdAt), asc(inbound.id));
+        .orderBy(desc(inbound.createdAt), desc(inbound.id))
+        .limit(limit);
+      return rows.reverse();
+    },
+
+    /** The AI said these pitches are not one question: never cluster them again. */
+    async excludePitches(
+      spaceId: string,
+      pitchIds: string[],
+      since: Date,
+      tx: DbOrTx = db,
+    ): Promise<void> {
+      if (pitchIds.length === 0) return;
+      await tx
+        .update(inbound)
+        .set({ questionGroupExcluded: true })
+        .where(and(candidateWhere(spaceId, since), inArray(inbound.id, pitchIds)));
     },
 
     async setPitchEmbedding(id: string, vector: number[], tx: DbOrTx = db): Promise<void> {
@@ -301,8 +343,30 @@ export function createQuestionGroupsRepo(db: Db) {
       return row;
     },
 
-    async deleteById(id: string, tx: DbOrTx = db): Promise<void> {
+    /**
+     * Deletes a group the AI rejected, only while it is still open and unnamed (the owner may have
+     * answered, dismissed or redrafted it during the AI call); its pitches are excluded so they
+     * are not re-clustered. Call it in a transaction. False when the group moved on.
+     */
+    async dropRejected(id: string, tx: DbOrTx = db): Promise<boolean> {
+      const [row] = await tx
+        .select({ id: questionGroups.id })
+        .from(questionGroups)
+        .where(
+          and(
+            eq(questionGroups.id, id),
+            eq(questionGroups.status, 'open'),
+            isNull(questionGroups.draft),
+          ),
+        )
+        .for('update');
+      if (!row) return false;
+      await tx
+        .update(inbound)
+        .set({ questionGroupExcluded: true })
+        .where(eq(inbound.questionGroupId, id));
       await tx.delete(questionGroups).where(eq(questionGroups.id, id));
+      return true;
     },
 
     /**

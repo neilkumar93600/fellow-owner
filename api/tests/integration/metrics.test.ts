@@ -109,6 +109,28 @@ describe('POST /api/spaces/:handle/visit', () => {
   });
 });
 
+describe('per-space visit cap', () => {
+  it('spends the cap only on new visitors, never on repeat visits', async () => {
+    const kai = await factories.space({ handle: 'kaicap', displayName: 'Kai' });
+    const key = `${kai.space.id}:${utcDayString()}`;
+    for (let i = 0; i < VISITS_PER_SPACE_PER_DAY - 2; i += 1) {
+      await withinCap({
+        name: 'visit-space',
+        key,
+        windowSeconds: 86_400,
+        max: VISITS_PER_SPACE_PER_DAY,
+        redis: null,
+      });
+    }
+    // One slot left after this visitor: repeats of it must not take it.
+    for (let i = 0; i < 3; i += 1) await visit('kaicap', '198.51.100.70').expect(204);
+    await visit('kaicap', '198.51.100.71').expect(204);
+    await visit('kaicap', '198.51.100.72').expect(204);
+    const rows = await db.select().from(pageVisits).where(eq(pageVisits.spaceId, kai.space.id));
+    expect(rows.map((r) => r.visits).sort()).toEqual([1, 3]);
+  });
+});
+
 describe('GET /api/studio/metrics', () => {
   it('needs an owner and a valid window', async () => {
     await request(app).get('/api/studio/metrics').expect(401);
@@ -215,5 +237,29 @@ describe('GET /api/studio/metrics', () => {
     expect(res.body.days).toBe(30);
     expect(res.body.joinRate).toBeNull();
     expect(res.body.bioVisitors.changePct).toBeNull();
+  });
+
+  it('caps joinRate at 100% and counts only fans still in a community', async () => {
+    const lena = await signInWithOtp(app, 'lena@metrics.test', 'Lena Cho');
+    const space = await factories.space({
+      owner: { id: lena.userId, email: lena.email, name: 'Lena Cho' },
+      handle: 'lena',
+      displayName: 'Lena Cho',
+    });
+    const communityId = (space.communities[0] as CommunityRow).id;
+    await db
+      .insert(pageVisits)
+      .values({ spaceId: space.space.id, visitorHash: 'only-one', day: utcDayString() });
+    await factories.member(space.space.id, { communityIds: [communityId] });
+    await factories.member(space.space.id, { communityIds: [communityId] });
+    // Neither of these is a fan who joined: one was removed, one only sent a pitch.
+    const gone = await factories.member(space.space.id, { communityIds: [communityId] });
+    expect(await repos.memberships.remove(space.space.id, gone.membership.id)).toBe(true);
+    await factories.member(space.space.id);
+
+    const res = await metrics(7, lena.cookie).expect(200);
+    expect(res.body.joins.value).toBe(2);
+    expect(res.body.bioVisitors.value).toBe(1);
+    expect(res.body.joinRate).toBe(1);
   });
 });

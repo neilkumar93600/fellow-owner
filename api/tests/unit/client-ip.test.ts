@@ -1,6 +1,6 @@
 import type { Request } from 'express';
 import { describe, expect, it } from 'vitest';
-import { clientIp } from '../../src/lib/client-ip.js';
+import { clientIp, normalizeIp } from '../../src/lib/client-ip.js';
 
 const KEY = 'k'.repeat(40);
 const env = { INTERNAL_API_KEY: KEY };
@@ -69,5 +69,33 @@ describe('clientIp', () => {
   it('nothing usable: the socket address (non-IP header values are ignored)', () => {
     expect(clientIp(req({}), env)).toBe('10.0.0.9');
     expect(clientIp(req({ 'x-real-ip': 'not-an-ip' }), env)).toBe('10.0.0.9');
+  });
+
+  it('keys IPv6 on its /64, so one network cannot rotate into fresh buckets', () => {
+    const a = clientIp(req({ 'x-real-ip': '2001:DB8:1:2:aaaa:bbbb:cccc:dddd' }), env);
+    const b = clientIp(req({ 'x-edge-key': KEY, 'x-edge-client-ip': '2001:db8:1:2::9' }), env);
+    expect(a).toBe('2001:db8:1:2::');
+    expect(b).toBe(a);
+    expect(clientIp(req({ 'x-real-ip': '2001:db8:1:3::9' }), env)).toBe('2001:db8:1:3::');
+    expect(clientIp(req({}, 'fe80::1%eth0'), env)).toBe('fe80:0:0:0::');
+  });
+
+  it('maps IPv4-mapped IPv6 to IPv4 (dotted or hex)', () => {
+    expect(clientIp(req({ 'x-real-ip': '::ffff:203.0.113.9' }), env)).toBe('203.0.113.9');
+    expect(clientIp(req({}, '::ffff:cb00:7109'), env)).toBe('203.0.113.9');
+  });
+});
+
+describe('normalizeIp', () => {
+  it('leaves IPv4 and non-IPs alone', () => {
+    expect(normalizeIp('198.51.100.1')).toBe('198.51.100.1');
+    expect(normalizeIp('unknown')).toBe('unknown');
+  });
+
+  it('handles :: anywhere', () => {
+    expect(normalizeIp('::')).toBe('0:0:0:0::');
+    expect(normalizeIp('::1')).toBe('0:0:0:0::');
+    expect(normalizeIp('2001:db8::')).toBe('2001:db8:0:0::');
+    expect(normalizeIp('2001:db8:0:0:1::1')).toBe('2001:db8:0:0::');
   });
 });

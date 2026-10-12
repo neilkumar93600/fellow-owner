@@ -13,8 +13,8 @@ export function createSnoozesService({ repos }: SnoozesServiceDeps) {
     const found =
       refType === 'pitch'
         ? await repos.pitches.findById(spaceId, refId)
-        : await repos.posts.findById(refId);
-    if (!found || ('spaceId' in found && found.spaceId !== spaceId)) throw notFound('Item');
+        : await repos.posts.findInSpace(spaceId, refId);
+    if (!found) throw notFound('Item');
   }
 
   return {

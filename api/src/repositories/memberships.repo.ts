@@ -244,8 +244,9 @@ export function createMembershipsRepo(db: Db) {
 
     /**
      * Join / first pitch: inserts the membership unless the user already has one in the space
-     * (unique space_id + user_id), in which case the existing row (removed or not) is returned.
-     * Safe under concurrent requests.
+     * (unique space_id + user_id), in which case the existing row (removed or not) is returned,
+     * locked FOR UPDATE: a removal or leave racing the caller's transaction waits for it, or
+     * commits first and is seen here. Safe under concurrent requests.
      */
     async insertOrGet(
       values: NewMembershipRow,
@@ -261,7 +262,8 @@ export function createMembershipsRepo(db: Db) {
         .select()
         .from(memberships)
         .where(and(eq(memberships.spaceId, values.spaceId), eq(memberships.userId, values.userId)))
-        .limit(1);
+        .limit(1)
+        .for('update');
       if (!existing) throw new Error('membership insert conflicted but no row was found');
       return { row: existing, created: false };
     },
@@ -367,6 +369,41 @@ export function createMembershipsRepo(db: Db) {
         );
         return true;
       });
+    },
+
+    /**
+     * Locks an active membership (SELECT ... FOR UPDATE) for the rest of `tx`, so community
+     * writes cannot land after a concurrent removal or leave. Null when it is not active (any more).
+     */
+    async lockActive(spaceId: string, id: string, tx: DbOrTx): Promise<MembershipRow | null> {
+      const [row] = await tx
+        .select()
+        .from(memberships)
+        .where(and(activeMember(spaceId), eq(memberships.id, id)))
+        .limit(1)
+        .for('update');
+      return row ?? null;
+    },
+
+    /**
+     * The owner removes someone who already left: the leave becomes an owner removal (left_at
+     * cleared), so they can't come back. Communities were already left. False when the row was
+     * not a self-left membership.
+     */
+    async convertLeaveToRemoval(spaceId: string, id: string, tx: DbOrTx = db): Promise<boolean> {
+      const rows = await tx
+        .update(memberships)
+        .set({ leftAt: null })
+        .where(
+          and(
+            eq(memberships.spaceId, spaceId),
+            eq(memberships.id, id),
+            isNotNull(memberships.removedAt),
+            isNotNull(memberships.leftAt),
+          ),
+        )
+        .returning({ id: memberships.id });
+      return rows.length > 0;
     },
 
     /**

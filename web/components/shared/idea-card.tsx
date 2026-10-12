@@ -1,5 +1,5 @@
 import type { AiInsight, IdeaItem, PostCard } from '@fellow-owners/shared';
-import { Megaphone, Pin } from 'lucide-react';
+import { Megaphone } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
@@ -64,11 +64,11 @@ export function IdeaCard({
         />
         {creator && ai ? (
           <AiVerdict ai={ai} />
-        ) : post.pinned && post.answerGroup ? (
-          // An Answer Once answer (F32): pinned first in the feed, labelled quietly.
+        ) : post.answerGroup ? (
+          // An Answer Once answer (F32), labelled quietly.
           <span className="inline-flex items-center gap-1.5 text-small text-ink-soft">
-            <Pin aria-hidden="true" strokeWidth={1.5} className="size-4" />
-            Pinned · answered for{' '}
+            <Megaphone aria-hidden="true" strokeWidth={1.5} className="size-4" />
+            Answered for{' '}
             <span className="tabular-nums">{formatNumber(post.answerGroup.askedCount)}</span> people
           </span>
         ) : null}

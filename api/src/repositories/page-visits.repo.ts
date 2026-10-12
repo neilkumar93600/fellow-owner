@@ -1,7 +1,8 @@
 import type { FeedbackVerdict } from '@fellow-owners/shared';
-import { and, count, eq, gte, isNull, lt, sql } from 'drizzle-orm';
+import { and, count, eq, exists, gte, isNull, lt, sql } from 'drizzle-orm';
 import type { Db, DbOrTx } from '../db/client.js';
 import { aiFeedback } from '../db/schema/ai.js';
+import { communityMembers } from '../db/schema/communities.js';
 import { memberships } from '../db/schema/memberships.js';
 import { pageVisits } from '../db/schema/page-visits.js';
 import { posts } from '../db/schema/posts.js';
@@ -30,6 +31,22 @@ export function createPageVisitsRepo(db: Db) {
         });
     },
 
+    /** Adds a repeat visit to an existing row; false when this visitor has no row that day. */
+    async bump(spaceId: string, visitorHash: string, day: string, tx: DbOrTx = db) {
+      const rows = await tx
+        .update(pageVisits)
+        .set({ visits: sql`${pageVisits.visits} + 1` })
+        .where(
+          and(
+            eq(pageVisits.spaceId, spaceId),
+            eq(pageVisits.visitorHash, visitorHash),
+            eq(pageVisits.day, day),
+          ),
+        )
+        .returning({ visits: pageVisits.visits });
+      return rows.length > 0;
+    },
+
     /** Unique visitors per day, summed over the range. */
     async visitorsBetween(spaceId: string, fromDay: string, toDay: string, tx: DbOrTx = db) {
       const [row] = await tx
@@ -45,7 +62,10 @@ export function createPageVisitsRepo(db: Db) {
       return row?.n ?? 0;
     },
 
-    /** Members who joined in the range (the owner's own membership never counts). */
+    /**
+     * Fans who joined in the range and are still members: removed members and pitch-only
+     * memberships (no community) do not count, nor the owner's own membership.
+     */
     async joinsBetween(spaceId: string, from: Date, to: Date, tx: DbOrTx = db) {
       const [row] = await tx
         .select({ n: count() })
@@ -54,8 +74,15 @@ export function createPageVisitsRepo(db: Db) {
           and(
             eq(memberships.spaceId, spaceId),
             eq(memberships.role, 'member'),
+            isNull(memberships.removedAt),
             gte(memberships.joinedAt, from),
             lt(memberships.joinedAt, to),
+            exists(
+              tx
+                .select({ one: sql`1` })
+                .from(communityMembers)
+                .where(eq(communityMembers.membershipId, memberships.id)),
+            ),
           ),
         );
       return row?.n ?? 0;

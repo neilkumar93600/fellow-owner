@@ -20,6 +20,12 @@ const A = LIMITS.answerOnce;
 /** C6: pitches missing an embedding are embedded first, at most this many per run. */
 const EMBED_PER_RUN = 50;
 /**
+ * Only the newest candidates are clustered per run: the pass is synchronous JS on the API's
+ * process, about 200 x (200 + open groups) x 1536 flops. ponytail: older singletons beyond the
+ * cap are never clustered; match them to open centroids in SQL (pgvector <=>) if that matters.
+ */
+export const CANDIDATES_PER_RUN = 200;
+/**
  * A space is due when a groupable pitch arrived within this window. Two hours, so one missed
  * hourly tick still catches up.
  */
@@ -64,7 +70,7 @@ export interface ClusterResult {
 /**
  * Greedy single pass in the given order: each candidate joins the nearest group or new cluster
  * whose centroid is within `maxDistance` (centroids move as members join), else seeds a new
- * cluster. ponytail: O(candidates x groups); fine for a 30-day window of one space's pitches.
+ * cluster. ponytail: O(candidates x groups), bounded by CANDIDATES_PER_RUN.
  */
 export function clusterCandidates(
   candidates: readonly ClusterItem[],
@@ -98,7 +104,10 @@ export function clusterCandidates(
       continue;
     }
     const n = best.size;
-    best.centroid = best.centroid.map((value, i) => (value * n + (item.vector[i] ?? 0)) / (n + 1));
+    // In place: bucket centroids are copies.
+    for (let i = 0; i < best.centroid.length; i += 1) {
+      best.centroid[i] = ((best.centroid[i] ?? 0) * n + (item.vector[i] ?? 0)) / (n + 1);
+    }
     best.size = n + 1;
     best.ids.push(item.id);
   }
@@ -119,9 +128,9 @@ export function clusterCandidates(
  * (fan notes, ideas, other) of the last 30 days, not spam, still new or shortlisted, ungrouped
  * and never removed by the creator. Each joins the nearest open group within
  * LIMITS.answerOnce.maxDistance, else clusters with the others; a new cluster of 3+ is named by
- * the `questionGroup` AI task. The AI saying "not one question" leaves the pitches ungrouped (they
- * stay eligible); the AI failing creates the group with the first subject as a placeholder
- * question and no draft, and a later run names it.
+ * the `questionGroup` AI task. The AI saying "not one question" leaves the pitches ungrouped and
+ * excluded (never sent to the AI again); the AI failing creates the group with the first subject
+ * as a placeholder question and no draft, and a later run names it.
  */
 export function createQuestionGrouper(deps: QuestionGrouperDeps) {
   const { db, repos, ai } = deps;
@@ -171,10 +180,12 @@ export function createQuestionGrouper(deps: QuestionGrouperDeps) {
       );
       if (output === 'failed') return;
       if (output === null) {
-        // Not one question after all: the pitches go back to the pool (FK on delete set null).
-        await repos.questionGroups.deleteById(group.id);
+        // Not one question after all: dropped, its pitches never re-clustered. A no-op when the
+        // owner answered, dismissed or redrafted it during the AI call.
+        await db.transaction((tx) => repos.questionGroups.dropRejected(group.id, tx));
         continue;
       }
+      // A no-op when the group is no longer open.
       await repos.questionGroups.setNaming(group.id, {
         question: output.question,
         draft: output.draft,
@@ -189,7 +200,7 @@ export function createQuestionGrouper(deps: QuestionGrouperDeps) {
     await nameWaiting(space);
 
     const since = daysAgo(A.windowDays);
-    const candidates = await repos.questionGroups.candidates(spaceId, since);
+    const candidates = await repos.questionGroups.candidates(spaceId, since, CANDIDATES_PER_RUN);
     await embedMissing(spaceId, candidates);
     const byId = new Map(candidates.map((candidate) => [candidate.id, candidate]));
     const items = candidates.flatMap((candidate) =>
@@ -215,7 +226,11 @@ export function createQuestionGrouper(deps: QuestionGrouperDeps) {
         space,
         members.map((member) => member.body),
       );
-      if (output === null) continue;
+      if (output === null) {
+        // Remembered, so the same cluster is not sent to the AI again every run.
+        await repos.questionGroups.excludePitches(spaceId, cluster.ids, since);
+        continue;
+      }
       const first = members[0];
       if (!first) continue;
       const created = await db

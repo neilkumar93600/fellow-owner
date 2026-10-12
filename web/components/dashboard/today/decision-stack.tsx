@@ -1,5 +1,6 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, PartyPopper } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
@@ -9,7 +10,9 @@ import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useInboxAction } from '@/hooks/queries/use-inbox';
+import { briefingKeys } from '@/hooks/queries/use-briefing';
+import { ideasKeys } from '@/hooks/queries/use-ideas';
+import { inboxKeys, useInboxAction } from '@/hooks/queries/use-inbox';
 import { snooze } from '@/lib/api/snoozes';
 import { routes } from '@/lib/routes';
 import { toastError, toastSuccess } from '@/lib/toast';
@@ -41,6 +44,7 @@ function isTyping(target: EventTarget): boolean {
  */
 export function DecisionStack({ items }: { items: DecisionItem[] }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const reduceMotion = useReducedMotion();
   const love = useLovePost();
   const inboxAction = useInboxAction();
@@ -243,7 +247,16 @@ export function DecisionStack({ items }: { items: DecisionItem[] }) {
                 onLater={(item) => {
                   // Later hides the card for a day on the server too; a failed save only means it returns.
                   if (item.kind !== 'fan') {
-                    snooze({ refType: item.kind, refId: item.refId, days: 1 }).catch(() => {});
+                    snooze({ refType: item.kind, refId: item.refId, days: 1 })
+                      .then(() =>
+                        // The cards, Top ideas and the briefing leave the snoozed one out; a remount must too.
+                        Promise.all([
+                          queryClient.invalidateQueries({ queryKey: inboxKeys.lists }),
+                          queryClient.invalidateQueries({ queryKey: ideasKeys.all }),
+                          queryClient.invalidateQueries({ queryKey: briefingKeys.all }),
+                        ]),
+                      )
+                      .catch(() => {});
                   }
                   dismiss(item, -1);
                 }}

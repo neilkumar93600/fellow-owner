@@ -101,7 +101,9 @@ export function createCommunitiesService(deps: CommunitiesServiceDeps) {
     async create(owner: OwnerContext, input: CreateCommunityBody): Promise<StudioCommunity> {
       const { space } = owner;
       const slug = input.slug ?? slugify(input.name, LIMITS.community.slug.max, 'community');
-      await assertStorableImage(storage, ['coverUrl'], input.coverUrl, null);
+      await assertStorableImage(storage, ['coverUrl'], input.coverUrl, null, [
+        `community_cover/${space.id}/`,
+      ]);
       const created = await db.transaction(async (tx) => {
         await limits.lockWrites(space.id, owner.userId, tx);
         const total = await repos.communities.countBySpace(space.id, tx);
@@ -138,7 +140,9 @@ export function createCommunitiesService(deps: CommunitiesServiceDeps) {
       const { space } = owner;
       const current = await repos.communities.findById(space.id, id);
       if (!current) throw notFound('Community');
-      await assertStorableImage(storage, ['coverUrl'], input.coverUrl, current.coverUrl);
+      await assertStorableImage(storage, ['coverUrl'], input.coverUrl, current.coverUrl, [
+        `community_cover/${space.id}/`,
+      ]);
       const patch: CommunityUpdate = {};
       if (input.name !== undefined) patch.name = input.name;
       if (input.description !== undefined) {

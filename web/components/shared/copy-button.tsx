@@ -16,6 +16,8 @@ export interface CopyButtonProps {
   /** What it sits on, for the hover fill and outline (see buttonVariants). */
   surface?: 'white' | 'glass' | 'card';
   className?: string;
+  /** Called once the text is on the clipboard (not when the copy was refused). */
+  onCopied?: () => void;
 }
 
 /** Copies `value`, confirms with a toast and shows a check for two seconds. */
@@ -26,6 +28,7 @@ export function CopyButton({
   variant = 'ghost',
   surface = 'white',
   className,
+  onCopied,
 }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
@@ -40,6 +43,7 @@ export function CopyButton({
       await navigator.clipboard.writeText(value);
       setCopied(true);
       toastSuccess(message);
+      onCopied?.();
     } catch (error) {
       toastError(error, { fallback: 'Could not copy. Select the text and copy it instead.' });
     }

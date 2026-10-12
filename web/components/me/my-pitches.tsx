@@ -1,6 +1,6 @@
 'use client';
 
-import { PITCH_TYPE_LABELS, type Pitch } from '@fellow-owners/shared';
+import { MY_SPACE_FIRST_PAGE, PITCH_TYPE_LABELS, type Pitch } from '@fellow-owners/shared';
 import { Send, Undo2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import { EmptyState } from '@/components/shared/empty-state';
 import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { cn } from '@/components/ui/cn';
+import { useMoreMyPitches } from '@/hooks/queries/use-me';
 import { useWithdrawPitch } from '@/hooks/queries/use-pitches';
 import { formatDate, formatNumber, pluralize } from '@/lib/format';
 import { routes } from '@/lib/routes';
@@ -28,7 +29,8 @@ export interface MyPitchesProps {
 /**
  * Ideas I sent: today's allowance, then each idea with its type, subject and date, a tracker showing how
  * far it got (Sent, Read, Shortlisted, Replied), the creator's reply quoted in a lilac well, and
- * Withdraw (confirmed) while the idea is still New.
+ * Withdraw (confirmed) while the idea is still New. My space holds the first MY_SPACE_FIRST_PAGE; Load
+ * more appends older ones until a page says there are none left.
  */
 export function MyPitches({
   handle,
@@ -39,6 +41,10 @@ export function MyPitches({
 }: MyPitchesProps) {
   const [withdrawing, setWithdrawing] = useState<Pitch | null>(null);
   const withdrawMutation = useWithdrawPitch();
+  const more = useMoreMyPitches(handle);
+  // The last id when a page said nothing older is left (a refetch of My space shows the button again).
+  const [doneAfter, setDoneAfter] = useState<string | null>(null);
+  const last = pitches.at(-1)?.id;
 
   return (
     <div className="flex flex-col gap-4">
@@ -146,6 +152,23 @@ export function MyPitches({
           className="glass min-h-64"
         />
       )}
+      {last && pitches.length >= MY_SPACE_FIRST_PAGE && last !== doneAfter ? (
+        <Button
+          variant="secondary"
+          surface="glass"
+          className="self-center"
+          loading={more.isPending}
+          onClick={() =>
+            more.mutate(last, {
+              onSuccess: (page) => {
+                if (!page.nextCursor) setDoneAfter(page.items.at(-1)?.id ?? last);
+              },
+            })
+          }
+        >
+          Load more
+        </Button>
+      ) : null}
 
       <ConfirmDialog
         open={withdrawing !== null}

@@ -1,0 +1,47 @@
+{
+  "task": "challengeSummary",
+  "description": "Closed challenge recaps (hand-written answers in OpenRouter's wire format, no re-recording).",
+  "cases": [
+    {
+      "name": "recaps the entries in one short plain line",
+      "input": {
+        "title": "Your best $10 meal abroad",
+        "entries": [
+          { "title": "Bifana in Porto", "summary": "A pork sandwich and a beer for 4 euros." },
+          { "title": "Pho in Hanoi", "summary": null },
+          { "title": "Tacos al pastor in Mexico City", "summary": "Five tacos from a street stand." }
+        ]
+      },
+      "responses": [
+        {
+          "content": {
+            "summary": "  Fans shared **street food** finds from Porto, Hanoi and Mexico City,\n mostly sandwiches, soups and tacos under $10.  "
+          },
+          "usage": { "prompt_tokens": 300, "completion_tokens": 40 }
+        }
+      ],
+      "expect": {
+        "summary": "Fans shared street food finds from Porto, Hanoi and Mexico City, mostly sandwiches, soups and tacos under $10.",
+        "requests": 1
+      }
+    },
+    {
+      "name": "retries once when the summary is empty",
+      "input": {
+        "title": "Packing light",
+        "entries": [
+          { "title": "One backpack for a month", "summary": null },
+          { "title": "Capsule wardrobe for Japan", "summary": null }
+        ]
+      },
+      "responses": [
+        { "content": { "summary": "   " } },
+        { "content": { "summary": "Entries focused on carry-on only trips and small capsule wardrobes." } }
+      ],
+      "expect": {
+        "summary": "Entries focused on carry-on only trips and small capsule wardrobes.",
+        "requests": 2
+      }
+    }
+  ]
+}

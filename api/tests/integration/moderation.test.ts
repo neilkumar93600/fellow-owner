@@ -228,6 +228,86 @@ describe('comment hide', () => {
   });
 });
 
+describe('reporting comments', () => {
+  async function freshComment(body: string) {
+    const target = await factories.post(mira.space.id, builders.id, author.membership.id, {
+      title: 'A post with comments to report',
+    });
+    const res = await request(app)
+      .post(`/api/posts/${target.id}/comments`)
+      .set('Cookie', author.cookie)
+      .send({ body })
+      .expect(201);
+    return { postId: target.id, commentId: res.body.id as string };
+  }
+  const reportComment = (cookie: string, id: string) =>
+    request(app).post(`/api/comments/${id}/report`).set('Cookie', cookie).send({ reason: 'spam' });
+
+  it('hide_target hides the comment, resolves every open report on it, and fans stop seeing it', async () => {
+    const { postId, commentId: target } = await freshComment('Buy followers here');
+    const second = await member('second@mod.test', 'Second');
+    await reportComment(fan.cookie, target).expect(204);
+    await reportComment(second.cookie, target).expect(204);
+    const open = (
+      await request(app)
+        .get('/api/studio/reports?status=open&limit=50')
+        .set('Cookie', owner.cookie)
+        .expect(200)
+    ).body as ReportsPage;
+    const mine = open.items.filter((i) => i.target.id === target);
+    expect(mine).toHaveLength(2);
+
+    const acted = await request(app)
+      .patch(`/api/studio/reports/${mine[0]?.id}`)
+      .set('Cookie', owner.cookie)
+      .send({ action: 'hide_target' })
+      .expect(200);
+    expect(acted.body).toMatchObject({
+      status: 'resolved',
+      target: { type: 'comment', hidden: true },
+    });
+    expect((await repos.comments.findById(postId, target))?.hiddenAt).not.toBeNull();
+    const rows = await db.select().from(reports).where(eq(reports.targetId, target));
+    expect(rows.map((r) => r.status)).toEqual(['resolved', 'resolved']);
+
+    const thread = await request(app)
+      .get(`/api/posts/${postId}`)
+      .set('Cookie', fan.cookie)
+      .expect(200);
+    expect(thread.body.comments.map((c: { id: string }) => c.id)).not.toContain(target);
+  });
+
+  it('a hidden or deleted comment cannot be reported: 404', async () => {
+    const hidden = await freshComment('Hide me');
+    await request(app)
+      .patch(`/api/studio/posts/${hidden.postId}/comments/${hidden.commentId}`)
+      .set('Cookie', owner.cookie)
+      .send({ action: 'hide' })
+      .expect(204);
+    await reportComment(fan.cookie, hidden.commentId).expect(404);
+
+    const removed = await freshComment('Delete me');
+    await request(app)
+      .delete(`/api/posts/${removed.postId}/comments/${removed.commentId}`)
+      .set('Cookie', author.cookie)
+      .expect(204);
+    await reportComment(fan.cookie, removed.commentId).expect(404);
+    const filed = await db.select().from(reports).where(eq(reports.targetId, removed.commentId));
+    expect(filed).toHaveLength(0);
+  });
+
+  it('a member the owner removed cannot report posts or comments: 403', async () => {
+    const victim = await member('gone@mod.test', 'Gone');
+    const { commentId: target } = await freshComment('Still here');
+    await request(app)
+      .delete(`/api/studio/people/${victim.membership.id}`)
+      .set('Cookie', owner.cookie)
+      .expect(204);
+    await reportComment(victim.cookie, target).expect(403);
+    await reportPost(victim.cookie).expect(403);
+  });
+});
+
 describe('DELETE /api/spaces/:handle/me', () => {
   it('lets a fan leave and keeps counters right', async () => {
     const leaver = await member('leaver@mod.test', 'Leaver');

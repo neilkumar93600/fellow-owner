@@ -48,10 +48,14 @@ const originSchema = z
 const rawEnvSchema = z.object({
   NODE_ENV: z.enum(NODE_ENVS).default('development'),
   PORT: z.coerce.number().int().min(1).max(65535).default(4000),
-  LOG_LEVEL: z.enum(LOG_LEVELS).optional(),
+  LOG_LEVEL: optionalString.pipe(z.enum(LOG_LEVELS).optional()),
 
   DATABASE_URL: optionalString,
-  DATABASE_POOL_MAX: z.coerce.number().int().min(1).max(100).optional(),
+  // At least 2: withJobLock holds one connection for the whole job while the job queries the pool.
+  DATABASE_POOL_MAX: z.preprocess(
+    (value) => (typeof value === 'string' && value.trim() === '' ? undefined : value),
+    z.coerce.number().int().min(2).max(100).optional(),
+  ),
 
   REDIS_URL: optionalString,
 

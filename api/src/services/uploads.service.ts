@@ -23,17 +23,19 @@ const EXTENSIONS: Record<UploadContentType, string> = {
 
 /**
  * 400 validation_error unless `url` may be stored as an avatar or cover (lib/storage.ts
- * mediaImageProblem: an /api/media upload must really be a JPEG, PNG or WebP). An unchanged value
- * (`url === current`) was checked when it was first saved, so it is not fetched again.
+ * mediaImageProblem: an /api/media upload must be under one of `prefixes`, the caller's own, and
+ * really be a JPEG, PNG or WebP). An unchanged value (`url === current`) was checked when it was
+ * first saved, so it is not fetched again.
  */
 export async function assertStorableImage(
   storage: Storage,
   path: string[],
   url: string | null | undefined,
-  current?: string | null,
+  current: string | null | undefined,
+  prefixes: readonly string[],
 ): Promise<void> {
   if (url === current) return;
-  const problem = await mediaImageProblem(storage, url);
+  const problem = await mediaImageProblem(storage, url, prefixes);
   if (problem) {
     throw validationError(
       [{ location: 'body', path, message: problem, code: 'invalid_image' }],

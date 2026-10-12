@@ -3,6 +3,8 @@
 import type { StatValue } from '@fellow-owners/shared';
 import { useState } from 'react';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/components/ui/cn';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMetrics } from '@/hooks/queries/use-metrics';
 import { formatNumber } from '@/lib/format';
@@ -28,8 +30,7 @@ function Tile({ label, value, note }: { label: string; value: string; note?: str
 /** Pilot analytics on Today: bio visitors, joins, how often you agree with the AI, collabs. */
 export function MetricsCard() {
   const [days, setDays] = useState<(typeof WINDOWS)[number]>(30);
-  const { data, isPending, isError } = useMetrics(days);
-  if (isError) return null;
+  const { data, isPending, isError, isPlaceholderData, refetch } = useMetrics(days);
 
   return (
     <GlassPanel as="section" aria-labelledby="metrics-card-title" className="p-5">
@@ -51,14 +52,30 @@ export function MetricsCard() {
           ))}
         </div>
       </div>
-      {isPending || !data ? (
+      {isError ? (
+        <div
+          role="alert"
+          className="mt-4 flex flex-wrap items-center gap-3 text-body text-ink-soft"
+        >
+          Could not load these numbers.
+          <Button variant="secondary" size="md" surface="glass" onClick={() => void refetch()}>
+            Try again
+          </Button>
+        </div>
+      ) : isPending || !data ? (
         <div aria-hidden="true" className="mt-4 grid grid-cols-2 gap-4">
           {[0, 1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-12 w-full" />
           ))}
         </div>
       ) : (
-        <dl className="mt-4 grid grid-cols-2 gap-4">
+        <dl
+          aria-busy={isPlaceholderData}
+          className={cn(
+            'mt-4 grid grid-cols-2 gap-4 transition-opacity',
+            isPlaceholderData && 'opacity-50',
+          )}
+        >
           <Tile
             label="Bio page visitors"
             value={formatNumber(data.bioVisitors.value)}

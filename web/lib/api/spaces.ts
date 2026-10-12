@@ -1,4 +1,5 @@
 import type {
+  BeforeQuery,
   CreatePitchInput,
   CreatePostInput,
   FeedPage,
@@ -7,7 +8,9 @@ import type {
   JoinSpaceInput,
   MySpace,
   OwnMembership,
+  Page,
   Pitch,
+  PostCard,
   PostDetail,
   Showcase,
   SpacePage,
@@ -16,6 +19,7 @@ import type {
   UpdateMembershipInput,
   ViewerMembership,
 } from '@fellow-owners/shared';
+import { beforeSearch } from '@/lib/api/posts';
 import { apiFetch } from '@/lib/fetcher';
 
 // Typed client for /api/spaces/:handle/*: the public bio page and showcase, then the member side.
@@ -60,6 +64,16 @@ export function joinSpace(handle: string, input: JoinSpaceInput): Promise<JoinRe
 /** GET /me: My space (own posts, teams, pitches with replies, caps left today). Members only. */
 export function getMe(handle: string, signal?: AbortSignal): Promise<MySpace> {
   return apiFetch<MySpace>(`${spacePath(handle)}/me`, { signal });
+}
+
+/** GET /me/posts?before=: own posts older than `before` (My space "Show more"). Members only. */
+export function getMyPosts(handle: string, query: BeforeQuery): Promise<Page<PostCard>> {
+  return apiFetch<Page<PostCard>>(`${spacePath(handle)}/me/posts${beforeSearch(query)}`);
+}
+
+/** GET /me/pitches?before=: own pitches older than `before` (My space "Show more"). Members only. */
+export function getMyPitches(handle: string, query: BeforeQuery): Promise<Page<Pitch>> {
+  return apiFetch<Page<Pitch>>(`${spacePath(handle)}/me/pitches${beforeSearch(query)}`);
 }
 
 /** PATCH /me: own profile; `communityIds` replaces the joined set. */

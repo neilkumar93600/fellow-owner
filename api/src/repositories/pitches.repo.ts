@@ -14,6 +14,7 @@ import {
   count,
   desc,
   eq,
+  getTableColumns,
   gte,
   inArray,
   isNull,
@@ -119,7 +120,8 @@ const inboxColumns = {
   aiTags: inbound.aiTags,
   aiSkills: inbound.aiSkills,
   aiIsSpam: inbound.aiIsSpam,
-  embedding: inbound.embedding,
+  // Never loaded here (~15 KB of text per row, unused by the inbox).
+  embedding: sql<null>`null`,
   senderName: user.name,
   senderHeadline: memberships.headline,
   senderImage: user.image,
@@ -315,18 +317,27 @@ export function createPitchesRepo(db: Db) {
       return row ?? null;
     },
 
-    /** The sender's pitches in the space (all statuses), newest first (MySpace.pitches). */
+    /**
+     * The sender's pitches in the space (all statuses), newest first, without the embedding
+     * (MySpace.pitches). `before`: only pitches older than that pitch of theirs ("Show more").
+     */
     async listBySender(
       spaceId: string,
       senderMembershipId: string,
-      { limit = 100 }: { limit?: number } = {},
+      { limit = 100, before }: { limit?: number; before?: string | undefined } = {},
       tx: DbOrTx = db,
     ): Promise<InboundRow[]> {
       return tx
-        .select()
+        .select({ ...getTableColumns(inbound), embedding: sql<null>`null` })
         .from(inbound)
         .where(
-          and(eq(inbound.spaceId, spaceId), eq(inbound.senderMembershipId, senderMembershipId)),
+          and(
+            eq(inbound.spaceId, spaceId),
+            eq(inbound.senderMembershipId, senderMembershipId),
+            before
+              ? sql`(${inbound.createdAt}, ${inbound.id}) < (select i.created_at, i.id from inbound i where i.id = ${before}::uuid and i.sender_membership_id = ${senderMembershipId}::uuid)`
+              : undefined,
+          ),
         )
         .orderBy(desc(inbound.createdAt), desc(inbound.id))
         .limit(limit);

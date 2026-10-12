@@ -13,6 +13,8 @@ export interface BioViewProps {
   joinedIds?: readonly string[];
   /** The creator looking at their own bio link: the way in opens the studio and the idea panel goes. */
   isOwner?: boolean;
+  /** False while who the viewer is still loads: no visit is recorded until it is known (not the creator's own). */
+  viewerKnown?: boolean;
 }
 
 /**
@@ -20,7 +22,12 @@ export interface BioViewProps {
  * rooms to join, the coral "Send Mira an idea", "Fans of the week", then "Made by Mira's fans". Never
  * one-way: the rooms and Join always show. No match labels, no verification claims.
  */
-export function BioView({ page, joinedIds = [], isOwner = false }: BioViewProps) {
+export function BioView({
+  page,
+  joinedIds = [],
+  isOwner = false,
+  viewerKnown = true,
+}: BioViewProps) {
   const { space, communities, featured, spotlights } = page;
   const first = space.displayName.split(' ')[0];
   // A fan's way in goes straight to their first room instead of back into Join (03-app-flow §4).
@@ -36,7 +43,7 @@ export function BioView({ page, joinedIds = [], isOwner = false }: BioViewProps)
 
   return (
     <div className="flex flex-col gap-10">
-      {isOwner ? null : <VisitBeacon handle={space.handle} />}
+      {isOwner || !viewerKnown ? null : <VisitBeacon handle={space.handle} />}
       <CreatorHeader space={space} cta={cta} />
       <CommunityGrid handle={space.handle} communities={communities} joinedIds={joinedIds} />
       {isOwner ? null : <PitchCta handle={space.handle} firstName={first} />}

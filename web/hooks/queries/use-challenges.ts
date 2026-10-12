@@ -25,11 +25,24 @@ export function useChallenges() {
   });
 }
 
-/** One challenge with its entries (404 for an unknown id). */
+/** The recap is written in the background after Close: check back this many times (3s apart). */
+const RECAP_POLLS = 10;
+
+/**
+ * One challenge with its entries (404 for an unknown id). A closed challenge with entries but no AI
+ * recap yet checks back every 3 seconds, about 30 seconds in all.
+ */
 export function useChallenge(id: string | null | undefined) {
   return useQuery({
     queryKey: challengeKeys.detail(id ?? ''),
     queryFn: id ? ({ signal }) => getChallenge(id, signal) : skipToken,
+    refetchInterval: ({ state: { data, dataUpdateCount } }) =>
+      data?.status === 'closed' &&
+      data.entryCount > 0 &&
+      data.aiSummary === null &&
+      dataUpdateCount < RECAP_POLLS
+        ? 3000
+        : false,
   });
 }
 

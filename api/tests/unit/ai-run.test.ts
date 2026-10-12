@@ -138,6 +138,27 @@ describe('runAiTask preflight', () => {
     ).resolves.toBeDefined();
   });
 
+  it('holds the cap when the calls run in parallel (the slot is reserved before the model call)', async () => {
+    const cap = TASK_CAPS.suggestCommunities?.max ?? 0;
+    const script = Array.from(
+      { length: cap * 3 },
+      () => async () =>
+        new Promise<GenerateResult>((resolve) =>
+          setTimeout(() => resolve(answer('{"title":"a","score":1}', 5, 5)), 20),
+        ),
+    );
+    const { model, calls } = scriptedModel(script);
+    const { rt, rows } = runtimeWith(model);
+    const options = { ...base, task: 'suggestCommunities' as const };
+    const results = await Promise.allSettled(
+      Array.from({ length: cap * 3 }, () => runAiTask(rt, options)),
+    );
+    expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(cap);
+    expect(calls).toHaveLength(cap);
+    expect(rows).toHaveLength(cap);
+    expect(rows.every((row) => row.status === 'ok' && row.model === 'test/fast-model')).toBe(true);
+  });
+
   it('applies the per-space daily cap for promoteDrafts', async () => {
     const cap = TASK_CAPS.promoteDrafts?.max ?? 0;
     expect(cap).toBe(10);

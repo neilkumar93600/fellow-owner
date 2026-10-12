@@ -230,7 +230,8 @@ export function aiInsight(row: AiFieldsRow, tasteVersion: number): AiInsight {
   return {
     status: row.analysisStatus,
     attempts: row.analysisAttempts,
-    error: row.analysisError,
+    // analysis_error holds raw provider text (billing, model ids): the owner only needs to know it failed.
+    error: row.analysisError ? 'Analysis failed' : null,
     summary: row.aiSummary,
     category: row.aiCategory,
     fitScore: row.aiFitScore,

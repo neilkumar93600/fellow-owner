@@ -1,20 +1,24 @@
 import { RETENTION_DAYS } from '@fellow-owners/shared';
-import { and, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
+import { and, isNotNull, isNull, like, lt, or, sql } from 'drizzle-orm';
 import type { Db } from '../db/client.js';
-import { session, verification } from '../db/schema/auth.js';
+import { session, user, verification } from '../db/schema/auth.js';
+import { communities } from '../db/schema/communities.js';
 import { jobRuns } from '../db/schema/jobs.js';
 import { notifications } from '../db/schema/later.js';
 import { memberships } from '../db/schema/memberships.js';
 import { pageVisits } from '../db/schema/page-visits.js';
+import { spaces } from '../db/schema/spaces.js';
 import { supportRequests } from '../db/schema/support.js';
 import { daysAgo, utcDayString } from '../lib/dates.js';
 import type { Logger } from '../lib/logger.js';
+import { MEDIA_PATH, type Storage } from '../lib/storage.js';
 import type { Repos } from '../repositories/index.js';
 
 export interface PurgeDeps {
   db: Db;
   repos: Pick<Repos, 'posts' | 'comments' | 'clicks' | 'aiRuns' | 'digests' | 'notifications'>;
   logger: Logger;
+  storage: Storage;
 }
 
 /** Rows deleted (or, for removed members, wiped) per retention rule (05-backend-schema section 8). */
@@ -39,6 +43,8 @@ export interface PurgeResult {
   /** Removed memberships whose intro, links and skills (and embedding) were cleared. */
   removedMemberProfiles: number;
   jobRuns: number;
+  /** Bucket objects older than ORPHAN_UPLOAD_HOURS that no row points at (best effort). */
+  orphanedUploads: number;
   /** The cutoff used for each rule, for the response and the log line. */
   cutoffs: {
     softDeleted: string;
@@ -51,6 +57,7 @@ export interface PurgeResult {
     pageVisits: string;
     removedMembers: string;
     jobRuns: string;
+    orphanedUploads: string;
   };
 }
 
@@ -63,6 +70,44 @@ const PAGE_VISIT_DAYS = 400;
 /** A removed member's intro, links and skills are cleared this long after removal. */
 const REMOVED_MEMBER_DAYS = 30;
 const JOB_RUN_DAYS = 30;
+/** An upload nobody saved (or since replaced) is deleted once it is this old. */
+const ORPHAN_UPLOAD_HOURS = 24;
+/** The upload prefixes (uploads.service.ts presign), each `<kind>/<owner>/<uuid>.<ext>`. */
+const UPLOAD_PREFIXES = ['avatar/', 'member_avatar/', 'space_cover/', 'community_cover/'];
+
+/**
+ * Deletes bucket objects older than `before` that no row points at (spaces avatar and cover,
+ * communities cover, user image): presigned uploads never saved, and images since replaced.
+ * Best effort: a bucket failure is logged and counts what was done so far.
+ * ponytail: lists the whole bucket and loads every stored /api/media path into one Set; fine for
+ * thousands of images, page by owner prefix if the bucket grows past that.
+ */
+async function deleteOrphanedUploads(
+  { db, storage, logger }: PurgeDeps,
+  before: Date,
+): Promise<number> {
+  if (!storage.enabled) return 0;
+  const media = `${MEDIA_PATH}%`;
+  const rows = await db.execute<{ url: string }>(sql`
+    select ${spaces.avatarUrl} as url from ${spaces} where ${like(spaces.avatarUrl, media)}
+    union select ${spaces.coverUrl} from ${spaces} where ${like(spaces.coverUrl, media)}
+    union select ${communities.coverUrl} from ${communities} where ${like(communities.coverUrl, media)}
+    union select ${user.image} from ${user} where ${like(user.image, media)}`);
+  const kept = new Set(rows.map((row) => row.url.slice(MEDIA_PATH.length)));
+  let deleted = 0;
+  try {
+    for (const prefix of UPLOAD_PREFIXES) {
+      for (const key of await storage.listBefore(prefix, before)) {
+        if (kept.has(key)) continue;
+        await storage.delete(key);
+        deleted += 1;
+      }
+    }
+  } catch (err) {
+    logger.warn({ err, deleted }, 'orphaned uploads: bucket failed, the next run continues');
+  }
+  return deleted;
+}
 
 /**
  * Retention purge (05-backend-schema section 8), run daily by the tick and by /api/cron/purge:
@@ -81,6 +126,7 @@ const JOB_RUN_DAYS = 30;
  * | page_visits                            | 400 days    |
  * | Removed members' intro, links, skills  | 30 days     |
  * | job_runs                               | 30 days     |
+ * | Bucket uploads no row points at        | 24 hours    |
  *
  * Pitches are never purged on a timer (they go when the space or the sender's account goes), and
  * a deleted space cascades, so neither needs a rule here.
@@ -106,6 +152,7 @@ export async function purgeExpired(deps: PurgeDeps, now: Date = new Date()): Pro
   const visitsBefore = utcDayString(daysAgo(PAGE_VISIT_DAYS, now));
   const removedBefore = daysAgo(REMOVED_MEMBER_DAYS, now);
   const jobRunsBefore = daysAgo(JOB_RUN_DAYS, now);
+  const uploadsBefore = new Date(now.getTime() - ORPHAN_UPLOAD_HOURS * 3_600_000);
   const count = (rows: unknown[]) => rows.length;
 
   // Comments first: a post's comments go with it, and counting them separately keeps the numbers
@@ -171,6 +218,8 @@ export async function purgeExpired(deps: PurgeDeps, now: Date = new Date()): Pro
       .returning({ job: jobRuns.job }),
   );
 
+  const orphanedUploads = await deleteOrphanedUploads(deps, uploadsBefore);
+
   const result: PurgeResult = {
     posts,
     comments,
@@ -185,6 +234,7 @@ export async function purgeExpired(deps: PurgeDeps, now: Date = new Date()): Pro
     pageVisits: pageVisitsDeleted,
     removedMemberProfiles,
     jobRuns: jobRunsDeleted,
+    orphanedUploads,
     cutoffs: {
       softDeleted: softDeletedBefore.toISOString(),
       clickEvents: clicksBefore.toISOString(),
@@ -196,6 +246,7 @@ export async function purgeExpired(deps: PurgeDeps, now: Date = new Date()): Pro
       pageVisits: visitsBefore,
       removedMembers: removedBefore.toISOString(),
       jobRuns: jobRunsBefore.toISOString(),
+      orphanedUploads: uploadsBefore.toISOString(),
     },
   };
 

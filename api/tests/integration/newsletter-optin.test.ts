@@ -125,6 +125,63 @@ describe('newsletter double opt-in', () => {
     expect(await row('c@example.com')).toMatchObject({ confirmed_at: null, unsubscribed_at: null });
   });
 
+  const confirmToken = (email: string) => signToken('newsletter-confirm', email, secret, 3600);
+  const unsubscribeToken = (email: string) => signToken('newsletter-unsubscribe', email, secret);
+
+  it('an old confirm link used after unsubscribing leaves the address unsubscribed', async () => {
+    const app = createApp(buildContainer({ mailer }));
+    await subscribe(app, 'e@example.com').expect(200);
+    const stale = confirmToken('e@example.com');
+    await request(app).post(`/api/newsletter/confirm?token=${stale}`).expect(200);
+    await request(app)
+      .post(`/api/newsletter/unsubscribe?token=${unsubscribeToken('e@example.com')}`)
+      .expect(200);
+    await request(app).post(`/api/newsletter/confirm?token=${stale}`).expect(200);
+    const after = await row('e@example.com');
+    expect(after?.confirmed_at).not.toBeNull();
+    expect(after?.unsubscribed_at).not.toBeNull();
+  });
+
+  it('a sign-up after unsubscribing keeps the opt-out until the new link is confirmed', async () => {
+    const app = createApp(buildContainer({ mailer }));
+    await subscribe(app, 'f@example.com').expect(200);
+    await request(app).post(`/api/newsletter/confirm?token=${confirmToken('f@example.com')}`);
+    await request(app).post(
+      `/api/newsletter/unsubscribe?token=${unsubscribeToken('f@example.com')}`,
+    );
+    const unsubscribedAt = (await row('f@example.com'))?.unsubscribed_at;
+    await db.execute(
+      sql`update newsletter_subscribers set confirm_sent_at = now() - interval '25 hours' where email = 'f@example.com'`,
+    );
+    sent.length = 0;
+
+    await subscribe(app, 'f@example.com').expect(200);
+    expect(sent).toHaveLength(1);
+    expect((await row('f@example.com'))?.unsubscribed_at).toEqual(unsubscribedAt);
+
+    const link = sent[0]?.text.match(/\/newsletter\/confirm\?token=(\S+)/)?.[1] ?? '';
+    await request(app).post(`/api/newsletter/confirm?token=${link}`).expect(200);
+    const after = await row('f@example.com');
+    expect(after?.unsubscribed_at).toBeNull();
+    expect(after?.confirmed_at).not.toBeNull();
+  });
+
+  it('a failed confirm send gives the 24 h claim back, so the next try sends', async () => {
+    let fail = true;
+    const flaky = {
+      async send(message: MailMessage) {
+        if (fail) throw new Error('resend down');
+        sent.push(message);
+      },
+    };
+    const app = createApp(buildContainer({ mailer: flaky }));
+    await subscribe(app, 'g@example.com').expect(200);
+    expect(sent).toHaveLength(0);
+    fail = false;
+    await subscribe(app, 'g@example.com').expect(200);
+    expect(sent).toHaveLength(1);
+  });
+
   it(`sends at most ${NEWSLETTER_CONFIRMS_PER_DAY} confirm emails a day in all`, async () => {
     const container = buildContainer({ mailer });
     for (let i = 0; i < NEWSLETTER_CONFIRMS_PER_DAY + 3; i++) {
@@ -137,5 +194,10 @@ describe('newsletter double opt-in', () => {
       sql`select count(*)::int as n from newsletter_subscribers`,
     );
     expect(count?.n).toBe(NEWSLETTER_CONFIRMS_PER_DAY + 3);
+    // Addresses skipped by the cap keep no 24 h claim: they can try again once it resets.
+    const [claimed] = await db.execute<{ n: number }>(
+      sql`select count(*)::int as n from newsletter_subscribers where confirm_sent_at is not null`,
+    );
+    expect(claimed?.n).toBe(sent.length);
   });
 });

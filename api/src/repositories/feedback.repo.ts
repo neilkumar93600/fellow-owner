@@ -20,6 +20,64 @@ export function briefingHighlightRef(digestId: string, index: number): string {
   return `${digestId}:${index}`;
 }
 
+/** ref_id as a uuid when it is a post or pitch id, else null (never a cast error). */
+const refUuid = sql`case when ${aiFeedback.refType} in ('post', 'inbound')
+  and ${aiFeedback.refId} ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+  then ${aiFeedback.refId}::uuid end`;
+
+/**
+ * The recentExamples query. The joins compare the uuid primary keys (not `id::text = ref_id`),
+ * so each vote is one index lookup instead of a scan of the space's posts and pitches.
+ * Exported for the plan test.
+ */
+export function recentExamplesQuery(
+  spaceId: string,
+  { excludeRefId, limit }: { excludeRefId?: string; limit: number },
+  tx: DbOrTx,
+) {
+  return tx
+    .select({
+      verdict: aiFeedback.verdict,
+      refType: aiFeedback.refType,
+      postTitle: posts.title,
+      postSummary: posts.aiSummary,
+      pitchTitle: inbound.subject,
+      pitchSummary: inbound.aiSummary,
+    })
+    .from(aiFeedback)
+    .innerJoin(
+      spaces,
+      and(eq(spaces.id, aiFeedback.spaceId), eq(spaces.ownerUserId, aiFeedback.createdByUserId)),
+    )
+    .leftJoin(
+      posts,
+      and(
+        eq(aiFeedback.refType, 'post'),
+        eq(posts.id, refUuid),
+        eq(posts.spaceId, aiFeedback.spaceId),
+        isNull(posts.deletedAt),
+      ),
+    )
+    .leftJoin(
+      inbound,
+      and(
+        eq(aiFeedback.refType, 'inbound'),
+        eq(inbound.id, refUuid),
+        eq(inbound.spaceId, aiFeedback.spaceId),
+      ),
+    )
+    .where(
+      and(
+        eq(aiFeedback.spaceId, spaceId),
+        inArray(aiFeedback.refType, ['post', 'inbound']),
+        or(isNotNull(posts.id), isNotNull(inbound.id)),
+        excludeRefId ? ne(aiFeedback.refId, excludeRefId) : undefined,
+      ),
+    )
+    .orderBy(desc(aiFeedback.createdAt), desc(aiFeedback.id))
+    .limit(limit);
+}
+
 export function createFeedbackRepo(db: Db) {
   return {
     /** Insert or change the vote (unique per ref_type, ref_id, user). */
@@ -110,53 +168,10 @@ export function createFeedbackRepo(db: Db) {
      */
     async recentExamples(
       spaceId: string,
-      { excludeRefId, limit }: { excludeRefId?: string; limit: number },
+      options: { excludeRefId?: string; limit: number },
       tx: DbOrTx = db,
     ): Promise<TriageFeedbackExample[]> {
-      const rows = await tx
-        .select({
-          verdict: aiFeedback.verdict,
-          refType: aiFeedback.refType,
-          postTitle: posts.title,
-          postSummary: posts.aiSummary,
-          pitchTitle: inbound.subject,
-          pitchSummary: inbound.aiSummary,
-        })
-        .from(aiFeedback)
-        .innerJoin(
-          spaces,
-          and(
-            eq(spaces.id, aiFeedback.spaceId),
-            eq(spaces.ownerUserId, aiFeedback.createdByUserId),
-          ),
-        )
-        .leftJoin(
-          posts,
-          and(
-            eq(aiFeedback.refType, 'post'),
-            eq(sql`${posts.id}::text`, aiFeedback.refId),
-            eq(posts.spaceId, aiFeedback.spaceId),
-            isNull(posts.deletedAt),
-          ),
-        )
-        .leftJoin(
-          inbound,
-          and(
-            eq(aiFeedback.refType, 'inbound'),
-            eq(sql`${inbound.id}::text`, aiFeedback.refId),
-            eq(inbound.spaceId, aiFeedback.spaceId),
-          ),
-        )
-        .where(
-          and(
-            eq(aiFeedback.spaceId, spaceId),
-            inArray(aiFeedback.refType, ['post', 'inbound']),
-            or(isNotNull(posts.id), isNotNull(inbound.id)),
-            excludeRefId ? ne(aiFeedback.refId, excludeRefId) : undefined,
-          ),
-        )
-        .orderBy(desc(aiFeedback.createdAt), desc(aiFeedback.id))
-        .limit(limit);
+      const rows = await recentExamplesQuery(spaceId, options, tx);
       return rows.map((row) =>
         row.refType === 'post'
           ? {

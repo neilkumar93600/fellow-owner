@@ -1,24 +1,32 @@
-import type {
-  CommunitySuggestion,
-  JoinResponse,
-  joinSpaceSchema,
-  MySpace,
-  OwnMembership,
-  PersonRow,
-  PostCard,
-  SuggestCommunitiesResponse,
-  updateMembershipSchema,
-  ViewerMembership,
+import {
+  type BeforeQuery,
+  type CommunitySuggestion,
+  type JoinResponse,
+  type joinSpaceSchema,
+  LIMITS,
+  MY_SPACE_FIRST_PAGE,
+  type MySpace,
+  type OwnMembership,
+  type Page,
+  type PersonRow,
+  type Pitch,
+  type PostCard,
+  type SuggestCommunitiesResponse,
+  type updateMembershipSchema,
+  type ViewerMembership,
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
 import { type AiServices, type BackgroundRunner, isAiUnavailable } from '../ai/types.js';
 import type { Db, DbOrTx } from '../db/client.js';
 import type { CommunityRow } from '../db/schema/communities.js';
+import type { InboundRow } from '../db/schema/inbound.js';
 import type { MembershipRow } from '../db/schema/memberships.js';
 import type { PostRow } from '../db/schema/posts.js';
+import type { SpaceRow } from '../db/schema/spaces.js';
 import { toIso } from '../lib/dates.js';
 import { forbidden, notFound, validationError } from '../lib/errors.js';
 import type { Logger } from '../lib/logger.js';
+import { clampLimit, toPage } from '../lib/pagination.js';
 import { clamp, displayName, isLeadRole, pitchView, publicCommunity } from '../lib/present.js';
 import type { Repos } from '../repositories/index.js';
 import type { MembershipUpdate } from '../repositories/memberships.repo.js';
@@ -150,6 +158,24 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
     });
   }
 
+  /** The sender's view of their pitches, with the Answer Once group when one answered them. */
+  async function pitchViews(space: SpaceRow, rows: InboundRow[]): Promise<Pitch[]> {
+    const answeredGroups = await repos.pitches.answeredGroups(rows.map((row) => row.id));
+    return rows.map((row) => {
+      const answered = answeredGroups.get(row.id);
+      return pitchView(row, {
+        showReadReceipts: space.showReadReceipts,
+        // Same post href as notifications.service: /<handle>/p/<postId>.
+        answeredGroup: answered
+          ? {
+              count: answered.count,
+              postHref: `/${encodeURIComponent(space.handle)}/p/${encodeURIComponent(answered.postId)}`,
+            }
+          : null,
+      });
+    });
+  }
+
   return {
     ownMembership,
 
@@ -232,6 +258,7 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
      */
     async join(handle: string, userId: string, input: JoinBody): Promise<JoinResponse> {
       const space = await access.spaceByHandle(handle);
+      await access.assertCanEnter(space, userId);
       const active = await activeCommunities(space.id);
       const communityIds = [...new Set(input.communityIds)];
       assertKnownCommunities(communityIds, active);
@@ -284,18 +311,21 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
      */
     async me(ctx: MemberContext): Promise<MySpace> {
       const { space, membership } = ctx;
-      const [own, communities, authored, teamRows, pitches, postsLeft, pitchesLeft] =
+      const [own, communities, authored, teamRows, pitchRows, postsLeft, pitchesLeft] =
         await Promise.all([
           ownMembership(membership),
           repos.communities.listBySpace(space.id),
-          repos.posts.listByAuthor(space.id, membership.id),
+          repos.posts.listByAuthor(space.id, membership.id, {
+            limit: MY_SPACE_FIRST_PAGE,
+            visibleOnly: true,
+          }),
           repos.teams.listByMembership(space.id, membership.id),
-          repos.pitches.listBySender(space.id, membership.id),
+          repos.pitches.listBySender(space.id, membership.id, { limit: MY_SPACE_FIRST_PAGE }),
           limits.leftToday('posts', space.id, membership.id),
           limits.leftToday('pitches', space.id, membership.id),
         ]);
 
-      const answeredGroups = await repos.pitches.answeredGroups(pitches.map((row) => row.id));
+      const pitches = await pitchViews(space, pitchRows);
       const authoredIds = new Set(authored.map((row) => row.id));
       const teamPosts = await repos.posts.findManyByIds(
         space.id,
@@ -326,21 +356,37 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
             ? [{ post: card, role: row.role, status: row.status, isLead: isLeadRole(row.role) }]
             : [];
         }),
-        pitches: pitches.map((row) => {
-          const answered = answeredGroups.get(row.id);
-          return pitchView(row, {
-            showReadReceipts: space.showReadReceipts,
-            // Same post href as notifications.service: /<handle>/p/<postId>.
-            answeredGroup: answered
-              ? {
-                  count: answered.count,
-                  postHref: `/${encodeURIComponent(space.handle)}/p/${encodeURIComponent(answered.postId)}`,
-                }
-              : null,
-          });
-        }),
+        pitches,
         caps: { pitchesLeftToday: pitchesLeft, postsLeftToday: postsLeft },
       };
+    },
+
+    /** GET /api/spaces/:handle/me/posts?before=: own visible posts older than `before`. */
+    async myPosts(ctx: MemberContext, query: BeforeQuery): Promise<Page<PostCard>> {
+      const { space, membership } = ctx;
+      const limit = clampLimit(query.limit ?? LIMITS.pagination.maxPageSize);
+      const rows = await repos.posts.listByAuthor(space.id, membership.id, {
+        before: query.before,
+        limit: limit + 1,
+        visibleOnly: true,
+      });
+      const page = toPage(rows, limit, (last) => last.id);
+      return {
+        items: await posts.buildCards(space, page.items, membership),
+        nextCursor: page.nextCursor,
+      };
+    },
+
+    /** GET /api/spaces/:handle/me/pitches?before=: own pitches older than `before`. */
+    async myPitches(ctx: MemberContext, query: BeforeQuery): Promise<Page<Pitch>> {
+      const { space, membership } = ctx;
+      const limit = clampLimit(query.limit ?? LIMITS.pagination.maxPageSize);
+      const rows = await repos.pitches.listBySender(space.id, membership.id, {
+        before: query.before,
+        limit: limit + 1,
+      });
+      const page = toPage(rows, limit, (last) => last.id);
+      return { items: await pitchViews(space, page.items), nextCursor: page.nextCursor };
     },
 
     /**
@@ -365,15 +411,19 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
         wanted = [...wanted, ...archivedJoined];
       }
 
-      const updated = await db.transaction(async (tx) => {
+      const { prior, updated } = await db.transaction(async (tx) => {
+        // Removed or left since the request started: no profile or community writes.
+        const prior = await repos.memberships.lockActive(space.id, membership.id, tx);
+        if (!prior) throw forbidden('Join this space first');
         const row = await repos.memberships.update(space.id, membership.id, patch, tx);
         if (wanted) await repos.memberships.replaceCommunities(space.id, membership.id, wanted, tx);
-        return row;
+        return { prior, updated: row };
       });
       if (!updated) throw notFound('Membership');
-      if (input.headline !== undefined || input.intro !== undefined || input.skills !== undefined) {
-        embedProfile(space.id, updated);
-      }
+      // Embeddings cost money: only when the embedded text really changed.
+      const embedded = (row: MembershipRow) =>
+        JSON.stringify([row.headline, row.intro, row.skills ?? []]);
+      if (embedded(updated) !== embedded(prior)) embedProfile(space.id, updated);
       return ownMembership(updated);
     },
 
@@ -382,7 +432,11 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
       const target = await repos.memberships.findById(owner.space.id, membershipId);
       if (!target) throw notFound('Member');
       if (target.role === 'owner') throw forbidden("The space owner can't be removed");
-      if (target.removedAt) return;
+      if (target.removedAt) {
+        // They left on their own first: make it the owner's removal so they can't come back.
+        if (target.leftAt) await repos.memberships.convertLeaveToRemoval(owner.space.id, target.id);
+        return;
+      }
       await repos.memberships.remove(owner.space.id, target.id);
       log.info({ spaceId: owner.space.id, membershipId }, 'member removed');
     },
@@ -408,14 +462,17 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
       const joined = await repos.memberships.communityIds(target.id);
       const archivedJoined = joined.filter((id) => !active.has(id));
 
-      await db.transaction((tx) =>
-        repos.memberships.replaceCommunities(
+      await db.transaction(async (tx) => {
+        // Removed or left since the read above: no community writes.
+        if (!(await repos.memberships.lockActive(space.id, target.id, tx)))
+          throw notFound('Member');
+        await repos.memberships.replaceCommunities(
           space.id,
           target.id,
           [...wanted, ...archivedJoined],
           tx,
-        ),
-      );
+        );
+      });
       log.info({ spaceId: space.id, membershipId }, 'member moved');
 
       const [rows, scores] = await Promise.all([

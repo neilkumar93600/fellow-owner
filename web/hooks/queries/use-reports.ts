@@ -1,18 +1,21 @@
 import type { ReportItem, ReportStatus, ReportsPage } from '@fellow-owners/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteCursor } from '@/hooks/use-cursor-list';
 import { actOnReport, listReports, reportComment, reportPost } from '@/lib/api/moderation';
 import { toastError, toastSuccess } from '@/lib/toast';
+import { ideasKeys } from './use-ideas';
 
 export const reportKeys = {
   all: ['studio', 'reports'] as const,
   list: (status: ReportStatus) => ['studio', 'reports', status] as const,
 };
 
-/** The owner's report queue for one status, newest first. */
+/** The owner's report queue for one status, newest first, 50 a page with "load more". */
 export function useReports(status: ReportStatus) {
-  return useQuery({
+  return useInfiniteCursor<ReportsPage>({
     queryKey: reportKeys.list(status),
-    queryFn: ({ signal }) => listReports({ status, limit: 50 }, signal),
+    fetchPage: (cursor, signal) =>
+      listReports({ status, limit: 50, ...(cursor ? { cursor } : {}) }, signal),
   });
 }
 
@@ -34,6 +37,8 @@ export function useActOnReport() {
     onSuccess: (_item, { action }) => {
       toastSuccess(action === 'hide_target' ? 'Hidden from members' : 'Report closed');
       void queryClient.invalidateQueries({ queryKey: reportKeys.all });
+      // A hidden post or comment shows in the Ideas lists, Top ideas and the post panel.
+      if (action === 'hide_target') void queryClient.invalidateQueries({ queryKey: ideasKeys.all });
     },
     onError: (error) => toastError(error),
   });

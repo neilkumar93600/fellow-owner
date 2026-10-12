@@ -159,6 +159,17 @@ describe('sendDue', () => {
     expect(sent).toHaveLength(0);
   });
 
+  it('never emails the shared demo accounts, whatever their domain', async () => {
+    const demoEnv = { ...env, DEMO_FAN_EMAIL: 'priya@fellow-test.dev' };
+    const demoEmails = buildContainer({
+      env: demoEnv,
+      mailer: { send: async (m) => void sent.push(m) },
+    }).services.notificationEmails;
+    await notify(fan, 'reply_received', hoursAgo(2));
+    expect(await demoEmails.sendDue(NOW)).toBe(0);
+    expect(sent).toHaveLength(0);
+  });
+
   it('caps the lines in one email and says how many more there are', async () => {
     const total = LIMITS.emails.digestMaxItems + 2;
     for (let i = 0; i < total; i++) await notify(fan, 'reply_received', hoursAgo(2), `Idea ${i}`);

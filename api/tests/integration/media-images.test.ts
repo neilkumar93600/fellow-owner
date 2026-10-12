@@ -39,6 +39,9 @@ function memoryStorage() {
       for (const key of keys) objects.delete(key);
       return keys.length;
     },
+    async listBefore(prefix) {
+      return [...objects.keys()].filter((key) => key.startsWith(prefix));
+    },
   };
   return { storage, objects };
 }
@@ -151,6 +154,50 @@ describe('uploaded images are checked by their bytes', () => {
     expect(row?.image).toBe(good);
     // A plain link keeps today's rules.
     expect((await update('https://cdn.example.com/priya.jpg')).status).toBe(200);
+  });
+});
+
+describe('uploads are only stored by their owner, as the kind they were made for', () => {
+  const settings = (profile: Record<string, unknown>) =>
+    request(app)
+      .put('/api/studio/settings')
+      .set('Cookie', owner.cookie)
+      .send({ profile: { displayName: 'Mira Lane', platforms: [], ...profile } });
+
+  it("studio settings: someone else's avatar or cover, or another kind, is 400", async () => {
+    const other = randomUUID();
+    for (const profile of [
+      { avatarUrl: upload('avatar', other, PNG) },
+      { avatarUrl: upload('community_cover', mira.space.id, PNG) },
+      { coverUrl: upload('space_cover', other, PNG) },
+      { coverUrl: upload('avatar', owner.userId, PNG) },
+    ]) {
+      const res = await settings(profile).expect(400);
+      expect(res.body.error.code).toBe('validation_error');
+    }
+    // The owner's own member avatar may be their space avatar too.
+    await settings({ avatarUrl: upload('member_avatar', owner.userId, PNG) }).expect(200);
+  });
+
+  it("community cover: another space's cover is 400", async () => {
+    const community = mira.communities[0];
+    if (!community) throw new Error('no community');
+    const res = await request(app)
+      .patch(`/api/studio/communities/${community.id}`)
+      .set('Cookie', owner.cookie)
+      .send({ coverUrl: upload('community_cover', randomUUID(), PNG) })
+      .expect(400);
+    expect(res.body.error.code).toBe('validation_error');
+  });
+
+  it("update-user: another user's member avatar is 400", async () => {
+    const fan = await signInWithOtp(app, 'lena@media.test', 'Lena Park');
+    const res = await request(app)
+      .post('/api/auth/update-user')
+      .set('Origin', TEST_ORIGIN)
+      .set('Cookie', fan.cookie)
+      .send({ image: upload('member_avatar', owner.userId, PNG) });
+    expect(res.status).toBe(400);
   });
 });
 

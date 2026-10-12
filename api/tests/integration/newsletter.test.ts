@@ -1,8 +1,9 @@
 import { sql } from 'drizzle-orm';
 import request from 'supertest';
-import { afterAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
+import { NEWSLETTER_PER_IP_PER_DAY } from '../../src/routes/newsletter.routes.js';
 import { closeDb, db } from '../helpers/test-db.js';
 
 async function rowsFor(email: string) {
@@ -73,5 +74,28 @@ describe('POST /api/newsletter', () => {
     expect(res.status).toBe(429);
     expect(res.body.error.code).toBe('rate_limited');
     expect(await rowsFor('fan6@example.com')).toHaveLength(0);
+  });
+
+  it(`allows one IP ${NEWSLETTER_PER_IP_PER_DAY} sign-ups a day, a small share of the confirm cap`, async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      vi.setSystemTime(new Date('2026-10-12T08:00:00Z'));
+      const app = createApp(buildContainer());
+      const post = (i: number) =>
+        request(app)
+          .post('/api/newsletter')
+          .set('X-Real-IP', '203.0.113.53')
+          .send({ email: `day${i}@example.com` });
+      for (let i = 0; i < NEWSLETTER_PER_IP_PER_DAY; i++) {
+        if (i > 0 && i % 5 === 0) vi.setSystemTime(Date.now() + 61_000);
+        await post(i).expect(200);
+      }
+      vi.setSystemTime(Date.now() + 61_000);
+      const res = await post(NEWSLETTER_PER_IP_PER_DAY);
+      expect(res.status).toBe(429);
+      expect(await rowsFor(`day${NEWSLETTER_PER_IP_PER_DAY}@example.com`)).toHaveLength(0);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

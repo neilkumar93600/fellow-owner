@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { feedKeys } from '@/hooks/queries/use-feed';
 import { spacePageKeys } from '@/hooks/queries/use-space-page';
 import { membershipKeys } from '@/hooks/use-membership';
-import { getMe, updateMe } from '@/lib/api/spaces';
+import { getMe, getMyPitches, getMyPosts, updateMe } from '@/lib/api/spaces';
 import { toastError } from '@/lib/toast';
 
 export const meKeys = {
@@ -44,6 +44,43 @@ export function useUpdateMe(handle: string) {
         }
       }
     },
+    onError: (error) => toastError(error),
+  });
+}
+
+/** `more` appended to `list`, skipping ids already held. */
+function appendNew<T extends { id: string }>(list: T[], more: T[]): T[] {
+  const held = new Set(list.map((item) => item.id));
+  return [...list, ...more.filter((item) => !held.has(item.id))];
+}
+
+/**
+ * My space "Show more" for own posts: the page older than `before` (the last id held) is appended to
+ * the cached MySpace, so every other write keeps patching one list. Failures toast.
+ */
+export function useMoreMyPosts(handle: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (before: string) => getMyPosts(handle, { before }),
+    onSuccess: (page) =>
+      queryClient.setQueryData<MySpace>(
+        meKeys.detail(handle),
+        (old) => old && { ...old, posts: appendNew(old.posts, page.items) },
+      ),
+    onError: (error) => toastError(error),
+  });
+}
+
+/** My space "Show more" for own pitches, appended like useMoreMyPosts. Failures toast. */
+export function useMoreMyPitches(handle: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (before: string) => getMyPitches(handle, { before }),
+    onSuccess: (page) =>
+      queryClient.setQueryData<MySpace>(
+        meKeys.detail(handle),
+        (old) => old && { ...old, pitches: appendNew(old.pitches, page.items) },
+      ),
     onError: (error) => toastError(error),
   });
 }

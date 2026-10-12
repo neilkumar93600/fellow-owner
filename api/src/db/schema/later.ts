@@ -74,6 +74,8 @@ export const notifications = pgTable(
     ),
     /** Purge of old read notifications. */
     index('notifications_read_created_idx').on(t.createdAt).where(sql`${t.readAt} is not null`),
+    /** Hourly email digest and the purge of old unread notifications. */
+    index('notifications_unread_created_idx').on(t.createdAt).where(sql`${t.readAt} is null`),
     index('notifications_space_idx').on(t.spaceId),
     check('notifications_kind_check', sql`${t.kind} in (${inList(NOTIFICATION_KINDS)})`),
   ],

@@ -2,6 +2,7 @@ import { CONTACT, LIMITS, OPERATOR } from '@fellow-owners/shared';
 import { Resend } from 'resend';
 import type { Env } from '../config/env.js';
 import { type Logger, maskEmail } from '../lib/logger.js';
+import { resendRequestOptions } from '../lib/mailer.js';
 import { connected, type Redis } from '../lib/redis.js';
 
 /**
@@ -223,13 +224,10 @@ export function createEmailSender(env: Env, logger: Logger): EmailSender {
   return {
     async sendOtp({ to, code, type }) {
       const { subject, text, html } = renderOtpEmail(code, type);
-      const { data, error } = await resend.emails.send({
-        from: env.EMAIL_FROM,
-        to: [to],
-        subject,
-        text,
-        html,
-      });
+      const { data, error } = await resend.emails.send(
+        { from: env.EMAIL_FROM, to: [to], subject, text, html },
+        resendRequestOptions(),
+      );
       if (error) {
         log.error({ to: maskEmail(to), type, err: error }, 'OTP email failed');
         throw new Error(`Resend rejected the OTP email: ${error.message}`);

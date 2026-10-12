@@ -6,6 +6,7 @@ import { type AskRow, asks } from '../db/schema/later.js';
 import { memberships } from '../db/schema/memberships.js';
 import { type PostRow, posts } from '../db/schema/posts.js';
 import { type SpaceRow, spaces } from '../db/schema/spaces.js';
+import { postListColumns } from './posts.repo.js';
 
 /** An ask (creator challenge) with what its summary card needs. */
 export interface AskWithCounts {
@@ -88,14 +89,17 @@ export function createAsksRepo(db: Db) {
       return row ?? null;
     },
 
-    /** Entries, oldest first. `visibleOnly` drops hidden ones (deleted ones are always dropped). */
+    /**
+     * Entries, oldest first, without the embedding. `visibleOnly` drops hidden ones (deleted ones
+     * are always dropped).
+     */
     async entries(
       askId: string,
       { visibleOnly }: { visibleOnly: boolean },
       tx: DbOrTx = db,
     ): Promise<PostRow[]> {
       return tx
-        .select()
+        .select(postListColumns)
         .from(posts)
         .where(
           and(

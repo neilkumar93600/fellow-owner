@@ -296,7 +296,7 @@ export interface PostCard {
   /** The viewer's own signals on this post. */
   viewerSignals: SignalKind[];
   isAuthor: boolean;
-  /** Pinned to the top of its community feed (an Answer Once answer). Optional until the API sends it. */
+  /** An Answer Once answer post. The feed is newest first: it is labelled, not kept on top. */
   pinned?: boolean;
   /** Set when this post is the creator's answer to a repeated question (F32). */
   answerGroup?: { id: string; askedCount: number } | null;
@@ -444,6 +444,8 @@ export interface QuestionGroup {
   /** The AI's one-line version of the question. */
   question: string;
   askedCount: number;
+  /** Askers whose pitch has a reply; 0 for an answer that was only posted. */
+  repliedCount: number;
   askers: QuestionAsker[];
   communities: Array<Pick<PublicCommunity, 'id' | 'slug' | 'name' | 'tint' | 'icon'>>;
   /** AI draft in the creator's voice; null while the AI is pending. */
@@ -453,7 +455,7 @@ export interface QuestionGroup {
   answeredAt: ISODate | null;
   answer: string | null;
   pinnedIn: string[];
-  /** The pinned answer post, once sent with pinning on. */
+  /** The answer post (the first community chosen), once posted. */
   postId: string | null;
   redraftsLeft: number;
 }

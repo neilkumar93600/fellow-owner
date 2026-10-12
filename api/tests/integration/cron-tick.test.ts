@@ -5,7 +5,7 @@ import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
 import { jobRuns } from '../../src/db/schema/index.js';
 import { sweepAll } from '../../src/workers/sweep-all.js';
-import { JOB_NAMES, type JobName, type Jobs } from '../../src/workers/tick.js';
+import { JOB_NAMES, type JobName, type Jobs, startTick } from '../../src/workers/tick.js';
 import { createFactories } from '../helpers/factories.js';
 import { closeDb, db, resetDatabase } from '../helpers/test-db.js';
 
@@ -73,16 +73,22 @@ describe('POST|GET /api/cron/tick', () => {
   });
 
   it('runs nothing twice in the same slot (a second tick finds every slot done)', async () => {
-    const { app, auth, calls, container } = setup();
-    await request(app).get('/api/cron/tick').set('Authorization', auth).expect(202);
+    const { calls, container } = setup();
+    // Frozen clock: Monday 10:20 UTC, past every daily slot, so no hour boundary can interfere.
+    const now = new Date('2026-10-12T10:20:00Z');
+    expect([...(await startTick(container, { now }))].sort()).toEqual([...JOB_NAMES].sort());
     await container.background.whenIdle();
 
-    const second = await request(app).get('/api/cron/tick').set('Authorization', auth).expect(202);
+    expect(await startTick(container, { now })).toEqual([]);
     await container.background.whenIdle();
-    // Only an hour boundary between the two calls could make the hourly jobs due again.
-    if (second.body.jobs.length === 0) {
-      for (const job of JOB_NAMES) expect(calls[job]).toBe(1);
-    }
+    for (const job of JOB_NAMES) expect(calls[job]).toBe(1);
+
+    // An hour later only the hourly jobs are due again.
+    const later = await startTick(container, { now: new Date(now.getTime() + 3_600_000) });
+    const hourly = ['sweep', 'group_questions', 'close_challenges', 'email_digests'];
+    expect([...later].sort()).toEqual([...hourly].sort());
+    await container.background.whenIdle();
+    for (const job of JOB_NAMES) expect(calls[job]).toBe(hourly.includes(job) ? 2 : 1);
   });
 
   it('two ticks at once run each job once', async () => {

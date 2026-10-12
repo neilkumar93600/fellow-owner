@@ -198,7 +198,10 @@ export function createSpacesService(deps: SpacesServiceDeps) {
       if (await repos.spaces.findByOwnerUserId(user.id)) {
         throw conflict('You already have a space');
       }
-      await assertStorableImage(storage, ['avatarUrl'], input.avatarUrl, user.image);
+      await assertStorableImage(storage, ['avatarUrl'], input.avatarUrl, user.image, [
+        `avatar/${user.id}/`,
+        `member_avatar/${user.id}/`,
+      ]);
       if ((await takenHandles([input.handle], user.id)).size > 0) {
         throw handleTaken(await suggestions(input.handle, user.id));
       }
@@ -267,12 +270,14 @@ export function createSpacesService(deps: SpacesServiceDeps) {
         ['profile', 'avatarUrl'],
         profile?.avatarUrl,
         owner.space.avatarUrl,
+        [`avatar/${owner.userId}/`, `member_avatar/${owner.userId}/`],
       );
       await assertStorableImage(
         storage,
         ['profile', 'coverUrl'],
         profile?.coverUrl,
         owner.space.coverUrl,
+        [`space_cover/${owner.space.id}/`],
       );
       const updated = await db.transaction(async (tx) => {
         let row: SpaceRow | null = owner.space;

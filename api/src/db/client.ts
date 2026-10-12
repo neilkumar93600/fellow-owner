@@ -14,7 +14,7 @@ export interface CreateDbOptions {
 }
 
 /**
- * postgres.js with `prepare: false` (required by the Supabase transaction pooler on port 6543)
+ * postgres.js with `prepare: false` (safe behind a transaction pooler such as PgBouncer)
  * and drizzle over the full schema, so `db.query.*` relational queries work everywhere.
  */
 export function createDb({

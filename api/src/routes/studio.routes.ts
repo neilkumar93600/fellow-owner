@@ -23,13 +23,15 @@ import {
   updateCommunitySchema,
   updateSettingsSchema,
 } from '@fellow-owners/shared';
-import { Router } from 'express';
+import { type RequestHandler, Router } from 'express';
+import { isDemoEmail } from '../auth/demo.js';
 import type { Container } from '../container.js';
 import { createPlatformController } from '../controllers/platform.controller.js';
+import { forbidden } from '../lib/errors.js';
 import { noStore } from '../lib/http.js';
 import { redis } from '../lib/redis.js';
 import { requireOwner } from '../middlewares/require-owner.js';
-import { requireSession } from '../middlewares/require-session.js';
+import { requireSession, sessionOf } from '../middlewares/require-session.js';
 import { validate } from '../middlewares/validate.js';
 
 /**
@@ -54,7 +56,21 @@ export function createStudioRoutes(container: Container): Router {
     validate({ query: handleCheckQuerySchema }),
     controller.handleCheck,
   );
-  router.post('/space', session, validate({ body: createSpaceSchema }), controller.createSpace);
+  // The demo accounts are shared by every visitor and the nightly reset only rebuilds the demo
+  // space, so they never get a space of their own.
+  const notDemoAccount: RequestHandler = (req, _res, next) => {
+    if (isDemoEmail(container.env, sessionOf(req).user.email)) {
+      throw forbidden('The demo accounts can only use the demo space');
+    }
+    next();
+  };
+  router.post(
+    '/space',
+    session,
+    notDemoAccount,
+    validate({ body: createSpaceSchema }),
+    controller.createSpace,
+  );
 
   // Platform auto-fetch (onboarding): rate limited per user inside the controller.
   const platform = createPlatformController({

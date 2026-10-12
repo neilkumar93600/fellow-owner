@@ -1,8 +1,10 @@
+import { sql, TransactionRollbackError } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildContainer } from '../../src/container.js';
 import type { CommunityRow } from '../../src/db/schema/communities.js';
+import { recentExamplesQuery } from '../../src/repositories/feedback.repo.js';
 import { createFactories, type TestSpace } from '../helpers/factories.js';
-import { closeDb, resetDatabase } from '../helpers/test-db.js';
+import { closeDb, db, resetDatabase } from '../helpers/test-db.js';
 
 const container = buildContainer();
 const factories = createFactories(container);
@@ -43,6 +45,8 @@ beforeAll(async () => {
   await repos.feedback.upsert(key('inbound', disliked), 'down');
   await repos.feedback.upsert(key('post', current), 'up');
   await repos.feedback.upsert(key('briefing_highlight', `${current}:0`), 'up');
+  // A post vote whose ref is not a uuid matches nothing (and must not break the uuid join).
+  await repos.feedback.upsert(key('post', 'not-a-uuid'), 'up');
   // Votes by anyone but the creator never count.
   await repos.feedback.upsert(key('post', liked, fan.id), 'down');
 });
@@ -64,5 +68,34 @@ describe('feedback examples for triage', () => {
     expect(await repos.feedback.recentExamples(mira.space.id, { limit: 1 })).toHaveLength(1);
     const empty = await factories.space();
     expect(await repos.feedback.recentExamples(empty.space.id, { limit: 10 })).toEqual([]);
+  });
+
+  it('looks posts and pitches up by primary key, not by scanning the space', async () => {
+    let plan = '';
+    await db
+      .transaction(async (tx) => {
+        // A busy space (copies of the voted items, rolled back below), then read the inner lookups.
+        for (const [table, id] of [
+          ['posts', liked],
+          ['inbound', disliked],
+        ] as const) {
+          await tx.execute(
+            sql.raw(`insert into ${table} select (jsonb_populate_record(t, jsonb_build_object('id', gen_random_uuid()))).*
+              from ${table} t, generate_series(1, 2000) where t.id = '${id}'`),
+          );
+          await tx.execute(sql.raw(`analyze ${table}`));
+        }
+        await tx.execute(sql`set local enable_hashjoin = off`);
+        await tx.execute(sql`set local enable_mergejoin = off`);
+        const query = recentExamplesQuery(mira.space.id, { limit: 5 }, tx);
+        const rows = await tx.execute<{ 'QUERY PLAN': string }>(sql`explain (costs off) ${query}`);
+        plan = rows.map((row) => row['QUERY PLAN']).join('\n');
+        tx.rollback();
+      })
+      .catch((error) => {
+        if (!(error instanceof TransactionRollbackError)) throw error;
+      });
+    expect(plan).toMatch(/using posts_pkey on posts[^\n]*\n\s*Index Cond: \(id = /);
+    expect(plan).toMatch(/using inbound_pkey on inbound[^\n]*\n\s*Index Cond: \(id = /);
   });
 });

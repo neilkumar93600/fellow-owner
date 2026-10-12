@@ -14,7 +14,7 @@ import { fakeAskAi } from './fakes/ask-ai.js';
 import { fakeChallengeSummary } from './fakes/challenge-summary.js';
 import { fakeCoach } from './fakes/coach.js';
 import { fakeQuestionGroup } from './fakes/question-group.js';
-import { isBudgetExempt, taskCapReached } from './run.js';
+import { preflight, runRef } from './run.js';
 import { SPOTLIGHT_NOTE_MAX } from './tasks/spotlight-note.js';
 import { flattenRecent } from './tasks/suggest-setup.js';
 import {
@@ -120,8 +120,6 @@ function estimateTokens(value: unknown): number {
   const text = typeof value === 'string' ? value : JSON.stringify(value ?? '');
   return Math.ceil(text.length / 4);
 }
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // ---------------------------------------------------------------- triage
 
@@ -741,38 +739,27 @@ export function createFakeAiServices(options: FakeAiOptions = {}): AiServices {
     const forced = options.failTasks?.[task];
     if (forced) throw new AiUnavailableError(forced, undefined, { task });
 
-    // Space-less onboarding calls (suggestSetup): no budget, no ai_runs row; the caller caps them.
+    // The live preflight (budget, atomic TASK_CAPS reservation). Space-less onboarding calls
+    // (suggestSetup): no budget, no ai_runs row; the caller caps them.
     const spaceId = ctx.spaceId;
-    if (aiRuns && spaceId !== null) {
-      if (!isBudgetExempt(task)) {
-        const budget = await aiRuns.budgetState(spaceId);
-        if (budget.paused) throw new AiUnavailableError('budget', undefined, { task });
-      }
-      // The same caps as the live preflight (ai/run.ts TASK_CAPS).
-      const reached = await taskCapReached(
-        aiRuns,
-        task,
-        { spaceId, userId: ctx.userId ?? null },
-        new Date(),
-      );
-      if (reached) throw new AiUnavailableError('cap', reached, { task });
-    }
+    const reservation =
+      aiRuns && spaceId !== null
+        ? await preflight({ enabled: true, accounting: aiRuns }, task, ctx)
+        : null;
 
     const started = Date.now();
     const output = produce();
     if (aiRuns && spaceId !== null) {
-      await aiRuns.insert({
-        spaceId,
-        userId: ctx.userId ?? null,
-        task,
-        refType: ctx.refType ?? null,
-        refId: ctx.refId && UUID.test(ctx.refId) ? ctx.refId : null,
+      const result = {
         model: FAKE_MODEL,
         inputTokens: estimateTokens(input),
         outputTokens: task === 'embedItem' ? 0 : estimateTokens(output),
         latencyMs: Date.now() - started,
         status: 'ok',
-      });
+        error: null,
+      };
+      if (reservation) await aiRuns.complete(reservation, result);
+      else await aiRuns.insert({ ...runRef(task, { ...ctx, spaceId }), ...result });
     }
     return output;
   }

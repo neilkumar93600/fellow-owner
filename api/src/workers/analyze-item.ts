@@ -185,9 +185,12 @@ export function createAnalyzer(deps: AnalyzerDeps): Analyzer & {
     analyzeItem: async (ref) => {
       await analyzeSafely(ref);
     },
-    sweep: (spaceId): Promise<SweepResult> =>
-      sweepSpace({ repos: deps.repos, background: deps.background, logger: log }, spaceId, (ref) =>
-        analyzeSafely(ref, { claimed: true }),
+    sweep: (spaceId, options): Promise<SweepResult> =>
+      sweepSpace(
+        { repos: deps.repos, background: deps.background, logger: log },
+        spaceId,
+        (ref) => analyzeSafely(ref, { claimed: true }),
+        options,
       ),
   };
 }

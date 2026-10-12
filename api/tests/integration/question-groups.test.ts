@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { createFakeAiServices } from '../../src/ai/fake.js';
 import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
+import { communities } from '../../src/db/schema/communities.js';
 import { inbound } from '../../src/db/schema/inbound.js';
 import { notifications } from '../../src/db/schema/later.js';
 import { posts } from '../../src/db/schema/posts.js';
@@ -78,6 +79,7 @@ async function openGroups(): Promise<QuestionGroup[]> {
 }
 
 async function replyNotifications(userId: string) {
+  await container.background.whenIdle();
   return db
     .select()
     .from(notifications)
@@ -204,6 +206,7 @@ describe('Answer Once grouping', () => {
       answer,
       pinnedIn: [community.name],
       postId: expect.any(String),
+      repliedCount: 3,
     });
 
     const members = await db.select().from(inbound).where(eq(inbound.questionGroupId, group.id));
@@ -322,7 +325,7 @@ describe('Answer Once data integrity', () => {
 
   it('a failing notification after the answer commits still returns the answered group', async () => {
     const spy = vi
-      .spyOn(container.services.notifications, 'notify')
+      .spyOn(container.repos.notifications, 'insertMany')
       .mockRejectedValue(new Error('notifications down'));
     try {
       const res = await request(app)
@@ -331,7 +334,9 @@ describe('Answer Once data integrity', () => {
         .send({ answer: 'Packing cubes, one bag, done.', replyAll: true })
         .expect(200);
       expect(res.body).toMatchObject({ id: groupId, status: 'answered' });
-      expect(spy).toHaveBeenCalledTimes(3);
+      await container.background.whenIdle();
+      // One batched insert for all three askers, not one per asker.
+      expect(spy).toHaveBeenCalledTimes(1);
     } finally {
       spy.mockRestore();
     }
@@ -354,6 +359,111 @@ describe('Answer Once data integrity', () => {
     expect(row?.questionGroupId).toBeNull();
     const [group] = await db.select().from(questionGroups).where(eq(questionGroups.id, groupId));
     expect(group?.askedCount).toBe(3);
+  });
+});
+
+describe('Answer Once answer edge cases', () => {
+  /** Three near pitches (the first from the fan, or from a new fan) grouped into one open group. */
+  async function openGroupAt(axis: number, firstFromFan = false) {
+    const pitches = [
+      await pitchAt(mira, vec(axis), firstFromFan ? { membershipId: fanMembershipId } : {}),
+      await pitchAt(mira, vec(axis, 0.1)),
+      await pitchAt(mira, vec(axis, 0.2)),
+    ];
+    await grouper.groupSpace(mira.space.id);
+    const [row] = await db
+      .select()
+      .from(inbound)
+      .where(eq(inbound.id, pitches[0]?.id as string));
+    const groupId = row?.questionGroupId;
+    if (!groupId) throw new Error('pitches were not grouped');
+    return { groupId, pitches };
+  }
+
+  const answerRoute = (groupId: string) =>
+    request(app).post(`/api/studio/question-groups/${groupId}/answer`).set('Cookie', owner.cookie);
+  const postsOf = (groupId: string) =>
+    db.select().from(posts).where(eq(posts.questionGroupId, groupId));
+  const text = 'Packing cubes, one bag, and the heavy shoes on the plane. Video soon!';
+
+  it('404s for a pin community of another space or an archived one, and the group stays open', async () => {
+    const { groupId } = await openGroupAt(80);
+    const foreign = await factories.space({ handle: 'zed', displayName: 'Zed Other' });
+    const foreignCommunity = foreign.communities[0];
+    const archived = mira.communities[1];
+    if (!foreignCommunity || !archived) throw new Error('communities missing');
+    await db
+      .update(communities)
+      .set({ archivedAt: new Date() })
+      .where(eq(communities.id, archived.id));
+    try {
+      for (const id of [foreignCommunity.id, archived.id]) {
+        const res = await answerRoute(groupId)
+          .send({ answer: text, replyAll: true, pinCommunityIds: [id] })
+          .expect(404);
+        expect(res.body.error.code).toBe('not_found');
+      }
+    } finally {
+      await db.update(communities).set({ archivedAt: null }).where(eq(communities.id, archived.id));
+    }
+    expect(await postsOf(groupId)).toHaveLength(0);
+    const [row] = await db.select().from(questionGroups).where(eq(questionGroups.id, groupId));
+    expect(row?.status).toBe('open');
+    const members = await db.select().from(inbound).where(eq(inbound.questionGroupId, groupId));
+    expect(members.every((pitch) => pitch.status !== 'replied')).toBe(true);
+  });
+
+  it('keeps an earlier individual reply and tells that fan nothing more', async () => {
+    const { groupId, pitches } = await openGroupAt(100, true);
+    const first = pitches[0];
+    if (!first) throw new Error('no pitch');
+    await db
+      .update(inbound)
+      .set({ status: 'replied', creatorReply: 'Mine, just for you.', repliedAt: new Date() })
+      .where(eq(inbound.id, first.id));
+    const before = (await replyNotifications(fan.userId)).length;
+
+    const res = await answerRoute(groupId).send({ answer: text, replyAll: true }).expect(200);
+    expect(res.body.repliedCount).toBe(3);
+    const members = await db.select().from(inbound).where(eq(inbound.questionGroupId, groupId));
+    expect(members.find((pitch) => pitch.id === first.id)?.creatorReply).toBe(
+      'Mine, just for you.',
+    );
+    expect(members.filter((pitch) => pitch.creatorReply === text)).toHaveLength(2);
+    expect((await replyNotifications(fan.userId)).length).toBe(before);
+  });
+
+  it('a post-only answer replies to nobody and reports no replies', async () => {
+    const { groupId, pitches } = await openGroupAt(120);
+    const community = mira.communities[0];
+    if (!community) throw new Error('no community');
+    const res = await answerRoute(groupId)
+      .send({ answer: text, replyAll: false, pinCommunityIds: [community.id] })
+      .expect(200);
+    expect(res.body).toMatchObject({ status: 'answered', repliedCount: 0 });
+    const members = await db.select().from(inbound).where(eq(inbound.questionGroupId, groupId));
+    expect(members).toHaveLength(pitches.length);
+    for (const pitch of members) {
+      expect(pitch.status).toBe('new');
+      expect(pitch.creatorReply).toBeNull();
+    }
+    const listed = await list(owner).expect(200);
+    expect(listed.body.items.find((item: QuestionGroup) => item.id === groupId).repliedCount).toBe(
+      0,
+    );
+  });
+
+  it('two communities get two posts, and post_id is the first one chosen', async () => {
+    const { groupId } = await openGroupAt(140);
+    const [a, b] = mira.communities;
+    if (!a || !b) throw new Error('needs two communities');
+    const res = await answerRoute(groupId)
+      .send({ answer: text, replyAll: false, pinCommunityIds: [b.id, a.id] })
+      .expect(200);
+    const made = await postsOf(groupId);
+    expect(made.map((post) => post.communityId).sort()).toEqual([a.id, b.id].sort());
+    expect(made.find((post) => post.communityId === b.id)?.id).toBe(res.body.postId);
+    expect(res.body.pinnedIn).toEqual([b.name, a.name]);
   });
 });
 

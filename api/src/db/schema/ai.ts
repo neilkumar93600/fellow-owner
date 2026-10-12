@@ -105,6 +105,8 @@ export const aiFeedback = pgTable(
   (t) => [
     unique('ai_feedback_ref_user_key').on(t.refType, t.refId, t.createdByUserId),
     index('ai_feedback_space_idx').on(t.spaceId, t.refType),
+    /** Triage examples: a space's newest votes first. */
+    index('ai_feedback_space_created_idx').on(t.spaceId, t.createdAt),
     index('ai_feedback_created_by_idx').on(t.createdByUserId),
     check(
       'ai_feedback_ref_type_check',

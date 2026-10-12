@@ -19,6 +19,7 @@ import { spaces } from '../db/schema/spaces.js';
 import { logger as defaultLogger, type Logger, maskEmail } from '../lib/logger.js';
 import { connected, redis as defaultRedis, type Redis } from '../lib/redis.js';
 import { createStorage, mediaImageProblem, type Storage } from '../lib/storage.js';
+import { withinCap } from '../middlewares/rate-limit.js';
 import { createRepos } from '../repositories/index.js';
 import { createAccountService } from '../services/account.service.js';
 import { isDemoEmail } from './demo.js';
@@ -39,6 +40,12 @@ export const AUTH_BASE_PATH = '/api/auth';
 export const CLIENT_IP_HEADER = 'x-fo-client-ip';
 
 const DAY_SECONDS = 60 * 60 * 24;
+
+/**
+ * Code emails per hour in all, whatever the IP or address (production): far above real traffic, it
+ * stops someone rotating IPs and addresses from running up Resend until the domain is suspended.
+ */
+export const OTP_EMAILS_PER_HOUR = 300;
 
 /** What the shared demo accounts may not do: change themselves, or see and end other visitors' sessions. */
 const DEMO_LOCKED_PATHS = new Set([
@@ -121,8 +128,9 @@ export function redisRateLimitStorage(redis: Redis, logger: Logger): BetterAuthR
  *   link-based reset stays disabled: no email carries a link. /sign-in/email-otp still works for
  *   API clients and the test helpers.
  * - In production each address gets at most one code per 60 s and 5 per 15 minutes
- *   (`createSendThrottle`); above that the email is dropped silently and the earlier code still
- *   works.
+ *   (`createSendThrottle`), and all addresses together OTP_EMAILS_PER_HOUR; above that the email
+ *   is dropped silently and the earlier code still works. A sign-in code is only emailed to an
+ *   address that has an account (`disableSignUp`); dev and tests still sign up by code.
  * - Signed in: /change-password (current password needed; other sessions end), /list-sessions and
  *   /revoke-other-sessions (Account tab).
  * - Deleting an account: /delete-user emails a code (Better Auth's delete token, no link); sending
@@ -173,6 +181,20 @@ export function createAuth(deps: AuthDeps = {}) {
     const delivery = (async () => {
       if (throttle && !(await throttle.allow(message.to))) {
         logger.warn({ to: maskEmail(message.to), type: message.type }, 'code email throttled');
+        return;
+      }
+      // After the per-address check, so one address's repeats do not use up the total.
+      if (
+        throttle &&
+        !(await withinCap({
+          name: 'otp-email-hour',
+          key: 'all',
+          windowSeconds: 60 * 60,
+          max: OTP_EMAILS_PER_HOUR,
+          redis,
+        }))
+      ) {
+        logger.error({ type: message.type }, 'code email dropped: hourly cap for all addresses');
         return;
       }
       await email.sendOtp(message);
@@ -299,8 +321,10 @@ export function createAuth(deps: AuthDeps = {}) {
           before: async (data, ctx) => {
             await assertNotSpaceHandle(data.username, ctx?.context.session?.user.id);
             // An uploaded avatar (/api/media/...) must really be an image; other URLs as before.
-            if (data.image !== undefined && data.image !== ctx?.context.session?.user.image) {
-              const problem = await mediaImageProblem(storage, data.image);
+            const self = ctx?.context.session?.user;
+            if (data.image !== undefined && data.image !== self?.image) {
+              const own = self ? [`member_avatar/${self.id}/`, `avatar/${self.id}/`] : [];
+              const problem = await mediaImageProblem(storage, data.image, own);
               if (problem) {
                 throw new APIError('BAD_REQUEST', { code: 'VALIDATION_ERROR', message: problem });
               }
@@ -417,6 +441,9 @@ export function createAuth(deps: AuthDeps = {}) {
         storeOTP: 'encrypted',
         resendStrategy: 'reuse',
         overrideDefaultEmailVerification: true,
+        // Nobody signs up by code in production (sign-up is email + password or OAuth), so a
+        // sign-in code for an unknown address is not emailed. The test helpers still sign up by code.
+        disableSignUp: env.isProduction,
         sendVerificationOTP: async ({ email: to, otp, type }) => {
           deliver({ to, code: otp, type });
         },
