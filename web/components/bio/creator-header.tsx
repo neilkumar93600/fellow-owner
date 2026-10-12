@@ -26,7 +26,7 @@ export interface CreatorHeaderProps {
 /**
  * DESIGN.md Bio link: a cover photo, then a frosted profile card that overlaps it: the round portrait, the
  * name in Instrument Serif, @handle and the bio, the platform follower chips as 44px glass pills that
- * link out, the follower and fan totals and the way in (a glass pill: the page's coral is "Send an
+ * link out, the follower and fan totals and the way in (a glass pill: the page's blue is "Send an
  * idea"). Words sit on glass-strong, so they are ink.
  */
 export function CreatorHeader({ space, cta }: CreatorHeaderProps) {

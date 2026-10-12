@@ -6,7 +6,7 @@ import { cn } from '@/components/ui/cn';
 import { routes } from '@/lib/routes';
 
 /**
- * "Send Mira an idea": the bio's one coral action, in its own glass panel between the rooms and the
+ * "Send Mira an idea": the bio's one blue action, in its own glass panel between the rooms and the
  * fans' walls, so a visitor meets it without scrolling the whole page.
  */
 export function PitchCta({ handle, firstName }: { handle: string; firstName: string }) {

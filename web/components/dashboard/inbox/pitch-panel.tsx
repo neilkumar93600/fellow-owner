@@ -57,7 +57,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
  * DESIGN.md Side panel for a fan message: the subject as the H2 with its status, then the sender, why the
  * AI picked it (its match and reason, with thumbs), the full message at 68ch and its links. The sticky
  * footer holds Shortlist and Archive (Restore for a kept-out message) and the reply box, which can draft
- * in the creator's voice and holds the one coral button.
+ * in the creator's voice and holds the one blue button.
  */
 export function PitchPanel({
   item,

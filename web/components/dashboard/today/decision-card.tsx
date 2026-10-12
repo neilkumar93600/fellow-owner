@@ -39,7 +39,7 @@ const plainClick = (event: React.MouseEvent) =>
 
 /**
  * DESIGN.md Decision card: one frosted glass-strong card (28px) with the fan's face, name and room, the
- * idea in their words, the AI's "Why", the match label, and four actions. The one coral action is
+ * idea in their words, the AI's "Why", the match label, and four actions. The one blue action is
  * Feature when the item can be featured, else Reply. The card itself is the stack's only tab stop
  * (roving tabindex); while it animates out it is inert, so focus never lands on a leaving card.
  */

@@ -47,7 +47,7 @@ export const TINT_STYLES: Record<
   peach: {
     card: `${FROST} bg-[#fff1e8]/80`,
     tile: 'bg-aurora-peach',
-    icon: 'text-coral',
+    icon: 'text-lake',
     chip: 'bg-aurora-peach',
   },
   lavender: {

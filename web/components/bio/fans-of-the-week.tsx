@@ -35,7 +35,7 @@ export function FansOfTheWeek({
                 <Sparkles
                   aria-hidden="true"
                   strokeWidth={1.5}
-                  className="ml-auto size-5 shrink-0 text-coral"
+                  className="ml-auto size-5 shrink-0 text-lake"
                 />
               </figcaption>
               <blockquote className="line-clamp-5 text-body text-ink">{fan.note}</blockquote>

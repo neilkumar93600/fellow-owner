@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { AuroraBackdrop } from '@/components/shared/aurora-backdrop';
 import { SITE } from '@/lib/constants';
-import { instrumentSerif, inter } from '@/lib/fonts';
+import { geistMono, inter, newsreader } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 import { Providers } from './providers';
 import './globals.css';
@@ -41,7 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(inter.variable, instrumentSerif.variable, 'antialiased')}
+      className={cn(geistMono.variable, inter.variable, newsreader.variable, 'antialiased')}
     >
       <body className="bg-cream text-ink">
         <AuroraBackdrop />

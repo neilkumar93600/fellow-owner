@@ -239,7 +239,7 @@ export interface CommunityPanelProps {
 /**
  * Add or edit a community in the side panel: name and description (with counts), the tint as swatches,
  * the icon as a radio grid and a live preview chip, validated with the API's own schema. The footer
- * holds the screen's one coral action (Create or Save community) and, when editing, Archive.
+ * holds the screen's one blue action (Create or Save community) and, when editing, Archive.
  */
 export function CommunityPanel({
   open,

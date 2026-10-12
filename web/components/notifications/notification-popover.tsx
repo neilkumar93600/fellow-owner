@@ -129,7 +129,7 @@ export function NotificationPopoverContent({
             disabled={markRead.isPending}
             className={cn(
               'inline-flex min-h-11 items-center text-label text-ink underline underline-offset-4 transition-colors',
-              'hover:text-coral-hover disabled:text-ink-soft',
+              'hover:text-lake-hover disabled:text-ink-soft',
             )}
           >
             Mark all read
@@ -173,7 +173,7 @@ export function NotificationPopoverContent({
             <button
               type="button"
               onClick={onLoadMore}
-              className="inline-flex min-h-11 items-center text-label text-ink underline underline-offset-4 hover:text-coral-hover"
+              className="inline-flex min-h-11 items-center text-label text-ink underline underline-offset-4 hover:text-lake-hover"
             >
               Load more
             </button>
@@ -184,7 +184,7 @@ export function NotificationPopoverContent({
   );
 }
 
-/** The kind's icon on a soft tile; unread items add a 6px coral dot (not colour alone: unread text is also full ink). */
+/** The kind's icon on a soft tile; unread items add a 6px blue dot (not colour alone: unread text is also full ink). */
 function KindIcon({ kind, unread }: { kind: NotificationItem['kind']; unread: boolean }) {
   const Icon = KIND_ICON[kind] ?? Bell;
   return (
@@ -194,7 +194,7 @@ function KindIcon({ kind, unread }: { kind: NotificationItem['kind']; unread: bo
     >
       <Icon strokeWidth={1.5} className="size-4 text-ink" />
       {unread ? (
-        <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-coral ring-2 ring-white" />
+        <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-lake ring-2 ring-white" />
       ) : null}
     </span>
   );

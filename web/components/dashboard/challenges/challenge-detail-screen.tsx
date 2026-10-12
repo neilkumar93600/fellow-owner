@@ -44,7 +44,7 @@ const backLink = (
 /**
  * One challenge: its header (community, countdown, the prompt, due date), the AI shortlist with the
  * reason for each pick once it is closed, and every entry as a card with a match label. Open shows the
- * coral Close and shortlist; closed shows Pick winner on each shortlisted entry; a winner leads to its
+ * blue Close and shortlist; closed shows Pick winner on each shortlisted entry; a winner leads to its
  * Spotlight composer.
  */
 export function ChallengeDetailScreen({ id }: { id: string }) {

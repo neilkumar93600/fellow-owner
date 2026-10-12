@@ -158,7 +158,7 @@ export function StoryVisual({ id }: { id: StoryStepId }) {
               <Play size={18} strokeWidth={1.5} fill="currentColor" />
             </span>
             <span className="glass-chip absolute top-2.5 left-2.5 inline-flex h-7 items-center gap-1.5 bg-white/85 px-3 text-caption text-ink">
-              <Heart aria-hidden="true" size={13} strokeWidth={2} className="text-coral" />
+              <Heart aria-hidden="true" size={13} strokeWidth={2} className="text-lake" />
               Featured in Sunday’s vlog
             </span>
           </div>

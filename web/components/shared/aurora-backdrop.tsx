@@ -3,40 +3,40 @@ import type * as React from 'react';
 /** CSS custom properties read by .aurora-blob and the aurora-drift keyframes (globals.css). */
 type BlobStyle = React.CSSProperties & Record<`--${string}`, string>;
 
-/** Golden hour: warm peach top left like a low sun, sky and lilac across, mint at the foot. */
+/** Monad washes: coral top left, sky-wash top right, gold lower right, mint at the foot. */
 const BLOBS: BlobStyle[] = [
   {
     left: '-22vmax',
     top: '-18vmax',
-    '--blob': 'var(--color-aurora-peach)',
+    '--blob': 'var(--color-coral)',
     '--to-x': '8vmax',
     '--to-y': '6vmax',
   },
   {
     right: '-26vmax',
     top: '-24vmax',
-    '--blob': 'var(--color-aurora-sky)',
+    '--blob': 'var(--color-sky-wash)',
     '--to-x': '-6vmax',
     '--to-y': '8vmax',
   },
   {
     right: '-18vmax',
     bottom: '-30vmax',
-    '--blob': 'var(--color-aurora-lilac)',
+    '--blob': 'var(--color-gold)',
     '--to-x': '-10vmax',
     '--to-y': '-6vmax',
   },
   {
     left: '-20vmax',
     bottom: '-34vmax',
-    '--blob': 'var(--color-aurora-mint)',
+    '--blob': 'var(--color-mint)',
     '--to-x': '10vmax',
     '--to-y': '-4vmax',
   },
 ];
 
 /**
- * DESIGN.md Aurora: the page-wide backdrop behind every frosted panel. Fixed, behind everything, hidden
+ * DESIGN.md Atmospheric Wash: the page-wide backdrop behind every frosted panel. Fixed, behind everything, hidden
  * from assistive tech. The blobs drift for a few slow passes and then rest; static under reduced motion.
  * Rendered once, in app/layout.tsx.
  */

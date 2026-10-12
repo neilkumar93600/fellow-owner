@@ -480,7 +480,7 @@ export function OnboardingStepper() {
             ) : null}
 
             {/* Busy and unavailable buttons stay focusable (presses are ignored), so focus never drops to
-                the page while the space is created. The step's one coral button: Continue, then Create. */}
+                the page while the space is created. The step's one blue button: Continue, then Create. */}
             <div className="mt-8 flex items-center gap-3">
               {step > 0 ? (
                 <button

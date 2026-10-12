@@ -46,7 +46,7 @@ export interface PostFormProps {
 
 /**
  * New post: a strong-glass form card checked by the shared createPostSchema. Open spots show for fan projects only.
- * Publish is the screen's one coral action: it posts, confirms with a toast and opens the new post. A
+ * Publish is the screen's one blue action: it posts, confirms with a toast and opens the new post. A
  * failure toasts and the form keeps what was typed.
  */
 export function PostForm({

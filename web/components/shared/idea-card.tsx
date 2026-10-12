@@ -34,7 +34,7 @@ function AiVerdict({ ai }: { ai: AiInsight }) {
 /**
  * DESIGN.md Idea card: soft frosted glass, radius 24, padding 20. Community chip, H2 title (two lines at most,
  * the link), one Body summary line in ink-muted, the team's avatars, the signal counts in Small ink-muted,
- * then Open. Creator screens add the match label and a glass Spotlight (coral stays the screen's one action). Hover
+ * then Open. Creator screens add the match label and a glass Spotlight (blue stays the screen's one action). Hover
  * steps the glass to 80% white and underlines the title; nothing moves.
  */
 export function IdeaCard({

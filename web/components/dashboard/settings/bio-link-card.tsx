@@ -22,7 +22,7 @@ export interface BioLinkCardProps {
 }
 
 /**
- * Settings, Bio link tab: the link with the screen's one coral Copy, a share line to copy, the QR code
+ * Settings, Bio link tab: the link with the screen's one blue Copy, a share line to copy, the QR code
  * with a PNG download, and a small preview of the bio header fans land on.
  */
 export function BioLinkCard({ space }: BioLinkCardProps) {

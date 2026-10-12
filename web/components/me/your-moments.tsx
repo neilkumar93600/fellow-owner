@@ -11,7 +11,7 @@ import { formatRelative } from '@/lib/format';
 /** The notification kinds that are good news about the fan's own work, each with its icon and tile tint. */
 const MOMENTS: Partial<Record<NotificationKind, { icon: LucideIcon; tile: string; ink: string }>> =
   {
-    post_loved: { icon: Heart, tile: 'bg-aurora-peach', ink: 'fill-coral text-coral' },
+    post_loved: { icon: Heart, tile: 'bg-aurora-peach', ink: 'fill-lake text-lake' },
     project_featured: { icon: Star, tile: 'bg-aurora-sky', ink: 'text-[#2b6ca8]' },
     spotlighted: { icon: Sparkles, tile: 'bg-aurora-lilac', ink: 'text-[#5b47a8]' },
     challenge_shortlisted: { icon: Trophy, tile: 'bg-aurora-mint', ink: 'text-[#22694f]' },

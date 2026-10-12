@@ -38,7 +38,7 @@ export interface AuthFormProps {
 
 /**
  * /login: Google, Apple or Facebook first (most arrivals come from a creator's bio link on a phone),
- * then a handle or email with a password; the coral Log in stays the screen's one primary action.
+ * then a handle or email with a password; the blue Log in stays the screen's one primary action.
  * A wrong pair never says which half was wrong, so the screen cannot be used to test addresses.
  */
 export function LoginForm({ returnTo, inAppBrowser, oauthError }: AuthFormProps) {

@@ -32,7 +32,7 @@ function fanReason(reason: string): string {
 export interface ChallengeCardProps {
   handle: string;
   challenge: ChallengeSummary;
-  /** The page's coral action: Enter is coral only when the header's New post steps aside. */
+  /** The page's blue action: Enter is blue only when the header's New post steps aside. */
   primary?: boolean;
 }
 
@@ -54,7 +54,7 @@ export function ChallengeCard({ handle, challenge, primary = false }: ChallengeC
           aria-hidden="true"
           className="grid size-12 shrink-0 place-items-center rounded-2xl bg-aurora-peach"
         >
-          <Trophy strokeWidth={1.5} className="size-6 text-coral" />
+          <Trophy strokeWidth={1.5} className="size-6 text-lake" />
         </span>
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <p className="text-caption text-ink-soft">

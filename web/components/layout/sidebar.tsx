@@ -17,7 +17,7 @@ import { AccountMenu, type HeaderSpace } from './header';
  * their name in a right-hand tooltip (and kept as the link's name, sr-only), a hairline between groups,
  * Help and the avatar menu at the foot. Expanded (248px, 1024px and up, remembered in a cookie): rows are
  * 44px pills with their label, groups get small headings, and the foot adds the name and handle. Icons
- * keep the same x slot in both. The current room is a soft aurora-peach (#FFD9C2) chip with a coral
+ * keep the same x slot in both. The current room is a soft aurora-peach (#FFD9C2) chip with a blue
  * icon (3.7:1 on peach, AA for icons) and an ink label (12.9:1), and no dot.
  *
  * Which look applies is pure CSS on the shell's data-sidebar (see AppShell), so below 1024px an expanded
@@ -153,7 +153,7 @@ function RailLink({
         <span className="grid size-11 shrink-0 place-items-center">
           <Icon
             aria-hidden
-            className={cn('size-5', active && 'text-coral')}
+            className={cn('size-5', active && 'text-lake')}
             strokeWidth={active ? 2 : 1.6}
           />
         </span>

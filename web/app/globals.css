@@ -16,35 +16,49 @@
 @source not inline("[&_svg:not([class*='size-'])]:size-{3,4}");
 
 /*
- * Golden Hour Frost (DESIGN.md is the source). Frosted glass over a slow peach, sky, lilac and mint aurora
- * on cream. Ink words, one coral action per screen. Light theme only.
+ * Parchment Frost (DESIGN.md is the source). An editorial journal on warm parchment: frosted glass over soft
+ * pastel washes (coral, sky, mint, gold), serif headlines at 400, monospace UI, hairline Ash borders and one
+ * Lake Blue action per screen. Light theme only.
  *
- * Coral note: the spec's #F0603A gives white text 3.26:1, under AA, so the action coral is the darker
- * #C8432A (white 4.89:1, on cream 4.59:1). #F0603A stays as `sunset`, for decoration only (the active nav
- * dot, glows), never under or as text. Sky is #235D96 for the same reason (#3B82C4 is 4.06:1 on white): 6.8:1 on white, 6.4 on cream, and 5.2 on the raw
- * aurora peach #FFD9C2, 4.8 on sky and 4.7 on lilac, so a link on any patch of the backdrop reads.
- * Measure with: node scripts/contrast-check.mjs <fg> <bg> ...
+ * Contrast (node scripts/contrast-check.mjs <fg> <bg>): white on lake 6.1:1, lake on parchment 5.5:1,
+ * graphite on parchment 7.6:1, ink-muted #6b6968 on parchment 4.9:1. Smoke #797776 is 4.0:1 on parchment,
+ * so it is for large text, field borders (3:1) and decoration only. The pastels (coral, sky-wash, mint,
+ * gold, crimson) never sit under or act as text: they are washes, tiles and illustration.
  */
 @theme {
-  --color-cream: #fbf7f2;
-  --color-ink: #1e1b26;
-  --color-ink-soft: #55506a;
-  --color-coral: #c8432a;
-  --color-coral-hover: #a9361f;
-  --color-sunset: #f0603a;
-  --color-sky: #235d96;
+  /* Monad palette. */
+  --color-parchment: #f6f3f1;
+  --color-lake: #2b59d1;
+  --color-lake-hover: #234aae;
+  --color-periwinkle: #cfdaf5;
+  --color-sky-wash: #a0b5eb;
+  --color-mint: #a7fccd;
+  --color-coral: #ff9473;
+  --color-gold: #ecda98;
+  --color-crimson: #f37a0a;
+  --color-off-black: #242424;
+  --color-graphite: #4e4d4d;
+  --color-smoke: #797776;
+  --color-ash: #cecac8;
+
+  /* Roles (older names kept so every screen follows the new palette). */
+  --color-cream: var(--color-parchment);
+  --color-ink: var(--color-off-black);
+  --color-ink-soft: var(--color-graphite);
+  --color-sunset: var(--color-crimson);
+  --color-sky: var(--color-lake);
   --color-success: #15803d;
   --color-warn-ink: #a45a00;
-  --color-aurora-peach: #ffd9c2;
-  --color-aurora-sky: #bfddf7;
-  --color-aurora-lilac: #dccff7;
-  --color-aurora-mint: #cfefe3;
-  --radius-panel: 28px;
-  --radius-chip: 999px;
-  --shadow-glass: 0 20px 60px -20px rgb(40 30 60 / 0.18);
-  --font-display: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
-  /* Rainbow CTA (components/ui/rainbow-button.tsx): 3 passes once in view, then it rests. */
-  --animate-rainbow: rainbow var(--speed, 2s) linear 3;
+  /* Tints of the washes, for solid fills (tiles, chips, the active nav item). */
+  --color-aurora-peach: #ffd9cc;
+  --color-aurora-sky: var(--color-periwinkle);
+  --color-aurora-lilac: #dfe5f8;
+  --color-aurora-mint: #d2fde5;
+  --radius-panel: 40px;
+  --radius-chip: 9999px;
+  /* Glass carries no heavy shadow: the hairline and the blur separate it. */
+  --shadow-glass: 0 0 10px 0 rgb(0 0 0 / 0.06);
+  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
 }
 
 :root {
@@ -60,7 +74,8 @@
   --glass-chip: rgb(255 255 255 / 0.62);
   --glass-fallback: rgb(255 255 255 / 0.92);
   --glass-highlight: inset 1px 1px 0 rgb(255 255 255 / 0.7);
-  --glass-edge: rgb(255 255 255 / 0.6);
+  /* The hairline: Ash, slightly see-through so the wash still glows at the edge. */
+  --glass-edge: rgb(206 202 200 / 0.75);
 
   /*
    * Landing chrome: the band under the fixed navbar that keyboard focus must clear (WCAG 2.4.11), read by
@@ -76,35 +91,35 @@
   --dur-base: 200ms;
   --dur-slow: 250ms;
 
-  /* shadcn variables mapped onto Golden Hour Frost. */
-  --background: var(--color-cream);
+  /* shadcn variables mapped onto Parchment Frost. */
+  --background: var(--color-parchment);
   --foreground: var(--color-ink);
   --card: rgb(255 255 255 / 0.6);
   --card-foreground: var(--color-ink);
-  --popover: #ffffff;
+  --popover: #fbfaf9;
   --popover-foreground: var(--color-ink);
-  --primary: var(--color-coral);
+  --primary: var(--color-lake);
   --primary-foreground: #ffffff;
   --secondary: var(--glass-strong);
   --secondary-foreground: var(--color-ink);
-  --muted: #f3ece5;
+  --muted: #eeeae7;
   --muted-foreground: var(--color-ink-soft);
-  --accent: #f6eee6;
+  --accent: #ece8e5;
   --accent-foreground: var(--color-ink);
   --destructive: #c42b2b;
-  --border: #e9e1d8;
-  --input: #d9cfc5;
-  /* The focus ring is ink: 15.9:1 on cream, 16.9 on white, 12.9 on peach (WCAG 1.4.11 needs 3). */
+  --border: var(--color-ash);
+  --input: var(--color-ash);
+  /* The focus ring is off-black: 14:1 on parchment (WCAG 1.4.11 needs 3). */
   --ring: var(--color-ink);
-  --chart-1: var(--color-coral);
-  --chart-2: var(--color-sky);
+  --chart-1: var(--color-lake);
+  --chart-2: #c25e08;
   --chart-3: #3f8f72;
-  --chart-4: #8b6fc9;
-  --chart-5: #a39caf;
+  --chart-4: #7a6cc0;
+  --chart-5: #a3a09e;
   --radius: 1rem;
   --sidebar: var(--glass-strong);
   --sidebar-foreground: var(--color-ink);
-  --sidebar-primary: var(--color-coral);
+  --sidebar-primary: var(--color-lake);
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: var(--glass-chip);
   --sidebar-accent-foreground: var(--color-ink);
@@ -117,36 +132,36 @@
    * grepped across web/ and still has a caller; delete each one the day `rg` finds none. Already removed:
    * the --blur-N washes, --glass-border, --lime and its button, the shell radius and the Magic UI tokens.
    */
-  --page: var(--color-cream);
-  --shell: #f3ece5;
+  --page: var(--color-parchment);
+  --shell: #eeeae7;
   --glass: var(--glass-soft);
-  --card-strong: #ffffff;
+  --card-strong: #fbfaf9;
   --ink: var(--color-ink);
   --ink-soft: var(--color-ink-soft);
-  --ink-muted: #5f5a70;
-  --ink-faint: #9a94a6;
-  --line: #ebe4dc;
-  --line-row: #ddd4ca;
-  --line-strong: #8a8296;
-  --line-field: #6f6980;
+  --ink-muted: #6b6968;
+  --ink-faint: #9b9795;
+  --line: var(--color-ash);
+  --line-row: #dcd8d6;
+  --line-strong: var(--color-smoke);
+  --line-field: var(--color-smoke);
   --danger-deep: #c42b2b;
-  --table-head: #f3ece5;
-  --peach: #fff4ec;
-  --peach-tile: #ffd9c2;
-  --orange: #c8432a;
-  --lavender: #f6f1ff;
-  --lavender-tile: #dccff7;
-  --purple: #4f46e5;
-  --purple-chart: #6d4fc2;
-  --aqua: #eefaf5;
-  --aqua-tile: #cfefe3;
+  --table-head: #eeeae7;
+  --peach: #fff0ea;
+  --peach-tile: var(--color-aurora-peach);
+  --orange: var(--color-lake);
+  --lavender: #eef2fb;
+  --lavender-tile: var(--color-periwinkle);
+  --purple: var(--color-lake);
+  --purple-chart: #5a4fb0;
+  --aqua: #ebfdf3;
+  --aqua-tile: var(--color-aurora-mint);
   --teal: #2f7d62;
   --success: var(--color-success);
   --success-ink: var(--color-success);
-  --warn-bg: #fff3e0;
+  --warn-bg: #fdf4dc;
   --warn-ink: var(--color-warn-ink);
-  --info-bg: #e3f0fb;
-  --info-ink: var(--color-sky);
+  --info-bg: #e7edfa;
+  --info-ink: var(--color-lake);
   --danger: #e04848;
 }
 
@@ -157,8 +172,10 @@
 }
 
 @theme inline {
+  /* The page default is mono (every UI string); `font-sans` is for long reads only; `font-display` is the serif. */
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-sans: var(--font-inter), "Helvetica Neue", Arial, system-ui, sans-serif;
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-display);
 
   /* legacy: pre-pivot colour utilities still used by screens outside the sweep (see the :root note). */
   --color-page: var(--page);
@@ -232,16 +249,16 @@
   /* 28px card radius: declared on :root above, but utilities need it here too (rounded-card). */
   --radius-card: 1.75rem;
 
-  /* App type scale (04 §4). */
-  --text-display: 2rem;
-  --text-display--line-height: 2.5rem;
-  --text-display--font-weight: 500;
-  --text-h1: 1.5rem;
-  --text-h1--line-height: 2rem;
-  --text-h1--font-weight: 500;
-  --text-h2: 1.25rem;
-  --text-h2--line-height: 1.75rem;
-  --text-h2--font-weight: 500;
+  /* App type scale. Display, h1 and h2 are serif headings (base layer): weight 400, never bold. */
+  --text-display: 2.5rem;
+  --text-display--line-height: 1.2;
+  --text-display--font-weight: 400;
+  --text-h1: 2rem;
+  --text-h1--line-height: 1.2;
+  --text-h1--font-weight: 400;
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 1.2;
+  --text-h2--font-weight: 400;
   --text-stat: 2.5rem;
   --text-stat--line-height: 2.75rem;
   --text-stat--font-weight: 600;
@@ -254,14 +271,14 @@
   --text-caption--font-weight: 500;
 
   /* Landing scale (brand register override in the landing brief). */
-  --text-hero: clamp(3.5rem, 1.6rem + 6.4vw, 7.5rem);
-  --text-hero--line-height: 0.93;
-  --text-hero--letter-spacing: -0.035em;
-  --text-hero--font-weight: 500;
-  --text-section: clamp(2.5rem, 1.4rem + 3.6vw, 4.5rem);
-  --text-section--line-height: 1.05;
-  --text-section--letter-spacing: -0.03em;
-  --text-section--font-weight: 500;
+  --text-hero: clamp(3rem, 1.6rem + 4.4vw, 5rem);
+  --text-hero--line-height: 1.1;
+  --text-hero--letter-spacing: -0.02em;
+  --text-hero--font-weight: 400;
+  --text-section: clamp(2.25rem, 1.5rem + 2.4vw, 3rem);
+  --text-section--line-height: 1.2;
+  --text-section--letter-spacing: -0.02em;
+  --text-section--font-weight: 400;
   --text-lead: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
   --text-lead--line-height: 1.45;
   --text-lead--letter-spacing: -0.01em;
@@ -275,7 +292,8 @@
     @apply border-border outline-ring/50;
   }
   html {
-    @apply font-sans;
+    @apply font-mono;
+    letter-spacing: -0.02em;
     -webkit-text-size-adjust: 100%;
     /* A classic scrollbar that comes and goes (short and long auth screens) would shift the page. */
     scrollbar-gutter: stable;
@@ -292,13 +310,25 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
-  /* DESIGN.md Focus Ring: solid ink, 2px, offset 2px. Reads on cream, glass, the aurora and coral alike. */
+  /* Headings are the serif at 400 (Parchment Frost): the serif announces, the mono instructs. A heading
+     that should read as UI (a small card label) opts out with font-mono. */
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  /* Long reads (font-sans) get Inter's normal tracking, not the mono's. */
+  .font-sans {
+    letter-spacing: -0.006em;
+  }
+  /* DESIGN.md Focus Ring: solid off-black, 2px, offset 2px. Reads on parchment, glass, the washes and blue. */
   :focus-visible {
     outline: 2px solid var(--color-ink);
     outline-offset: 2px;
   }
   ::selection {
-    background: var(--color-aurora-peach);
+    background: var(--color-periwinkle);
     color: var(--color-ink);
   }
   /* Button icon default (see the @source note at the top): 16px, 12px on the xs sizes. Any size-* or w-/h-
@@ -314,19 +344,21 @@
 }
 
 @layer components {
-  /* Landing buttons: primary coral pill 48 high, secondary glass pill, ghost 40 round. */
+  /* Landing buttons: primary Lake Blue pill 48 high, secondary glass pill, ghost 40 round. Mono, uppercase. */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     height: 3rem;
-    padding-inline: 1.5rem;
-    border-radius: 999px;
-    font-size: 0.9375rem;
+    padding-inline: 2rem;
+    border-radius: 100px;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
     font-weight: 500;
     line-height: 1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
     white-space: nowrap;
     text-decoration: none;
     border: 1px solid transparent;
@@ -346,12 +378,11 @@
     pointer-events: none;
   }
   .btn-primary {
-    background: var(--color-coral);
+    background: var(--color-lake);
     color: #ffffff;
-    box-shadow: 0 10px 24px -12px rgb(200 67 42 / 0.6);
   }
   .btn-primary:hover {
-    background: var(--color-coral-hover);
+    background: var(--color-lake-hover);
   }
   .btn-secondary {
     background: var(--glass-strong);
@@ -376,10 +407,10 @@
   }
 
   /*
-   * Golden Hour Frost glass. Components layer on purpose: a caller's rounded-*, bg-* or shadow-* utility
-   * overrides the default radius, fill or shadow. soft (.glass, 55%) carries short text, strong (72%) long
-   * text, lists and side panels, chip (62%, full pill) small controls. ink-soft on any of them over the
-   * brightest aurora (peach) is 6.9:1 or more.
+   * Parchment Frost glass: real backdrop blur, an Ash hairline, almost no shadow. Components layer on
+   * purpose: a caller's rounded-*, bg-* or shadow-* utility overrides the default radius, fill or shadow.
+   * soft (.glass, 55%) carries short text, strong (72%) long text, lists and side panels, chip (62%, full
+   * pill) small controls. Graphite on any of them over the brightest wash stays above 6:1.
    */
   .glass,
   .glass-strong,
@@ -400,9 +431,7 @@
   .glass-chip {
     background: var(--glass-chip);
     border-radius: var(--radius-chip);
-    box-shadow:
-      var(--glass-highlight),
-      0 6px 18px -10px rgb(40 30 60 / 0.22);
+    box-shadow: var(--glass-highlight);
   }
   /* No backdrop-filter (older in-app webviews): near-opaque, never see-through text on the aurora. */
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -415,8 +444,9 @@
   }
 
   /*
-   * The aurora: three soft radial blobs on cream (components/shared/aurora-backdrop.tsx). Each blob is a
-   * transformed radial gradient, not a CSS blur filter, so the drift stays on the compositor.
+   * The atmospheric wash: soft radial blobs on parchment (components/shared/aurora-backdrop.tsx) in the
+   * Monad pastels (coral, sky-wash, mint, gold). Each blob is a transformed radial gradient, not a CSS blur
+   * filter, so the drift stays on the compositor.
    */
   .aurora {
     position: fixed;
@@ -424,7 +454,7 @@
     z-index: -10;
     overflow: hidden;
     pointer-events: none;
-    background: var(--color-cream);
+    background: var(--color-parchment);
   }
   .aurora-blob {
     position: absolute;
@@ -432,7 +462,8 @@
     height: 70vmax;
     border-radius: 50%;
     background: radial-gradient(closest-side, var(--blob), transparent);
-    opacity: 0.85;
+    /* The Monad washes are saturated pastels: at 0.5 they read as a soft halo, never a fill. */
+    opacity: 0.5;
     will-change: transform;
     /* Three slow passes (about four minutes), then it rests: nothing loops forever in view. */
     animation: aurora-drift 40s ease-in-out 6 alternate both;
@@ -466,19 +497,22 @@
     border-radius: 999px;
   }
 
-  /* Small eyebrow chip used above section titles. */
+  /* Small eyebrow tag above section titles: a hairline pill, mono uppercase 12px. */
   .eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     height: 2rem;
     padding-inline: 0.875rem;
-    border-radius: 999px;
-    background: var(--card-strong);
+    border-radius: 9999px;
+    border: 1px solid var(--color-ash);
+    background: var(--glass-chip);
     color: var(--ink);
-    font-size: 0.8125rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: -0.005em;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
   }
 
   .tabular {

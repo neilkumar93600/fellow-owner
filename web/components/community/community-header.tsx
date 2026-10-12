@@ -16,7 +16,7 @@ export interface CommunityHeaderProps {
   joined: boolean;
   /** The desktop New post (phones get the floating pill instead). Null hides the actions (locked). */
   newPostHref: string | null;
-  /** New post is the page's coral action; with an open challenge it steps aside for Enter the challenge. */
+  /** New post is the page's blue action; with an open challenge it steps aside for Enter the challenge. */
   newPostPrimary?: boolean;
   /** Joins this community; the Join button is disabled (null) until the viewer's membership is known. */
   onJoin: (() => void) | null;

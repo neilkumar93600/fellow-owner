@@ -19,7 +19,7 @@ export interface BioViewProps {
 
 /**
  * The bio link (/{handle}), DESIGN.md Bio link recipe: cover and frosted profile card, the photo-cover
- * rooms to join, the coral "Send Mira an idea", "Fans of the week", then "Made by Mira's fans". Never
+ * rooms to join, the blue "Send Mira an idea", "Fans of the week", then "Made by Mira's fans". Never
  * one-way: the rooms and Join always show. No match labels, no verification claims.
  */
 export function BioView({

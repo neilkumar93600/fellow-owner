@@ -10,7 +10,7 @@ export function LovedBadge({ creator, className }: { creator: string; className?
         className,
       )}
     >
-      <Heart aria-hidden="true" strokeWidth={0} className="size-3.5 fill-coral" />
+      <Heart aria-hidden="true" strokeWidth={0} className="size-3.5 fill-lake" />
       Loved by {creator}
     </span>
   );

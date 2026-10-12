@@ -51,7 +51,7 @@ function Rail() {
           key={href}
           className={cn(
             'grid size-11 shrink-0 place-items-center rounded-full',
-            index === 0 ? 'bg-aurora-peach text-coral' : 'text-ink-soft',
+            index === 0 ? 'bg-aurora-peach text-lake' : 'text-ink-soft',
             index === RAIL.length - 1 && 'mt-auto',
           )}
         >

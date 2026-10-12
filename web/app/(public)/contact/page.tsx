@@ -10,7 +10,7 @@ import { CONTACT, MIN_AGE, OPERATOR, RESPONSE_DAYS } from '@/lib/legal';
 
 /*
  * Honest channels only: the four addresses from shared CONTACT and the postal address from OPERATOR, plus
- * a contact form that stores the message and emails the sender a copy. Support is the one coral action;
+ * a contact form that stores the message and emails the sender a copy. Support is the one blue action;
  * the other mailboxes are secondary.
  */
 

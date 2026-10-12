@@ -80,7 +80,7 @@ function Chips({ items }: { items: string[] }) {
 /**
  * The post side panel on /dashboard/ideas?item=: the AI read (summary, fit with its reason, tags and
  * skills, thumbs on the read), the body at 68ch, roles, team, signals and the comment thread with its
- * box. Footer: Hide (confirmed) or Unhide, Rescore, and the panel's one coral Spotlight, full width.
+ * box. Footer: Hide (confirmed) or Unhide, Rescore, and the panel's one blue Spotlight, full width.
  * Every change goes to the API; the hooks refresh the lists.
  */
 export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: PostPanelProps) {

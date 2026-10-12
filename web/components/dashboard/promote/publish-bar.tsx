@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 
 export interface PublishBarProps {
   state: PromotionState;
-  /** Why the coral action is blocked, said beside it; null when it can run. */
+  /** Why the blue action is blocked, said beside it; null when it can run. */
   blocked: string | null;
   /** Drafts differ from the last save (a live promotion saves them; a draft publishes them). */
   dirty: boolean;
@@ -26,7 +26,7 @@ export interface PublishBarProps {
 }
 
 /**
- * The composer's actions under the summary well: the screen's one coral button (Publish, or Save drafts
+ * The composer's actions under the summary well: the screen's one blue button (Publish, or Save drafts
  * once live), then Copy and Open in X side by side, then Take it down behind a confirm while live.
  */
 export function PublishBar({

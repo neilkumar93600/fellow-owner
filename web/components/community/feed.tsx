@@ -53,7 +53,7 @@ export interface CommunityFeedProps {
 /**
  * /{handle}/c/{slug}: the cover header, an open challenge pinned on top, the Ideas, Fan projects and
  * Discussions tab bar, a one-time tip, then frosted post cards in one column with Load more. The
- * screen's one coral action is Enter the challenge while one is open, else New post (in the header from
+ * screen's one blue action is Enter the challenge while one is open, else New post (in the header from
  * 640px, a floating pill on phones). A visitor who is not a member gets the first three titles and Join
  * to see everything.
  */

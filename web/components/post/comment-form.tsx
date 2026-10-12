@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Field, TextArea } from '@/components/ui/field';
 
-/** The comment box under the thread. Comment is the post screen's one coral action. */
+/** The comment box under the thread. Comment is the post screen's one blue action. */
 export function CommentForm({
   onComment,
   className,

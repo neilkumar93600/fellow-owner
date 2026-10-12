@@ -17,7 +17,7 @@ type LinkRow = LinkInput & { key: number };
 
 /**
  * Join step 3, skippable: skills as removable chips (Enter, a comma or Add; lowercased and deduplicated
- * by the shared schema, 10 at most) and up to five labelled links, then the step's one coral Finish.
+ * by the shared schema, 10 at most) and up to five labelled links, then the step's one blue Finish.
  * Every control is 44px or carries a 44px hit area.
  */
 export function ProfileStep({ handle, onDone }: { handle: string; onDone: () => void }) {

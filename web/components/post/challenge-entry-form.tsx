@@ -26,7 +26,7 @@ import { LinksField } from './form-parts';
 /**
  * Enter a challenge: the post form with the challenge's title and prompt shown above it. An entry is an
  * idea post, so it is just a title, the details and up to three links, checked by the shared
- * challengeEntrySchema. Publish is the screen's one coral action. A closed or past-due challenge shows
+ * challengeEntrySchema. Publish is the screen's one blue action. A closed or past-due challenge shows
  * a plain message instead of the form; if it closes while the fan is typing, the API answers 409 and the
  * same message appears above the form with what was typed kept.
  */
@@ -85,7 +85,7 @@ export function ChallengeEntryForm({
           aria-hidden="true"
           className="grid size-12 shrink-0 place-items-center rounded-2xl bg-aurora-peach"
         >
-          <Trophy strokeWidth={1.5} className="size-6 text-coral" />
+          <Trophy strokeWidth={1.5} className="size-6 text-lake" />
         </span>
         <div className="flex min-w-0 flex-col gap-1">
           <p className="text-caption text-ink-soft">

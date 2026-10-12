@@ -56,7 +56,7 @@ export interface MySpaceViewProps {
 }
 
 /**
- * /{handle}/me: the fan's profile card (Edit opens it inline, with Save as the screen's one coral), then
+ * /{handle}/me: the fan's profile card (Edit opens it inline, with Save as the screen's one blue), then
  * "Your moments" (loved, featured, spotlighted, shortlisted), then My posts, My crews and Ideas I sent as
  * URL tabs.
  */

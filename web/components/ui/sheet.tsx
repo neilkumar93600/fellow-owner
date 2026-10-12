@@ -100,7 +100,7 @@ export function SheetBody({ className, ...props }: React.ComponentProps<'div'>) 
   );
 }
 
-/** The action footer, pinned to the bottom (reply box, Shortlist, Archive, the coral primary). */
+/** The action footer, pinned to the bottom (reply box, Shortlist, Archive, the blue primary). */
 export function SheetFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div

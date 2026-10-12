@@ -28,7 +28,7 @@ export interface CoachPanelProps {
 
 /**
  * F30 Idea Coach. On demand only: a secondary "Check my pitch" under the body (Send stays the one
- * coral), then an inset lavender well with a clarity checklist and an optional rewrite. It judges
+ * blue), then an inset lavender well with a clarity checklist and an optional rewrite. It judges
  * clarity, never taste: no score, no "Mira would like this", and nothing here reaches the creator.
  */
 export function CoachPanel({

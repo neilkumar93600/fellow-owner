@@ -70,7 +70,7 @@ export function Spinner({ className }: { className?: string }) {
 }
 
 /**
- * Primary coral pill, 48px, full width: the screen's one coral action. A press is the 0.98 scale and
+ * Primary blue pill, 48px, full width: the screen's one blue action. A press is the 0.98 scale and
  * nothing else (DESIGN.md Settled Press Rule). While pending a 16px spinner leads the label, the label stays,
  * the width holds and the button reports aria-busy (DESIGN.md Shared states, Loading). Busy and done
  * buttons stay at full strength and focusable (presses are ignored); only `disabled` dims to 50%, through

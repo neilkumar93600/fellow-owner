@@ -32,7 +32,7 @@ function prefersReducedMotion() {
 
 /**
  * Marketing navbar: transparent bar on the hero, floating glass pill after 24px of scroll, a glass chip with
- * a coral dot on the section in view, glass menu sheet below 1024px. Owner rule: the bar's only button is
+ * a blue dot on the section in view, glass menu sheet below 1024px. Owner rule: the bar's only button is
  * Get started (to /start, which skips auth for a signed-in visitor). It is glass while the hero's own
  * Get started ([data-hero-cta]) is on screen and rainbow once that scrolls away, so there is at most one
  * rainbow per viewport. The sheet holds the section links and the same one button. Marketing paths only.

@@ -6,7 +6,7 @@ import { AuroraBackdrop } from '@/components/shared/aurora-backdrop';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { cn } from '@/components/ui/cn';
 import { DISPLAY_H1 } from '@/lib/constants';
-import { instrumentSerif, inter } from '@/lib/fonts';
+import { geistMono, inter, newsreader } from '@/lib/fonts';
 
 /**
  * Replaces the root layout when it fails, so it brings its own document, the global styles, both fonts
@@ -24,7 +24,10 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="en" className={cn(inter.variable, instrumentSerif.variable, 'antialiased')}>
+    <html
+      lang="en"
+      className={cn(geistMono.variable, inter.variable, newsreader.variable, 'antialiased')}
+    >
       <body className="bg-cream text-ink">
         <AuroraBackdrop />
         <title>Something went wrong · Fellow Owners</title>

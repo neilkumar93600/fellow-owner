@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
  * "Enter as creator" / "Enter as fan" (F22). Signs into the seeded demo account through the API and follows
  * its redirect. If the API is unreachable, shows the documented "Demo unavailable" toast and stays put.
  * variant 'rainbow' is the marketing primary: the dark pill over the aurora. 'rainbow-outline' is the light
- * pill for glass. Use at most one rainbow button per viewport; the app keeps coral.
+ * pill for glass. Use at most one rainbow button per viewport; the app keeps blue.
  * Extra props (data-*, aria-*, id, ...) land on the button.
  */
 export function DemoButton({

@@ -16,7 +16,7 @@ export interface SidePanelProps {
   /** A status pill beside the title. */
   status?: React.ReactNode;
   children: React.ReactNode;
-  /** The sticky action footer: reply box, Shortlist, Archive, the coral primary. */
+  /** The sticky action footer: reply box, Shortlist, Archive, the blue primary. */
   footer?: React.ReactNode;
   /** Where focus lands on close: pass the row's primary link (DESIGN.md), else the previous focus. */
   finalFocus?: SheetContentProps['finalFocus'];

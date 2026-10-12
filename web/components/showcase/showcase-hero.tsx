@@ -22,7 +22,7 @@ export interface ShowcaseHeroProps {
 /**
  * The top of a showcase: the room's cover photo, then a frosted panel that overlaps it with "Featured by
  * Mira" (back to the bio), the title in Instrument Serif, the creator's headline, the room chip, "Made
- * it" status and date, and the screen's one coral "Join Mira's space" beside a glass Copy link pill.
+ * it" status and date, and the screen's one blue "Join Mira's space" beside a glass Copy link pill.
  */
 export function ShowcaseHero({ space, promotion, post, shareUrl }: ShowcaseHeroProps) {
   const first = space.displayName.split(' ')[0];

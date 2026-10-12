@@ -5,7 +5,7 @@ import { cn } from '@/components/ui/cn';
 
 /**
  * The phones' New post: a pill that floats 16px above the bottom edge (plus the safe area) at the right
- * of the column, coral unless an open challenge holds the page's coral action. It is sticky at the end of
+ * of the column, blue unless an open challenge holds the page's blue action. It is sticky at the end of
  * the feed rather than fixed, so it rides over the cards while the feed scrolls and settles below the
  * list, never over the footer links. From 640px the header carries New post instead. Render it as the
  * last child of the feed's column.

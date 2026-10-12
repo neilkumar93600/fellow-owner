@@ -1,6 +1,13 @@
-import { Instrument_Serif, Inter } from 'next/font/google';
+import { Geist_Mono, Inter, Newsreader } from 'next/font/google';
 
-/** Inter variable with the optical-size axis: all UI and body text. */
+/** Geist Mono: every UI string (nav, buttons, badges, labels, meta, short body). The page default. */
+export const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+  display: 'swap',
+});
+
+/** Inter with the optical-size axis: long reads only (post bodies, comments, legal, newsletters), via `font-sans`. */
 export const inter = Inter({
   subsets: ['latin'],
   axes: ['opsz'],
@@ -8,11 +15,11 @@ export const inter = Inter({
   display: 'swap',
 });
 
-/** Instrument Serif: display headlines (28px and up) and the occasional italic accent word (`font-display`). */
-export const instrumentSerif = Instrument_Serif({
+/** Newsreader: headings and display type at weight 400, never bold (`font-display`). */
+export const newsreader = Newsreader({
   weight: '400',
   style: ['normal', 'italic'],
   subsets: ['latin'],
-  variable: '--font-instrument-serif',
+  variable: '--font-newsreader',
   display: 'swap',
 });

@@ -14,7 +14,7 @@ import { routes } from '@/lib/routes';
  * Pricing (F29, P2). The pilot is free, and /terms §10 and /refunds §4 are binding about it: no card, no
  * commission, opt-in only if paid plans ever land. So the page shows the one plan that exists and names the
  * value metric of the next one instead of inventing numbers. Fans never pay; that is the positioning, not
- * a footnote. One coral button: Start your space, on the plan that is open.
+ * a footnote. One blue button: Start your space, on the plan that is open.
  */
 
 export const metadata: Metadata = {

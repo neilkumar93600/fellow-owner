@@ -1,27 +1,27 @@
 import { cva } from 'class-variance-authority';
 
 /**
- * DESIGN.md Buttons (Golden Hour Frost). Always a full pill with a Label. `primary` is the one coral
- * action per screen (white on coral 4.89:1), `secondary` a frosted glass pill, `ghost` a bare 40px round
- * icon button. Hover is a colour change only (never on a disabled or busy control), press scales to 0.98
- * through the `press` utility, and keyboard focus is the global 2px ink ring. `surface` names what the
- * button sits on: white (tables, panels, dialogs), glass (toolbars, the top bar) or card (tinted cards).
+ * DESIGN.md Buttons (Parchment Frost). Always a full pill, mono 14px uppercase. `primary` is the one Lake
+ * Blue action per screen (white on lake 6.1:1, no shadow), `secondary` a frosted glass pill with an Ash
+ * hairline, `ghost` a bare 40px round icon button. Hover is a colour change only (never on a disabled or
+ * busy control), press scales to 0.98 through the `press` utility, and keyboard focus is the global 2px ink
+ * ring. `surface` names what the button sits on: white (tables, panels, dialogs), glass (toolbars, the top
+ * bar) or card (tinted cards).
  *
  * No client directive, so server components can style a link with it:
  * `<Link href="/dashboard/promote" className={buttonVariants({ variant: 'secondary' })}>`.
  */
 export const buttonVariants = cva(
   [
-    'press relative inline-flex shrink-0 items-center justify-center gap-2 rounded-full text-label whitespace-nowrap select-none',
+    'press relative inline-flex shrink-0 items-center justify-center gap-2 rounded-full font-mono text-[0.875rem] leading-none font-medium tracking-[-0.02em] uppercase whitespace-nowrap select-none',
     'disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:not-aria-busy:cursor-not-allowed aria-disabled:not-aria-busy:opacity-50 aria-busy:cursor-progress',
     '[&_svg]:shrink-0 [&_svg]:stroke-[1.5]',
   ],
   {
     variants: {
       variant: {
-        /** The one primary action per screen: sunset coral, white words. */
-        primary:
-          'bg-coral text-white shadow-[0_10px_24px_-12px_rgb(200_67_42/0.6),inset_0_1px_0_rgb(255_255_255/0.25)] not-disabled:not-aria-disabled:hover:bg-coral-hover',
+        /** The one primary action per screen: Lake Blue, white words. */
+        primary: 'bg-lake text-white not-disabled:not-aria-disabled:hover:bg-lake-hover',
         /** Frosted glass pill, ink words. Every other action. */
         secondary:
           'glass-chip text-ink not-disabled:not-aria-disabled:hover:bg-white/90',
@@ -45,7 +45,7 @@ export const buttonVariants = cva(
       surface: { white: '', glass: '', card: '' },
     },
     compoundVariants: [
-      { variant: 'primary', size: 'lg', className: 'px-6' },
+      { variant: 'primary', size: 'lg', className: 'px-8' },
       {
         variant: ['secondary', 'ghost', 'destructive', 'destructive-secondary'],
         size: 'lg',

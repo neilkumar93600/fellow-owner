@@ -32,7 +32,7 @@ export interface IntroStepProps {
 
 /**
  * Join step 2: the intro (280 characters, "One line about you"), "Suggest rooms" (also on blur once the
- * intro is 10 characters), the selectable tiles, and the step's one coral "Join N rooms", disabled with
+ * intro is 10 characters), the selectable tiles, and the step's one blue "Join N rooms", disabled with
  * its reason beside it until at least one room is picked.
  */
 export function IntroStep({

@@ -44,7 +44,7 @@ export interface PitchFormProps {
 /**
  * Send an idea (J4): type, subject, body and up to three links on a strong-glass card, checked by the
  * shared createPitchSchema. No prices and no paid priority anywhere. The draft is kept in sessionStorage
- * per handle; Send idea (the one coral) ends on the confirmation that says where the reply appears.
+ * per handle; Send idea (the one blue) ends on the confirmation that says where the reply appears.
  */
 export function PitchForm({
   handle,

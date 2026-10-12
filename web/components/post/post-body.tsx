@@ -205,7 +205,7 @@ export function PostBody({ handle, post }: { handle: string; post: PostDetail })
   );
 }
 
-/** Inline edit of the title and body; Save is secondary because Comment is the screen's coral. */
+/** Inline edit of the title and body; Save is secondary because Comment is the screen's blue. */
 function PostEditor({
   initial,
   saving,
