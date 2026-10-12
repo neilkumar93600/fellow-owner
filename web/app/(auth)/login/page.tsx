@@ -6,6 +6,7 @@ import { redirectIfSignedIn } from '../redirect-signed-in';
 // An indexed log-in screen has no search value and competes with the pages that do.
 export const metadata: Metadata = {
   title: 'Log in',
+  description: 'Log in to Fellow Owners: your creator studio, or the spaces you joined as a fan.',
   robots: { index: false, follow: false },
 };
 

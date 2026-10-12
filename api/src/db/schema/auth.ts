@@ -3,8 +3,9 @@ import { timestamptz } from './columns.js';
 
 // Better Auth 1.7 core tables (user, session, account, verification), generated with the
 // drizzle adapter's schema generator for `provider: 'pg'` with the emailOTP plugin (no tables of
-// its own) and the username plugin (`user.username`), plus the two `user.additionalFields` from
-// auth/index.ts (the optional social profile). The only change from the generated file:
+// its own) and the username plugin (`user.username`), plus the `user.additionalFields` from
+// auth/index.ts (the optional social profile, and the age confirmation added in 0010). The only
+// change from the generated file:
 // timestamps are timestamptz (05: all timestamps are timestamptz). Property names are what
 // Better Auth reads; keep them as they are. Better Auth checks this object against its config on
 // first use, so a field added there needs its column here (and a migration).
@@ -25,6 +26,8 @@ export const user = pgTable('user', {
   username: text('username').unique(),
   socialPlatform: text('social_platform'),
   socialHandle: text('social_handle'),
+  /** When the person confirmed they meet the Terms' minimum age (sign-up checkbox); null before. */
+  ageConfirmedAt: timestamptz('age_confirmed_at'),
 });
 
 export const session = pgTable(

@@ -5,19 +5,25 @@ import { env as defaultEnv, type Env } from './config/env.js';
 import { createAccountController } from './controllers/account.controller.js';
 import { createAdminController } from './controllers/admin.controller.js';
 import { createAskController } from './controllers/ask.controller.js';
+import { createBrandsController } from './controllers/brands.controller.js';
 import { createChallengesController } from './controllers/challenges.controller.js';
 import { createCoachController } from './controllers/coach.controller.js';
+import { createCollabController } from './controllers/collab.controller.js';
 import { createConfigController } from './controllers/config.controller.js';
 import { createCronController } from './controllers/cron.controller.js';
 import { createDemoController } from './controllers/demo.controller.js';
 import { createFollowersController } from './controllers/followers.controller.js';
 import { createInsightsController } from './controllers/insights.controller.js';
+import { createInstagramController } from './controllers/instagram.controller.js';
+import { createMediaKitController } from './controllers/media-kit.controller.js';
 import { createMetricsController } from './controllers/metrics.controller.js';
 import { createModerationController } from './controllers/moderation.controller.js';
 import { createNewsletterController } from './controllers/newsletter.controller.js';
 import { createNotificationPrefsController } from './controllers/notification-prefs.controller.js';
 import { createNotificationsController } from './controllers/notifications.controller.js';
+import { createPerformanceController } from './controllers/performance.controller.js';
 import { createPitchesController } from './controllers/pitches.controller.js';
+import { createPlannerController } from './controllers/planner.controller.js';
 import { createPostsController } from './controllers/posts.controller.js';
 import { createPublicController } from './controllers/public.controller.js';
 import { createQuestionGroupsController } from './controllers/question-groups.controller.js';
@@ -37,17 +43,21 @@ import { createRepos, type Repos } from './repositories/index.js';
 import { createAccessService } from './services/access.service.js';
 import { createAccountService } from './services/account.service.js';
 import { createAskService } from './services/ask.service.js';
+import { createBrandsService } from './services/brands.service.js';
 import { createBriefingService } from './services/briefing.service.js';
 import { createChallengesService } from './services/challenges.service.js';
 import { createClicksService } from './services/clicks.service.js';
 import { createCoachService } from './services/coach.service.js';
+import { createCollabService } from './services/collab.service.js';
 import { createCommentsService } from './services/comments.service.js';
 import { createCommunitiesService } from './services/communities.service.js';
 import { createDemoService } from './services/demo.service.js';
 import { createDiscoveryService } from './services/discovery.service.js';
 import { createFollowersService } from './services/followers.service.js';
 import { createInsightsService } from './services/insights.service.js';
+import { createInstagramService } from './services/instagram.service.js';
 import { createLimitsService } from './services/limits.service.js';
+import { createMediaKitService } from './services/media-kit.service.js';
 import { createMembershipsService } from './services/memberships.service.js';
 import { createMetricsService } from './services/metrics.service.js';
 import { createModerationService } from './services/moderation.service.js';
@@ -55,7 +65,9 @@ import { createNewsletterService } from './services/newsletter.service.js';
 import { createNotificationEmailsService } from './services/notification-emails.service.js';
 import { createNotificationsService } from './services/notifications.service.js';
 import { createOverviewService } from './services/overview.service.js';
+import { createPerformanceService } from './services/performance.service.js';
 import { createPitchesService } from './services/pitches.service.js';
+import { createPlannerService } from './services/planner.service.js';
 import { createPostsService } from './services/posts.service.js';
 import { createPromotionsService } from './services/promotions.service.js';
 import { createQuestionGroupsService } from './services/question-groups.service.js';
@@ -84,7 +96,7 @@ import type { Jobs } from './workers/tick.js';
  *
  * Extension points (one function each, below):
  * - createAiServices: which AiServices implementation runs (live OpenRouter or the fake)
- * - createServices:   one entry per services/*.service.ts
+ * - createServices:   one entry per services/*.service.ts (creator suite: withSuiteServices)
  * - createJobs:       what each scheduled job (workers/tick.ts JobName) runs
  * - createControllers: one entry per controllers/*.controller.ts
  * Routes receive the whole Container (routes/*.routes.ts factories).
@@ -145,7 +157,7 @@ export function createAiServices(deps: { env: Env; logger: Logger; repos: Repos 
  * others).
  */
 export function createServices(deps: CoreDeps) {
-  return withBackendServices(deps, createBaseServices(deps));
+  return withSuiteServices(deps, withBackendServices(deps, createBaseServices(deps)));
 }
 
 /** The services that existed before the backend completion. */
@@ -246,6 +258,27 @@ function withBackendServices(deps: CoreDeps, base: ReturnType<typeof createBaseS
   };
 }
 
+/**
+ * The creator suite (migration 0010), one service per feature package, in dependency order:
+ * performance (F1/F2) feeds the planner (F3, best times) and the media kit (F6); brands (F5) shows
+ * the media kit settings; instagram (F5 switch) files DMs through brands. Each takes the whole bag.
+ */
+function withSuiteServices(deps: CoreDeps, base: ReturnType<typeof withBackendServices>) {
+  const bag = { ...deps, ...base };
+  const performance = createPerformanceService(bag);
+  const mediaKit = createMediaKitService({ ...bag, performance });
+  const brands = createBrandsService({ ...bag, mediaKit });
+  return {
+    ...base,
+    performance,
+    planner: createPlannerService({ ...bag, performance }),
+    collab: createCollabService(bag),
+    mediaKit,
+    brands,
+    instagram: createInstagramService({ ...bag, brands }),
+  };
+}
+
 export type Services = ReturnType<typeof createServices>;
 
 /**
@@ -266,6 +299,9 @@ export function createJobs(services: Services, deps: CoreDeps): Jobs {
     purge: () => purgeExpired(bag),
     refresh_followers: () => refreshFollowers(bag),
     community_digests: () => digestWriter.writeDue(new Date()),
+    refresh_performance: () => services.performance.refreshDue(new Date()),
+    planner_reminders: () => services.planner.sendDueReminders(new Date()),
+    brand_digest: () => services.brands.sendDigests(new Date()),
   };
 }
 
@@ -300,6 +336,13 @@ export function createControllers(services: Services, deps: CoreDeps, jobs: Jobs
     snoozes: createSnoozesController(bag),
     config: createConfigController(bag),
     admin: createAdminController(bag),
+    // Creator suite (0010).
+    performance: createPerformanceController(bag),
+    planner: createPlannerController(bag),
+    collab: createCollabController(bag),
+    brands: createBrandsController(bag),
+    instagram: createInstagramController(bag),
+    mediaKit: createMediaKitController(bag),
   };
 }
 

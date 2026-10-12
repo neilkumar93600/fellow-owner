@@ -1,4 +1,4 @@
-import { LIMITS, type LinkItem } from '@fellow-owners/shared';
+import { COLLAB_LIMITS, LIMITS, type LinkItem } from '@fellow-owners/shared';
 import { sql } from 'drizzle-orm';
 import {
   type AnyPgColumn,
@@ -58,6 +58,11 @@ export const posts = pgTable(
     hiddenAt: timestamptz('hidden_at'),
     /** Soft delete by the author; hard-deleted after 30 days. */
     deletedAt: timestamptz('deleted_at'),
+    /** F4: the author asked for feedback; the project is surfaced in its community. */
+    feedbackWantedAt: timestamptz('feedback_wanted_at'),
+    /** F4: the space owner backs the project ("Backed by {creator}"), with an optional note. */
+    backedAt: timestamptz('backed_at'),
+    backedNote: text('backed_note'),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
     ...aiFields(),
@@ -85,6 +90,16 @@ export const posts = pgTable(
     index('posts_missing_embedding_idx')
       .on(t.createdAt)
       .where(sql`${t.embedding} is null and ${t.deletedAt} is null`),
+    /** F4: projects asking for feedback in a community, latest first. */
+    index('posts_community_feedback_idx')
+      .on(t.communityId, t.feedbackWantedAt.desc())
+      .where(sql`${t.feedbackWantedAt} is not null and ${t.deletedAt} is null`),
+    /** F4: projects the creator backs. */
+    index('posts_space_backed_idx').on(t.spaceId, t.backedAt).where(sql`${t.backedAt} is not null`),
+    check(
+      'posts_backed_note_check',
+      sql`${t.backedNote} is null or char_length(${t.backedNote}) <= ${sql.raw(String(COLLAB_LIMITS.backingNote.max))}`,
+    ),
     check(
       'posts_title_check',
       sql`char_length(${t.title}) between ${sql.raw(String(P.title.min))} and ${sql.raw(String(P.title.max))}`,

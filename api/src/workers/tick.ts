@@ -10,10 +10,15 @@ export const JOB_NAMES = [
   'group_questions',
   'close_challenges',
   'email_digests',
+  // Creator suite F3: hourly reminders for planned posts due within the hour.
+  'planner_reminders',
   'demo_reset',
   'purge',
   'refresh_followers',
   'community_digests',
+  // Creator suite: F1 daily refresh (07:00), F5 daily brand digest (14:00).
+  'refresh_performance',
+  'brand_digest',
 ] as const;
 export type JobName = (typeof JOB_NAMES)[number];
 
@@ -32,6 +37,10 @@ const SCHEDULE: Partial<Record<JobName, { hour: number; weekday?: number }>> = {
   purge: { hour: 9 },
   refresh_followers: { hour: 6 },
   community_digests: { hour: 13, weekday: 1 },
+  // After refresh_followers, so a day's snapshot sees the fresh counts.
+  refresh_performance: { hour: 7 },
+  // 10am Eastern / 7am Pacific: before a US creator's working day.
+  brand_digest: { hour: 14 },
 };
 
 /**
@@ -54,7 +63,8 @@ export function jobSlot(job: JobName, date: Date): Date {
 
 /**
  * The jobs scheduled in the hour of `date` (UTC): hourly sweep, group_questions, close_challenges,
- * email_digests; 09:00 demo_reset + purge; 06:00 refresh_followers; Monday 13:00 community_digests.
+ * email_digests, planner_reminders; 06:00 refresh_followers; 07:00 refresh_performance; 09:00
+ * demo_reset + purge; 14:00 brand_digest; Monday 13:00 community_digests.
  */
 export function dueJobs(date: Date): JobName[] {
   const hourStart = Math.floor(date.getTime() / HOUR) * HOUR;

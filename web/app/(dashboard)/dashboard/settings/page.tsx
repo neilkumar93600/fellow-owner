@@ -12,6 +12,7 @@ const TABS = [
   { value: 'taste', label: 'What you love' },
   { value: 'bio-link', label: 'Bio link' },
   { value: 'import', label: 'Import audience' },
+  { value: 'brands', label: 'Brand deals' },
   { value: 'account', label: 'Account' },
 ] as const;
 

@@ -8,6 +8,8 @@ import styles from '@/components/landing/footer.module.css';
 import { useSectionLink } from '@/components/landing/nav-scroll';
 import { FooterLandscape } from '@/components/layout/footer-landscape';
 import { NewsletterForm } from '@/components/layout/newsletter-form';
+import { GA_ID } from '@/components/shared/analytics';
+import { CookieSettingsButton } from '@/components/shared/cookie-notice';
 import { Logo } from '@/components/shared/logo';
 import {
   InstagramIcon,
@@ -164,6 +166,14 @@ function SiteFooter() {
                 </Link>
               </span>
             ))}
+            {GA_ID ? (
+              <span className={styles.legalItem}>
+                <span aria-hidden="true" className={styles.dot}>
+                  &middot;
+                </span>
+                <CookieSettingsButton className={styles.blink} />
+              </span>
+            ) : null}
           </nav>
         </div>
       </div>

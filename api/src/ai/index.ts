@@ -5,7 +5,9 @@ import { createFakeAiServices } from './fake.js';
 import { type AiModels, createAiModels, modelIdsFrom, type ProviderOptions } from './provider.js';
 import type { AiAccounting, AiRuntime } from './run.js';
 import { askAI } from './tasks/ask-ai.js';
+import { brandTriage } from './tasks/brand-triage.js';
 import { briefing } from './tasks/briefing.js';
+import { captionDraft } from './tasks/caption-draft.js';
 import { challengeSummary } from './tasks/challenge-summary.js';
 import { clusterImport } from './tasks/cluster-import.js';
 import { coach } from './tasks/coach.js';
@@ -57,6 +59,8 @@ export function createLiveAiServices(rt: AiRuntime): AiServices {
     coach: (input, ctx) => coach(rt, input, ctx),
     questionGroup: (input, ctx) => questionGroup(rt, input, ctx),
     challengeSummary: (input, ctx) => challengeSummary(rt, input, ctx),
+    captionDraft: (input, ctx) => captionDraft(rt, input, ctx),
+    brandTriage: (input, ctx) => brandTriage(rt, input, ctx),
   };
 }
 

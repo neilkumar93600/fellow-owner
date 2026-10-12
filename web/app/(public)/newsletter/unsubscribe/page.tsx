@@ -7,7 +7,7 @@ import { NewsletterTokenAction } from '../token-action';
 
 // Where the unsubscribe link in a newsletter email lands. Opening it changes nothing; the button does.
 export const metadata: Metadata = {
-  title: 'Newsletter',
+  title: 'Unsubscribe from the newsletter',
   robots: { index: false },
 };
 

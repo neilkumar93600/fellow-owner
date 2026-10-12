@@ -70,6 +70,7 @@ export function publicSpace(space: SpaceRow, memberCount: number): PublicSpace {
     memberCount,
     isDemo: space.isDemo,
     coverUrl: space.coverUrl,
+    mediaKitEnabled: space.mediaKitEnabled,
   };
 }
 

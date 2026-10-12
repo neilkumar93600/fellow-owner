@@ -11,6 +11,8 @@ import {
 } from '@fellow-owners/shared';
 import type { AiRunsRepo } from '../repositories/ai-runs.repo.js';
 import { fakeAskAi } from './fakes/ask-ai.js';
+import { fakeBrandTriage } from './fakes/brand-triage.js';
+import { fakeCaptionDraft } from './fakes/caption-draft.js';
 import { fakeChallengeSummary } from './fakes/challenge-summary.js';
 import { fakeCoach } from './fakes/coach.js';
 import { fakeQuestionGroup } from './fakes/question-group.js';
@@ -785,6 +787,8 @@ export function createFakeAiServices(options: FakeAiOptions = {}): AiServices {
     questionGroup: (input, ctx) => run('questionGroup', ctx, input, () => fakeQuestionGroup(input)),
     challengeSummary: (input, ctx) =>
       run('challengeSummary', ctx, input, () => fakeChallengeSummary(input)),
+    captionDraft: (input, ctx) => run('captionDraft', ctx, input, () => fakeCaptionDraft(input)),
+    brandTriage: (input, ctx) => run('brandTriage', ctx, input, () => fakeBrandTriage(input)),
   };
 }
 

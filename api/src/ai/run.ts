@@ -1,4 +1,10 @@
-import { DAILY_CAPS, HOURLY_CAPS, LIMITS } from '@fellow-owners/shared';
+import {
+  BRAND_LIMITS,
+  DAILY_CAPS,
+  HOURLY_CAPS,
+  LIMITS,
+  PLANNER_LIMITS,
+} from '@fellow-owners/shared';
 import {
   APICallError,
   embed,
@@ -132,6 +138,9 @@ export const TASK_CAPS: Partial<Record<AiTaskName, TaskCap>> = {
   coach: { scope: 'user', window: 'day', max: LIMITS.coach.perDay, spaceMax: 300 },
   questionGroup: { scope: 'space', window: 'day', max: 50 },
   challengeSummary: { scope: 'space', window: 'day', max: 20 },
+  // Creator suite: both count toward the space's daily token budget.
+  captionDraft: { scope: 'space', window: 'day', max: PLANNER_LIMITS.captionDraftsPerDay },
+  brandTriage: { scope: 'space', window: 'day', max: BRAND_LIMITS.triagePerDay },
 };
 
 /**

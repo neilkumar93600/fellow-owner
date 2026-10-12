@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import { A, Callout, LegalShell, Mail, P, Section, UL } from '@/components/legal/legal-ui';
+import { JsonLd } from '@/components/shared/json-ld';
 import { CONTACT, LEGAL_UPDATED, MIN_AGE, OPERATOR } from '@/lib/legal';
+import { breadcrumbJsonLd, pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Terms of service',
   description:
     'The rules for creators and fans using Fellow Owners: what you own, what the AI does and does not do, and what we promise while the product is free.',
-  alternates: { canonical: '/terms' },
-};
+  path: '/terms',
+});
 
 export default function Page() {
   return (
@@ -18,6 +20,12 @@ export default function Page() {
       updated={LEGAL_UPDATED}
       lead="The short version: your work stays yours, the AI advises and never acts, this version costs nothing, and either of us can walk away at any time. The full agreement is below, in plain English where the law allows."
     >
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Terms of service', path: '/terms' },
+        ])}
+      />
       <Section id="agreement" title="The agreement">
         <P>
           These terms are a legally binding agreement between you and {OPERATOR.entity} (operating{' '}

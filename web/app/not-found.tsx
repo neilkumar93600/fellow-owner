@@ -5,8 +5,10 @@ import { Logo } from '@/components/shared/logo';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { DISPLAY_H1 } from '@/lib/constants';
 import { routes } from '@/lib/routes';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = { title: 'Page not found' };
+// The default share card: a missing creator page must not point at its (missing) creator card.
+export const metadata: Metadata = pageMetadata({ title: 'Page not found' });
 
 /**
  * The 404: a frosted glass panel on the parchment washes (the root layout paints them), with a Lisbon street

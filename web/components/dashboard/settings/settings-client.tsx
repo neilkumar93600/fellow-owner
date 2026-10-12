@@ -4,6 +4,7 @@ import type { StudioSpace } from '@fellow-owners/shared';
 import { AlertCircle } from 'lucide-react';
 import { AccountCards } from '@/components/dashboard/settings/account-cards';
 import { BioLinkCard } from '@/components/dashboard/settings/bio-link-card';
+import { BrandSettingsCard } from '@/components/dashboard/settings/brand-settings-card';
 import { ImportAudienceCard } from '@/components/dashboard/settings/import-audience-card';
 import { ProfileForm } from '@/components/dashboard/settings/profile-form';
 import { TasteProfileForm } from '@/components/dashboard/settings/taste-profile-form';
@@ -58,6 +59,7 @@ export function SettingsClient({ space: initialSpace, current, tabs }: SettingsC
       {current === 'taste' ? <TasteProfileForm space={space} isPending={isPending} /> : null}
       {current === 'bio-link' ? <BioLinkCard space={space} /> : null}
       {current === 'import' ? <ImportAudienceCard /> : null}
+      {current === 'brands' ? <BrandSettingsCard /> : null}
       {current === 'account' ? <AccountCards /> : null}
     </div>
   );

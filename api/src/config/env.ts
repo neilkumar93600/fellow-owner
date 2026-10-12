@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isFieldEncryptionKey } from '../lib/crypto.js';
 
 /**
  * Environment for the API, checked with zod when this module is first imported.
@@ -88,6 +89,15 @@ const rawEnvSchema = z.object({
   APIFY_ENABLED: booleanFlag,
 
   YOUTUBE_API_KEY: optionalString,
+
+  // Creator suite (all optional; each feature stays off without its keys).
+  FIELD_ENCRYPTION_KEY: optionalString,
+  INBOUND_EMAIL_DOMAIN: optionalString,
+  INBOUND_EMAIL_SECRET: optionalString,
+  META_APP_ID: optionalString,
+  META_APP_SECRET: optionalString,
+  META_VERIFY_TOKEN: optionalString,
+  TURNSTILE_SECRET_KEY: optionalString,
 
   BUCKET_ENDPOINT: optionalString.pipe(z.url().optional()),
   BUCKET_REGION: optionalString,
@@ -179,6 +189,29 @@ export interface Env {
   YOUTUBE_API_KEY: string | undefined;
   /** Live YouTube imports. False without a key: imports return labelled sample data. */
   YOUTUBE_ENABLED: boolean;
+
+  /**
+   * 32 random bytes, base64 (`openssl rand -base64 32`): the AES-256-GCM key for secrets stored in
+   * the database (lib/crypto.ts), such as Instagram tokens. Required in production once a feature
+   * that stores secrets is on (INSTAGRAM_ENABLED). Never logged.
+   */
+  FIELD_ENCRYPTION_KEY: string | undefined;
+  /** F5 forwarding addresses <alias>@INBOUND_EMAIL_DOMAIN (the owner points its MX at the mail worker). */
+  INBOUND_EMAIL_DOMAIN: string | undefined;
+  /** HMAC-SHA256 secret the mail worker signs POST /api/inbound/email with. */
+  INBOUND_EMAIL_SECRET: string | undefined;
+  /** True when both inbound email values are set. */
+  INBOUND_EMAIL_ENABLED: boolean;
+  /** Meta app for Instagram DM sync (F5 switch): the app id and secret, and the webhook verify token. */
+  META_APP_ID: string | undefined;
+  META_APP_SECRET: string | undefined;
+  META_VERIFY_TOKEN: string | undefined;
+  /** True when all three META_* values are set: the Instagram connect flow and webhook are on. */
+  INSTAGRAM_ENABLED: boolean;
+  /** Cloudflare Turnstile server key; bot checks are skipped without it (the web has the site key). */
+  TURNSTILE_SECRET_KEY: string | undefined;
+  /** True when TURNSTILE_SECRET_KEY is set. */
+  TURNSTILE_ENABLED: boolean;
 
   /** S3-compatible bucket for image uploads (Railway bucket). All four values, or none. */
   BUCKET_ENDPOINT: string | undefined;
@@ -320,6 +353,30 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     issues.push('AI_ENABLED=true needs OPENROUTER_API_KEY');
   }
 
+  // Creator suite: key-optional features come as full sets (a partial set is a typo).
+  const inboundEmailEnabled = credentialPair('INBOUND_EMAIL_DOMAIN', 'INBOUND_EMAIL_SECRET');
+  if (
+    raw.INBOUND_EMAIL_DOMAIN &&
+    !/^(?=.{1,253}$)([a-z0-9-]+\.)+[a-z]{2,}$/i.test(raw.INBOUND_EMAIL_DOMAIN)
+  ) {
+    issues.push('INBOUND_EMAIL_DOMAIN must be a domain name, e.g. in.example.com');
+  }
+  if (raw.INBOUND_EMAIL_SECRET && raw.INBOUND_EMAIL_SECRET.length < 32) {
+    issues.push('INBOUND_EMAIL_SECRET must be at least 32 characters');
+  }
+  const metaKeys = ['META_APP_ID', 'META_APP_SECRET', 'META_VERIFY_TOKEN'] as const;
+  const metaSet = metaKeys.filter((key) => Boolean(raw[key]));
+  if (metaSet.length > 0 && metaSet.length < metaKeys.length) {
+    issues.push(`Set all of ${metaKeys.join(', ')}, or none`);
+  }
+  const instagramEnabled = metaSet.length === metaKeys.length;
+  if (raw.FIELD_ENCRYPTION_KEY && !isFieldEncryptionKey(raw.FIELD_ENCRYPTION_KEY)) {
+    issues.push('FIELD_ENCRYPTION_KEY must be 32 bytes, base64 (openssl rand -base64 32)');
+  }
+  if (isProduction && instagramEnabled && !raw.FIELD_ENCRYPTION_KEY) {
+    issues.push('FIELD_ENCRYPTION_KEY is required in production when Instagram (META_*) is on');
+  }
+
   if (issues.length > 0) throw new EnvError(issues);
 
   const webOrigin = raw.WEB_ORIGIN;
@@ -386,6 +443,17 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
 
     YOUTUBE_API_KEY: raw.YOUTUBE_API_KEY,
     YOUTUBE_ENABLED: Boolean(raw.YOUTUBE_API_KEY),
+
+    FIELD_ENCRYPTION_KEY: raw.FIELD_ENCRYPTION_KEY,
+    INBOUND_EMAIL_DOMAIN: raw.INBOUND_EMAIL_DOMAIN?.toLowerCase(),
+    INBOUND_EMAIL_SECRET: raw.INBOUND_EMAIL_SECRET,
+    INBOUND_EMAIL_ENABLED: inboundEmailEnabled,
+    META_APP_ID: raw.META_APP_ID,
+    META_APP_SECRET: raw.META_APP_SECRET,
+    META_VERIFY_TOKEN: raw.META_VERIFY_TOKEN,
+    INSTAGRAM_ENABLED: instagramEnabled,
+    TURNSTILE_SECRET_KEY: raw.TURNSTILE_SECRET_KEY,
+    TURNSTILE_ENABLED: Boolean(raw.TURNSTILE_SECRET_KEY),
 
     BUCKET_ENDPOINT: raw.BUCKET_ENDPOINT,
     BUCKET_REGION: raw.BUCKET_REGION ?? 'auto',

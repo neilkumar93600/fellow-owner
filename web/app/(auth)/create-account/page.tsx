@@ -6,6 +6,8 @@ import { redirectIfSignedIn } from '../redirect-signed-in';
 // Not worth ranking, but its links (terms, privacy, log in) are fine to follow.
 export const metadata: Metadata = {
   title: 'Create your account',
+  description:
+    'Create your Fellow Owners account to start a space for your followers, or to join a creator’s.',
   robots: { index: false, follow: true },
 };
 

@@ -3,7 +3,11 @@ import { readAuthRequest } from '@/components/auth/auth-server';
 import { ResetPasswordForm } from '@/components/auth/reset-password-form';
 
 // The second half of the password reset, reached from /forgot-password. Not indexed.
-export const metadata: Metadata = { title: 'Choose a new password', robots: { index: false } };
+export const metadata: Metadata = {
+  title: 'Choose a new password',
+  description: 'Choose a new password for your Fellow Owners account.',
+  robots: { index: false },
+};
 
 // returnTo rides along, so a reset that ends in logging in still lands where the visitor was headed.
 export default async function Page({

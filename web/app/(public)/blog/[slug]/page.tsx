@@ -1,13 +1,12 @@
-import { ChevronLeft } from 'lucide-react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DateBadge, PageFrame } from '@/components/marketing/page-frame';
-import { buttonVariants } from '@/components/ui/button-variants';
+import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 import { cn } from '@/components/ui/cn';
 import { getPost, POSTS } from '@/lib/blog';
 import { DISPLAY_H1 } from '@/lib/constants';
 import { routes } from '@/lib/routes';
+import { pageMetadata } from '@/lib/seo';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -17,13 +16,13 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPost((await params).slug);
-  if (!post) return { title: 'Note not found' };
-  return {
+  if (!post) notFound();
+  return pageMetadata({
     title: post.title,
     description: post.summary,
-    alternates: { canonical: `/blog/${post.slug}` },
-    openGraph: { type: 'article', title: post.title, description: post.summary },
-  };
+    path: `/blog/${post.slug}`,
+    publishedTime: post.date,
+  });
 }
 
 export default async function Page({ params }: Props) {
@@ -32,16 +31,13 @@ export default async function Page({ params }: Props) {
 
   return (
     <PageFrame>
-      <Link
-        href={routes.marketing.blog()}
-        className={cn(
-          buttonVariants({ variant: 'secondary', surface: 'glass' }),
-          'h-11 pr-5 pl-3 text-ink',
-        )}
-      >
-        <ChevronLeft aria-hidden className="size-5" />
-        All notes
-      </Link>
+      <Breadcrumbs
+        crumbs={[
+          { name: 'Home', path: routes.home() },
+          { name: 'Blog', path: routes.marketing.blog() },
+          { name: post.title, path: `/blog/${post.slug}` },
+        ]}
+      />
 
       <article className="mt-8">
         <header className="flex flex-col items-start gap-3">

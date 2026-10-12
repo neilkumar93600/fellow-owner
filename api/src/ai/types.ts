@@ -11,7 +11,12 @@ import type {
   TasteProfile,
   Tint,
 } from '@fellow-owners/shared';
+import type { BrandTriageAiInput, BrandTriageAiOutput } from './tasks/brand-triage.js';
+import type { CaptionDraftAiInput, CaptionDraftAiOutput } from './tasks/caption-draft.js';
 import type { TriageFeedbackExample } from './tasks/triage-item.js';
+
+// Creator-suite task types live in their task modules (owned with the feature) and are re-exported.
+export type { BrandTriageAiInput, BrandTriageAiOutput, CaptionDraftAiInput, CaptionDraftAiOutput };
 
 // The contract between the domain services (callers) and the AI module (implementations).
 // Domain code depends only on these types; `container.ts` decides which implementation is used:
@@ -57,6 +62,10 @@ export type AiTaskName =
   | 'coach'
   | 'questionGroup'
   | 'challengeSummary'
+  /** F3 planner caption drafts (tasks/caption-draft.ts). */
+  | 'captionDraft'
+  /** F5 brand request triage (tasks/brand-triage.ts). */
+  | 'brandTriage'
   /** fal.ai media (ai/media.ts): no v1 route uses these yet. */
   | 'generateImage'
   | 'generateVideo';
@@ -457,6 +466,10 @@ export interface AiServices {
   questionGroup(input: QuestionGroupInput, ctx: AiContext): Promise<QuestionGroupOutput>;
   /** Challenge close summary (workers/close-challenges.ts). */
   challengeSummary(input: ChallengeSummaryInput, ctx: AiContext): Promise<ChallengeSummaryOutput>;
+  /** F3 caption draft (POST /api/spaces/:handle/planner/caption-draft); capped per space per day. */
+  captionDraft(input: CaptionDraftAiInput, ctx: AiContext): Promise<CaptionDraftAiOutput>;
+  /** F5 brand request triage (brands service, on arrival); capped per space per day. */
+  brandTriage(input: BrandTriageAiInput, ctx: AiContext): Promise<BrandTriageAiOutput>;
 }
 
 // ---------------------------------------------------------------- background work

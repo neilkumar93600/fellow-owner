@@ -1,4 +1,5 @@
 import {
+  type BrandRequestSource,
   type markNotificationsReadSchema,
   type NotificationItem,
   type NotificationKind,
@@ -6,6 +7,7 @@ import {
   type NotificationsQuery,
   PITCH_TYPE_LABELS,
   type PitchType,
+  type Platform,
   POST_TYPE_LABELS,
   type PostType,
   REPORT_REASON_LABELS,
@@ -60,6 +62,26 @@ export interface NotificationPayloads {
   challenge_shortlisted: { askId: string; postId: string; title: string };
   /** To the space owner when a member reports a post or comment (F25). */
   report_filed: { reportId: string; targetType: ReportTarget; reason: ReportReason };
+  // Creator suite (0010).
+  /** To the creator: a planned post is due within the hour (F3, tick `planner_reminders`). */
+  planner_reminder: {
+    planItemId: string;
+    title: string;
+    scheduledAt: string;
+    platforms: Platform[];
+  };
+  /** To the poll's post author when a member votes (F4). */
+  poll_voted: { postId: string; pollId: string; question: string; actorName: string };
+  /** To a project's team and followers when an update is posted (F4). */
+  project_updated: { postId: string; title: string; updateId: string; actorName: string };
+  /** To the project author when the creator backs it (F4). */
+  project_backed: { postId: string; title: string };
+  /** To the creator when a brand request arrives (F5). */
+  brand_request_received: {
+    brandRequestId: string;
+    brandName: string;
+    source: BrandRequestSource;
+  };
 }
 
 /** notify() input, discriminated by kind. */
@@ -190,6 +212,43 @@ function present(row: NotificationWithSpace): Pick<NotificationItem, 'text' | 'h
       return {
         text: `A ${v.targetType} was reported: ${REPORT_REASON_LABELS[v.reason] ?? v.reason}`,
         href: '/dashboard/communities/reports',
+      };
+    }
+    case 'planner_reminder': {
+      const v: NotificationPayloads['planner_reminder'] = p;
+      return {
+        text: `Time to post: ${cut(v.title)}`,
+        href: `/dashboard/planner?item=${seg(v.planItemId)}`,
+      };
+    }
+    case 'poll_voted': {
+      const v: NotificationPayloads['poll_voted'] = p;
+      return {
+        text: `${v.actorName} voted on your poll: ${cut(v.question)}`,
+        href: `${space}/p/${seg(v.postId)}`,
+      };
+    }
+    case 'project_updated': {
+      const v: NotificationPayloads['project_updated'] = p;
+      return {
+        text: `${v.actorName} posted an update on ${cut(v.title)}`,
+        href: `${space}/p/${seg(v.postId)}`,
+      };
+    }
+    case 'project_backed': {
+      const v: NotificationPayloads['project_backed'] = p;
+      return {
+        text: `${creator} is backing your project: ${cut(v.title)}`,
+        href: `${space}/p/${seg(v.postId)}`,
+      };
+    }
+    case 'brand_request_received': {
+      const v: NotificationPayloads['brand_request_received'] = p;
+      const via =
+        v.source === 'email' ? ' by email' : v.source === 'instagram' ? ' on Instagram' : '';
+      return {
+        text: `New brand request${via} from ${cut(v.brandName)}`,
+        href: `/dashboard/brands?item=${seg(v.brandRequestId)}`,
       };
     }
     default:

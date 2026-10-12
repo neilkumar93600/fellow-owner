@@ -52,7 +52,7 @@ function BrowserPage({ step }: { step: number }) {
     case 0:
       return (
         <div className={BIO}>
-          <CreatorHeader space={LIVE_SPACE} cta={{ href: '#', label: 'Join a room' }} />
+          <CreatorHeader space={LIVE_SPACE} cta={{ href: '#', label: 'Join a room' }} nameAs="p" />
           <CommunityGrid handle={LIVE_SPACE.handle} communities={LIVE_ROOMS} joinedIds={[]} />
         </div>
       );
@@ -182,7 +182,9 @@ function PhoneCard({
 function PhonePage({ step }: { step: number }) {
   switch (step) {
     case 0:
-      return <CreatorHeader space={LIVE_SPACE} cta={{ href: '#', label: 'Join a room' }} />;
+      return (
+        <CreatorHeader space={LIVE_SPACE} cta={{ href: '#', label: 'Join a room' }} nameAs="p" />
+      );
     case 1:
       return (
         <div className="flex flex-col gap-4 px-4 pt-14">

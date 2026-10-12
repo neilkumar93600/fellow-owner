@@ -73,9 +73,14 @@ export const aiUnavailable = (message = 'AI is unavailable right now', details?:
 export const internalError = (message = 'Something went wrong') =>
   new AppError('internal_error', 500, message);
 
+/** A key-optional feature whose server keys are not set (Instagram DMs, email forwarding). */
+export const featureDisabled = (what = 'This feature') =>
+  new AppError('feature_disabled', 503, `${what} is not set up on this server`);
+
 /**
- * Scaffolding only: a route or method whose feature is not built yet answers 501. Nothing ships
- * calling it (T21 checks `rg notImplemented api/src` finds only this helper).
+ * Scaffolding only: a route or method whose feature is not built yet answers 501. The creator-suite
+ * stubs (Wave A) call it until their feature lands; nothing should ship calling it
+ * (`rg notImplemented api/src` should find only this helper at release).
  */
 export const notImplemented = (what = 'This feature') =>
-  new AppError('internal_error', 501, `${what} is not available yet`);
+  new AppError('not_implemented', 501, `${what} is not available yet`);

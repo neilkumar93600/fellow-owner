@@ -10,14 +10,16 @@ import {
   Table,
   UL,
 } from '@/components/legal/legal-ui';
+import { JsonLd } from '@/components/shared/json-ld';
 import { CONTACT, COOKIES, LEGAL_UPDATED, STORAGE } from '@/lib/legal';
+import { breadcrumbJsonLd, pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Cookie policy',
   description:
     'The four first-party cookies Fellow Owners needs to sign you in, the browser storage that keeps your drafts, and nothing else. No analytics, no advertising, no third-party cookies.',
-  alternates: { canonical: '/cookies' },
-};
+  path: '/cookies',
+});
 
 export default function Page() {
   return (
@@ -28,6 +30,12 @@ export default function Page() {
       updated={LEGAL_UPDATED}
       lead="Four first-party cookies keep you signed in, and nothing else: no analytics, no advertising pixels, no third-party cookies. Below is everything stored on your device, and why."
     >
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Cookie policy', path: '/cookies' },
+        ])}
+      />
       <Section id="short-version" title="The short version">
         <P>
           A cookie is a small piece of text a website asks your browser to keep and send back with

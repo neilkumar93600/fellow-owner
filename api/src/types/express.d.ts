@@ -25,6 +25,11 @@ declare global {
       membership: MembershipRow | null;
       /** Parsed `?query` from validate({ query }); Express 5 `req.query` is a read-only getter. */
       validatedQuery: unknown;
+      /**
+       * The exact bytes of a JSON body on /api/inbound/* and /api/webhooks/* (create-app.ts), for
+       * webhook signatures (HMAC over the raw body). Undefined everywhere else.
+       */
+      rawBody?: Buffer;
     }
   }
 }

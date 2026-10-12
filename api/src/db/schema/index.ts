@@ -13,6 +13,8 @@ import { spaces } from './spaces.js';
 
 export * from './ai.js';
 export * from './auth.js';
+export * from './brands.js';
+export * from './collab.js';
 export * from './columns.js';
 export * from './communities.js';
 export * from './enums.js';
@@ -25,6 +27,8 @@ export * from './moderation.js';
 export * from './newsletter.js';
 export * from './notification-prefs.js';
 export * from './page-visits.js';
+export * from './performance.js';
+export * from './planner.js';
 export * from './posts.js';
 export * from './promotions.js';
 export * from './question-groups.js';

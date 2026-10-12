@@ -9,11 +9,17 @@ import { LoopSection } from '@/components/landing/loop-section';
 import { ProblemSection } from '@/components/landing/problem-section';
 import { ShowcaseStrip } from '@/components/landing/showcase-strip';
 import { TrustSection } from '@/components/landing/trust-section';
+import { JsonLd } from '@/components/shared/json-ld';
 import { SITE } from '@/lib/constants';
+import { organizationJsonLd, pageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = {
+  ...pageMetadata({
+    title: `${SITE.name}: ${SITE.tagline}`,
+    description: SITE.description,
+    path: '/',
+  }),
   title: { absolute: `${SITE.name}: ${SITE.tagline}` },
-  description: SITE.description,
 };
 
 // Section order (round 4): hero, problem, how it works, for creators, for fans, connect, showcase, trust,
@@ -21,6 +27,7 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <main id="main">
+      <JsonLd data={organizationJsonLd()} />
       <Hero />
       <ProblemSection />
       <LoopSection />

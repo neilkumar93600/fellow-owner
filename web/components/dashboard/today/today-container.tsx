@@ -13,11 +13,13 @@ import { usePeople } from '@/hooks/queries/use-people';
 import { useStudioSpace } from '@/hooks/use-space';
 import { errorMessage } from '@/lib/toast';
 import { AskCard } from './ask-card';
+import { BrandPickCard } from './brand-pick-card';
 import { buildDecisionItems, pulseSentence } from './decision-items';
 import { DecisionStack, DecisionStackSkeleton } from './decision-stack';
 import { FansToThank, FansToThankSkeleton } from './fans-to-thank';
 import { MetricsCard } from './metrics-card';
 import { PlatformsCard } from './platforms-card';
+import { ProfileScoreCard } from './profile-score-card';
 import { PulsePanel, PulsePanelSkeleton } from './pulse-panel';
 import { ReportsNotice } from './reports-notice';
 import { SetupChecklist } from './setup-checklist';
@@ -74,6 +76,9 @@ export function TodayContainer() {
     <TodayView
       extras={
         <>
+          {/* Creator suite: the daily brand pick (F5, B4) and the profile score (F2, B1). */}
+          <BrandPickCard />
+          <ProfileScoreCard />
           <PlatformsCard />
           <AskCard />
           <MetricsCard />

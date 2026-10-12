@@ -2,19 +2,25 @@ import type { Db } from '../db/client.js';
 import { createAccountRepo } from './account.repo.js';
 import { createAiRunsRepo } from './ai-runs.repo.js';
 import { createAsksRepo } from './asks.repo.js';
+import { createBrandsRepo } from './brands.repo.js';
 import { createClicksRepo } from './clicks.repo.js';
+import { createCollabRepo } from './collab.repo.js';
 import { createCommentsRepo } from './comments.repo.js';
 import { createCommunitiesRepo } from './communities.repo.js';
 import { createDigestsRepo } from './digests.repo.js';
 import { createFeedbackRepo } from './feedback.repo.js';
 import { createFollowersRepo } from './followers.repo.js';
 import { createInsightsRepo } from './insights.repo.js';
+import { createInstagramRepo } from './instagram.repo.js';
+import { createMediaKitRepo } from './media-kit.repo.js';
 import { createMembershipsRepo } from './memberships.repo.js';
 import { createNewsletterRepo } from './newsletter.repo.js';
 import { createNotificationPrefsRepo } from './notification-prefs.repo.js';
 import { createNotificationsRepo } from './notifications.repo.js';
 import { createPageVisitsRepo } from './page-visits.repo.js';
+import { createPerformanceRepo } from './performance.repo.js';
 import { createPitchesRepo } from './pitches.repo.js';
+import { createPlannerRepo } from './planner.repo.js';
 import { createPostsRepo } from './posts.repo.js';
 import { createPromotionsRepo } from './promotions.repo.js';
 import { createQuestionGroupsRepo } from './question-groups.repo.js';
@@ -55,6 +61,13 @@ export function createRepos(db: Db) {
     notificationPrefs: createNotificationPrefsRepo(db),
     pageVisits: createPageVisitsRepo(db),
     account: createAccountRepo(db),
+    // Creator suite (0010): one repo per feature package.
+    performance: createPerformanceRepo(db),
+    planner: createPlannerRepo(db),
+    collab: createCollabRepo(db),
+    brands: createBrandsRepo(db),
+    instagram: createInstagramRepo(db),
+    mediaKit: createMediaKitRepo(db),
   };
 }
 

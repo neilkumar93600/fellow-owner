@@ -6,10 +6,13 @@ import { buttonVariants } from '@/components/ui/button-variants';
 import { DISPLAY_H1 } from '@/lib/constants';
 
 // Where the confirm and unsubscribe links in newsletter emails land (the API redirects here).
-export const metadata: Metadata = {
-  title: 'Newsletter',
-  robots: { index: false },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ status: string }>;
+}): Promise<Metadata> {
+  return { title: NOTICES[(await params).status]?.title ?? 'Newsletter', robots: { index: false } };
+}
 
 const NOTICES: Record<string, { title: string; body: string }> = {
   confirmed: {

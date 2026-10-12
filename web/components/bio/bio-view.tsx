@@ -6,6 +6,7 @@ import { FansOfTheWeek } from './fans-of-the-week';
 import { FeaturedProjects } from './featured-projects';
 import { PitchCta } from './pitch-cta';
 import { VisitBeacon } from './visit-beacon';
+import { WorkWithMeLink } from './work-with-me-link';
 
 export interface BioViewProps {
   page: SpacePage;
@@ -47,6 +48,11 @@ export function BioView({
       <CreatorHeader space={space} cta={cta} />
       <CommunityGrid handle={space.handle} communities={communities} joinedIds={joinedIds} />
       {isOwner ? null : <PitchCta handle={space.handle} firstName={first} />}
+      <WorkWithMeLink
+        handle={space.handle}
+        firstName={first}
+        mediaKitEnabled={space.mediaKitEnabled}
+      />
       <FansOfTheWeek firstName={first} spotlights={spotlights} />
       <FeaturedProjects
         handle={space.handle}

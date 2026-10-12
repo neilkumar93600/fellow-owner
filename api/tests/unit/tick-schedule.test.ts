@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { dueJobs, JOB_NAMES, jobSlot } from '../../src/workers/tick.js';
 
-const HOURLY = ['sweep', 'group_questions', 'close_challenges', 'email_digests'];
+const HOURLY = [
+  'sweep',
+  'group_questions',
+  'close_challenges',
+  'email_digests',
+  'planner_reminders',
+];
 
 /** 2026-10-12 is a Monday. */
 const at = (iso: string) => new Date(iso);
@@ -22,6 +28,11 @@ describe('dueJobs (the schedule, UTC)', () => {
   it('adds community_digests on Monday at 13:00 only', () => {
     expect(dueJobs(at('2026-10-12T13:00:00Z'))).toEqual([...HOURLY, 'community_digests']);
     expect(dueJobs(at('2026-10-13T13:00:00Z'))).toEqual(HOURLY);
+  });
+
+  it('adds refresh_performance at 07:00 and brand_digest at 14:00', () => {
+    expect(dueJobs(at('2026-10-13T07:05:00Z'))).toEqual([...HOURLY, 'refresh_performance']);
+    expect(dueJobs(at('2026-10-13T14:59:59Z'))).toEqual([...HOURLY, 'brand_digest']);
   });
 
   it('only names known jobs', () => {

@@ -2,6 +2,7 @@
 // Dates are ISO 8601 strings. Lists use cursor pagination: { items, nextCursor }.
 // AI fields (AiInsight) only ever appear in /api/studio responses (owner view).
 
+import type { Backing, Poll } from './collab.js';
 import type {
   AnalysisStatus,
   BriefingRefType,
@@ -53,6 +54,10 @@ export type ApiErrorCode =
   | 'demo_disabled'
   | 'ai_unavailable'
   | 'uploads_disabled'
+  /** A key-optional feature whose server keys are not set (Instagram, email forwarding). */
+  | 'feature_disabled'
+  /** A route whose feature is not built yet (creator-suite stubs until Wave B lands). */
+  | 'not_implemented'
   | 'internal_error';
 
 export interface ApiErrorBody {
@@ -136,6 +141,8 @@ export interface PublicSpace {
   isDemo: boolean;
   /** Uploaded cover (/api/media/<key>) or an image link; null = the default art. */
   coverUrl: string | null;
+  /** The creator turned on the public media kit (/{handle}/media-kit, F6). */
+  mediaKitEnabled: boolean;
 }
 
 export interface PublicCommunity {
@@ -304,6 +311,13 @@ export interface PostCard {
   lovedAt: ISODate | null;
   /** Set when the post is an entry to a creator challenge (posts.ask_id). */
   challenge: { id: string; title: string; status: ChallengeStatus } | null;
+  // F4 fan collaboration (collab.ts); optional until the posts presenters fill them.
+  /** The author asked for feedback: the project is surfaced in its community. */
+  feedbackWantedAt?: ISODate | null;
+  /** "Backed by {creator}". */
+  backing?: Backing | null;
+  /** The post carries a poll (PostDetail.poll has it). */
+  hasPoll?: boolean;
 }
 
 /** A blurred placeholder shown to non-members (first 3 titles only). */
@@ -355,6 +369,12 @@ export interface PostDetail extends PostCard {
   team: TeamMember[];
   viewerTeam: { role: string; status: TeamStatus } | null;
   comments: CommentItem[];
+  // F4 fan collaboration (collab.ts); optional until the posts presenters fill them.
+  poll?: Poll | null;
+  /** Entries on the project's updates timeline (GET /api/posts/:id/updates lists them). */
+  updateCount?: number;
+  /** The viewer follows the project's updates. */
+  viewerFollowing?: boolean;
 }
 
 /** PUT/DELETE /api/posts/:id/signals/:kind */

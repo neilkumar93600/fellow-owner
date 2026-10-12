@@ -365,6 +365,13 @@ export function createAuth(deps: AuthDeps = {}) {
           // Stores the handle without its leading @.
           validator: { input: socialHandleSchema },
         },
+        // When the person confirmed the Terms' minimum age (0010). Never client input: the server
+        // stamps it from the sign-up checkbox (or the onboarding confirmation for social sign-ups).
+        ageConfirmedAt: {
+          type: 'date',
+          required: false,
+          input: false,
+        },
       },
     },
     // Google, Apple and Facebook tokens are stored encrypted with BETTER_AUTH_SECRET. Nothing in the

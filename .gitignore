@@ -42,3 +42,16 @@ typecheck-output.txt
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# keys, credentials and captured traffic (never commit)
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.tfvars
+*.har
+*.dump
+playwright/.auth/
+e2e/.auth/

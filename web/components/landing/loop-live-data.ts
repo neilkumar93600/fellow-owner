@@ -32,6 +32,7 @@ export const LIVE_SPACE: PublicSpace = {
   memberCount: DEMO.members,
   isDemo: true,
   coverUrl: null,
+  mediaKitEnabled: false,
 };
 
 export const LIVE_ROOMS: PublicCommunity[] = DEMO.rooms.map((room, index) => ({

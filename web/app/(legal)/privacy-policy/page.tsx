@@ -11,6 +11,7 @@ import {
   Table,
   UL,
 } from '@/components/legal/legal-ui';
+import { JsonLd } from '@/components/shared/json-ld';
 import {
   AI_MODELS,
   CONTACT,
@@ -22,13 +23,14 @@ import {
   RESPONSE_DAYS,
   RETENTION,
 } from '@/lib/legal';
+import { breadcrumbJsonLd, pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Privacy policy',
   description:
     'What Fellow Owners collects, what it never collects, who processes it, how long it is kept, and how to get it deleted.',
-  alternates: { canonical: '/privacy-policy' },
-};
+  path: '/privacy-policy',
+});
 
 export default function Page() {
   return (
@@ -39,6 +41,12 @@ export default function Page() {
       updated={LEGAL_UPDATED}
       lead="We collect only what it takes to run your space and sign you in. We do not track you across the web, we do not sell personal data, and your posts and ideas do not train AI models."
     >
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Privacy policy', path: '/privacy-policy' },
+        ])}
+      />
       <Section id="who-we-are" title="Who we are">
         <P>
           {OPERATOR.name} is owned and operated by {OPERATOR.entity}, a corporation organized under

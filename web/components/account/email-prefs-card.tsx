@@ -16,6 +16,10 @@ const KIND_LABELS: Record<EmailNotificationKind, string> = {
   spotlighted: 'A creator gives you a shout-out',
   challenge_shortlisted: 'Your challenge entry makes the shortlist',
   team_decision: 'A crew request is accepted or declined',
+  project_updated: 'A project you follow posts an update',
+  project_backed: 'A creator backs your fan project',
+  planner_reminder: 'Creators: a planned post is due within the hour',
+  brand_request_received: 'Creators: a daily summary of new brand requests',
 };
 
 /**

@@ -3,16 +3,21 @@
 import type { NotificationItem } from '@fellow-owners/shared';
 import {
   Bell,
+  BriefcaseBusiness,
+  CalendarClock,
   Flag,
+  HandHeart,
   Heart,
   Lightbulb,
   Loader2,
   type LucideIcon,
   Megaphone,
+  Rocket,
   Sparkles,
   Star,
   Trophy,
   UserPlus,
+  Vote,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef } from 'react';
@@ -34,6 +39,11 @@ const KIND_ICON: Record<NotificationItem['kind'], LucideIcon> = {
   spotlighted: Sparkles,
   challenge_shortlisted: Trophy,
   report_filed: Flag,
+  planner_reminder: CalendarClock,
+  poll_voted: Vote,
+  project_updated: Rocket,
+  project_backed: HandHeart,
+  brand_request_received: BriefcaseBusiness,
 };
 
 export interface NotificationPopoverProps {

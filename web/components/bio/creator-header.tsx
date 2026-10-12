@@ -21,6 +21,8 @@ export interface CreatorHeaderProps {
   space: PublicSpace;
   /** The viewer's way in: Join for visitors, the first joined community for members, the studio for the owner. */
   cta: { href: string; label: string };
+  /** The bio page's one h1; a preview inside another page (the landing mockups) passes 'p'. */
+  nameAs?: 'h1' | 'p';
 }
 
 /**
@@ -29,7 +31,7 @@ export interface CreatorHeaderProps {
  * link out, the follower and fan totals and the way in (a glass pill: the page's blue is "Send an
  * idea"). Words sit on glass-strong, so they are ink.
  */
-export function CreatorHeader({ space, cta }: CreatorHeaderProps) {
+export function CreatorHeader({ space, cta, nameAs: Name = 'h1' }: CreatorHeaderProps) {
   const first = space.displayName.split(' ')[0];
   const photos = space.isDemo ? DEMO_PHOTOS : undefined;
   return (
@@ -79,9 +81,9 @@ export function CreatorHeader({ space, cta }: CreatorHeaderProps) {
           )}
         </div>
         <div className="flex flex-col gap-1">
-          <h1 className="font-display text-[2.25rem] leading-[1.1] font-normal text-ink sm:text-[2.75rem]">
+          <Name className="font-display text-[2.25rem] leading-[1.1] font-normal text-ink sm:text-[2.75rem]">
             {space.displayName}
-          </h1>
+          </Name>
           <p className="text-small text-ink-soft">@{space.handle}</p>
         </div>
         {space.bio ? (

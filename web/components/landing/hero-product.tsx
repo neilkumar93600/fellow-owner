@@ -76,7 +76,11 @@ export function HeroStage() {
           <PhoneFrame designWidth={340} scale={0.62}>
             {/* Scrolled past the cover, as a fan would be: the name, then the rooms. */}
             <div className="-mt-[236px] flex flex-col gap-6 pb-6 @container">
-              <CreatorHeader space={LIVE_SPACE} cta={{ href: '#', label: 'Join a room' }} />
+              <CreatorHeader
+                space={LIVE_SPACE}
+                cta={{ href: '#', label: 'Join a room' }}
+                nameAs="p"
+              />
               <div className="px-4">
                 <CommunityGrid handle={LIVE_SPACE.handle} communities={HERO_ROOMS} joinedIds={[]} />
               </div>

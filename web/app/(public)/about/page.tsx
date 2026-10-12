@@ -7,15 +7,16 @@ import { buttonVariants } from '@/components/ui/button-variants';
 import { cn } from '@/components/ui/cn';
 import { DISPLAY_H1 } from '@/lib/constants';
 import { routes } from '@/lib/routes';
+import { pageMetadata } from '@/lib/seo';
 
 // From PRODUCT.md and docs/01-prd.md, told through the demo creator Mira Lane: who it is for, why, how it
 // works, and the principles we hold to.
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'About',
   description:
     'Fellow Owners is one link in a creator’s bio that gathers followers into communities, ideas and crews, with an AI that sorts the best of the DMs and always says why.',
-  alternates: { canonical: '/about' },
-};
+  path: '/about',
+});
 
 interface Card {
   title: string;

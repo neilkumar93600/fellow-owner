@@ -28,3 +28,23 @@ export function requireOwner(deps: OwnerGuardDeps): RequestHandler {
     next();
   };
 }
+
+/**
+ * Owner routes keyed by handle (/api/spaces/:handle/..., the creator suite): requireOwner, then
+ * `:handle` must be the caller's own space. 401 signed out; 404 for a handle they do not own (as
+ * for any space that is not theirs). Per-route only: it reads req.params.
+ */
+export function requireSpaceOwner(deps: OwnerGuardDeps): RequestHandler {
+  return async (req, res, next) => {
+    const session = await loadSession(deps.auth, req, res);
+    if (!session) throw unauthorized();
+    const handle = String(req.params.handle ?? '')
+      .trim()
+      .toLowerCase();
+    const space = await deps.spaces.findByOwnerUserId(session.user.id);
+    if (!space || space.handle !== handle) throw notFound('Space');
+    req.space = space;
+    req.membership = await deps.memberships.findByUser(space.id, session.user.id);
+    next();
+  };
+}

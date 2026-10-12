@@ -1,10 +1,13 @@
 import {
+  DIGEST_NOTIFICATION_KINDS,
+  type DigestNotificationKind,
   EMAIL_NOTIFICATION_KINDS,
   type EmailNotificationKind,
   LIMITS,
   type NotificationPrefs,
   type NotificationPrefsInput,
 } from '@fellow-owners/shared';
+import type { Env } from '../config/env.js';
 import type { CoreDeps } from '../container.js';
 import { signToken, verifyToken } from '../lib/signed-token.js';
 import type { DigestRow } from '../repositories/notification-prefs.repo.js';
@@ -13,6 +16,33 @@ import type { NotificationPayloads } from './notifications.service.js';
 export type NotificationEmailsServiceDeps = Pick<CoreDeps, 'env' | 'repos' | 'mailer' | 'logger'>;
 
 const UNSUBSCRIBE_PURPOSE = 'email-unsubscribe';
+
+/**
+ * What every notification email carries (the digest here; the planner reminder and the brand
+ * digest send their own): a body link to a page whose button POSTs (link scanners only GET), the
+ * RFC 8058 one-click target the mail client POSTs to (through the web's /api rewrite), and the
+ * preferences page. Pass `headers` to mailer.send.
+ */
+export function unsubscribeLinks(
+  env: Pick<Env, 'WEB_ORIGIN' | 'BETTER_AUTH_SECRET'>,
+  userId: string,
+): { page: string; preferences: string; headers: Record<string, string> } {
+  const token = encodeURIComponent(signToken(UNSUBSCRIBE_PURPOSE, userId, env.BETTER_AUTH_SECRET));
+  const oneClick = `${env.WEB_ORIGIN}/api/email/unsubscribe?token=${token}`;
+  return {
+    page: `${env.WEB_ORIGIN}/email-preferences?token=${token}`,
+    preferences: `${env.WEB_ORIGIN}/email-preferences`,
+    headers: {
+      'List-Unsubscribe': `<${oneClick}>`,
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    },
+  };
+}
+
+/** True when `kind` may be emailed to someone with these prefs (master switch, unsubscribe, kind switch). */
+export function emailAllowed(prefs: NotificationPrefs, kind: EmailNotificationKind): boolean {
+  return prefs.emailEnabled && !prefs.unsubscribed && prefs.kinds[kind];
+}
 
 /** Notifications younger than this are left for the next run: people reading live are not emailed. */
 const SETTLE_MS = 10 * 60_000;
@@ -27,7 +57,7 @@ function describe(row: DigestRow): { text: string; href: string } {
   const space = `/${seg(row.spaceHandle)}`;
   const creator = row.spaceDisplayName;
   // ponytail: payload is trusted (only notify() writes it), cast instead of re-validating.
-  switch (row.kind as EmailNotificationKind) {
+  switch (row.kind as DigestNotificationKind) {
     case 'reply_received': {
       const v = row.payload as unknown as NotificationPayloads['reply_received'];
       return {
@@ -61,6 +91,20 @@ function describe(row: DigestRow): { text: string; href: string } {
         href: `${space}/p/${seg(v.postId)}`,
       };
     }
+    case 'project_updated': {
+      const v = row.payload as unknown as NotificationPayloads['project_updated'];
+      return {
+        text: `${v.actorName} posted an update on ${v.title}`,
+        href: `${space}/p/${seg(v.postId)}`,
+      };
+    }
+    case 'project_backed': {
+      const v = row.payload as unknown as NotificationPayloads['project_backed'];
+      return {
+        text: `${creator} is backing your project: ${v.title}`,
+        href: `${space}/p/${seg(v.postId)}`,
+      };
+    }
   }
 }
 
@@ -80,13 +124,7 @@ export function createNotificationEmailsService(deps: NotificationEmailsServiceD
   }
 
   async function sendDigest(userId: string, email: string, name: string, rows: DigestRow[]) {
-    const token = encodeURIComponent(
-      signToken(UNSUBSCRIBE_PURPOSE, userId, env.BETTER_AUTH_SECRET),
-    );
-    // The body link opens a page whose button POSTs (link scanners only GET); the header is the
-    // RFC 8058 one-click target the mail client POSTs to (through the web's /api rewrite).
-    const unsubscribePage = `${env.WEB_ORIGIN}/email-preferences?token=${token}`;
-    const oneClickUrl = `${env.WEB_ORIGIN}/api/email/unsubscribe?token=${token}`;
+    const links = unsubscribeLinks(env, userId);
     const shown = rows.slice(0, LIMITS.emails.digestMaxItems);
     const lines = shown.map((row) => {
       const { text, href } = describe(row);
@@ -104,18 +142,15 @@ export function createNotificationEmailsService(deps: NotificationEmailsServiceD
       ...(more > 0 ? ['', `...and ${more} more. Open Fellow Owners to see everything.`] : []),
       '',
       `You get these emails because notification emails are on for your account.`,
-      `Unsubscribe: ${unsubscribePage}`,
-      `Or choose which emails you get: ${env.WEB_ORIGIN}/email-preferences`,
+      `Unsubscribe: ${links.page}`,
+      `Or choose which emails you get: ${links.preferences}`,
     ].join('\n');
     await mailer.send({
       to: email,
       subject:
         count === 1 ? '1 new update on Fellow Owners' : `${count} new updates on Fellow Owners`,
       text,
-      headers: {
-        'List-Unsubscribe': `<${oneClickUrl}>`,
-        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
-      },
+      headers: links.headers,
     });
   }
 
@@ -147,7 +182,7 @@ export function createNotificationEmailsService(deps: NotificationEmailsServiceD
     async sendDue(now: Date): Promise<number> {
       const olderThan = new Date(now.getTime() - SETTLE_MS);
       const rows = await repo.dueDigestRows({
-        kinds: EMAIL_NOTIFICATION_KINDS,
+        kinds: DIGEST_NOTIFICATION_KINDS,
         olderThan,
         since: new Date(now.getTime() - LOOKBACK_MS),
         // Anyone can act as the demo accounts, so their notifications are never emailed.

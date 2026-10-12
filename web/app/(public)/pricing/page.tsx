@@ -9,6 +9,7 @@ import { cn } from '@/components/ui/cn';
 import { DISPLAY_H1 } from '@/lib/constants';
 import { CONTACT } from '@/lib/legal';
 import { routes } from '@/lib/routes';
+import { pageMetadata } from '@/lib/seo';
 
 /*
  * Pricing (F29, P2). The pilot is free, and /terms §10 and /refunds §4 are binding about it: no card, no
@@ -17,12 +18,12 @@ import { routes } from '@/lib/routes';
  * a footnote. One blue button: Start your space, on the plan that is open.
  */
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Pricing',
   description:
     'Fellow Owners is free while we pilot: no card, no commission on what your fans make, and fans never pay. What a paid creator plan will be priced on when it arrives.',
-  alternates: { canonical: '/pricing' },
-};
+  path: '/pricing',
+});
 
 const START_HREF = routes.auth.createAccount(routes.onboarding());
 const mailto = (subject: string) =>

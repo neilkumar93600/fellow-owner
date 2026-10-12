@@ -57,6 +57,9 @@ export const handleParamsSchema = z.object({
   handle: z.string().trim().toLowerCase().min(1).max(LIMITS.handle.max),
 });
 
+/** Owner routes on one item of a space: /api/spaces/:handle/<things>/:id. */
+export const handleIdParamsSchema = handleParamsSchema.extend({ id: idSchema });
+
 export const handleCheckQuerySchema = z.object({
   handle: z.string().trim().toLowerCase().max(LIMITS.handle.max),
 });

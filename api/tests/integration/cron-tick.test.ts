@@ -85,7 +85,13 @@ describe('POST|GET /api/cron/tick', () => {
 
     // An hour later only the hourly jobs are due again.
     const later = await startTick(container, { now: new Date(now.getTime() + 3_600_000) });
-    const hourly = ['sweep', 'group_questions', 'close_challenges', 'email_digests'];
+    const hourly = [
+      'sweep',
+      'group_questions',
+      'close_challenges',
+      'email_digests',
+      'planner_reminders',
+    ];
     expect([...later].sort()).toEqual([...hourly].sort());
     await container.background.whenIdle();
     for (const job of JOB_NAMES) expect(calls[job]).toBe(hourly.includes(job) ? 2 : 1);

@@ -17,6 +17,8 @@ export const authClient = createAuthClient({
       user: {
         socialPlatform: { type: 'string', required: false },
         socialHandle: { type: 'string', required: false },
+        // Set by the server only (sign-up age confirmation), never sent by the client.
+        ageConfirmedAt: { type: 'date', required: false, input: false },
       },
     }),
   ],

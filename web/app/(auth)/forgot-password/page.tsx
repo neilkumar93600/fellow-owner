@@ -4,7 +4,11 @@ import { ForgotPasswordForm } from '@/components/auth/forgot-password-form';
 import { redirectIfSignedIn } from '../redirect-signed-in';
 
 // Linked from the Password label on /login. Per-visitor, so not indexed.
-export const metadata: Metadata = { title: 'Reset your password', robots: { index: false } };
+export const metadata: Metadata = {
+  title: 'Reset your password',
+  description: 'Get an email with a link to choose a new Fellow Owners password.',
+  robots: { index: false },
+};
 
 // returnTo rides along, so a reset that ends in logging in still lands where the visitor was headed.
 export default async function Page({

@@ -132,18 +132,48 @@ export const NOTIFICATION_KINDS = [
   'challenge_shortlisted',
   /** To the space owner when a member reports a post or comment (F25). */
   'report_filed',
+  /** Creator suite (migration 0010). To the creator: a planned post is due within the hour (F3). */
+  'planner_reminder',
+  /** To the poll's post author when a member votes (F4). */
+  'poll_voted',
+  /** To a project's team and followers when an update is posted (F4). */
+  'project_updated',
+  /** To the project author when the creator backs the project (F4). */
+  'project_backed',
+  /** To the creator when a brand request arrives by form, email or Instagram (F5). */
+  'brand_request_received',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
-/** Kinds that can also go out by email (hourly digest, notification_prefs.kinds). */
+/**
+ * Kinds that can also go out by email: the switches in notification_prefs.kinds. Most go in the
+ * hourly digest (DIGEST_NOTIFICATION_KINDS); planner_reminder is emailed by the planner job right
+ * away and brand_request_received by the daily brand digest, each honouring the same switch.
+ */
 export const EMAIL_NOTIFICATION_KINDS = [
   'reply_received',
   'project_featured',
   'spotlighted',
   'challenge_shortlisted',
   'team_decision',
+  'project_updated',
+  'project_backed',
+  'planner_reminder',
+  'brand_request_received',
 ] as const satisfies readonly NotificationKind[];
 export type EmailNotificationKind = (typeof EMAIL_NOTIFICATION_KINDS)[number];
+
+/** The email kinds the hourly digest (tick `email_digests`) sends. */
+export const DIGEST_NOTIFICATION_KINDS = [
+  'reply_received',
+  'project_featured',
+  'spotlighted',
+  'challenge_shortlisted',
+  'team_decision',
+  'project_updated',
+  'project_backed',
+] as const satisfies readonly EmailNotificationKind[];
+export type DigestNotificationKind = (typeof DIGEST_NOTIFICATION_KINDS)[number];
 
 /** question_groups.status (F32 Answer Once, text + CHECK). */
 export const QUESTION_GROUP_STATUSES = ['open', 'answered', 'dismissed'] as const;

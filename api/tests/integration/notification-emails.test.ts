@@ -284,6 +284,10 @@ describe('GET/PUT /api/me/notification-prefs', () => {
         spotlighted: true,
         challenge_shortlisted: true,
         team_decision: true,
+        project_updated: true,
+        project_backed: true,
+        planner_reminder: true,
+        brand_request_received: true,
       },
       unsubscribed: false,
     });

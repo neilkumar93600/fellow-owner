@@ -7,7 +7,7 @@ import { NewsletterTokenAction } from '../token-action';
 
 // Where the confirm link in a newsletter email lands. Opening it changes nothing; the button does.
 export const metadata: Metadata = {
-  title: 'Newsletter',
+  title: 'Confirm your newsletter signup',
   robots: { index: false },
 };
 

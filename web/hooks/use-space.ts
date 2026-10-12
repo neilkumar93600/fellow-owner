@@ -1,5 +1,5 @@
 import type { StudioSpace } from '@fellow-owners/shared';
-import { useQuery } from '@tanstack/react-query';
+import { type QueryClient, useQuery } from '@tanstack/react-query';
 import { getMySpace } from '@/lib/api/studio';
 
 // No 'use client' here: server code may import the keys and creatorFirstName; the hooks only
@@ -18,6 +18,23 @@ export function useStudioSpace(initialData?: StudioSpace) {
     queryFn: ({ signal }) => getMySpace(signal),
     initialData,
   });
+}
+
+/**
+ * The creator's handle for /api/spaces/:handle/... calls (the creator suite). On dashboard pages the
+ * shell has already cached the space, so this is set from the first render; undefined elsewhere.
+ */
+export function useStudioHandle(): string | undefined {
+  return useStudioSpace().data?.handle;
+}
+
+/** The handle inside a mutation: the cached space, fetched once if it is not cached yet. */
+export async function ensureStudioHandle(queryClient: QueryClient): Promise<string> {
+  const space = await queryClient.ensureQueryData({
+    queryKey: studioKeys.space,
+    queryFn: ({ signal }) => getMySpace(signal),
+  });
+  return space.handle;
 }
 
 /** "Mira" for the welcome line: the account name's first word, else the space's display name. */

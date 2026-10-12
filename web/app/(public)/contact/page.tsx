@@ -7,6 +7,7 @@ import { buttonVariants } from '@/components/ui/button-variants';
 import { cn } from '@/components/ui/cn';
 import { DISPLAY_H1 } from '@/lib/constants';
 import { CONTACT, MIN_AGE, OPERATOR, RESPONSE_DAYS } from '@/lib/legal';
+import { pageMetadata } from '@/lib/seo';
 
 /*
  * Honest channels only: the four addresses from shared CONTACT and the postal address from OPERATOR, plus
@@ -14,12 +15,12 @@ import { CONTACT, MIN_AGE, OPERATOR, RESPONSE_DAYS } from '@/lib/legal';
  * the other mailboxes are secondary.
  */
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Contact',
   description:
     'Reach the Fellow Owners team: support, privacy, legal and copyright addresses, what each one is for and how soon we reply.',
-  alternates: { canonical: '/contact' },
-};
+  path: '/contact',
+});
 
 interface Channel {
   name: string;

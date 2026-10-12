@@ -1,4 +1,13 @@
-import type { IdeasView, InboxSort, InboxTab, PitchStatus, PostType } from '@fellow-owners/shared';
+import type {
+  BrandRequestStatus,
+  IdeasView,
+  InboxSort,
+  InboxTab,
+  PerformanceWindow,
+  PitchStatus,
+  PlannerView,
+  PostType,
+} from '@fellow-owners/shared';
 
 // Typed paths for every screen in docs/03-app-flow.md. Query values that are empty or equal to the
 // screen's default are left out, so each view has one URL.
@@ -73,6 +82,16 @@ export const routes = {
     promoteComposer: (postId: string) => `/dashboard/promote/${seg(postId)}`,
     challenges: () => '/dashboard/challenges',
     challenge: (id: string) => `/dashboard/challenges/${seg(id)}`,
+    /** F1/F2: reach, engagement, top posts, best times and the profile score. */
+    performance: (q: { days?: PerformanceWindow } = {}) =>
+      withQuery('/dashboard/performance', q, { days: 30 }),
+    /** F3: the content calendar; `date` (YYYY-MM-DD) picks the week or month, `item` opens one. */
+    planner: (q: { view?: PlannerView; date?: string; item?: string } = {}) =>
+      withQuery('/dashboard/planner', q, { view: 'week' }),
+    /** F5: the brand inbox; `item` opens one request. */
+    brands: (q: { status?: BrandRequestStatus; item?: string } = {}) =>
+      withQuery('/dashboard/brands', q),
+    /** Tabs: profile (default), taste, bio-link, import, brands, account. */
     settings: (q: { tab?: string } = {}) => withQuery('/dashboard/settings', q, { tab: 'profile' }),
   },
 
@@ -89,6 +108,10 @@ export const routes = {
     pitch: (handle: string) => `${space(handle)}/pitch`,
     me: (handle: string) => `${space(handle)}/me`,
     showcase: (handle: string, slug: string) => `${space(handle)}/s/${seg(slug)}`,
+    /** F5: the public brand form. */
+    workWithMe: (handle: string) => `${space(handle)}/work-with-me`,
+    /** F6: the public media kit (404 while the creator has it off). */
+    mediaKit: (handle: string) => `${space(handle)}/media-kit`,
     /** The signed-in fan's own account page (password, sessions, emails, data). */
     account: () => '/account',
   },

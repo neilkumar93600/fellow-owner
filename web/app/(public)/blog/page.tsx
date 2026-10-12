@@ -3,12 +3,13 @@ import Link from 'next/link';
 import { longDate, PageFrame } from '@/components/marketing/page-frame';
 import { POSTS } from '@/lib/blog';
 import { DISPLAY_H1 } from '@/lib/constants';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Blog',
   description: 'Short product notes on why Fellow Owners works the way it does.',
-  alternates: { canonical: '/blog' },
-};
+  path: '/blog',
+});
 
 export default function Page() {
   return (

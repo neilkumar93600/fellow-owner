@@ -13,10 +13,12 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = await getSpacePage((await params).handle);
-  if (!page) return {};
+  if (!page) notFound();
+  const { displayName, handle } = page.space;
   return pageMetadata({
-    title: `Join ${page.space.displayName}’s space`,
-    path: routes.fan.join(page.space.handle),
+    title: `Join ${displayName}’s space`,
+    description: `Join ${displayName}’s communities on Fellow Owners in under a minute.`,
+    path: routes.fan.join(handle),
     noindex: true,
   });
 }

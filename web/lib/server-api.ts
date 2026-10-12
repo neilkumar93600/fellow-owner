@@ -1,5 +1,11 @@
 import 'server-only';
-import type { Showcase, SpacePage, StudioSpace, ViewerMembership } from '@fellow-owners/shared';
+import type {
+  MediaKit,
+  Showcase,
+  SpacePage,
+  StudioSpace,
+  ViewerMembership,
+} from '@fellow-owners/shared';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -95,6 +101,11 @@ export const getFreshSpacePage = cache((handle: string): Promise<SpacePage | nul
     cache: 'no-store',
   });
 });
+
+/** GET /api/spaces/:handle/media-kit (F6): the public media kit, or null while it is off or unknown. */
+export function getMediaKit(handle: string): Promise<MediaKit | null> {
+  return cachedOrNull<MediaKit>(`/api/spaces/${encodeURIComponent(handle)}/media-kit`);
+}
 
 /** GET /api/spaces/:handle/showcase/:slug: a promoted project, or null when there is none. */
 export function getShowcase(handle: string, slug: string): Promise<Showcase | null> {
