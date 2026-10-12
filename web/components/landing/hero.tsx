@@ -1,5 +1,4 @@
 import { ArrowUpRight } from 'lucide-react';
-import { getImageProps } from 'next/image';
 import { AvatarStack } from '@/components/shared/avatar-initials';
 import { cn } from '@/lib/utils';
 import styles from './hero.module.css';
@@ -7,39 +6,21 @@ import { HeroIntro } from './hero-intro';
 import { HeroClaim, HeroStage } from './hero-product';
 import { HERO_CARD, HERO_STATS, LIVE_CREW } from './hero-product-data';
 
-/** Scenery only (no people): desktop fills the frame, phones get a right-side crop behind the phone. */
-function sceneryProps() {
-  const common = { alt: '', sizes: '(min-width: 1024px) 100vw, 92vw', quality: 75 };
-  const desktop = getImageProps({
-    ...common,
-    src: '/creator/hero-scenery.webp',
-    width: 2400,
-    height: 1600,
-  }).props;
-  const mobile = getImageProps({
-    ...common,
-    src: '/creator/hero-scenery-mobile.webp',
-    width: 1200,
-    height: 1259,
-  }).props;
-  return { desktop: desktop.srcSet, mobile };
-}
-
 /**
- * Hero (spec §4b "Framed Golden Hour"): one rounded frame around a golden-hour landscape. On the left,
- * over a cream scrim: the page's only h1, the sub line, honest stats and the claim bar, the hero's one
- * control. On the right the product (hero-product.tsx), decorative and inert. Copy is server-rendered and
- * complete without JavaScript; the entrance, springs and drift are client enhancements.
+ * Hero (Parchment Frost): one rounded parchment frame with two soft Monad washes (coral to sky-wash,
+ * sky-wash to mint) behind the frosted product. On the left, on plain parchment: the page's only h1, the
+ * sub line, honest stats and the claim bar, the hero's one control (the one Lake Blue button). On the right
+ * the product (hero-product.tsx), decorative and inert. Copy is server-rendered and complete without
+ * JavaScript; the entrance, springs and drift are client enhancements.
  */
 export function Hero() {
-  const { desktop, mobile } = sceneryProps();
   return (
     <>
       <HeroIntro />
       <section id="hero" aria-labelledby="hero-title" className={styles.hero}>
         <div className={styles.frame}>
           <div className={styles.copy}>
-            <p className={cn('glass-chip', styles.pill)}>
+            <p className={cn('eyebrow', styles.pill)}>
               <span className={styles.pillDot} aria-hidden="true" />
               The operating system for your fanbase
             </p>
@@ -52,10 +33,7 @@ export function Hero() {
               </span>{' '}
               <span className={styles.line}>
                 <span className={cn(styles.lineInner, styles.line2)}>
-                  Finally, a way to{' '}
-                  <em className={styles.accent} data-text="hear them.">
-                    hear them.
-                  </em>
+                  Finally, a way to <em className={styles.accent}>hear them.</em>
                 </span>
               </span>
             </h1>
@@ -71,16 +49,11 @@ export function Hero() {
           </div>
 
           <div className={styles.stageWrap}>
-            <picture className={styles.photo} data-hero-last>
-              <source media="(min-width: 1024px)" srcSet={desktop} />
-              <img
-                {...mobile}
-                alt=""
-                loading="eager"
-                fetchPriority="high"
-                className={styles.photoImg}
-              />
-            </picture>
+            {/* The washes: decoration only. data-hero-last ends the entrance on its animationend. */}
+            <div className={styles.washes} data-hero-last aria-hidden="true">
+              <span className={styles.washA} />
+              <span className={styles.washB} />
+            </div>
             <HeroStage />
           </div>
 

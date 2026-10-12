@@ -1,6 +1,6 @@
 /*
  * New ways to connect (connect-section.tsx): two rows of three frosted tiles, each with a tiny picture of
- * the real UI. The page aurora shows through; text sits on 55% glass, so ink-soft stays above 6.9:1.
+ * the real UI. The page washes show through; text sits on 55% glass, so ink-soft stays above 6:1.
  */
 
 .section {
@@ -32,9 +32,10 @@
 .groupLabel {
   margin: 48px 0 16px;
   color: var(--ink-soft);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
 }
 
@@ -70,12 +71,14 @@
   padding: 24px;
 }
 
+/* Tile titles are 20px and up: the serif at 400. */
 .tileTitle {
   color: var(--ink);
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.015em;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .tileLine {
@@ -108,7 +111,7 @@
 .snipTitle {
   color: var(--ink);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.3;
 }
 
@@ -136,7 +139,7 @@
   background: var(--color-aurora-peach);
   color: var(--ink);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .pillBtn {
@@ -151,7 +154,7 @@
   box-shadow: inset 0 0 0 1px var(--line-row);
   color: var(--ink);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Reply in my voice: a DM, a draft and three dots that type for a few seconds, then rest. */
@@ -165,7 +168,7 @@
 
 .bubble b {
   margin-right: 4px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .bubbleIn {
@@ -222,7 +225,7 @@
   gap: 6px;
   color: var(--ink-soft);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Faces (generated fan photos) */
@@ -251,7 +254,7 @@
   gap: 10px;
   color: var(--ink);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* What fans want */
@@ -271,7 +274,7 @@
 .wantRow b {
   color: var(--ink-soft);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .bar {
@@ -302,11 +305,11 @@
   background: var(--color-aurora-peach);
   color: var(--ink);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .loved svg {
-  color: var(--color-coral);
+  color: var(--color-lake);
 }
 
 /* Your idea made it */
@@ -320,7 +323,7 @@
 }
 
 .notice b {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .noticeIcon {
@@ -341,7 +344,7 @@
   list-style: none;
   color: var(--ink);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .credits li {
@@ -400,7 +403,7 @@
   font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
   font-weight: 400;
   line-height: 1.1;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .challengeLine {
@@ -436,7 +439,7 @@
   margin: 0;
   color: var(--ink-soft);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .stepLabel span {
@@ -465,7 +468,7 @@
 .briefTitle {
   color: var(--ink);
   font-size: 1.0625rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.3;
 }
 
@@ -546,7 +549,7 @@
 .entryPrice {
   margin-top: auto;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* The AI shortlist: three picks, each with its reason. */
@@ -578,7 +581,7 @@
   background: var(--color-aurora-peach);
   color: var(--ink);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .pickBody {
@@ -598,7 +601,7 @@
 .pickTop b {
   color: var(--ink);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.3;
 }
 
@@ -610,7 +613,7 @@
 
 .why b {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 @media (prefers-reduced-motion: reduce) {

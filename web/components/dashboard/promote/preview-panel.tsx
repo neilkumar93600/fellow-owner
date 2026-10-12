@@ -85,7 +85,7 @@ export function PreviewPanel({
         ) : null}
       </div>
 
-      <figure className="min-w-0 rounded-2xl border border-ink/10 bg-white p-4">
+      <figure className="min-w-0 rounded-2xl border border-line bg-white p-4">
         <figcaption className="flex items-center gap-3">
           <AvatarInitials name={author.name} image={author.image} size={40} />
           <span className="flex min-w-0 flex-col">

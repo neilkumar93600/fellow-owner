@@ -62,12 +62,6 @@
 }
 
 :root {
-  /* Rainbow CTA stops (Magic UI values). Marketing only; the app keeps coral. */
-  --color-1: hsl(0 100% 63%);
-  --color-2: hsl(270 100% 63%);
-  --color-3: hsl(210 100% 63%);
-  --color-4: hsl(195 100% 63%);
-  --color-5: hsl(90 100% 63%);
   /* Glass fills: soft for panels that carry short text, strong for long text, lists and side panels. */
   --glass-soft: rgb(255 255 255 / 0.55);
   --glass-strong: rgb(255 255 255 / 0.72);
@@ -318,6 +312,10 @@
     font-weight: 400;
     letter-spacing: -0.02em;
   }
+  /* An uppercase heading is a small card label ("FANS TO THANK"): mono caps, never serif caps. */
+  :is(h1, h2):where(.uppercase) {
+    font-family: var(--font-mono);
+  }
   /* Long reads (font-sans) get Inter's normal tracking, not the mono's. */
   .font-sans {
     letter-spacing: -0.006em;
@@ -481,22 +479,6 @@
     }
   }
 
-  /* legacy: glass pill, still used by components/onboarding/onboarding-preview.tsx. Move it to .glass-chip, then delete. */
-  .glass-pill {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.75) 0%,
-      rgba(255, 255, 255, 0.45) 100%
-    );
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow:
-      0 4px 16px -2px rgba(15, 23, 42, 0.04),
-      inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
-    border-radius: 999px;
-  }
-
   /* Small eyebrow tag above section titles: a hairline pill, mono uppercase 12px. */
   .eyebrow {
     display: inline-flex;
@@ -635,19 +617,6 @@
   }
 }
 
-/*
- * The "AI reviewing" chip and skeleton blocks: one soft band sweeps across every 1.6s, a translated
- * pseudo-element behind the content (transform only). Static under reduced motion.
- */
-@keyframes rainbow {
-  0% {
-    background-position: 0%;
-  }
-  100% {
-    background-position: 200%;
-  }
-}
-
 @keyframes aurora-drift {
   from {
     transform: translate3d(var(--from-x, 0), var(--from-y, 0), 0) scale(1);
@@ -657,6 +626,10 @@
   }
 }
 
+/*
+ * The "AI reviewing" chip and skeleton blocks: one soft band sweeps across every 1.6s, a translated
+ * pseudo-element behind the content (transform only). Static under reduced motion.
+ */
 @keyframes shimmer-sweep {
   from {
     transform: translateX(-100%);

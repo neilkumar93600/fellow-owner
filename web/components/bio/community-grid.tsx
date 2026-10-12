@@ -43,14 +43,16 @@ export function CommunityGrid({ handle, communities, joinedIds }: CommunityGridP
                 </div>
                 <div className="flex flex-1 flex-col gap-3 p-5">
                   <div className="flex flex-col gap-0.5">
-                    <h3 className="text-h2 text-ink">{community.name}</h3>
-                    <p className="text-small text-ink-soft">
+                    <h3 className="font-display text-h2 text-ink">{community.name}</h3>
+                    <p className="text-caption uppercase text-ink-soft">
                       <span className="tabular-nums">{formatNumber(community.memberCount)}</span>{' '}
                       {pluralize(community.memberCount, 'fan')}
                     </p>
                   </div>
                   {community.description ? (
-                    <p className="line-clamp-3 text-body text-ink">{community.description}</p>
+                    <p className="line-clamp-3 font-sans text-body text-ink">
+                      {community.description}
+                    </p>
                   ) : null}
                   <div className="mt-auto flex items-center pt-1">
                     <Link

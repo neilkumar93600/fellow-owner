@@ -1,8 +1,8 @@
 /*
- * Closing CTA, "Fans orbit + sunrise": the landing's last section, directly above the footer.
+ * Closing CTA, "Fans orbit": the landing's last section, directly above the footer.
  *
- * Layers, back to front: the sunrise (a coral to peach glow, a horizon arc and a little grain, faded out
- * toward the bottom edge so it melts into the footer), the orbit (two elliptical rings of fans, 1280px up;
+ * Layers, back to front: the washes (two soft Monad blobs, coral to sky-wash and sky-wash to mint, and a
+ * little grain, faded out toward the bottom edge so they melt into the footer), the orbit (two elliptical rings of fans, 1280px up;
  * a static avatar cluster below), then the centered content. The orbit is transform-only and pauses
  * while the section is off screen (cta-motion.tsx sets data-play). Nothing is hidden without JavaScript,
  * and reduced motion renders it all still (the entrances only arm when motion is allowed).
@@ -40,77 +40,46 @@
   }
 }
 
-/* ---------- Sunrise ---------- */
+/* ---------- Washes ---------- */
 
-.sun {
+.washes {
   position: absolute;
   inset: auto 0 0;
   z-index: 0;
   height: min(78%, 680px);
   pointer-events: none;
-  /* Strong through the arc, gone at the bottom edge so the footer's cream takes over. */
+  /* Strong in the middle, gone at the bottom edge so the footer's parchment takes over. */
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
 }
 
-.glow {
+/* Two Monad blobs: a two-pastel gradient each, its edge faded by a radial mask so it is never sharp. */
+.washA,
+.washB {
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      52% 70% at 50% 92%,
-      rgb(240 96 58 / 0.34),
-      rgb(255 168 128 / 0.3) 38%,
-      rgb(255 217 194 / 0.34) 66%,
-      transparent 86%
-    ),
-    radial-gradient(90% 60% at 50% 100%, rgb(255 217 194 / 0.55), transparent 78%),
-    radial-gradient(40% 50% at 12% 100%, rgb(220 207 247 / 0.45), transparent 80%),
-    radial-gradient(40% 50% at 88% 100%, rgb(191 221 247 / 0.4), transparent 80%);
-  filter: blur(6px);
-}
-
-/* The horizon: the top of a huge circle, lit from its rim, with a hairline of light along the arc. */
-.horizon {
-  --size: max(1500px, 170vw);
-  --rise: 190px;
-
-  position: absolute;
-  left: 50%;
-  bottom: calc(var(--rise) - var(--size));
-  width: var(--size);
+  bottom: -28%;
+  width: min(900px, 120vw);
   aspect-ratio: 1;
-  translate: -50% 0;
   border-radius: 50%;
-  background:
-    radial-gradient(
-      50% 36% at 50% 0%,
-      rgb(255 244 232 / 0.95),
-      rgb(255 196 156 / 0.85) 30%,
-      rgb(240 96 58 / 0.42) 62%,
-      transparent 100%
-    ),
-    linear-gradient(to bottom, rgb(255 217 194 / 0.55), transparent 40%);
-  box-shadow:
-    inset 0 2px 0 rgb(255 255 255 / 0.95),
-    inset 0 14px 36px -12px rgb(255 255 255 / 0.7),
-    0 -18px 70px rgb(240 96 58 / 0.3),
-    0 -2px 24px rgb(255 196 156 / 0.7);
+  opacity: 0.8;
+  -webkit-mask-image: radial-gradient(closest-side, #000 20%, transparent);
+  mask-image: radial-gradient(closest-side, #000 20%, transparent);
 }
 
-@media (min-width: 768px) {
-  .horizon {
-    --rise: 232px;
-  }
+.washA {
+  left: 50%;
+  translate: -88% 0;
+  background: linear-gradient(135deg, var(--color-coral) 15%, var(--color-sky-wash) 85%);
+}
+
+.washB {
+  left: 50%;
+  translate: -12% 6%;
+  background: linear-gradient(200deg, var(--color-sky-wash) 10%, var(--color-mint) 80%);
 }
 
 .grain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.12;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
+  z-index: 1;
 }
 
 /* ---------- Orbit ---------- */
@@ -148,7 +117,7 @@
   left: calc(var(--w) * var(--k) / -2);
   width: calc(var(--w) * var(--k));
   aspect-ratio: 1;
-  border: 1px solid rgb(30 27 38 / 0.08);
+  border: 1px solid rgb(206 202 200 / 0.7);
   border-radius: 50%;
   transform: scaleY(var(--sy));
 }
@@ -219,10 +188,9 @@
   border: 2px solid rgb(255 255 255 / 0.9);
   border-radius: 50%;
   background: var(--glass-chip);
-  box-shadow: 0 10px 28px -10px rgb(40 30 60 / 0.35);
   color: var(--ink);
-  font-size: 0.9375rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 500;
   letter-spacing: 0.01em;
 }
 
@@ -231,19 +199,19 @@
 }
 
 .initials.tonePeach {
-  background: #ffd9c2;
+  background: var(--color-aurora-peach);
 }
 
 .initials.toneSky {
-  background: #bfddf7;
+  background: var(--color-aurora-sky);
 }
 
 .initials.toneLilac {
-  background: #dccff7;
+  background: var(--color-aurora-lilac);
 }
 
 .initials.toneMint {
-  background: #cfefe3;
+  background: var(--color-aurora-mint);
 }
 
 .chip {
@@ -254,20 +222,20 @@
   padding-inline: 14px;
   border: 1px solid var(--glass-edge);
   border-radius: 999px;
-  background: rgb(255 255 255 / 0.72);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  box-shadow:
-    var(--glass-highlight),
-    0 12px 30px -14px rgb(40 30 60 / 0.3);
+  background: var(--glass-chip);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: var(--glass-highlight);
   color: var(--ink);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .chip svg {
-  color: var(--color-coral);
+  color: var(--color-lake);
 }
 
 /* Below 1280px: a still cluster above the headline instead of the rings. */
@@ -313,13 +281,13 @@
   max-width: 920px;
 }
 
-/* A soft cream pool behind the text calms any face drifting past it. */
+/* A soft parchment pool behind the text calms any face drifting past it. */
 .content::before {
   content: "";
   position: absolute;
   inset: -40px -140px;
   z-index: -1;
-  background: radial-gradient(closest-side, rgb(251 247 242 / 0.88), rgb(251 247 242 / 0));
+  background: radial-gradient(closest-side, rgb(246 243 241 / 0.88), rgb(246 243 241 / 0));
   pointer-events: none;
 }
 
@@ -335,7 +303,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 1.2rem + 4.4vw, 4.5rem);
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.05;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
@@ -344,12 +312,9 @@
   display: block;
 }
 
+/* The one accent: italic serif in Lake Blue. No gradient text. */
 .title em {
-  padding-right: 0.06em;
-  background: linear-gradient(100deg, var(--color-coral), #d84b2b);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-lake);
   font-style: italic;
 }
 
@@ -380,23 +345,15 @@
   }
 }
 
-.demoBtn {
-  height: 48px;
-  padding-inline: 28px;
-  font-size: 1rem;
-}
-
 .statsWrap {
   margin-top: 36px;
   padding: 18px 12px 14px;
   border: 1px solid var(--glass-edge);
   border-radius: 28px;
-  background: rgb(255 255 255 / 0.5);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  box-shadow:
-    var(--glass-highlight),
-    0 20px 50px -28px rgb(40 30 60 / 0.25);
+  background: var(--glass-soft);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: var(--glass-highlight);
 }
 
 @media (min-width: 480px) {
@@ -422,7 +379,7 @@
 }
 
 .stat + .stat {
-  border-left: 1px solid rgb(30 27 38 / 0.14);
+  border-left: 1px solid var(--color-ash);
 }
 
 @media (min-width: 480px) {
@@ -431,18 +388,22 @@
   }
 }
 
+/* Figures are mono (the Counting Rule), labels small uppercase meta. */
 .statValue {
   color: var(--ink);
-  font-family: var(--font-display);
-  font-size: 2rem;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 .statLabel {
   color: var(--color-ink-soft);
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1rem;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .note {
@@ -480,12 +441,12 @@
     scale 1.6s var(--ease-out) 0.2s;
 }
 
-.sun[data-armed] {
+.washes[data-armed] {
   opacity: 0;
   translate: 0 8%;
 }
 
-.sun[data-armed][data-inview] {
+.washes[data-armed][data-inview] {
   opacity: 1;
   translate: 0 0;
   transition:

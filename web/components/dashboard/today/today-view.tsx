@@ -25,8 +25,8 @@ interface TodaySlots {
 
 /**
  * DESIGN.md Today. The greeting, then the decision stack beside a right column (pulse, fans to thank,
- * community tiles) once main is 56rem wide; below that the column drops under the stack. Shared by the
- * screen and its skeleton so both hold one shape.
+ * community tiles) once main is 56rem wide, with the extras (platforms, Ask your AI, metrics) under the
+ * stack; below that everything is one column. Shared by the screen and its skeleton so both hold one shape.
  */
 export function TodayView({
   banner,
@@ -44,12 +44,18 @@ export function TodayView({
       {greeting}
       <div className="grid items-start gap-6 @4xl:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
         <div className="min-w-0">{stack}</div>
-        <div className="flex min-w-0 flex-col gap-4">
+        <div className="flex min-w-0 flex-col gap-4 @4xl:row-span-2">
           {pulse}
           {fans}
           {communities}
-          {extras}
         </div>
+        {/* From 56rem the extras fill the space under the stack (two up) instead of lengthening the
+            right column; narrower, they follow the column as before. */}
+        {extras ? (
+          <div className="grid min-w-0 items-start gap-4 @4xl:col-start-1 @5xl:grid-cols-2">
+            {extras}
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -92,10 +98,16 @@ export function CommunityTiles({ communities }: { communities: CommunityActivity
   return (
     <section aria-labelledby="today-communities-title">
       <div className="mb-2 flex items-baseline justify-between gap-3 px-1">
-        <h2 id="today-communities-title" className="text-label text-ink">
+        <h2
+          id="today-communities-title"
+          className="text-caption tracking-wide text-ink-soft uppercase"
+        >
           Your communities
         </h2>
-        <Link href={routes.dashboard.communities()} className="text-small text-sky hover:underline">
+        <Link
+          href={routes.dashboard.communities()}
+          className="text-small text-lake hover:underline"
+        >
           All communities
         </Link>
       </div>
@@ -108,7 +120,7 @@ export function CommunityTiles({ communities }: { communities: CommunityActivity
               <Link
                 href={routes.dashboard.community(c.slug)}
                 className={cn(
-                  'press flex h-full flex-col gap-2 rounded-[22px] p-4 shadow-glass',
+                  'press flex h-full flex-col gap-2 rounded-[28px] border border-line p-4',
                   style.card,
                 )}
               >
@@ -135,7 +147,7 @@ export function CommunityTilesSkeleton() {
   return (
     <div aria-hidden="true" className="grid grid-cols-2 gap-3">
       {[0, 1, 2, 3].map((i) => (
-        <Skeleton key={i} className="h-[124px] rounded-[22px]" />
+        <Skeleton key={i} className="h-[124px] rounded-[28px]" />
       ))}
     </div>
   );

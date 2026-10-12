@@ -58,7 +58,7 @@ export function ChallengeEntryForm({
     return (
       <GlassPanel strength="strong" className="flex flex-col items-start gap-4 p-6 sm:p-8">
         <h2 className="text-h2 text-ink">This challenge has closed</h2>
-        <p className="max-w-[60ch] text-body text-ink">
+        <p className="max-w-[60ch] text-body text-ink-soft">
           “{challenge.title}” isn’t taking new entries. Keep an eye on the community for the next
           one.
         </p>
@@ -88,12 +88,12 @@ export function ChallengeEntryForm({
           <Trophy strokeWidth={1.5} className="size-6 text-lake" />
         </span>
         <div className="flex min-w-0 flex-col gap-1">
-          <p className="text-caption text-ink-soft">
+          <p className="text-caption text-ink-soft uppercase">
             Challenge{challenge.communityName ? ` · ${challenge.communityName}` : ''}
           </p>
           <h2 className="text-h2 text-ink">{challenge.title}</h2>
           {challenge.body ? (
-            <p className="max-w-[60ch] text-body text-ink">{challenge.body}</p>
+            <p className="max-w-[60ch] text-body text-ink-soft">{challenge.body}</p>
           ) : null}
         </div>
       </GlassPanel>
@@ -124,10 +124,10 @@ export function ChallengeEntryForm({
             count={{ value: watch('body').length, max: LIMITS.post.body.max }}
             error={errors.body?.message}
           >
-            <TextArea {...register('body')} rows={8} />
+            <TextArea {...register('body')} rows={8} className="font-sans" />
           </Field>
           <LinksField max={LIMITS.post.links.max} />
-          <div className="flex border-t border-ink/10 pt-6">
+          <div className="flex border-t border-line pt-6">
             <Button type="submit" loading={enter.isPending} className="max-sm:w-full">
               Enter the challenge
             </Button>

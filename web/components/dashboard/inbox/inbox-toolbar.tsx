@@ -61,7 +61,7 @@ function ViewToggle({ view, onView }: Pick<InboxToolbarProps, 'view' | 'onView'>
           onClick={() => onView(value)}
           className={cn(
             'press inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-small-strong',
-            view === value ? 'bg-white text-ink shadow-sm' : 'text-ink-soft hover:text-ink',
+            view === value ? 'bg-white text-ink' : 'text-ink-soft hover:text-ink',
           )}
         >
           <Icon aria-hidden="true" className="size-4" strokeWidth={1.75} />

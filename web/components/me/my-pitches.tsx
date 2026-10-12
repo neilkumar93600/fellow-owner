@@ -78,8 +78,10 @@ export function MyPitches({
                     </time>
                   </p>
                 </div>
-                <h3 className="mt-2 text-h2 text-ink">{pitch.subject}</h3>
-                <p className="mt-1 line-clamp-3 max-w-[68ch] text-body text-ink-soft">
+                <h3 className="mt-2 font-display text-h2 [overflow-wrap:anywhere] text-ink">
+                  {pitch.subject}
+                </h3>
+                <p className="mt-1 line-clamp-3 max-w-[68ch] font-sans text-body text-ink-soft">
                   {pitch.body}
                 </p>
 
@@ -110,7 +112,7 @@ export function MyPitches({
                         </>
                       ) : null}
                     </figcaption>
-                    <blockquote className="mt-1 max-w-[68ch] text-body text-ink">
+                    <blockquote className="mt-1 max-w-[68ch] font-sans text-body text-ink">
                       {pitch.creatorReply}
                     </blockquote>
                     {pitch.answeredGroup ? (

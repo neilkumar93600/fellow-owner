@@ -65,7 +65,7 @@ export function InboxCards({
             <article
               aria-current={selected ? 'true' : undefined}
               className={cn(
-                'glass-strong relative flex flex-col gap-3 rounded-[24px] p-4 transition-colors duration-150 ease-out-quart sm:p-5',
+                'glass-strong relative flex flex-col gap-3 rounded-panel p-4 transition-colors duration-150 ease-out-quart sm:p-5',
                 'hover:bg-white/85',
                 selected && 'bg-white/90 ring-2 ring-ink/70',
               )}
@@ -81,7 +81,7 @@ export function InboxCards({
                         event.preventDefault();
                         onOpen(item);
                       }}
-                      className="rounded-sm after:absolute after:inset-0 after:rounded-[24px] after:content-['']"
+                      className="rounded-sm after:absolute after:inset-0 after:rounded-panel after:content-['']"
                     >
                       {item.sender.name}
                       <span className="sr-only">: {item.subject}</span>
@@ -105,7 +105,7 @@ export function InboxCards({
               </div>
 
               <p className="text-label-strong text-ink">{item.subject}</p>
-              <p className="-mt-1.5 line-clamp-2 max-w-[68ch] text-body text-ink">
+              <p className="-mt-1.5 line-clamp-2 max-w-[68ch] font-sans text-body text-ink">
                 {item.isFiltered ? (
                   <span className="font-medium">{INBOX_TAB_LABELS.filtered}: </span>
                 ) : null}
@@ -113,8 +113,9 @@ export function InboxCards({
               </p>
 
               {reason ? (
-                <p className="text-small text-ink-soft">
-                  <span className="font-medium text-ink">Why:</span> {reason}
+                <p className="font-sans text-small text-ink-soft">
+                  <span className="text-caption tracking-wide text-ink uppercase">Why</span>{' '}
+                  {reason}
                 </p>
               ) : null}
               {item.ai.status === 'pending' ? <AiChip kind="reviewing" /> : null}
@@ -150,7 +151,7 @@ export function CardsSkeleton() {
   return (
     <div aria-hidden="true" className="flex flex-col gap-3">
       {[0, 1, 2, 3].map((i) => (
-        <div key={i} className="glass-strong flex flex-col gap-3 rounded-[24px] p-5">
+        <div key={i} className="glass-strong flex flex-col gap-3 rounded-panel p-5">
           <div className="flex items-center gap-3">
             <Skeleton className="size-11 rounded-full" />
             <div className="flex flex-col gap-2">

@@ -9,13 +9,13 @@ export interface CommunityChipProps {
   className?: string;
 }
 
-/** DESIGN.md Community chip: a 24px pill in the community's tile tint, its 16px Lucide icon and Caption ink name. */
+/** Community chip: a 24px hairline pill in the community's pastel tint, its 16px Lucide icon and mono caps ink name. */
 export function CommunityChip({ name, tint, icon, className }: CommunityChipProps) {
   const Icon = COMMUNITY_ICON[icon];
   return (
     <span
       className={cn(
-        'inline-flex h-6 max-w-full shrink-0 items-center gap-1.5 rounded-full px-2.5 text-caption text-ink',
+        'inline-flex h-6 max-w-full shrink-0 items-center gap-1.5 rounded-full border border-line px-2.5 text-caption text-ink uppercase',
         TINT_STYLES[cardTint(tint)].chip,
         className,
       )}

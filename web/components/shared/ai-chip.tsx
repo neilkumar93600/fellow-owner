@@ -12,11 +12,11 @@ const WORDS: Record<AiChipKind, string> = {
 };
 
 const KIND_CLASSES: Record<AiChipKind, string> = {
-  pick: 'bg-aurora-peach',
-  suggested: 'bg-aurora-peach',
-  // The sweep utility moves a Dove Grey band behind the words; static under reduced motion.
+  pick: 'bg-periwinkle',
+  suggested: 'bg-periwinkle',
+  // The sweep utility moves a pale band behind the words; static under reduced motion.
   reviewing: 'sweep glass-chip',
-  'not-analyzed': 'bg-white/70',
+  'not-analyzed': 'bg-white/70 border border-line',
 };
 
 export interface AiChipProps {
@@ -29,15 +29,15 @@ export interface AiChipProps {
 }
 
 /**
- * DESIGN.md AI chip, 24px Caption in ink. "AI pick" and "AI suggested" are aurora peach with the 14px Sparkles
+ * AI chip, 24px mono caps in ink. "AI pick" and "AI suggested" are periwinkle with the 14px Sparkles
  * (the only Sparkles in the product); always render the reason line beside them (The Reason Travels
- * Rule). "AI reviewing" is a glass chip with a sweeping band; "Not analyzed" is white at 70%, plus Retry.
+ * Rule). "AI reviewing" is a glass chip with a sweeping band; "Not analyzed" is white at 70% with a hairline, plus Retry.
  */
 export function AiChip({ kind, label, onRetry, className }: AiChipProps) {
   const chip = (
     <span
       className={cn(
-        'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-caption whitespace-nowrap text-ink',
+        'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-caption whitespace-nowrap text-ink uppercase',
         KIND_CLASSES[kind],
         !(kind === 'not-analyzed' && onRetry) && className,
       )}

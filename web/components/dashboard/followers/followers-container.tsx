@@ -287,7 +287,7 @@ export function FollowersContainer({ now }: { now: number }) {
           </>
         }
         end={
-          <>
+          <div className="flex min-w-0 flex-wrap items-center justify-end gap-3">
             <SearchSquare
               value={q}
               onChange={setQ}
@@ -310,14 +310,14 @@ export function FollowersContainer({ now }: { now: number }) {
               value={joined}
               onValueChange={(value) => set({ joined: value === ALL ? null : value, page: null })}
             />
-          </>
+          </div>
         }
       />
 
       <div className="flex flex-wrap items-center gap-3">
         <CountChips
           label="Filter followers"
-          className="min-w-0 flex-1"
+          className="min-w-0 flex-1 max-sm:basis-full"
           chips={[
             {
               key: 'all',

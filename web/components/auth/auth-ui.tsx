@@ -137,7 +137,7 @@ export const ALERT_ACTION = cx(
 );
 
 /**
- * Inline alert for a failed request: Paper White, a Signal Red icon, ink words and an optional Retry.
+ * Inline alert for a failed request: frosted, a Signal Red icon, ink words and an optional Retry.
  * Announced as an alert. No side stripe, no tint that would drag the words under 4.5:1. A new `attempt`
  * remounts the words alone, so a Retry that fails the same way is announced again while the alert and
  * its Retry stay put. With a `ref` it can take focus (an error shown on arrival).
@@ -170,7 +170,7 @@ export function AuthAlert({
       tabIndex={ref ? -1 : undefined}
       className={cx(
         styles.enter,
-        'flex items-start gap-3 rounded-lg border border-line bg-card p-3 pl-3.5',
+        'flex items-start gap-3 rounded-2xl border border-line bg-card p-3 pl-3.5',
         ref ? 'outline-none' : undefined,
         className,
       )}

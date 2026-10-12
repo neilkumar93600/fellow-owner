@@ -27,7 +27,7 @@ export interface CommunityMembersProps {
 }
 
 /**
- * The Members tab of a community (DESIGN.md refs 3cd1c6, cda9bd): a glass toolbar with search, the full
+ * The Members tab of a community: a glass toolbar with search, the full
  * members table (name with avatar, headline, skills, joined, row menu) and glass pagination. The name
  * links to the member on People; the row menu adds Remove from community, confirmed in a dialog.
  */

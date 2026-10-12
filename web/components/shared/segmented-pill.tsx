@@ -18,8 +18,8 @@ export interface SegmentedPillProps<T extends string> {
 }
 
 /**
- * DESIGN.md Segmented pill (Ideas: Ranked or Board): a glass pill with 4px padding and 40px segments.
- * Selected: a white pill, Label in ink, aria-pressed. Unselected: Body in ink-soft, white 60% on
+ * Segmented pill (Ideas: Ranked or Board): a glass pill with 4px padding and 40px segments, mono caps.
+ * Selected: a periwinkle pill with a hairline, ink, aria-pressed. Unselected: ink-soft, white 60% on
  * hover. The caller writes the choice to the URL (?view=).
  */
 export function SegmentedPill<T extends string>({
@@ -48,10 +48,10 @@ export function SegmentedPill<T extends string>({
               if (!selected) onChange(option.value);
             }}
             className={cn(
-              'press flex h-10 shrink-0 items-center gap-2 rounded-full px-4 whitespace-nowrap',
+              'press flex h-10 shrink-0 items-center gap-2 rounded-full px-4 text-small tracking-tight whitespace-nowrap uppercase',
               selected
-                ? 'bg-white text-label text-ink shadow-[0_2px_8px_-4px_rgb(40_30_60/0.25)]'
-                : 'text-body text-ink-soft hover:bg-white/60',
+                ? 'border border-line bg-periwinkle font-medium text-ink'
+                : 'text-ink-soft hover:bg-white/60',
             )}
           >
             {Icon ? <Icon aria-hidden="true" strokeWidth={1.5} className="size-4" /> : null}

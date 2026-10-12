@@ -26,7 +26,7 @@ export default function Page() {
         {POSTS.map((post) => (
           <li
             key={post.slug}
-            className="press group relative rounded-3xl border border-white/70 bg-white/60 p-6 hover:bg-white/80 has-focus-visible:bg-white/80"
+            className="press group relative rounded-panel glass p-6 hover:bg-white/80 has-focus-visible:bg-white/80"
           >
             <p className="text-small text-ink-soft">
               <time dateTime={post.date}>{longDate(post.date)}</time>
@@ -34,12 +34,12 @@ export default function Page() {
             <h2 className="mt-2 text-h2 text-ink">
               <Link
                 href={`/blog/${post.slug}`}
-                className="underline-offset-4 outline-none group-hover:underline after:absolute after:inset-0 after:rounded-3xl focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ink"
+                className="underline-offset-4 outline-none group-hover:underline after:absolute after:inset-0 after:rounded-panel focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ink"
               >
                 {post.title}
               </Link>
             </h2>
-            <p className="mt-2 max-w-[68ch] text-body text-ink-soft">{post.summary}</p>
+            <p className="mt-2 max-w-[68ch] font-sans text-body text-ink-soft">{post.summary}</p>
           </li>
         ))}
       </ul>

@@ -1,4 +1,4 @@
-/* You stay in charge (trust-section.tsx): three frosted statements on the aurora. */
+/* You stay in charge (trust-section.tsx): three frosted statements on the page washes. */
 
 .section {
   --gutter: 16px;
@@ -68,12 +68,14 @@
   background: var(--color-aurora-mint);
 }
 
+/* Card titles are 20px and up: the serif at 400. */
 .title {
   color: var(--ink);
-  font-size: 1.375rem;
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.015em;
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
@@ -107,13 +109,13 @@
 .snipLabel {
   color: var(--ink-soft);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .snipTitle {
   color: var(--ink);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.3;
 }
 
@@ -148,8 +150,9 @@
   background: #fff;
   box-shadow: inset 0 0 0 1px var(--line-row);
   color: var(--ink);
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
 }
 
 .hearts {
@@ -161,11 +164,11 @@
 }
 
 .hearts svg {
-  color: var(--color-coral);
+  color: var(--color-lake);
 }
 
 .hearts b {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .why {
@@ -176,5 +179,5 @@
 
 .why b {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
 }

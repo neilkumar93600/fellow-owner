@@ -21,13 +21,13 @@ export interface ConfirmDialogProps {
   confirmLabel: string;
   /** Runs, then the dialog closes. */
   onConfirm: () => void;
-  /** The confirm button's Signal Red icon. */
+  /** The confirm button's red icon. */
   icon?: React.ReactNode;
 }
 
 /**
- * DESIGN.md Dialog, for destructive confirmation only: Cancel (secondary) and the confirming verb as a
- * secondary pill with a Signal Red icon and Brick Red words. Focus is trapped while open and returns to
+ * Dialog, for destructive confirmation only: Cancel (secondary) and the confirming verb as a
+ * secondary pill with a red icon and deep red words. Focus is trapped while open and returns to
  * the trigger; Esc and Cancel close it.
  */
 export function ConfirmDialog({

@@ -88,10 +88,10 @@ function PrimaryTarget({
 }
 
 /**
- * DESIGN.md Data table (behind the "Table" toggle; card lists are the default). full: a strong glass
- * panel (radius 28, 16px padding) with a white 70% 48px pill header in Small Strong ink, 48px rows of
- * Small ink-soft cells ruled at ink 10%, lifting to white 80% on hover, focus within and selection.
- * compact (inside cards): Small ink-muted headers over the same rule and unfilled rows. Under 768px each row stacks: the primary cell, then
+ * Data table (behind the "Table" toggle; card lists are the default). full: a strong glass
+ * panel (radius 28, 16px padding) with a hairline 48px pill header in mono caps ink, 48px rows of
+ * mono ink-soft cells ruled by an ash hairline, lifting to white 80% on hover, focus within and selection.
+ * compact (inside cards): mono caps ink-muted headers over the same rule and unfilled rows. Under 768px each row stacks: the primary cell, then
  * the other cells (pills), then a chevron, the whole item one tap target.
  *
  * No client directive: a server page can render a static table with links; a client screen passes
@@ -133,8 +133,8 @@ export function DataTable<Row>({
                       className={cn(
                         'text-left whitespace-nowrap',
                         full
-                          ? 'h-12 bg-white/70 px-6 text-small-strong text-ink first:rounded-l-full last:rounded-r-full'
-                          : 'h-10 border-b border-ink/10 px-3 font-normal text-ink-muted',
+                          ? 'h-12 border-y border-line bg-white/70 px-6 text-caption font-medium tracking-tight text-ink uppercase first:rounded-l-full first:border-l last:rounded-r-full last:border-r'
+                          : 'h-10 border-b border-line px-3 text-caption font-normal tracking-tight text-ink-muted uppercase',
                         column.grow && 'w-full',
                         column.align === 'end' && 'text-right',
                         column.hideBelow && HIDE[column.hideBelow],
@@ -171,7 +171,7 @@ export function DataTable<Row>({
                         <td
                           key={column.key}
                           className={cn(
-                            'h-12 border-b border-ink/10 whitespace-nowrap transition-colors duration-150 ease-out-quart',
+                            'h-12 border-b border-line whitespace-nowrap transition-colors duration-150 ease-out-quart',
                             'group-focus-within/row:bg-white/80 group-hover/row:bg-white/80 group-aria-selected/row:bg-white/90',
                             full ? 'px-6' : 'px-3',
                             column.grow && 'w-full max-w-0 truncate',
@@ -211,7 +211,7 @@ export function DataTable<Row>({
                 <li
                   key={id}
                   className={cn(
-                    'relative flex min-h-16 items-center gap-3 border-b border-ink/10 px-4 py-3 transition-colors duration-150 ease-out-quart hover:bg-white/80 has-focus-visible:bg-white/80',
+                    'relative flex min-h-16 items-center gap-3 border-b border-line px-4 py-3 transition-colors duration-150 ease-out-quart hover:bg-white/80 has-focus-visible:bg-white/80',
                     selectedId === id && 'bg-white/90',
                   )}
                 >
@@ -220,7 +220,7 @@ export function DataTable<Row>({
                     <PrimaryTarget
                       href={href}
                       onOpen={open}
-                      className="block w-full truncate text-small-strong text-ink outline-none after:absolute after:inset-0 focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-ink"
+                      className="block w-full truncate text-small font-medium text-ink outline-none after:absolute after:inset-0 focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-ink"
                     >
                       {primary.cell(row)}
                     </PrimaryTarget>

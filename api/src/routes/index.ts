@@ -8,7 +8,7 @@ import { createCoachRoutes } from './coach.routes.js';
 import { createConfigRoutes } from './config.routes.js';
 import { createCronRoutes } from './cron.routes.js';
 import { createDemoRoutes } from './demo.routes.js';
-import { createFollowersRoutes } from './followers.routes.js';
+import { createFollowersRoutes, createSpaceFollowersRoutes } from './followers.routes.js';
 import { createHealthRoutes } from './health.routes.js';
 import { createAnalyticsRoutes, createExportRoutes } from './insights.routes.js';
 import { createMetricsRoutes, createVisitRoutes } from './metrics.routes.js';
@@ -48,7 +48,8 @@ import { createMediaRoutes, createUploadsRoutes } from './uploads.routes.js';
  *   /api/config  config         /api/support  support        /api/admin  admin
  *   /api/email   email (unsubscribe)          /api/me       account + notification prefs
  *   /api/media   media          /api/uploads  uploads
- *   /api/spaces  coach, visit, leave (DELETE /:handle/me), my-space (GET /:handle/me/posts|pitches)
+ *   /api/spaces  coach, visit, leave (DELETE /:handle/me), my-space (GET /:handle/me/posts|pitches),
+ *                followers (POST /:handle/followers/import/platform, owner)
  *   /api         reports on posts/comments, similar (member + studio)
  *   /api/studio  reports queue + comment hide; /api/studio/{question-groups, ask, snoozes,
  *                checklist, metrics}
@@ -73,6 +74,7 @@ export function createApiRouter(container: Container): Router {
   router.use('/spaces', createVisitRoutes(container));
   router.use('/spaces', createModerationMemberRoutes(container));
   router.use('/spaces', createMySpaceRoutes(container));
+  router.use('/spaces', createSpaceFollowersRoutes(container));
   router.use('/', createModerationTargetRoutes(container));
   router.use('/', createSimilarRoutes(container));
   router.use('/studio', createModerationStudioRoutes(container));

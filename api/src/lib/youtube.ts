@@ -21,6 +21,8 @@ export interface YoutubeCommenter {
 export interface YoutubeComments {
   source: 'youtube' | 'sample';
   commenters: YoutubeCommenter[];
+  /** Videos whose comments were read (0 for sample data). */
+  videos: number;
 }
 
 export type YoutubeFailure = 'not_found' | 'quota' | 'unavailable';
@@ -99,7 +101,7 @@ export function createYoutubeClient(deps: YoutubeDeps) {
     ): Promise<YoutubeComments> {
       if (!deps.apiKey) {
         const handle = 'handle' in channel ? channel.handle : channel.id;
-        return { source: 'sample', commenters: sampleCommenters(handle) };
+        return { source: 'sample', commenters: sampleCommenters(handle), videos: 0 };
       }
       const doFetch = deps.fetch ?? fetch;
 
@@ -159,7 +161,7 @@ export function createYoutubeClient(deps: YoutubeDeps) {
           }
         }
       }
-      return { source: 'youtube', commenters: [...byHandle.values()] };
+      return { source: 'youtube', commenters: [...byHandle.values()], videos: videoIds.length };
     },
   };
 }

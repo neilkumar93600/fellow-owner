@@ -16,7 +16,7 @@ function outcome(challenge: ChallengeSummary): string {
 }
 
 /**
- * DESIGN.md Challenge card: soft frosted glass, radius 24. The community chip and the countdown on one
+ * Challenge card: frosted glass, hairline, radius 24, no shadow. The community chip and the countdown on one
  * line, the title (the card's link, stretched over the whole card), the prompt in two lines, then the
  * entry count and what to do next. Hover steps the glass to 80% white.
  */
@@ -42,7 +42,7 @@ export function ChallengeCard({
         />
         <CountdownPill challenge={challenge} now={now} />
       </div>
-      <h3 className="line-clamp-2 text-h2 text-ink">
+      <h3 className="line-clamp-2 font-display text-h2 text-ink [overflow-wrap:anywhere]">
         <Link
           href={routes.dashboard.challenge(challenge.id)}
           className="rounded-sm underline-offset-4 group-hover:underline after:absolute after:inset-0 after:rounded-[24px]"
@@ -51,7 +51,7 @@ export function ChallengeCard({
         </Link>
       </h3>
       {challenge.body ? (
-        <p className="line-clamp-2 text-body text-ink-soft">{challenge.body}</p>
+        <p className="line-clamp-2 font-sans text-body text-ink-soft">{challenge.body}</p>
       ) : null}
       <p className="mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 pt-2 text-small text-ink-soft">
         <span className="tabular-nums text-ink">

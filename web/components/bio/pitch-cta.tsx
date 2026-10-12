@@ -19,7 +19,7 @@ export function PitchCta({ handle, firstName }: { handle: string; firstName: str
         <h2 className="font-display text-[1.75rem] leading-[1.15] text-ink">
           Got an idea for {firstName}?
         </h2>
-        <p className="max-w-[44ch] text-body text-ink">
+        <p className="max-w-[44ch] font-sans text-body text-ink">
           A collab, a brand deal, a place to see. {firstName} reads every one here.
         </p>
       </div>

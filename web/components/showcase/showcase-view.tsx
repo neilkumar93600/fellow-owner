@@ -67,15 +67,17 @@ export function ShowcaseView({ showcase, shareUrl }: ShowcaseViewProps) {
           <h2 id="showcase-about" className="text-h2 text-ink">
             About this one
           </h2>
-          <p className="mt-3 max-w-[68ch] text-body whitespace-pre-line text-ink">{post.body}</p>
+          <p className="mt-3 max-w-[68ch] font-sans text-body whitespace-pre-line text-ink">
+            {post.body}
+          </p>
           {post.openRoles.length > 0 ? (
             <>
-              <h3 className="mt-6 text-label text-ink">Open spots</h3>
+              <h3 className="mt-6 text-caption uppercase text-ink-soft">Open spots</h3>
               <ul className="mt-2 flex flex-wrap gap-2">
                 {post.openRoles.map((role) => (
                   <li
                     key={role}
-                    className="inline-flex h-8 items-center rounded-full bg-white/70 px-3 text-small text-ink"
+                    className="inline-flex h-8 items-center rounded-full border border-line bg-white/70 px-3 text-small text-ink"
                   >
                     {role}
                   </li>
@@ -83,7 +85,7 @@ export function ShowcaseView({ showcase, shareUrl }: ShowcaseViewProps) {
               </ul>
             </>
           ) : null}
-          <p className="mt-6 text-small text-ink-soft">
+          <p className="mt-6 text-caption uppercase text-ink-soft">
             {formatNumber(post.useCount)} would use this · {formatNumber(post.buildCount)} counted
             themselves in
           </p>

@@ -167,7 +167,7 @@ export function CommunityDetailView({ slug, tab }: CommunityDetailViewProps) {
     <div className="relative flex flex-col gap-4">
       <Link
         href={routes.dashboard.communities()}
-        className="press inline-flex h-10 items-center gap-2 self-start rounded-full pr-4 pl-3 text-label text-ink hover:bg-white/60"
+        className="press inline-flex h-10 items-center gap-2 self-start rounded-full pr-4 pl-3 text-label text-ink uppercase hover:bg-white/60"
       >
         <ArrowLeft aria-hidden="true" strokeWidth={1.5} className="size-5" />
         Communities
@@ -184,7 +184,7 @@ export function CommunityDetailView({ slug, tab }: CommunityDetailViewProps) {
             <Icon aria-hidden="true" strokeWidth={1.5} className={cn('size-6', styles.icon)} />
           </span>
           <div className="flex min-w-0 flex-col gap-2">
-            <h1 className="text-h1 text-ink">{community.name}</h1>
+            <h1 className="text-h1 [overflow-wrap:anywhere] text-ink">{community.name}</h1>
             <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span className="text-trend text-ink-soft">
                 {formatNumber(community.memberCount)}{' '}
@@ -197,7 +197,7 @@ export function CommunityDetailView({ slug, tab }: CommunityDetailViewProps) {
               />
             </p>
             {community.description ? (
-              <p className="max-w-[68ch] text-body text-ink">{community.description}</p>
+              <p className="max-w-[68ch] font-sans text-body text-ink">{community.description}</p>
             ) : null}
           </div>
         </div>

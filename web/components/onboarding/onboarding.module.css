@@ -1,14 +1,7 @@
 /*
- * Onboarding ("Create your space"). Scoped tokens from DESIGN.md that globals.css does not carry yet,
- * plus the solid ink focus ring.
+ * Onboarding ("Create your space"), Parchment Frost. Colours come from globals.css (smoke field borders,
+ * ash hairlines); this file keeps the solid ink focus ring and the few motions the steps use.
  */
-.root {
-  --line-field: #8e8e94;
-  --line-strong: #bdbdc2;
-  --danger-deep: #dc2626;
-  --overlay-soft: 0 24px 64px -16px rgba(45, 45, 48, 0.22);
-}
-
 .root :focus-visible {
   outline: 2px solid var(--color-ink);
   outline-offset: 2px;
@@ -52,56 +45,6 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
-}
-
-/*
- * One platform row. Phones: the platform select shares the top line only with its remove button, so it is
- * wide enough to read "Instagram" at 360px; followers and the profile link stack below it. From 640px:
- * platform, followers and remove on one line, the link under them. Each error sits right under its field.
- * Spacing comes from margins, not row gaps, so empty error rows take no room.
- */
-.platformRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas:
-    "platform remove"
-    "followers followers"
-    "followers-error followers-error"
-    "url url"
-    "url-error url-error";
-  column-gap: 8px;
-  align-items: end;
-}
-
-.platformRow > [data-area="platform"] {
-  grid-area: platform;
-}
-.platformRow > [data-area="remove"] {
-  grid-area: remove;
-}
-.platformRow > [data-area="followers"] {
-  grid-area: followers;
-}
-.platformRow > [data-area="followers-error"] {
-  grid-area: followers-error;
-}
-.platformRow > [data-area="url"] {
-  grid-area: url;
-}
-.platformRow > [data-area="url-error"] {
-  grid-area: url-error;
-}
-
-@media (min-width: 640px) {
-  .platformRow {
-    grid-template-columns: minmax(0, 1fr) 8.5rem auto;
-    grid-template-areas:
-      "platform followers remove"
-      "followers-error followers-error followers-error"
-      "url url url"
-      "url-error url-error url-error";
-    column-gap: 12px;
-  }
 }
 
 /* A step's fields arrive with a short fade; nothing slides (DESIGN.md Settled Press Rule). */

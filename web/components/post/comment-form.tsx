@@ -47,6 +47,7 @@ export function CommentForm({
         <TextArea
           {...register('body')}
           rows={3}
+          className="font-sans"
           placeholder="Ask a question, or say how you could help"
         />
       </Field>

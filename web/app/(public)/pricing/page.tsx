@@ -147,9 +147,9 @@ function PlanCard({ plan }: { plan: Plan }) {
   const tint = TINT_STYLES[plan.tint];
   const Icon = plan.icon;
   return (
-    <li className={cn('flex min-w-0 flex-col rounded-3xl p-6', tint.card)}>
+    <li className={cn('flex min-w-0 flex-col rounded-panel p-6', tint.card)}>
       <div className="flex items-center gap-4">
-        <span className={cn('grid size-14 shrink-0 place-items-center rounded-md', tint.tile)}>
+        <span className={cn('grid size-14 shrink-0 place-items-center rounded-2xl', tint.tile)}>
           <Icon aria-hidden className={cn('size-6 stroke-[1.5]', tint.icon)} />
         </span>
         <h2 className="text-h2 text-ink">{plan.name}</h2>
@@ -158,7 +158,7 @@ function PlanCard({ plan }: { plan: Plan }) {
         ) : null}
       </div>
 
-      <p className="mt-6 text-display text-ink">{plan.price}</p>
+      <p className="mt-6 font-display text-display text-ink">{plan.price}</p>
       <p className="mt-1 text-body text-ink-soft">{plan.unit}</p>
       <p className="mt-4 text-body text-ink">{plan.lead}</p>
 
@@ -213,10 +213,7 @@ export default function Page() {
       </ul>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-12 lg:items-start">
-        <section
-          aria-labelledby="promises-title"
-          className="rounded-3xl border border-white/70 bg-white/60 p-6 lg:col-span-5"
-        >
+        <section aria-labelledby="promises-title" className="rounded-panel glass p-6 lg:col-span-5">
           <h2 id="promises-title" className="text-h2 text-ink">
             What we commit to
           </h2>
@@ -233,7 +230,7 @@ export default function Page() {
           </p>
           <dl className="mt-2">
             {PROMISES.map((promise) => (
-              <div key={promise.title} className="border-b border-ink/10 py-4 last:border-b-0">
+              <div key={promise.title} className="border-b border-line py-4 last:border-b-0">
                 <dt className="text-label-strong text-ink">{promise.title}</dt>
                 <dd className="mt-1 text-body text-ink-soft">{promise.body}</dd>
               </div>
@@ -241,10 +238,7 @@ export default function Page() {
           </dl>
         </section>
 
-        <section
-          aria-labelledby="faq-title"
-          className="rounded-3xl border border-white/70 bg-white/60 p-6 lg:col-span-7"
-        >
+        <section aria-labelledby="faq-title" className="rounded-panel glass p-6 lg:col-span-7">
           <h2 id="faq-title" className="text-h2 text-ink">
             The money questions
           </h2>
@@ -253,7 +247,7 @@ export default function Page() {
               <details
                 key={item.q}
                 name="pricing-faq"
-                className="group border-b border-ink/10 last:border-b-0"
+                className="group border-b border-line last:border-b-0"
               >
                 <summary className="press -mx-3 flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-3 py-3 text-label text-ink hover:bg-white/70 [&::-webkit-details-marker]:hidden">
                   {item.q}

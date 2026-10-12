@@ -15,7 +15,7 @@
   /* DESIGN.md ink-soft: 5.8:1 on the page background. */
   --ink-soft: var(--color-ink-soft);
   /* DESIGN.md line-row: line (#E5E5E8) all but vanishes on the page grey; this one still reads as a hairline. */
-  --faq-line: #d4d4d8;
+  --faq-line: var(--color-ash);
   --gutter: 16px;
   --pad: 18px;
 
@@ -108,7 +108,7 @@
   color: var(--ink);
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
@@ -165,6 +165,7 @@
 
 .item[data-open] {
   background: var(--card-strong);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
 }
 
 .item[data-open]::before,
@@ -201,10 +202,12 @@
   border-radius: 24px;
   background: transparent;
   color: var(--ink);
-  font-size: 1.125rem;
-  font-weight: 500;
-  line-height: 1.625rem;
-  letter-spacing: -0.01em;
+  /* FAQ questions are headings: the serif at 400. */
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 400;
+  line-height: 1.75rem;
+  letter-spacing: -0.02em;
   text-align: left;
 }
 
@@ -215,7 +218,7 @@
 }
 
 .trigger:focus-visible {
-  outline: 2px solid rgb(124 58 237 / 0.4);
+  outline: 2px solid var(--color-ink);
   outline-offset: 2px;
 }
 
@@ -226,7 +229,7 @@
   }
 
   .item:has(.trigger:focus-visible) {
-    outline: 2px solid rgb(124 58 237 / 0.4);
+    outline: 2px solid var(--color-ink);
     outline-offset: 2px;
   }
 
@@ -301,8 +304,11 @@
   margin: 0;
   padding: 0 var(--pad) 26px;
   color: var(--ink-muted);
+  /* A long read: Inter. */
+  font-family: var(--font-sans);
   font-size: 1.0625rem;
   line-height: 1.65;
+  letter-spacing: -0.006em;
   text-wrap: pretty;
   opacity: 0;
   transform: translate3d(0, -6px, 0);

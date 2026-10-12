@@ -10,14 +10,14 @@ export interface BannerProps {
 }
 
 /**
- * DESIGN.md Banner: a Butter Wash band with 20px corners at the top of content and Toffee words, as in
+ * Banner: a pale gold band with a hairline and 16px corners at the top of content and mono amber words, as in
  * "AI paused until tomorrow. New items will be analyzed then."
  */
 export function Banner({ children, icon: Icon = Info, className }: BannerProps) {
   return (
     <div
       className={cn(
-        'flex items-start gap-3 rounded-xl bg-warn-bg px-4 py-3 text-body text-warn-ink',
+        'flex items-start gap-3 rounded-2xl border border-line bg-warn-bg px-4 py-3 text-small text-warn-ink',
         className,
       )}
     >

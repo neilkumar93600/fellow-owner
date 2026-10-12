@@ -17,6 +17,7 @@ import { buildDecisionItems, pulseSentence } from './decision-items';
 import { DecisionStack, DecisionStackSkeleton } from './decision-stack';
 import { FansToThank, FansToThankSkeleton } from './fans-to-thank';
 import { MetricsCard } from './metrics-card';
+import { PlatformsCard } from './platforms-card';
 import { PulsePanel, PulsePanelSkeleton } from './pulse-panel';
 import { ReportsNotice } from './reports-notice';
 import { SetupChecklist } from './setup-checklist';
@@ -73,6 +74,7 @@ export function TodayContainer() {
     <TodayView
       extras={
         <>
+          <PlatformsCard />
           <AskCard />
           <MetricsCard />
         </>

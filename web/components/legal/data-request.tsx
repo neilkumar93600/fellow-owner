@@ -94,21 +94,23 @@ export function DataRequest() {
     <form
       noValidate
       onSubmit={send}
-      className="mt-4 mb-3 rounded-3xl border border-white/70 bg-white/60 p-5 sm:p-6"
+      className="mt-4 mb-3 rounded-3xl border border-line bg-white/60 p-5 sm:p-6"
     >
-      <h3 className="text-label-strong text-ink">Write a privacy request</h3>
+      <h3 className="font-display text-h2 text-ink">Write a privacy request</h3>
       <p className="mt-1 max-w-[60ch] text-small text-ink-soft">
         Pick what you need and add the account email. We send the request to our privacy team and
         email you a short confirmation (once a day at most).
       </p>
 
       <fieldset className="mt-5">
-        <legend className="text-small-strong text-ink">What do you need?</legend>
+        <legend className="text-caption font-medium tracking-tight text-ink uppercase">
+          What do you need?
+        </legend>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
           {KINDS.map((item) => (
             <label
               key={item.value}
-              className="press flex min-h-11 cursor-pointer items-center gap-3 rounded-full border border-line px-4 py-2 text-body text-ink hover:bg-page has-checked:border-ink has-checked:text-label-strong"
+              className="press flex min-h-11 cursor-pointer items-center gap-3 rounded-full border border-line px-4 py-2 text-small text-ink hover:bg-page has-checked:border-ink has-checked:font-medium"
             >
               <input
                 type="radio"
@@ -144,12 +146,12 @@ export function DataRequest() {
         />
       </Field>
 
-      <div className="mt-5 rounded-lg border border-ink/10 bg-white/60 p-4">
+      <div className="mt-5 rounded-2xl border border-line bg-white/60 p-4">
         <p className="text-small text-ink-soft">
           To <span className="text-ink">{CONTACT.privacy}</span>
         </p>
-        <p className="mt-1 text-small-strong text-ink">{request.subject}</p>
-        <p className="mt-3 text-small whitespace-pre-line text-ink">{body}</p>
+        <p className="mt-1 text-small font-medium text-ink">{request.subject}</p>
+        <p className="mt-3 font-sans text-small whitespace-pre-line text-ink">{body}</p>
       </div>
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">

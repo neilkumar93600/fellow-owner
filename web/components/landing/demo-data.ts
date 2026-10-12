@@ -509,8 +509,8 @@ export const faqs = [
   },
 ] as const;
 
-/** Pastel tints for initials avatars, picked by hashing the name. */
-const AVATAR_TINTS = ['#FFE0CC', '#E3D9FF', '#D3F1E6', '#CFE6FA', '#F2E9DF'] as const;
+/** Pale Parchment Frost tints for initials avatars (peach, lilac, mint, periwinkle, warm), picked by hashing the name. */
+const AVATAR_TINTS = ['#FFD9CC', '#DFE5F8', '#D2FDE5', '#CFDAF5', '#EEEAE7'] as const;
 
 export function avatarTint(name: string): string {
   let hash = 0;

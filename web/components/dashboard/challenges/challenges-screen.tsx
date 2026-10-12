@@ -24,7 +24,7 @@ const notReady = (error: unknown) =>
 const byDue = (a: ChallengeSummary, b: ChallengeSummary) => a.dueAt.localeCompare(b.dueAt);
 
 /**
- * Challenges: the toolbar with the blue New challenge, then open challenges (soonest due first, with
+ * Challenges: the toolbar with the Lake Blue New challenge, then open challenges (soonest due first, with
  * their countdown) and closed ones as glass cards. A card opens the challenge.
  */
 export function ChallengesScreen() {

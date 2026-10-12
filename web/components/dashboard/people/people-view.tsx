@@ -160,7 +160,7 @@ export function PeopleView({
           </>
         }
         end={
-          <>
+          <div className="flex min-w-0 flex-wrap items-center justify-end gap-3">
             <SegmentedPill
               label="Fans view"
               options={VIEW_OPTIONS}
@@ -181,7 +181,7 @@ export function PeopleView({
               onValueChange={filter}
             />
             <ExportCsvMenu kind="people" />
-          </>
+          </div>
         }
       />
       {view === 'cards' ? (

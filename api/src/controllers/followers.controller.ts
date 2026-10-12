@@ -2,13 +2,16 @@ import {
   autoTagFollowersSchema,
   createFollowerSchema,
   followersQuerySchema,
+  handleParamsSchema,
   idParamsSchema,
   importFollowersSchema,
+  platformFansImportSchema,
   tagFollowersSchema,
   updateFollowerSchema,
   youtubeImportSchema,
 } from '@fellow-owners/shared';
 import type { Request, Response } from 'express';
+import { notFound } from '../lib/errors.js';
 import { sessionOf } from '../middlewares/require-session.js';
 import { bodyOf, paramsOf, queryOf } from '../middlewares/validate.js';
 import type { AccessService, OwnerContext } from '../services/access.service.js';
@@ -67,6 +70,18 @@ export function createFollowersController(deps: {
         bodyOf(req, youtubeImportSchema),
       );
       res.status(201).json(result);
+    },
+
+    /**
+     * POST /api/spaces/:handle/followers/import/platform -> PlatformFansImport (200). requireOwner
+     * resolved the caller's own space; another handle is 404 like any space they do not own.
+     */
+    async importPlatformFans(req: Request, res: Response): Promise<void> {
+      const owner = ownerOf(req);
+      if (paramsOf(req, handleParamsSchema).handle !== owner.space.handle) throw notFound('Space');
+      res.json(
+        await deps.followers.importPlatformFans(owner, bodyOf(req, platformFansImportSchema)),
+      );
     },
 
     /** POST /tag -> TagFollowersResult */

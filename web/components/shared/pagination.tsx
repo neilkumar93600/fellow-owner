@@ -8,7 +8,7 @@ function windowOf(page: number, count: number, size: number): [number, number] {
 }
 
 const CIRCLE =
-  'press grid size-10 shrink-0 place-items-center rounded-full border border-white/70 bg-white/60 text-ink disabled:cursor-not-allowed disabled:opacity-50';
+  'press grid size-10 shrink-0 place-items-center rounded-full border border-line bg-white/60 text-ink disabled:cursor-not-allowed disabled:opacity-50';
 
 function Ellipsis({ desktop, phone }: { desktop: boolean; phone: boolean }) {
   if (!desktop && !phone) return null;
@@ -37,9 +37,9 @@ export interface PaginationProps {
 }
 
 /**
- * DESIGN.md Pagination: a glass pill group (4px by 12px padding): two frosted circles for previous and
- * next (50% at either end), up to five 60 by 32px page pills 2px apart (the current one white with a
- * sunset underline, Small Strong ink, aria-current). Past five pages an ellipsis marks the hidden ones; below
+ * Pagination: a glass pill group (4px by 12px padding): two frosted circles for previous and
+ * next (50% at either end), up to five 60 by 32px page pills 2px apart (the current one a periwinkle pill
+ * with a hairline, mono ink, aria-current). Past five pages an ellipsis marks the hidden ones; below
  * 640px three narrower pills keep it inside a 360px screen. Renders nothing for a single page.
  */
 export function Pagination({
@@ -82,7 +82,7 @@ export function Pagination({
             className={cn(
               'press grid h-8 w-15 shrink-0 place-items-center rounded-full max-sm:w-11',
               isCurrent
-                ? 'bg-white text-small-strong text-ink shadow-[inset_0_-2px_0_var(--color-sunset)]'
+                ? 'border border-line bg-periwinkle text-small font-medium text-ink'
                 : 'text-small text-ink-soft hover:bg-white/70',
               (n < phoneStart || n > phoneEnd) && 'max-sm:hidden',
             )}

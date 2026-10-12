@@ -80,7 +80,7 @@ export function CommentThread({
         </Button>
       ) : null}
       {comments.length ? (
-        <ol className="mt-2 divide-y divide-ink/10">
+        <ol className="mt-2 divide-y divide-line">
           {comments.map((comment) => {
             const pending = isPendingComment(comment);
             return (
@@ -88,7 +88,9 @@ export function CommentThread({
                 <AvatarInitials name={comment.author.name} image={comment.author.image} />
                 <div className={cn('min-w-0 flex-1', pending && 'opacity-60')}>
                   <p className="flex flex-wrap items-baseline gap-x-2">
-                    <span className="text-small-strong text-ink">{comment.author.name}</span>
+                    <span className="text-small-strong text-ink uppercase">
+                      {comment.author.name}
+                    </span>
                     {comment.isOwn ? <span className="text-small text-ink-soft">(you)</span> : null}
                     <time
                       dateTime={comment.createdAt}
@@ -98,7 +100,7 @@ export function CommentThread({
                       {formatRelative(comment.createdAt)}
                     </time>
                   </p>
-                  <p className="mt-1 max-w-[68ch] whitespace-pre-line break-words text-body text-ink">
+                  <p className="mt-1 max-w-[68ch] font-sans text-body whitespace-pre-line break-words text-ink">
                     {comment.body}
                   </p>
                 </div>
@@ -122,7 +124,7 @@ export function CommentThread({
           })}
         </ol>
       ) : (
-        <p className="mt-2 text-body text-ink-soft">
+        <p className="mt-2 font-sans text-body text-ink-soft">
           No comments yet. Ask a question or offer to help.
         </p>
       )}
@@ -130,7 +132,7 @@ export function CommentThread({
         onComment={(body) =>
           add.mutate({ postId, body }, { onSuccess: () => toastSuccess('Comment posted') })
         }
-        className="mt-6 border-t border-ink/10 pt-6"
+        className="mt-6 border-t border-line pt-6"
       />
       <ConfirmDialog
         open={removing !== null}

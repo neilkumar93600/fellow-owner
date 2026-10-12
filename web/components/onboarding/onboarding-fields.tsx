@@ -12,7 +12,7 @@ import type * as React from 'react';
 export const cx = clsx;
 
 // Field vocabulary for onboarding (DESIGN.md Inputs / Fields): white, radius 16, 44 high,
-// 1px Field Grey border, label above in Small Strong, helper and errors below.
+// 1px Smoke border (3:1), label above in mono caps (as components/ui/field), helper and errors below.
 
 /**
  * Field type: 16px on phones so iOS Safari and in-app webviews (Instagram, TikTok) never zoom the page
@@ -22,7 +22,7 @@ export const fieldText = 'text-[16px] leading-[22px] sm:text-body';
 
 /** Border, fill, type and states shared by every field, without height or padding. */
 export const fieldSkin = cx(
-  'w-full min-w-0 rounded-lg border border-(--line-field) bg-card-strong',
+  'w-full min-w-0 rounded-lg border border-line-field bg-card-strong',
   fieldText,
   'text-ink placeholder:text-ink-muted',
   'transition-colors duration-150 ease-(--ease-out-quart) hover:border-ink-muted',
@@ -33,7 +33,11 @@ export const inputClass = cx(fieldSkin, 'block h-11 px-3.5');
 
 export const textareaClass = cx(fieldSkin, 'block resize-none px-3.5 py-2.5 leading-[22px]');
 
-export const labelClass = 'block text-small font-medium text-ink';
+export const labelClass = 'block text-caption font-medium tracking-tight text-ink uppercase';
+
+/** A group or section label inside a step (h2/h3 there too): mono caps, never the serif. */
+export const groupLabelClass =
+  'font-mono text-caption font-medium tracking-tight text-ink uppercase';
 
 export function FieldLabel({
   htmlFor,
@@ -51,17 +55,19 @@ export function FieldLabel({
   return (
     <label htmlFor={htmlFor} id={id} className={cx(labelClass, className)}>
       {children}
-      {optional ? <span className="font-normal text-ink-muted"> (optional)</span> : null}
+      {optional ? (
+        <span className="font-normal text-ink-muted normal-case"> (optional)</span>
+      ) : null}
     </label>
   );
 }
 
-/** Inline field error: Signal Red icon, Brick Red words, announced politely. Keeps its id mounted. */
+/** Inline field error: red icon, deep red words, announced politely. Keeps its id mounted. */
 export function FieldError({ id, message }: { id: string; message?: string }) {
   return (
     <p id={id} aria-live="polite" className={cx('text-small', message ? 'mt-1.5' : 'sr-only')}>
       {message ? (
-        <span className="flex items-start gap-1.5 text-(--danger-deep)">
+        <span className="flex items-start gap-1.5 text-danger-deep">
           <CircleAlert
             aria-hidden
             strokeWidth={1.5}
@@ -74,7 +80,7 @@ export function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
-/** Caption counter: ink-muted, Toffee from 90% of the limit, Brick Red over it. */
+/** Caption counter: ink-muted, amber from 90% of the limit, deep red over it. */
 export function CharCount({ id, value, max }: { id?: string; value: number; max: number }) {
   const over = value > max;
   const near = !over && value >= max * 0.9;
@@ -83,7 +89,7 @@ export function CharCount({ id, value, max }: { id?: string; value: number; max:
       id={id}
       className={cx(
         'tabular inline-flex items-center gap-1 text-caption',
-        over ? 'text-(--danger-deep)' : near ? 'text-warn-ink' : 'text-ink-muted',
+        over ? 'text-danger-deep' : near ? 'text-warn-ink' : 'text-ink-muted',
       )}
     >
       {over ? <CircleAlert aria-hidden strokeWidth={1.5} className="size-3.5 text-danger" /> : null}

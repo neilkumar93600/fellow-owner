@@ -172,7 +172,7 @@ function PhoneCard({
 }) {
   return (
     <div className="glass-strong flex flex-col gap-3 p-5">
-      <p className="text-caption text-ink-soft">{kicker}</p>
+      <p className="text-caption text-ink-soft uppercase">{kicker}</p>
       <p className="font-display text-[1.75rem] leading-[1.1] text-ink">{title}</p>
       {children}
     </div>

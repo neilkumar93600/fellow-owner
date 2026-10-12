@@ -1,5 +1,6 @@
+import Link from 'next/link';
 import type * as React from 'react';
-import { GetStartedButton } from '@/components/shared/get-started-button';
+import { routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import st from './cta.module.css';
 import { CtaStage } from './cta-motion';
@@ -8,10 +9,10 @@ import { DemoButton } from './demo-button';
 import { DEMO } from './demo-data';
 
 /*
- * Closing CTA, the landing's last section, directly above the footer: "Fans orbit + sunrise". Centered
- * headline and two buttons, fan avatars orbiting on two rings (cta-orbit.tsx, from 1024px), and a
- * golden-hour horizon glowing up from the bottom edge that fades into the footer. The Get started button
- * is the section's one rainbow (data-rainbow-cta tells the navbar to step back to glass while it shows).
+ * Closing CTA, the landing's last section, directly above the footer: "Fans orbit". Centered headline
+ * and two buttons, fan avatars orbiting on two rings (cta-orbit.tsx, from 1280px), and two soft Monad
+ * washes rising from the bottom edge that fade into the footer. Get started is the section's one Lake Blue
+ * button (data-rainbow-cta, a legacy name, tells the navbar to step back to glass while it shows).
  */
 
 const STATS = [
@@ -28,10 +29,10 @@ export function DemoCta() {
   return (
     <section id="demo" aria-labelledby="demo-title" className={st.section}>
       <CtaStage className={st.stage}>
-        <div aria-hidden="true" className={st.sun} data-cta-reveal="sun">
-          <div className={st.glow} />
-          <div className={st.horizon} />
-          <div className={st.grain} />
+        <div aria-hidden="true" className={st.washes} data-cta-reveal="washes">
+          <div className={st.washA} />
+          <div className={st.washB} />
+          <div className={cn('grain', st.grain)} />
         </div>
 
         <CtaOrbit />
@@ -60,8 +61,10 @@ export function DemoCta() {
           </p>
 
           <div className={cn(st.actions, st.rise)} data-cta-reveal="rise" style={delay(240)}>
-            <GetStartedButton variant="rainbow" size="lg" data-rainbow-cta />
-            <DemoButton as="creator" variant="secondary" className={st.demoBtn}>
+            <Link href={routes.start()} className="btn btn-primary" data-rainbow-cta>
+              Get started
+            </Link>
+            <DemoButton as="creator" variant="secondary">
               Try the live demo
             </DemoButton>
           </div>

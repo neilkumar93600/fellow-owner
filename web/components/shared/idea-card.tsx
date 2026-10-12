@@ -32,8 +32,8 @@ function AiVerdict({ ai }: { ai: AiInsight }) {
 }
 
 /**
- * DESIGN.md Idea card: soft frosted glass, radius 24, padding 20. Community chip, H2 title (two lines at most,
- * the link), one Body summary line in ink-muted, the team's avatars, the signal counts in Small ink-muted,
+ * Idea card: soft frosted glass with a hairline, radius 24, padding 20. Community chip, serif H2 title (two lines at most,
+ * the link), one summary line in ink-muted, the team's avatars, the signal counts in mono ink-muted,
  * then Open. Creator screens add the match label and a glass Spotlight (blue stays the screen's one action). Hover
  * steps the glass to 80% white and underlines the title; nothing moves.
  */
@@ -74,16 +74,16 @@ export function IdeaCard({
         ) : null}
       </div>
 
-      <h3 className="mt-3 line-clamp-2 text-h2 text-ink">
+      <h3 className="mt-3 line-clamp-2 font-display text-h2 font-normal text-ink">
         <Link href={href} className="rounded-sm underline-offset-4 group-hover:underline">
           {post.title}
         </Link>
       </h3>
-      <p className="mt-1 truncate text-body text-ink-muted">{post.excerpt}</p>
+      <p className="mt-1 truncate text-small text-ink-muted">{post.excerpt}</p>
 
       <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
         {team.length ? <AvatarStack people={team} total={post.teamSize} /> : null}
-        <p className="text-small text-ink-muted">
+        <p className="text-caption text-ink-muted">
           {formatNumber(post.useCount)} would use this · {formatNumber(post.buildCount)} want to
           help
         </p>

@@ -93,7 +93,7 @@
   color: var(--ink);
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
@@ -107,8 +107,10 @@
   background: var(--card-strong);
   box-shadow: inset 0 0 0 1px var(--line);
   color: var(--ink);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -156,6 +158,7 @@
   color: var(--ink);
   font-size: 0.875rem;
   font-weight: 500;
+  text-transform: uppercase;
   transition:
     box-shadow var(--dur-base) var(--ease-out-quart),
     transform var(--dur-fast) var(--ease-out-quart);
@@ -180,7 +183,7 @@
 }
 
 .control:hover {
-  box-shadow: inset 0 0 0 1px #d4d4d9;
+  box-shadow: inset 0 0 0 1px var(--color-smoke);
 }
 
 .control:active {
@@ -269,7 +272,7 @@
   border-radius: 28px;
   background: var(--glass-strong);
   border: 1px solid var(--glass-edge);
-  box-shadow: var(--glass-highlight), var(--shadow-glass);
+  box-shadow: var(--glass-highlight);
   transition: transform 250ms var(--ease-out-quart);
 }
 
@@ -453,7 +456,7 @@
   box-shadow: 0 0 0 2px #fff;
   color: var(--ink);
   font-size: 0.625rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
@@ -490,12 +493,12 @@
 }
 
 .signals svg {
-  color: var(--color-coral);
+  color: var(--color-lake);
 }
 
 .signals b {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* ---------- The "Made it" page crop ---------- */
@@ -508,7 +511,7 @@
   box-shadow: inset 0 0 0 1px var(--glass-edge);
 }
 
-/* The page's cover band, as aurora colour (no photo). */
+/* The page's cover band, in pale Parchment Frost tints (no photo). */
 .pageBand {
   display: flex;
   align-items: center;
@@ -533,7 +536,7 @@
   background: #fff;
   color: var(--ink);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -553,7 +556,7 @@
   margin: 8px 0 0;
   color: var(--ink-soft);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -594,7 +597,7 @@
 .creditText b {
   color: var(--ink);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* ---------- Reduced motion: one static row that scrolls and snaps ---------- */

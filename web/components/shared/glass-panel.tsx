@@ -10,8 +10,8 @@ export interface GlassPanelProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 /**
- * DESIGN.md Glass panel: frosted white over the aurora, a 1px top-left highlight, the glass shadow and a
- * 28px radius. Falls back to 92% white where backdrop-filter is unsupported (globals.css). Padding is
+ * Glass panel: frosted white over the parchment washes, an ash hairline and a
+ * 40px radius. Falls back to 92% white where backdrop-filter is unsupported (globals.css). Padding is
  * the caller's.
  */
 export function GlassPanel({

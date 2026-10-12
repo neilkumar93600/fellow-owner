@@ -46,8 +46,8 @@ export interface CommunityCardProps {
 }
 
 /**
- * DESIGN.md Community card: a frosted card washed in its aurora tint, radius 28 and padding 24; the 56px
- * icon tile with the name in H1 ink-soft beside it; 40px of open space; the 18px fans line ("Fans" 400,
+ * Community card: a frosted card washed in its pastel tint with an ash hairline, radius 40 and padding 24; the 56px
+ * icon tile with the name in serif H1 ink-soft beside it; 40px of open space; the 18px fans line ("Fans" 400,
  * the figure and the signed trend) and the digest in Body ink. Hover steps the name to ink (studio also fades in a
  * chevron); press is 0.98. On lavender the secondary words step up to ink-soft and a rising figure to ink;
  * the white card takes a Dove Grey tile with an ink icon.
@@ -73,7 +73,7 @@ export function CommunityCard({
   const nameId = `community-${slug}-name`;
   const reasonId = `community-${slug}-reason`;
   const base = cn(
-    'relative flex flex-col gap-10 rounded-panel p-6 text-left text-ink shadow-[inset_1px_1px_0_rgb(255_255_255/0.7),var(--shadow-glass)] transition-[border-color] duration-200 hover:border-white',
+    'relative flex flex-col gap-10 rounded-panel p-6 text-left text-ink transition-[border-color] duration-200 hover:border-smoke',
     styles.card,
   );
 
@@ -112,7 +112,7 @@ export function CommunityCard({
         className={cn(
           base,
           'group press cursor-pointer border-2 p-[22px] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink',
-          selected ? 'border-ink' : 'border-transparent',
+          selected ? 'border-ink' : 'border-line',
           className,
         )}
       >
@@ -129,7 +129,7 @@ export function CommunityCard({
           <span className="flex min-w-0 flex-col gap-1.5">
             <span
               id={nameId}
-              className="text-h1 text-ink-soft transition-colors duration-150 ease-out-quart group-hover:text-ink"
+              className="font-display text-h1 font-normal text-ink-soft transition-colors duration-150 ease-out-quart group-hover:text-ink"
             >
               {name}
             </span>
@@ -168,7 +168,7 @@ export function CommunityCard({
         {tile}
         <h3
           className={cn(
-            'text-h1 text-ink-soft',
+            'font-display text-h1 font-normal text-ink-soft',
             studio && 'transition-colors duration-150 ease-out-quart group-hover:text-ink',
           )}
         >

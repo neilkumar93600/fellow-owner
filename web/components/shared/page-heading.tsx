@@ -13,8 +13,8 @@ export interface PageHeadingProps {
 }
 
 /**
- * A page or section title with an optional line and actions. A page title (level 1) is Instrument Serif
- * at 36px; a section head stays Inter H2 (serif only at 28px and up). Words are ink, so they read on the
+ * A page or section title with an optional line and actions. A page title (level 1) is the serif at 36px, 400;
+ * a section head is the serif H2. Words are ink, so they read on the
  * bare aurora as well as on glass.
  */
 export function PageHeading({
@@ -36,7 +36,9 @@ export function PageHeading({
         >
           {title}
         </Heading>
-        {description ? <p className="max-w-[68ch] text-body text-ink">{description}</p> : null}
+        {description ? (
+          <p className="max-w-[68ch] text-small text-ink-soft">{description}</p>
+        ) : null}
       </div>
       {actions ? <div className="flex shrink-0 items-center gap-3">{actions}</div> : null}
     </div>

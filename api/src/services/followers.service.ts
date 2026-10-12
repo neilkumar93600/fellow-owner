@@ -9,28 +9,44 @@ import {
   type ImportSuggestion,
   type importFollowersSchema,
   LIMITS,
+  type LookupPlatform,
+  PLATFORM_FANS_LIMITS,
+  type PlatformFansImport,
+  type PlatformFansSkipReason,
+  type platformFansImportSchema,
   type TagFollowersResult,
   type tagFollowersSchema,
   type updateFollowerSchema,
   type youtubeImportSchema,
 } from '@fellow-owners/shared';
 import type { z } from 'zod';
-import { type AiServices, TAG_FOLLOWERS_BATCH } from '../ai/types.js';
+import { type AiServices, type BackgroundRunner, TAG_FOLLOWERS_BATCH } from '../ai/types.js';
+import type { Env } from '../config/env.js';
 import type { Db } from '../db/client.js';
 import type { CommunityRow } from '../db/schema/communities.js';
 import type { FollowerRow } from '../db/schema/followers.js';
 import { type ParsedImport, parseAudience, type RowError } from '../lib/audience-import.js';
 import { toIso, toIsoOrNull } from '../lib/dates.js';
 import { uniqueViolation } from '../lib/db-errors.js';
-import { AppError, conflict, isAppError, notFound, validationError } from '../lib/errors.js';
+import {
+  AppError,
+  conflict,
+  dailyCapReached,
+  isAppError,
+  notFound,
+  validationError,
+} from '../lib/errors.js';
 import type { Logger } from '../lib/logger.js';
 import { clampLimit, decodeTimeCursor, encodeTimeCursor, toPage } from '../lib/pagination.js';
+import { createPlatformFans, demoFans, type FansFetch } from '../lib/platform-fans.js';
+import { isDemoHandle, parseProfileUrl } from '../lib/platform-lookup.js';
 import {
   createYoutubeClient,
   parseChannelUrl,
   type YoutubeComments,
   YoutubeError,
 } from '../lib/youtube.js';
+import { withinCap } from '../middlewares/rate-limit.js';
 import type {
   FollowerFilter,
   FollowerTagRow,
@@ -44,6 +60,7 @@ export type CreateFollowerBody = z.output<typeof createFollowerSchema>;
 export type UpdateFollowerBody = z.output<typeof updateFollowerSchema>;
 export type ImportFollowersBody = z.output<typeof importFollowersSchema>;
 export type YoutubeImportBody = z.output<typeof youtubeImportSchema>;
+export type PlatformFansImportBody = z.output<typeof platformFansImportSchema>;
 
 /** An import from YouTube comments; `sample` is true when no API key is set (made-up commenters). */
 export type YoutubeImportResult = Omit<ImportResult, 'source'> & {
@@ -59,9 +76,18 @@ export interface FollowersServiceDeps {
   repos: Repos;
   ai: AiServices;
   logger: Logger;
-  /** Only YOUTUBE_API_KEY is read: without it the YouTube import answers labelled sample data. */
-  env?: { YOUTUBE_API_KEY?: string | undefined };
+  /**
+   * YOUTUBE_API_KEY (YouTube import), APIFY_TOKEN + APIFY_ENABLED (Instagram and TikTok fans).
+   * Without them the imports answer labelled sample data or skip.
+   */
+  env?: Partial<Pick<Env, 'YOUTUBE_API_KEY' | 'APIFY_TOKEN' | 'APIFY_ENABLED'>>;
+  /** Runs the fans import after onboarding; without it autoImportPlatforms does nothing. */
+  background?: BackgroundRunner;
 }
+
+/** Live fans imports a UTC day for the whole API (each may cost an Apify run or YouTube quota). */
+export const PLATFORM_FANS_RUNS_PER_DAY_ALL = 50;
+const DAY_SECONDS = 86_400;
 
 const F = LIMITS.follower;
 
@@ -128,6 +154,12 @@ export function createFollowersService(deps: FollowersServiceDeps) {
   const { db, repos, ai } = deps;
   const log = deps.logger.child({ module: 'followers' });
   const youtube = createYoutubeClient({ apiKey: deps.env?.YOUTUBE_API_KEY });
+  const fans = createPlatformFans({
+    apifyToken: deps.env?.APIFY_TOKEN,
+    apifyEnabled: deps.env?.APIFY_ENABLED ?? false,
+    youtubeKey: deps.env?.YOUTUBE_API_KEY,
+    logger: log,
+  });
 
   async function activeCommunities(spaceId: string): Promise<CommunityRow[]> {
     return repos.communities.listBySpace(spaceId);
@@ -308,6 +340,103 @@ export function createFollowersService(deps: FollowersServiceDeps) {
     };
   }
 
+  /**
+   * 429 daily_cap_reached past runsPerPlatformPerDay for this space and platform, or past the
+   * shared daily cap. Keys carry the UTC day. Per space first, so a space over its own cap does not
+   * use up the shared one.
+   */
+  async function assertFansCaps(spaceId: string, platform: LookupPlatform): Promise<void> {
+    const day = new Date().toISOString().slice(0, 10);
+    const perSpace = await withinCap({
+      name: 'platform-fans-space',
+      key: `${spaceId}:${platform}:${day}`,
+      windowSeconds: DAY_SECONDS,
+      max: PLATFORM_FANS_LIMITS.runsPerPlatformPerDay,
+    });
+    if (!perSpace) {
+      throw dailyCapReached(
+        `Fans can be imported from each platform ${PLATFORM_FANS_LIMITS.runsPerPlatformPerDay} times a day. Try again tomorrow.`,
+      );
+    }
+    const shared = await withinCap({
+      name: 'platform-fans-day',
+      key: day,
+      windowSeconds: DAY_SECONDS,
+      max: PLATFORM_FANS_RUNS_PER_DAY_ALL,
+    });
+    if (!shared) throw dailyCapReached('Fan imports are used up for today. Try again tomorrow.');
+  }
+
+  /**
+   * Commenters on a profile's recent posts -> followers, through runImport (imports record, dedupe
+   * on platform + handle, AI suggestions). Made-up people never reach a real space: sample mode
+   * skips with `sample`, and the demo fixtures only fill the demo space. 400 for a link that is
+   * not a profile; 429 past the caps (live fetches only).
+   */
+  async function importPlatformFans(
+    owner: OwnerContext,
+    input: PlatformFansImportBody,
+  ): Promise<PlatformFansImport> {
+    const target = parseProfileUrl(input.url);
+    if (!target) {
+      throw validationError([
+        {
+          location: 'body',
+          path: ['url'],
+          message: 'Use a profile link like instagram.com/name',
+          code: 'custom',
+        },
+      ]);
+    }
+    const { platform } = target;
+    const skip = (reason: PlatformFansSkipReason): PlatformFansImport => ({
+      status: 'skipped',
+      platform,
+      reason,
+    });
+    if (platform === 'x') return skip('unsupported');
+
+    let fetched: FansFetch;
+    if (isDemoHandle(target.handle)) {
+      if (!owner.space.isDemo) return skip('sample');
+      fetched = demoFans(platform);
+    } else {
+      if (!fans.live(platform)) return skip('sample');
+      await assertFansCaps(owner.space.id, platform);
+      fetched = await fans.commenters({ platform, handle: target.handle });
+    }
+    if (fetched.status === 'skipped') return skip(fetched.reason);
+
+    const parsed: ParsedImport = {
+      rows: fetched.commenters.slice(0, PLATFORM_FANS_LIMITS.peopleMax).map((c, index) => ({
+        line: index + 1,
+        name: c.name,
+        handle: c.handle,
+        platform,
+        email: null,
+        note: c.note || null,
+      })),
+      errors: [],
+      skipped: 0,
+    };
+    if (parsed.rows.length === 0) return skip('no_comments');
+    // ponytail: imports.source has no instagram/tiktok value, so those runs are recorded as
+    // `paste` (the rows keep their platform). Add the values in a migration if a screen needs them.
+    const result = await runImport(
+      owner,
+      platform === 'youtube' ? 'youtube' : 'paste',
+      parsed,
+      true,
+    );
+    return {
+      status: 'done',
+      platform,
+      imported: result.created,
+      existing: result.duplicates,
+      posts: fetched.posts,
+    };
+  }
+
   return {
     /** GET /api/studio/followers */
     async list(owner: OwnerContext, query: FollowersQuery): Promise<FollowersPage> {
@@ -474,6 +603,38 @@ export function createFollowersService(deps: FollowersServiceDeps) {
       }
       const result = await runImport(owner, 'youtube', parsed, true);
       return { ...result, source: 'youtube', sample: comments.source === 'sample' };
+    },
+
+    /** POST /api/spaces/:handle/followers/import/platform -> PlatformFansImport */
+    importPlatformFans,
+
+    /**
+     * After onboarding creates the space: the fans import for every fetched (has a handle)
+     * Instagram, TikTok or YouTube entry, one after another in the background. Non-demo spaces and
+     * live providers only (sample mode would only skip), so it never runs in tests unless a test
+     * turns a provider on and awaits background.whenIdle(). Never throws; results are logged.
+     */
+    autoImportPlatforms(owner: OwnerContext): void {
+      const { background } = deps;
+      if (!background || owner.space.isDemo) return;
+      const urls = (owner.space.platforms ?? []).flatMap((entry) => {
+        const target = entry.handle ? parseProfileUrl(entry.url) : null;
+        return target && fans.live(target.platform) && !isDemoHandle(target.handle)
+          ? [entry.url]
+          : [];
+      });
+      if (urls.length === 0) return;
+      const spaceId = owner.space.id;
+      background.run(`platform-fans:${spaceId}`, async () => {
+        for (const url of urls) {
+          try {
+            const result = await importPlatformFans(owner, { url });
+            log.info({ spaceId, ...result }, 'platform fans auto-import');
+          } catch (error) {
+            log.warn({ err: error, spaceId }, 'platform fans auto-import failed');
+          }
+        }
+      });
     },
 
     /** POST /api/studio/followers/tag */

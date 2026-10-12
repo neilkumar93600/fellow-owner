@@ -45,7 +45,7 @@ const STATUSES = [
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-h2 text-ink">{title}</h2>
+      <h2 className="font-display text-h2 text-ink">{title}</h2>
       {children}
     </section>
   );

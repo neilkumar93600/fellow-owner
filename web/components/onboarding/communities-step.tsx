@@ -18,7 +18,9 @@ import {
   errorMessage,
   FieldError,
   FieldLabel,
+  groupLabelClass,
   inputClass,
+  labelClass,
   textareaClass,
 } from './onboarding-fields';
 import {
@@ -210,7 +212,7 @@ export function CommunitiesStep({
       {/* The error sits under the group label, above the options, so it is in view of the first tile. */}
       <div>
         <div className="flex items-baseline justify-between gap-3">
-          <h2 id="ob-templates-label" className="text-small font-medium text-ink">
+          <h2 id="ob-templates-label" className={groupLabelClass}>
             Pick communities or add your own
           </h2>
           <p className="tabular shrink-0 text-small text-ink-soft" aria-live="polite">
@@ -224,7 +226,7 @@ export function CommunitiesStep({
         <fieldset aria-labelledby="ob-suggested-label" className="min-w-0">
           <h3
             id="ob-suggested-label"
-            className="inline-flex items-center gap-1.5 text-small font-medium text-ink"
+            className={cx(groupLabelClass, 'inline-flex items-center gap-1.5')}
           >
             <Sparkles aria-hidden strokeWidth={1.5} className="size-4" />
             Suggested from your channels
@@ -267,7 +269,7 @@ export function CommunitiesStep({
                       aria-hidden
                       className={cx(
                         'grid size-[22px] shrink-0 place-items-center rounded-full border-[1.5px]',
-                        selected ? 'border-ink bg-ink text-card-strong' : 'border-(--line-field)',
+                        selected ? 'border-ink bg-ink text-card-strong' : 'border-line-field',
                       )}
                     >
                       <Check
@@ -317,7 +319,7 @@ export function CommunitiesStep({
         </fieldset>
       ) : null}
       {suggested.length > 0 ? (
-        <p className="mt-1 text-small font-medium text-ink">Or start from a kind of creator</p>
+        <p className={cx(groupLabelClass, 'mt-1')}>Or start from a kind of creator</p>
       ) : null}
 
       <fieldset className="m-0 flex min-w-0 flex-wrap gap-2 border-0 p-0">
@@ -330,7 +332,7 @@ export function CommunitiesStep({
             onClick={() => setPresetId(p.id)}
             className={cx(
               styles.press,
-              'inline-flex h-11 items-center rounded-full border px-4 text-small font-medium text-ink sm:h-9',
+              'inline-flex h-11 items-center rounded-full border px-4 text-caption font-medium text-ink uppercase sm:h-9',
               p.id === presetId
                 ? 'border-ink bg-card-strong'
                 : 'border-line bg-glass hover:border-ink-muted',
@@ -416,7 +418,7 @@ export function CommunitiesStep({
               onClick={() => openEditor({ mode: 'create' }, 'ob-add-community')}
               className={cx(
                 styles.press,
-                'flex h-full min-h-[104px] w-full flex-col justify-between gap-3 rounded-[20px] border-2 border-dashed border-(--line-strong) bg-card-strong p-3 text-left hover:border-ink-muted hover:bg-card disabled:cursor-not-allowed disabled:opacity-50',
+                'flex h-full min-h-[104px] w-full flex-col justify-between gap-3 rounded-[20px] border-2 border-dashed border-line bg-card-strong p-3 text-left hover:border-ink-muted hover:bg-card disabled:cursor-not-allowed disabled:opacity-50',
               )}
             >
               <span className="grid size-9 place-items-center rounded-[12px] bg-table-head text-ink">
@@ -496,7 +498,7 @@ function Tile({
           aria-hidden
           className={cx(
             'grid size-[22px] place-items-center rounded-full border-[1.5px]',
-            selected ? 'border-ink bg-ink text-card-strong' : 'border-(--line-field)',
+            selected ? 'border-ink bg-ink text-card-strong' : 'border-line-field',
           )}
         >
           {custom ? (
@@ -668,7 +670,7 @@ function CommunityEditor({
         </div>
 
         <fieldset>
-          <legend className="text-small font-medium text-ink">Colour</legend>
+          <legend className={labelClass}>Colour</legend>
           <div className="mt-1.5 flex flex-wrap gap-1">
             {/* Lime is never a surface, so it is not offered. */}
             {TINTS.filter((t) => t !== 'lime').map((t) => (
@@ -695,7 +697,7 @@ function CommunityEditor({
                       TINT_STYLES[t].swatch,
                       tint === t
                         ? 'border-ink ring-2 ring-ink ring-offset-2 ring-offset-card'
-                        : 'border-(--line-strong)',
+                        : 'border-line-strong',
                     )}
                   >
                     {tint === t ? <Check strokeWidth={2} className="size-3.5 text-ink" /> : null}
@@ -707,7 +709,7 @@ function CommunityEditor({
         </fieldset>
 
         <fieldset>
-          <legend className="text-small font-medium text-ink">Icon</legend>
+          <legend className={labelClass}>Icon</legend>
           <div className="mt-1.5 grid grid-cols-4 gap-1.5 @sm:grid-cols-8">
             {ICON_OPTIONS.map((name) => {
               const Icon = COMMUNITY_ICON_COMPONENTS[name];
@@ -763,7 +765,7 @@ function CommunityEditor({
           <button
             type="button"
             onClick={onRemove}
-            className="btn ml-auto h-11 px-4 text-(--danger-deep) hover:bg-page"
+            className="btn ml-auto h-11 px-4 text-danger-deep hover:bg-page"
           >
             <Trash2 aria-hidden strokeWidth={1.5} className="size-4 text-danger" />
             Remove

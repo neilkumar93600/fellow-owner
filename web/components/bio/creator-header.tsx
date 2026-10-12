@@ -25,7 +25,7 @@ export interface CreatorHeaderProps {
 
 /**
  * DESIGN.md Bio link: a cover photo, then a frosted profile card that overlaps it: the round portrait, the
- * name in Instrument Serif, @handle and the bio, the platform follower chips as 44px glass pills that
+ * name in Newsreader serif, @handle and the bio (Inter, a long read), the platform follower chips as 44px glass pills that
  * link out, the follower and fan totals and the way in (a glass pill: the page's blue is "Send an
  * idea"). Words sit on glass-strong, so they are ink.
  */
@@ -60,7 +60,7 @@ export function CreatorHeader({ space, cta }: CreatorHeaderProps) {
       </div>
 
       <div className="glass-strong relative z-10 -mt-12 flex flex-col items-center gap-4 px-5 pt-0 pb-6 text-center sm:mx-6 sm:px-8">
-        <div className="-mt-12 rounded-full bg-white p-1 shadow-glass">
+        <div className="-mt-12 rounded-full border border-line bg-white p-1">
           {photos ? (
             <span
               aria-hidden="true"
@@ -82,9 +82,11 @@ export function CreatorHeader({ space, cta }: CreatorHeaderProps) {
           <h1 className="font-display text-[2.25rem] leading-[1.1] font-normal text-ink sm:text-[2.75rem]">
             {space.displayName}
           </h1>
-          <p className="text-body text-ink">@{space.handle}</p>
+          <p className="text-small text-ink-soft">@{space.handle}</p>
         </div>
-        {space.bio ? <p className="max-w-[46ch] text-body text-ink">{space.bio}</p> : null}
+        {space.bio ? (
+          <p className="max-w-[46ch] font-sans text-body text-ink">{space.bio}</p>
+        ) : null}
 
         {space.platforms.length > 0 ? (
           <ul
@@ -97,14 +99,14 @@ export function CreatorHeader({ space, cta }: CreatorHeaderProps) {
                   href={entry.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="glass-chip inline-flex h-11 press items-center gap-2 px-4 text-label text-ink hover:bg-white/90"
+                  className="glass-chip inline-flex h-11 press items-center gap-2 px-4 text-small text-ink uppercase hover:bg-white/90"
                 >
                   {entry.platform === 'other' ? (
                     <Globe aria-hidden="true" strokeWidth={1.5} className="size-5 shrink-0" />
                   ) : (
                     <PlatformIcon platform={entry.platform} />
                   )}
-                  <span className="tabular-nums">{formatCompact(entry.followers)}</span>
+                  <span className="font-medium tabular-nums">{formatCompact(entry.followers)}</span>
                   <span className="text-ink-soft">{PLATFORM_LABELS[entry.platform]}</span>
                   <span className="sr-only"> followers (opens in a new tab)</span>
                 </a>
@@ -113,7 +115,7 @@ export function CreatorHeader({ space, cta }: CreatorHeaderProps) {
           </ul>
         ) : null}
 
-        <p className="text-body text-ink">
+        <p className="text-caption uppercase text-ink-soft">
           <span className="tabular-nums">{formatCompact(space.totalFollowers)}</span> followers ·{' '}
           <span className="tabular-nums">{formatNumber(space.memberCount)}</span>{' '}
           {pluralize(space.memberCount, 'fan')} in the space

@@ -8,7 +8,7 @@ import { formatNumber } from '@/lib/format';
 
 export interface ChartLegendItem {
   label: string;
-  /** The series color, in series order: var(--chart-1) Marigold, var(--chart-2) Violet, var(--chart-3) Teal. */
+  /** The series color, in series order: var(--chart-1) Lake Blue, var(--chart-2) amber, var(--chart-3) green. */
   color: string;
 }
 
@@ -33,9 +33,8 @@ export interface ChartCardProps {
 }
 
 /**
- * DESIGN.md Chart card: Paper White, H2 top left, legend (10px dots, Body ink-soft) top right, the chart,
- * a one-line Small summary and a "Show data" ghost toggle that reveals the values as a table. Steps up to
- * Pure White on hover.
+ * Chart card: frosted glass with a hairline, serif H2 top left, legend (10px dots, mono ink-soft) top right,
+ * the chart, a one-line summary and a "Show data" ghost toggle that reveals the values as a table.
  */
 export function ChartCard({
   title,
@@ -66,7 +65,7 @@ export function ChartCard({
             {legend ? (
               <ul className="flex flex-wrap items-center gap-x-5 gap-y-1">
                 {legend.map((item) => (
-                  <li key={item.label} className="flex items-center gap-2 text-body text-ink-soft">
+                  <li key={item.label} className="flex items-center gap-2 text-small text-ink-soft">
                     <span
                       aria-hidden="true"
                       className="size-2.5 shrink-0 rounded-full"
@@ -112,7 +111,7 @@ export function ChartCard({
                     key={column}
                     scope="col"
                     className={cn(
-                      'h-10 border-b border-line-row px-3 text-small-strong whitespace-nowrap text-ink',
+                      'h-10 border-b border-line px-3 text-caption font-medium tracking-tight whitespace-nowrap text-ink uppercase',
                       i === 0 ? 'text-left' : 'text-right',
                     )}
                   >
@@ -129,14 +128,14 @@ export function ChartCard({
                       <th
                         key={data.columns[i]}
                         scope="row"
-                        className="h-10 border-b border-line-row px-3 text-left font-normal whitespace-nowrap"
+                        className="h-10 border-b border-line px-3 text-left font-normal whitespace-nowrap"
                       >
                         {value}
                       </th>
                     ) : (
                       <td
                         key={data.columns[i]}
-                        className="h-10 border-b border-line-row px-3 text-right whitespace-nowrap"
+                        className="h-10 border-b border-line px-3 text-right whitespace-nowrap"
                       >
                         {typeof value === 'number' ? formatNumber(value) : value}
                       </td>

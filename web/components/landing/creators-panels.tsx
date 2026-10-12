@@ -37,7 +37,7 @@ import styles from './creators-panels.module.css';
 import { avatarTint, creator, initials, promoteDraft } from './demo-data';
 
 /*
- * Three real screens from the creator studio, rebuilt in HTML in the Golden Hour Frost look: the decision-card
+ * Three real screens from the creator studio, rebuilt in HTML in the Parchment Frost look: the decision-card
  * Today, the fan mail as cards, and the Spotlight composer. They are pictures of the product: nothing inside
  * is focusable, and every value is demo data. Match is always a label, never a number.
  */

@@ -227,7 +227,7 @@ export function ResetPasswordForm({ returnTo }: { returnTo: string | null }) {
   if (done) {
     return (
       <AuthCard size="short">
-        <span className="mx-auto mb-6 grid size-14 place-items-center rounded-md bg-aqua-tile text-info-ink">
+        <span className="mx-auto mb-6 grid size-14 place-items-center rounded-2xl bg-aqua-tile text-info-ink">
           <Check aria-hidden size={24} strokeWidth={1.5} />
         </span>
         <AuthHeading title="Password updated" headingRef={headingRef}>
@@ -271,7 +271,7 @@ export function ResetPasswordForm({ returnTo }: { returnTo: string | null }) {
           {...register('email')}
         />
 
-        <p id={codeLabelId} className="mt-4 text-small font-medium text-ink">
+        <p id={codeLabelId} className="mt-4 text-caption uppercase text-ink">
           6‑digit code
         </p>
         <div className="mt-1.5">

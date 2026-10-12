@@ -1,6 +1,6 @@
 /*
  * How it works (loop-scene.tsx, loop-canvas.tsx, loop-static.tsx). The scene pins for about 300vh. Layers,
- * back to front (round 4 spec §3): the blurred recording on a canvas (-3), a cream wash with a soft
+ * back to front (round 4 spec §3): the blurred recording on a canvas (-3), a parchment wash with a soft
  * vignette (-1), the live product layer (0), the story cards (1), the heading and step rail (2). Everything
  * that moves per scroll frame is a motion value or a canvas draw, so nothing re-renders per frame.
  * Cards are 80% white glass: ink-soft keeps 4.5:1 over any frame (80% white over black is #CCC, 4.8:1).
@@ -26,8 +26,8 @@
   z-index: -3;
   width: 100%;
   height: 100%;
-  background: var(--color-cream) url("/frames/product/poster.webp") center / cover no-repeat;
-  /* Soft top and bottom edges: the recording fades into the page aurora instead of meeting the
+  background: var(--color-parchment) url("/frames/product/poster.webp") center / cover no-repeat;
+  /* Soft top and bottom edges: the recording fades into the page washes instead of meeting the
      Problem section above (and the next section below) in a hard line while the scene scrolls in/out. */
   -webkit-mask-image: linear-gradient(
     to bottom,
@@ -39,15 +39,15 @@
   mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 84%, transparent 100%);
 }
 
-/* Cream wash over the recording, darkening softly toward the edges. */
+/* Parchment wash over the recording, darkening softly toward the edges. */
 .shade {
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 75% 70% at 50% 50%, rgb(30 27 38 / 0) 55%, rgb(30 27 38 / 0.16) 100%),
-    rgb(251 247 242 / 0.35);
+    radial-gradient(ellipse 75% 70% at 50% 50%, rgb(36 36 36 / 0) 55%, rgb(36 36 36 / 0.14) 100%),
+    rgb(246 243 241 / 0.4);
   /* Same soft top/bottom edges as the canvas, so the vignette never draws a hard grey line. */
   -webkit-mask-image: linear-gradient(
     to bottom,
@@ -121,7 +121,8 @@
   }
 }
 
-/* Step chips: a row under the heading on phones, a column on the right from tablet up. */
+/* Step chips: a row under the heading on phones, a column on the right from tablet up. The current
+   step is the active-nav look: a periwinkle chip with a Lake Blue dot. */
 .rail {
   position: relative;
   z-index: 2;
@@ -161,8 +162,10 @@
   /* 80% keeps ink-soft at 4.5:1 over any frame (see the note at the top). */
   background: rgb(255 255 255 / 0.8);
   color: var(--color-ink-soft);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   cursor: pointer;
   transition:
     background-color var(--dur-base) var(--ease-out-quart),
@@ -175,7 +178,7 @@
     gap: 8px;
     height: 44px;
     padding: 0 18px 0 14px;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -184,7 +187,7 @@
 }
 
 .chip[aria-current] {
-  background: rgb(255 255 255 / 0.94);
+  background: var(--color-periwinkle);
   color: var(--color-ink);
 }
 
@@ -198,7 +201,7 @@
 }
 
 .chip[aria-current] .chipDot {
-  background: var(--color-sunset);
+  background: var(--color-lake);
 }
 
 /* Visually hidden on phones (the number shows), still the chip's name for assistive tech. */
@@ -289,19 +292,20 @@
   height: 8px;
 }
 
+/* Decorative pastels for the split (the counts sit in ink beside each dot). */
 .split > [data-tone="0"],
 .dot[data-tone="0"] {
-  background: var(--color-sunset);
+  background: var(--color-coral);
 }
 
 .split > [data-tone="1"],
 .dot[data-tone="1"] {
-  background: #9b7fe0;
+  background: var(--color-sky-wash);
 }
 
 .split > [data-tone="2"],
 .dot[data-tone="2"] {
-  background: var(--color-sky);
+  background: var(--color-lake);
 }
 
 /* Featured: the vlog's play badge and the week's clicks. */
@@ -314,10 +318,10 @@
   width: 48px;
   height: 48px;
   translate: -50% -50%;
+  border: 1px solid var(--glass-edge);
   border-radius: 999px;
   background: rgb(255 255 255 / 0.85);
   color: var(--color-ink);
-  box-shadow: 0 10px 30px -10px rgb(40 30 60 / 0.4);
 }
 
 .bars {
@@ -334,7 +338,7 @@
 }
 
 .bars > span:last-child {
-  background: var(--color-sunset);
+  background: var(--color-coral);
 }
 
 @media (max-width: 767px) {

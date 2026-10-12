@@ -62,7 +62,7 @@ export function CommunityCoverCard({
         )}
       </div>
       <div className="flex flex-col gap-3 p-6">
-        <h3 className="text-h1 text-ink">
+        <h3 className="font-display text-h1 text-ink [overflow-wrap:anywhere]">
           <Link
             data-card-link=""
             href={routes.dashboard.community(community.slug)}
@@ -72,7 +72,7 @@ export function CommunityCoverCard({
           </Link>
         </h3>
         <p className="flex flex-wrap items-center gap-x-2 text-trend font-normal text-ink-soft">
-          <span>Fans</span>
+          <span className="uppercase">Fans</span>
           <span className="font-medium text-ink">{formatNumber(community.memberCount)}</span>
           {community.trendPct == null ? null : (
             <>
@@ -82,7 +82,7 @@ export function CommunityCoverCard({
           )}
         </p>
         <div className="flex items-end gap-3">
-          <p className="min-w-0 flex-1 text-body text-ink">{digest}</p>
+          <p className="min-w-0 flex-1 text-body [overflow-wrap:anywhere] text-ink">{digest}</p>
           <Button
             variant="ghost"
             surface="glass"

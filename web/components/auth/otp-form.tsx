@@ -295,7 +295,7 @@ function OtpEntry({ email, returnTo }: { email: string | undefined; returnTo: st
           else void verify(digits.join(''));
         }}
       >
-        <p id={labelId} className="text-small font-medium text-ink">
+        <p id={labelId} className="text-caption uppercase text-ink">
           6‑digit code
         </p>
         <div className="mt-1.5">
@@ -450,7 +450,7 @@ function NextStep({
   return (
     <AuthCard size="short">
       {mismatch ? null : (
-        <span className="mx-auto mb-6 grid size-14 place-items-center rounded-md bg-aqua-tile text-info-ink">
+        <span className="mx-auto mb-6 grid size-14 place-items-center rounded-2xl bg-aqua-tile text-info-ink">
           <Check aria-hidden size={24} strokeWidth={1.5} />
         </span>
       )}

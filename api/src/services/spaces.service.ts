@@ -29,6 +29,7 @@ import type { Storage } from '../lib/storage.js';
 import type { Repos } from '../repositories/index.js';
 import type { SpaceProfileUpdate } from '../repositories/spaces.repo.js';
 import type { AccessService, OwnerContext } from './access.service.js';
+import type { FollowersService } from './followers.service.js';
 import { assertStorableImage } from './uploads.service.js';
 
 export type CreateSpaceBody = z.output<typeof createSpaceSchema>;
@@ -41,6 +42,8 @@ export interface SpacesServiceDeps {
   logger: Logger;
   /** Uploaded avatars and covers are checked in the bucket before they are stored. */
   storage: Storage;
+  /** After create: fans from each fetched platform's comments, in the background. */
+  followers?: Pick<FollowersService, 'autoImportPlatforms'>;
 }
 
 /** Live promotions on the bio page ("Featured by ..."). */
@@ -259,6 +262,12 @@ export function createSpacesService(deps: SpacesServiceDeps) {
         throw error;
       }
       log.info({ spaceId: space.id, handle: space.handle }, 'space created');
+      try {
+        deps.followers?.autoImportPlatforms({ userId: user.id, space, membership: null });
+      } catch (error) {
+        // Never let the fans import affect space creation.
+        log.warn({ err: error, spaceId: space.id }, 'platform fans auto-import not started');
+      }
       return studioSpace(space);
     },
 

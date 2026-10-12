@@ -121,8 +121,8 @@ export function NotificationPopoverContent({
     <div className="flex flex-col gap-2">
       {/* Header with "Mark all read" button */}
       {unreadCount > 0 && (
-        <div className="flex items-center justify-between border-b border-ink/10 px-2 pb-2">
-          <p className="text-label text-ink-soft">{unreadCount} unread</p>
+        <div className="flex items-center justify-between border-b border-line px-2 pb-2">
+          <p className="text-caption tracking-wide text-ink-soft uppercase">{unreadCount} unread</p>
           <button
             type="button"
             onClick={handleMarkAllRead}
@@ -154,8 +154,8 @@ export function NotificationPopoverContent({
 
               {/* Content */}
               <div className="min-w-0 flex-1">
-                <p className="text-body leading-snug">{item.text}</p>
-                <p className="mt-0.5 text-caption text-ink-soft">
+                <p className="font-sans text-body leading-snug">{item.text}</p>
+                <p className="mt-0.5 text-caption tracking-wide text-ink-muted uppercase">
                   {formatRelative(item.createdAt)}
                 </p>
               </div>
@@ -190,7 +190,7 @@ function KindIcon({ kind, unread }: { kind: NotificationItem['kind']; unread: bo
   return (
     <span
       aria-hidden="true"
-      className="relative mt-0.5 grid size-8 shrink-0 place-items-center rounded-full bg-aurora-peach"
+      className="relative mt-0.5 grid size-8 shrink-0 place-items-center rounded-full bg-periwinkle"
     >
       <Icon strokeWidth={1.5} className="size-4 text-ink" />
       {unread ? (

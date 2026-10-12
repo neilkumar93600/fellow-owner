@@ -52,7 +52,7 @@ export function FeaturedProjects({
                     icon={room?.icon ?? 'users'}
                     className="self-start"
                   />
-                  <h3 className="text-h2 text-ink">
+                  <h3 className="font-display text-h2 text-ink">
                     <Link
                       href={routes.fan.showcase(handle, project.showcaseSlug)}
                       className="outline-none group-hover:underline after:absolute after:inset-0 after:rounded-panel focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ink"
@@ -60,8 +60,8 @@ export function FeaturedProjects({
                       {project.title}
                     </Link>
                   </h3>
-                  <p className="line-clamp-2 text-body text-ink">{project.excerpt}</p>
-                  <p className="mt-auto text-small text-ink-soft">
+                  <p className="line-clamp-2 font-sans text-body text-ink">{project.excerpt}</p>
+                  <p className="mt-auto text-caption uppercase text-ink-soft">
                     {formatNumber(project.teamSize)}{' '}
                     {pluralize(project.teamSize, 'person', 'people')} made it · Featured{' '}
                     {formatDate(project.publishedAt)}

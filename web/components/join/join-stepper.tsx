@@ -139,7 +139,7 @@ export function JoinStepper({
 
       <div className="flex flex-col gap-6 glass-strong p-6 sm:p-8">
         {step === 'done' ? (
-          <span className="grid size-14 place-items-center rounded-md bg-aurora-lilac">
+          <span className="grid size-14 place-items-center rounded-2xl bg-aurora-lilac">
             <PartyPopper aria-hidden="true" strokeWidth={1.5} className="size-6 text-[#5b47a8]" />
           </span>
         ) : (

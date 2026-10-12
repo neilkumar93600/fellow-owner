@@ -141,7 +141,7 @@ export function PostForm({
           count={{ value: watch('body').length, max: LIMITS.post.body.max }}
           error={errors.body?.message}
         >
-          <TextArea {...register('body')} rows={8} />
+          <TextArea {...register('body')} rows={8} className="font-sans" />
         </Field>
 
         {coach && type !== 'discussion' ? (
@@ -173,7 +173,7 @@ export function PostForm({
 
         <LinksField max={LIMITS.post.links.max} />
 
-        <div className="flex flex-col-reverse gap-3 border-t border-ink/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col-reverse gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p id={capId} className="text-small text-ink-soft">
             {capped ? (
               `You've reached today's limit of ${DAILY_CAPS.posts} posts. Try again tomorrow.`

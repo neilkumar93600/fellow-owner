@@ -406,7 +406,7 @@ function HandleStatusLine({
             strokeWidth={1.5}
             className="mt-px size-4 shrink-0 text-danger"
           />
-          <span className="text-(--danger-deep)">
+          <span className="text-danger-deep">
             <span className="font-medium">{lead}</span> {rest}
           </span>
         </>

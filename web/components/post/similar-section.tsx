@@ -37,7 +37,9 @@ export function SimilarSection({ postId, scope }: SimilarSectionProps) {
     >
       {data.posts.length > 0 ? (
         <div className="flex flex-col gap-3">
-          <h3 className={studio ? 'text-small-strong text-ink' : 'text-h2 text-ink'}>
+          <h3
+            className={studio ? 'text-caption text-ink uppercase' : 'font-display text-h2 text-ink'}
+          >
             Similar ideas
           </h3>
           <ul className="flex flex-col gap-3">
@@ -55,7 +57,7 @@ export function SimilarSection({ postId, scope }: SimilarSectionProps) {
                 >
                   {post.title}
                 </Link>
-                <p className="line-clamp-2 text-small text-ink-muted">{post.excerpt}</p>
+                <p className="line-clamp-2 font-sans text-small text-ink-muted">{post.excerpt}</p>
               </li>
             ))}
           </ul>
@@ -64,7 +66,9 @@ export function SimilarSection({ postId, scope }: SimilarSectionProps) {
 
       {data.people.length > 0 ? (
         <div className="flex flex-col gap-3">
-          <h3 className={studio ? 'text-small-strong text-ink' : 'text-h2 text-ink'}>
+          <h3
+            className={studio ? 'text-caption text-ink uppercase' : 'font-display text-h2 text-ink'}
+          >
             People who could help
           </h3>
           <ul className="flex flex-col gap-3">

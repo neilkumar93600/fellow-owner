@@ -28,7 +28,7 @@ export interface CoachPanelProps {
 
 /**
  * F30 Idea Coach. On demand only: a secondary "Check my pitch" under the body (Send stays the one
- * blue), then an inset lavender well with a clarity checklist and an optional rewrite. It judges
+ * blue), then an inset periwinkle well with a clarity checklist and an optional rewrite. It judges
  * clarity, never taste: no score, no "Mira would like this", and nothing here reaches the creator.
  */
 export function CoachPanel({
@@ -118,7 +118,10 @@ export function CoachPanel({
       </div>
 
       {status === 'loading' ? (
-        <div aria-busy="true" className="flex flex-col gap-3 rounded-lg bg-lavender p-4">
+        <div
+          aria-busy="true"
+          className="flex flex-col gap-3 rounded-2xl border border-line bg-lavender p-4"
+        >
           <span className="sr-only" role="status">
             Checking your {noun}
           </span>
@@ -129,19 +132,22 @@ export function CoachPanel({
       ) : null}
 
       {status === 'unavailable' ? (
-        <p className="rounded-lg bg-lavender p-4 text-body text-ink">
+        <p className="rounded-2xl border border-line bg-lavender p-4 text-small text-ink">
           The coach is unavailable right now. Your {noun} is fine to send as is.
         </p>
       ) : null}
 
       {status === 'ready' && result ? (
         // The summary-well pattern: an inset on the form card, not a card in a card.
-        <section aria-labelledby={`${noteId}-tips`} className="rounded-lg bg-lavender p-4">
+        <section
+          aria-labelledby={`${noteId}-tips`}
+          className="rounded-2xl border border-line bg-lavender p-4"
+        >
           <h3
             id={`${noteId}-tips`}
             ref={headingRef}
             tabIndex={-1}
-            className="text-small-strong text-ink outline-none"
+            className="text-caption font-medium tracking-tight text-ink uppercase outline-none"
           >
             Coach tips{' '}
             <span className="font-normal text-ink-soft">· {creatorName} never sees these</span>
@@ -176,7 +182,7 @@ export function CoachPanel({
           </ul>
 
           {result.suggestion ? (
-            <div className="mt-4 border-t border-lavender-tile pt-3">
+            <div className="mt-4 border-t border-line pt-3">
               <button
                 type="button"
                 aria-expanded={showSuggestion}

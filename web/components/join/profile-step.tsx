@@ -150,7 +150,7 @@ export function ProfileStep({ handle, onDone }: { handle: string; onDone: () => 
             {skills.map((skill) => (
               <li
                 key={skill}
-                className="inline-flex h-9 items-center gap-1 rounded-full bg-white/70 pr-1 pl-3 text-small text-ink"
+                className="inline-flex h-9 items-center gap-1 rounded-full border border-line bg-white/70 pr-1 pl-3 text-small text-ink"
               >
                 {skill}
                 <button
@@ -168,7 +168,7 @@ export function ProfileStep({ handle, onDone }: { handle: string; onDone: () => 
       </div>
 
       <fieldset className="flex min-w-0 flex-col gap-4">
-        <legend className="mb-1 text-small-strong text-ink">
+        <legend className="mb-1 text-caption uppercase text-ink-soft">
           Links <span className="font-normal text-ink-soft">(optional)</span>
         </legend>
         {links.map((link, i) => (

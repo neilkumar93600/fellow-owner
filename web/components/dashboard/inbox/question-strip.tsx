@@ -25,13 +25,13 @@ export function QuestionStrip({
     <section
       aria-labelledby="question-strip-title"
       className={cn(
-        'glass flex flex-wrap items-center gap-x-4 gap-y-3 rounded-[24px] px-5 py-4',
+        'glass flex flex-wrap items-center gap-x-4 gap-y-3 rounded-panel px-5 py-4',
         className,
       )}
     >
       <span
         aria-hidden="true"
-        className="grid size-11 shrink-0 place-items-center rounded-full bg-aurora-lilac"
+        className="grid size-11 shrink-0 place-items-center rounded-full bg-periwinkle"
       >
         <Lightbulb strokeWidth={1.5} className="size-5 text-ink" />
       </span>

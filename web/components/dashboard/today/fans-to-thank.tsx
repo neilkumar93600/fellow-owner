@@ -26,12 +26,12 @@ function contributionLine({ contributions: c }: PersonRow): string {
 export function FansToThank({ fans }: { fans: PersonRow[] }) {
   const top = fans.slice(0, 4);
   return (
-    <GlassPanel as="section" aria-labelledby="fans-to-thank-title" className="p-5">
+    <GlassPanel as="section" aria-labelledby="fans-to-thank-title" className="rounded-panel p-6">
       <div className="flex items-baseline justify-between gap-3">
-        <h2 id="fans-to-thank-title" className="text-label text-ink">
+        <h2 id="fans-to-thank-title" className="text-caption tracking-wide text-ink-soft uppercase">
           Fans to thank
         </h2>
-        <Link href={routes.dashboard.people()} className="text-small text-sky hover:underline">
+        <Link href={routes.dashboard.people()} className="text-small text-lake hover:underline">
           All fans
         </Link>
       </div>

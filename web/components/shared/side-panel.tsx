@@ -23,7 +23,7 @@ export interface SidePanelProps {
 }
 
 /**
- * DESIGN.md Side panel: the 480px Pure White sheet from the right with its header (H2, status pill,
+ * Side panel: the 480px frosted sheet from the right with its header (H2, status pill,
  * close), a scrolling body and a sticky footer. Modal with a scrim below 1024px; beside the page on
  * desktop. The screen controls it, so the row's ?item= (or local state) decides what it shows.
  */

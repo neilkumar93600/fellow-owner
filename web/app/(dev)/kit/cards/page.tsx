@@ -57,7 +57,7 @@ const DIGEST = 'Three new trip ideas this week; the Lisbon guide found its photo
 function Panel({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <section aria-labelledby={`${id}-title`}>
-      <h2 id={`${id}-title`} className="mb-4 text-h2 text-ink">
+      <h2 id={`${id}-title`} className="mb-4 font-display text-h2 text-ink">
         {title}
       </h2>
       <div className="glass flex flex-col gap-5 p-4 sm:p-6">{children}</div>
@@ -217,9 +217,9 @@ export default function CardsKitPage() {
 
           <section
             aria-labelledby="top-ideas-title"
-            className="rounded-3xl border border-white/70 bg-white/60 p-6 transition-colors duration-150 ease-out-quart hover:bg-white/80"
+            className="rounded-3xl border border-line bg-white/60 p-6 transition-colors duration-150 ease-out-quart hover:bg-white/80"
           >
-            <h2 id="top-ideas-title" className="text-h2 text-ink">
+            <h2 id="top-ideas-title" className="font-display text-h2 text-ink">
               Top ideas
             </h2>
             <DataTable
@@ -357,7 +357,7 @@ export default function CardsKitPage() {
           <IdeaCardSkeleton variant="fan" />
           <CommunityCardSkeleton tint="lavender" />
         </div>
-        <div className="rounded-3xl border border-white/70 bg-white/60 p-6">
+        <div className="rounded-3xl border border-line bg-white/60 p-6">
           <TableSkeleton variant="compact" rows={3} columns={3} />
         </div>
       </Panel>

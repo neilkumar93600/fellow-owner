@@ -21,7 +21,7 @@ export interface FanPostCardProps {
 /**
  * A fan post as a frosted card: badges (Loved by Mira, challenge entry, status), the title as the card's one
  * link, a two-line summary, the open spots, then the author, the crew and the signals. The whole card
- * is the target (an ::after on the title link); hover lifts the glass.
+ * is the target (an ::after on the title link); hover brightens the glass.
  */
 export function FanPostCard({
   post,
@@ -47,11 +47,13 @@ export function FanPostCard({
             icon={post.community.icon}
           />
         ) : (
-          <span className="text-small text-ink-soft">{POST_TYPE_LABELS[post.type]}</span>
+          <span className="text-caption text-ink-soft uppercase">
+            {POST_TYPE_LABELS[post.type]}
+          </span>
         )}
         {post.lovedAt ? <LovedBadge creator={creator} /> : null}
         {post.challenge ? (
-          <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-aurora-lilac px-3 text-caption text-ink">
+          <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-aurora-lilac px-3 text-caption text-ink uppercase">
             <Trophy aria-hidden="true" strokeWidth={1.5} className="size-3.5" />
             Challenge entry
           </span>
@@ -59,7 +61,7 @@ export function FanPostCard({
         <StatusPill status={post.status} className="ml-auto" />
       </div>
 
-      <h3 className="line-clamp-2 text-h2 text-ink">
+      <h3 className="line-clamp-2 font-display text-h2 [overflow-wrap:anywhere] text-ink">
         <Link
           href={href}
           className="rounded-sm underline-offset-4 outline-none group-hover:underline after:absolute after:inset-0 after:rounded-panel focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ink"
@@ -67,20 +69,20 @@ export function FanPostCard({
           {post.title}
         </Link>
       </h3>
-      <p className="line-clamp-2 text-body text-ink">{post.excerpt}</p>
+      <p className="line-clamp-2 font-sans text-body text-ink">{post.excerpt}</p>
 
       {spots.length ? (
         <ul aria-label="Open spots" className="flex flex-wrap gap-1.5">
           {spots.map((role) => (
             <li
               key={role}
-              className="inline-flex h-6 items-center rounded-full bg-white/70 px-2.5 text-caption text-ink ring-1 ring-ink/10 ring-inset"
+              className="inline-flex h-6 items-center rounded-full border border-line bg-white/70 px-2.5 text-caption text-ink uppercase"
             >
               {role}
             </li>
           ))}
           {post.openRoles.length > spots.length ? (
-            <li className="inline-flex h-6 items-center px-1 text-caption text-ink-soft">
+            <li className="inline-flex h-6 items-center px-1 text-caption text-ink-soft uppercase">
               +{post.openRoles.length - spots.length} open
             </li>
           ) : null}
@@ -93,7 +95,7 @@ export function FanPostCard({
           <span className="truncate text-small text-ink">{post.author.name}</span>
         </span>
         {team.length > 1 ? <AvatarStack people={team} total={post.teamSize} /> : null}
-        <p className="text-small text-ink-soft">
+        <p className="text-caption text-ink-soft uppercase">
           <span className="tabular-nums">{formatNumber(post.useCount)}</span> would use this ·{' '}
           <span className="tabular-nums">{formatNumber(post.buildCount)}</span> want in
         </p>

@@ -6,13 +6,13 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { useRef, useState } from 'react';
 import { AvatarInitials } from '@/components/shared/avatar-initials';
 import { CopyButton } from '@/components/shared/copy-button';
+import { PlatformMark } from '@/components/shared/platform-connect';
 import { Button } from '@/components/ui/button';
 import { Field, TextArea, TextField } from '@/components/ui/field';
 import { appUrl } from '@/lib/env';
 import { formatCompact, formatNumber, pluralize } from '@/lib/format';
 import { routes } from '@/lib/routes';
 import { toastError, toastSuccess } from '@/lib/toast';
-import { PlatformMark } from './profile-form';
 
 export interface BioLinkCardProps {
   space: Pick<
@@ -37,7 +37,9 @@ export function BioLinkCard({ space }: BioLinkCardProps) {
       await navigator.clipboard.writeText(url);
       toastSuccess('Bio link copied.');
     } catch (error) {
-      toastError(error, { fallback: 'Could not copy. Select the link and copy it instead.' });
+      toastError(error, {
+        fallback: 'Could not copy. Select the link and copy it instead.',
+      });
     }
   };
 
@@ -54,7 +56,7 @@ export function BioLinkCard({ space }: BioLinkCardProps) {
     <div className="grid grid-cols-12 items-start gap-5">
       <section
         aria-labelledby="bio-link-title"
-        className="col-span-12 flex min-w-0 flex-col gap-6 glass-strong rounded-panel p-6 @4xl:col-span-7"
+        className="glass-strong col-span-12 flex min-w-0 flex-col gap-6 rounded-panel p-6 @4xl:col-span-7"
       >
         <div>
           <h2 id="bio-link-title" className="text-h2 text-ink">
@@ -98,7 +100,7 @@ export function BioLinkCard({ space }: BioLinkCardProps) {
       <div className="col-span-12 flex min-w-0 flex-col gap-5 @4xl:col-span-5">
         <section
           aria-labelledby="qr-title"
-          className="flex flex-col items-start gap-4 glass-strong rounded-panel p-6"
+          className="glass-strong flex flex-col items-start gap-4 rounded-panel p-6"
         >
           <div>
             <h2 id="qr-title" className="text-h2 text-ink">
@@ -115,7 +117,7 @@ export function BioLinkCard({ space }: BioLinkCardProps) {
               size={176}
               level="M"
               marginSize={1}
-              fgColor="#2d2d30"
+              fgColor="#242424"
               bgColor="#ffffff"
               role="img"
               aria-label={`QR code for your bio link, ${url.replace(/^https?:\/\//, '')}`}
@@ -130,10 +132,12 @@ export function BioLinkCard({ space }: BioLinkCardProps) {
           <h2 id="fan-view-title" className="text-h2 text-ink">
             How fans see it
           </h2>
-          {/* A still of the bio header on the Pewter Shell: no glass, no buttons. */}
+          {/* A still of the bio header on the shell: no glass, no buttons. */}
           <div className="mt-4 flex flex-col items-center gap-3 rounded-xl bg-shell px-4 py-6 text-center">
             <AvatarInitials name={space.displayName} image={space.avatarUrl} size={48} />
-            <p className="text-label-strong text-ink">{space.displayName}</p>
+            <p className="font-display text-[1.375rem] leading-7 tracking-[-0.02em] text-ink">
+              {space.displayName}
+            </p>
             {space.bio ? <p className="max-w-[40ch] text-small text-ink">{space.bio}</p> : null}
             {space.platforms.length > 0 ? (
               <ul className="flex flex-wrap justify-center gap-1.5">

@@ -24,12 +24,16 @@ export function SettingsClient({ space: initialSpace, current, tabs }: SettingsC
       <div className="flex flex-col gap-4">
         <h1 className="sr-only">Settings</h1>
         <TabBar label="Settings" tabs={tabs} />
-        <div className="flex items-start gap-3 rounded-xl bg-danger-bg px-4 py-3 text-body text-danger-ink">
-          <AlertCircle aria-hidden="true" strokeWidth={1.5} className="mt-px size-5 shrink-0" />
+        <div className="glass-strong flex items-start gap-3 rounded-3xl px-5 py-4 text-body text-ink">
+          <AlertCircle
+            aria-hidden="true"
+            strokeWidth={1.5}
+            className="mt-px size-5 shrink-0 text-danger"
+          />
           <div>
             <p>Could not load settings. Try refreshing the page.</p>
             {error instanceof Error ? (
-              <p className="mt-1 text-small text-danger-ink">{error.message}</p>
+              <p className="mt-1 text-small text-danger-deep">{error.message}</p>
             ) : null}
           </div>
         </div>

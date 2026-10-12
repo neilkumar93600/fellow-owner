@@ -2,8 +2,10 @@ import {
   autoTagFollowersSchema,
   createFollowerSchema,
   followersQuerySchema,
+  handleParamsSchema,
   idParamsSchema,
   importFollowersSchema,
+  platformFansImportSchema,
   tagFollowersSchema,
   updateFollowerSchema,
   youtubeImportSchema,
@@ -81,5 +83,24 @@ export function createFollowersRoutes(container: Container): Router {
     controller.update,
   );
   router.delete('/:id', owner, validate({ params: idParamsSchema }), controller.remove);
+  return router;
+}
+
+/**
+ * POST /api/spaces/:handle/followers/import/platform: fans from a profile's comments (owner only:
+ * 401 signed out, 404 for a space the caller does not own). Caps live in the service
+ * (followers.importPlatformFans), so the onboarding auto-import counts too. Mounted on /api/spaces
+ * before spaces.routes: per-route middleware only.
+ */
+export function createSpaceFollowersRoutes(container: Container): Router {
+  const router = Router();
+  const { auth, repos } = container;
+  router.post(
+    '/:handle/followers/import/platform',
+    noStore(),
+    requireOwner({ auth, spaces: repos.spaces, memberships: repos.memberships }),
+    validate({ params: handleParamsSchema, body: platformFansImportSchema }),
+    container.controllers.followers.importPlatformFans,
+  );
   return router;
 }

@@ -23,7 +23,7 @@ export function isMarketingPath(pathname: string): boolean {
 
 /** The serif display H1 for marketing and legal pages (the landing hero sets its own, larger one). */
 export const DISPLAY_H1 =
-  'font-display text-[2.5rem] leading-[1.05] tracking-[-0.01em] text-ink md:text-[3.25rem]';
+  'font-display text-[2.5rem] leading-[1.05] tracking-[-0.02em] text-ink md:text-[3.25rem]';
 
 export const SITE = {
   name: 'Fellow Owners',

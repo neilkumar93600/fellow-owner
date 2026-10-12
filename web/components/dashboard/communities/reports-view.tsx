@@ -103,21 +103,21 @@ function ReportRow({
   const { target } = item;
   return (
     <li className="glass-strong min-w-0 p-5 sm:p-6">
-      <p className="text-small text-ink-soft">
+      <p className="text-caption text-ink-soft uppercase">
         {REPORT_REASON_LABELS[item.reason]} · {target.type === 'post' ? 'Post' : 'Comment'} ·{' '}
         {item.reporterName ? `reported by ${item.reporterName}` : 'reporter left'} ·{' '}
         <time dateTime={item.createdAt} suppressHydrationWarning>
           {formatRelative(item.createdAt)}
         </time>
       </p>
-      <p className="mt-2 break-words text-body text-ink">
+      <p className="mt-2 font-sans text-body break-words text-ink">
         <Link href={target.href} className="underline underline-offset-2">
           {target.excerpt}
         </Link>
         {target.authorName ? <span className="text-ink-soft"> by {target.authorName}</span> : null}
       </p>
       {item.note ? (
-        <p className="mt-2 break-words text-small text-ink-soft">"{item.note}"</p>
+        <p className="mt-2 font-sans text-small break-words text-ink-soft">"{item.note}"</p>
       ) : null}
       {item.status === 'open' ? (
         <div className="mt-4 flex flex-wrap gap-2">
@@ -139,7 +139,7 @@ function ReportRow({
           </Button>
         </div>
       ) : (
-        <p className="mt-3 text-small text-ink-soft">
+        <p className="mt-3 text-caption text-ink-soft uppercase">
           {item.status === 'resolved' ? 'Resolved' : 'Dismissed'}
           {target.hidden ? ' · hidden from members' : ''}
         </p>

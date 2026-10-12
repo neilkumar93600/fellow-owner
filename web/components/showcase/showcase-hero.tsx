@@ -21,7 +21,7 @@ export interface ShowcaseHeroProps {
 
 /**
  * The top of a showcase: the room's cover photo, then a frosted panel that overlaps it with "Featured by
- * Mira" (back to the bio), the title in Instrument Serif, the creator's headline, the room chip, "Made
+ * Mira" (back to the bio), the title in Newsreader serif, the creator's headline, the room chip, "Made
  * it" status and date, and the screen's one blue "Join Mira's space" beside a glass Copy link pill.
  */
 export function ShowcaseHero({ space, promotion, post, shareUrl }: ShowcaseHeroProps) {
@@ -55,7 +55,7 @@ export function ShowcaseHero({ space, promotion, post, shareUrl }: ShowcaseHeroP
         <h1 className="font-display text-[2.25rem] leading-[1.1] font-normal text-ink sm:text-[2.75rem]">
           {post.title}
         </h1>
-        {lead ? <p className="max-w-[68ch] text-body text-ink">{lead}</p> : null}
+        {lead ? <p className="max-w-[68ch] font-sans text-body text-ink">{lead}</p> : null}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <CommunityChip
             name={post.community.name}
@@ -64,7 +64,7 @@ export function ShowcaseHero({ space, promotion, post, shareUrl }: ShowcaseHeroP
           />
           <StatusPill status={post.status} label={POST_STATUS_LABELS[post.status]} />
           {promotion.publishedAt ? (
-            <span className="text-small text-ink">
+            <span className="text-caption uppercase text-ink-soft">
               Featured {formatDate(promotion.publishedAt)}
             </span>
           ) : null}

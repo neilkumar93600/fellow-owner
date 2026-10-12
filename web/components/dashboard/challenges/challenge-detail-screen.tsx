@@ -144,7 +144,9 @@ function Header({
         {summary.title}
       </h2>
       {summary.body ? (
-        <p className="mt-3 max-w-[68ch] text-body whitespace-pre-line text-ink">{summary.body}</p>
+        <p className="mt-3 max-w-[68ch] font-sans text-body whitespace-pre-line text-ink">
+          {summary.body}
+        </p>
       ) : null}
       <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-ink-soft">
         <span className="inline-flex items-center gap-1.5">
@@ -201,7 +203,10 @@ function Shortlist({ summary }: { summary: ChallengeSummary }) {
           </p>
           <Link
             href={routes.dashboard.promoteComposer(summary.winnerPostId)}
-            className={buttonVariants({ variant: 'primary', size: 'md' })}
+            className={cn(
+              buttonVariants({ variant: 'primary', size: 'md' }),
+              'max-sm:h-auto max-sm:min-h-10 max-sm:w-full max-sm:py-2 max-sm:whitespace-normal',
+            )}
           >
             <Sparkles aria-hidden className="size-4" />
             Give it your spotlight
@@ -215,7 +220,7 @@ function Shortlist({ summary }: { summary: ChallengeSummary }) {
           className="glass min-h-40 rounded-panel"
         />
       ) : (
-        <ol className="grid gap-3">
+        <ol className="grid grid-cols-1 gap-3">
           {list.map((item, index) => (
             <ShortlistRow
               key={item.postId}
@@ -249,7 +254,7 @@ function AiRecap({ text }: { text: string }) {
       <h2 id="ai-recap-heading" className="text-label-strong text-ink">
         AI recap of the entries
       </h2>
-      <p className="text-body whitespace-pre-line text-ink-soft">{text}</p>
+      <p className="font-sans text-body whitespace-pre-line text-ink-soft">{text}</p>
     </GlassPanel>
   );
 }
@@ -270,12 +275,12 @@ function ShortlistRow({
   onPick: () => void;
 }) {
   return (
-    <li>
+    <li className="min-w-0">
       <GlassPanel
         as="article"
         className={cn(
           'flex flex-wrap items-center gap-x-4 gap-y-3 rounded-[24px] p-5',
-          isWinner && 'ring-2 ring-ink/70',
+          isWinner && 'ring-1 ring-ink/60',
         )}
       >
         <span
@@ -285,7 +290,7 @@ function ShortlistRow({
           {rank}
         </span>
         <div className="min-w-[12rem] flex-1">
-          <h3 className="text-h2 text-ink">
+          <h3 className="font-display text-h2 text-ink [overflow-wrap:anywhere]">
             <Link
               href={routes.dashboard.ideas({ item: item.postId })}
               className="rounded-sm underline-offset-4 hover:underline"
@@ -293,13 +298,13 @@ function ShortlistRow({
               {item.title}
             </Link>
           </h3>
-          <p className="text-small text-ink-soft">by {item.authorName}</p>
-          <p className="mt-2 text-small text-ink-soft">
-            <span className="font-medium text-ink">Why:</span> {item.reason}
+          <p className="truncate text-small text-ink-soft">by {item.authorName}</p>
+          <p className="mt-2 font-sans text-small text-ink-soft">
+            <span className="font-mono font-medium text-ink">Why:</span> {item.reason}
           </p>
         </div>
         {isWinner ? (
-          <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-aurora-mint px-3 text-caption text-ink">
+          <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-aurora-mint px-3 text-caption text-ink uppercase">
             <Trophy aria-hidden="true" strokeWidth={1.5} className="size-4" />
             Winner
           </span>
@@ -352,9 +357,9 @@ function Entries({
           className="glass min-h-48 rounded-panel"
         />
       ) : (
-        <ul className="grid gap-4 md:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {entries.map((entry) => (
-            <li key={entry.id}>
+            <li key={entry.id} className="min-w-0">
               <EntryCard
                 entry={entry}
                 shortlisted={shortlisted.has(entry.id)}
@@ -394,19 +399,19 @@ function EntryCard({
           />
         </div>
         {winner ? (
-          <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-aurora-mint px-3 text-caption text-ink">
+          <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-aurora-mint px-3 text-caption text-ink uppercase">
             <Trophy aria-hidden="true" strokeWidth={1.5} className="size-4" />
             Winner
           </span>
         ) : shortlisted ? (
-          <span className="inline-flex h-7 items-center rounded-full bg-aurora-peach px-3 text-caption text-ink">
+          <span className="inline-flex h-7 items-center rounded-full bg-aurora-peach px-3 text-caption text-ink uppercase">
             Shortlisted
           </span>
         ) : (
           <MatchLabel score={entry.ai.fitScore} />
         )}
       </div>
-      <h3 className="line-clamp-2 text-h2 text-ink">
+      <h3 className="line-clamp-2 font-display text-h2 text-ink [overflow-wrap:anywhere]">
         <Link
           href={routes.dashboard.ideas({ item: entry.id })}
           className="rounded-sm underline-offset-4 group-hover:underline after:absolute after:inset-0 after:rounded-[24px]"
@@ -414,10 +419,10 @@ function EntryCard({
           {entry.title}
         </Link>
       </h3>
-      <p className="line-clamp-2 text-body text-ink-soft">{entry.excerpt}</p>
+      <p className="line-clamp-2 font-sans text-body text-ink-soft">{entry.excerpt}</p>
       {entry.ai.fitReason ? (
-        <p className="line-clamp-2 text-small text-ink-soft">
-          <span className="font-medium text-ink">Why:</span> {entry.ai.fitReason}
+        <p className="line-clamp-2 font-sans text-small text-ink-soft">
+          <span className="font-mono font-medium text-ink">Why:</span> {entry.ai.fitReason}
         </p>
       ) : null}
       <p className="mt-auto pt-1 text-small text-ink-soft tabular-nums">

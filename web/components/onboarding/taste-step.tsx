@@ -10,6 +10,7 @@ import {
   cx,
   errorMessage,
   FieldError,
+  groupLabelClass,
   inputClass,
   itemError,
   textareaClass,
@@ -183,7 +184,7 @@ function LineList({
       className="min-w-0"
     >
       <div className="flex items-baseline justify-between gap-3">
-        <h2 id={`${id}-title`} className="text-body font-medium text-ink">
+        <h2 id={`${id}-title`} className={groupLabelClass}>
           {title}
         </h2>
         <span className="tabular shrink-0 text-small text-ink-soft">
@@ -222,7 +223,8 @@ function LineList({
                     onChange={(e) =>
                       setLines(lines.map((l, i) => (i === index ? e.target.value : l)))
                     }
-                    className={cx(textareaClass, 'min-h-[96px] flex-1')}
+                    // Captions and posts: a long read, so the sans.
+                    className={cx(textareaClass, 'min-h-24 flex-1 font-sans')}
                   />
                 ) : (
                   <input
@@ -286,7 +288,7 @@ function LineList({
 
       {filled === 0 && unusedExamples.length > 0 ? (
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-small text-ink-muted">Examples</span>
+          <span className="mr-1 text-caption text-ink-muted uppercase">Examples</span>
           {unusedExamples.map((ex) => (
             <button
               key={ex}
@@ -294,7 +296,7 @@ function LineList({
               onClick={() => add(ex)}
               className={cx(
                 styles.press,
-                'inline-flex h-11 items-center gap-1.5 rounded-full border border-line bg-card-strong px-3 text-small text-ink-soft hover:border-(--line-strong) hover:text-ink sm:h-8',
+                'inline-flex h-11 items-center gap-1.5 rounded-full border border-line bg-card-strong px-3 text-small text-ink-soft hover:border-line-strong hover:text-ink sm:h-8',
               )}
             >
               <Plus aria-hidden strokeWidth={1.5} className="size-3.5" />

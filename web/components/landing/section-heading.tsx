@@ -29,7 +29,7 @@ export function SectionHeading({
       {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
       <h2
         id={id}
-        className="max-w-[18ch] font-display text-section font-normal! tracking-[-0.015em]! text-ink text-balance"
+        className="max-w-[18ch] font-display text-section font-normal! tracking-[-0.02em]! text-ink text-balance"
       >
         {title}
       </h2>

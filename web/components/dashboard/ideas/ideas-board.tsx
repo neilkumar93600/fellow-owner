@@ -39,7 +39,7 @@ function Verdict({ post }: { post: IdeaItem }) {
  */
 function BoardCard({ post, href }: { post: IdeaItem; href: string }) {
   return (
-    <article className="group relative flex flex-col gap-3 glass rounded-2xl p-4 transition-colors duration-150 ease-out-quart hover:bg-white/80">
+    <article className="group relative flex flex-col gap-3 glass rounded-[24px] p-4 transition-colors duration-150 ease-out-quart hover:bg-white/80">
       <div className="flex min-h-6 items-center justify-between gap-2">
         <CommunityChip
           name={post.community.name}
@@ -52,10 +52,10 @@ function BoardCard({ post, href }: { post: IdeaItem; href: string }) {
           <Verdict post={post} />
         </span>
       </div>
-      <h3 className="line-clamp-3 text-label text-ink">
+      <h3 className="line-clamp-3 text-label [overflow-wrap:anywhere] text-ink">
         <Link
           href={href}
-          className="underline-offset-4 outline-none group-hover:underline after:absolute after:inset-0 after:rounded-2xl focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ink"
+          className="underline-offset-4 outline-none group-hover:underline after:absolute after:inset-0 after:rounded-[24px] focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ink"
         >
           {post.title}
         </Link>
@@ -69,8 +69,8 @@ function BoardCard({ post, href }: { post: IdeaItem; href: string }) {
 }
 
 /**
- * The Board view: four status columns (Open, Finding a crew, In the works, Made it) with ink heads on the
- * shell and compact cards. Below the 892px the four need, the board scrolls sideways; the 4px inset
+ * The Board view: four status columns (Open, Finding a crew, In the works, Made it) with uppercase mono heads on the
+ * washes and compact cards. Below the 892px the four need, the board scrolls sideways; the 4px inset
  * keeps focus rings clear of the scroll box.
  */
 export function IdeasBoard({ posts, hrefFor }: IdeasBoardProps) {
@@ -88,7 +88,7 @@ export function IdeasBoard({ posts, hrefFor }: IdeasBoardProps) {
             >
               <h2
                 id={`board-${status}`}
-                className="flex h-10 items-center gap-2 px-1 text-label-strong text-ink"
+                className="flex h-10 items-center gap-2 px-1 text-caption text-ink uppercase"
               >
                 {label}
                 <span className="text-small tabular-nums">

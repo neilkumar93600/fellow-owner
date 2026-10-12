@@ -41,7 +41,7 @@ export interface NewChallengeSheetProps {
 
 /**
  * New challenge, in the side panel: a title, the prompt, one community (or all) and a due date and time.
- * The form unmounts on close, so every open starts fresh. Coral Post challenge is the panel's one
+ * The form unmounts on close, so every open starts fresh. Lake Blue Post challenge is the panel's one
  * primary action; nothing reaches fans until it is pressed.
  */
 export function NewChallengeSheet({ open, onOpenChange, communities }: NewChallengeSheetProps) {

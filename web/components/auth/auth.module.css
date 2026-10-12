@@ -1,7 +1,7 @@
 /*
  * Auth screens: fields, the 6‑digit code boxes and the password strength meter.
- * Tokens come from app/globals.css; the contrast corrections in DESIGN.md apply:
- * Field Grey borders (3.3:1), a solid ink focus ring, Brick Red words for errors.
+ * Parchment Frost (DESIGN.md): 1px Smoke borders (3:1), 16px radius, a frosted white fill, a solid ink
+ * focus ring and Brick Red words for errors. Tokens come from app/globals.css.
  */
 
 /* Text inputs (04 §5 Inputs, DESIGN.md Inputs / Fields). */
@@ -12,7 +12,7 @@
   padding-inline: 14px;
   border: 1px solid var(--line-field);
   border-radius: 16px;
-  background: var(--card-strong);
+  background: rgb(255 255 255 / 0.72);
   color: var(--ink);
   /* 16px on phones stops iOS and in-app webviews from zooming the page on focus. */
   font-size: 16px;
@@ -70,7 +70,7 @@
   padding: 0;
   border: 1px solid var(--line-field);
   border-radius: 16px;
-  background: var(--card-strong);
+  background: rgb(255 255 255 / 0.72);
   color: var(--ink);
   caret-color: var(--color-ink);
   font-size: 24px;
@@ -167,7 +167,7 @@
   height: 44px;
   border: 1px solid var(--line-field);
   border-radius: 16px;
-  background: var(--card-strong);
+  background: rgb(255 255 255 / 0.72);
   transition: border-color var(--dur-fast) var(--ease-out-quart);
 }
 

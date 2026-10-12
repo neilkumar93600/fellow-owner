@@ -161,7 +161,7 @@ export function PitchForm({
           helper={`Up to ${LIMITS.pitch.links.max}, such as your work, a channel or a past trip.`}
         />
 
-        <div className="flex flex-col-reverse gap-3 border-t border-ink/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col-reverse gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p id={capId} className="text-small text-ink-soft">
             {capped ? (
               `You've reached today's limit of ${DAILY_CAPS.pitches} ideas for ${creatorName}. Try again tomorrow.`

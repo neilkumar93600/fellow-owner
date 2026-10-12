@@ -78,7 +78,7 @@ export function PromotionsList({ items, tab, icons, now }: PromotionsListProps) 
                   />
                   <StatusPill status={p.state} />
                 </div>
-                <h3 className="line-clamp-2 text-h2 text-ink">
+                <h3 className="line-clamp-2 font-display text-h2 text-ink">
                   <Link
                     href={routes.dashboard.promoteComposer(p.postId)}
                     className="rounded-sm underline-offset-4 group-hover:underline after:absolute after:inset-0 after:rounded-[24px]"

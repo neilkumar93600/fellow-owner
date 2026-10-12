@@ -190,7 +190,7 @@ export function PitchPanel({
           </div>
         ) : (
           <>
-            {ai.summary ? <p className="text-body text-ink">{ai.summary}</p> : null}
+            {ai.summary ? <p className="font-sans text-body text-ink">{ai.summary}</p> : null}
             {ai.fitScore != null && ai.fitReason ? (
               <div className="mt-3 flex items-start gap-3">
                 <FitPill score={ai.fitScore} reason={ai.fitReason} />
@@ -238,7 +238,7 @@ export function PitchPanel({
       </Section>
 
       <Section title="Their message">
-        <p className="max-w-[68ch] text-body whitespace-pre-line text-ink">
+        <p className="max-w-[68ch] font-sans text-body whitespace-pre-line text-ink">
           {detail?.body ?? item.excerpt}
         </p>
         {links.length > 0 ? (
@@ -261,7 +261,9 @@ export function PitchPanel({
 
       {sentReply ? (
         <Section title="Your reply">
-          <p className="max-w-[68ch] text-body whitespace-pre-line text-ink">{sentReply}</p>
+          <p className="max-w-[68ch] font-sans text-body whitespace-pre-line text-ink">
+            {sentReply}
+          </p>
         </Section>
       ) : null}
     </SidePanel>

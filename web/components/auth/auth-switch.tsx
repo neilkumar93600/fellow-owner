@@ -73,12 +73,12 @@ function BackLink({ returnTo }: { returnTo: string | null }) {
     <Link
       href={withReturnTo('/login', returnTo)}
       className={cx(
-        'press inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-full px-4 text-label text-ink transition-colors duration-150 hover:bg-page',
+        'press inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-full px-3 text-label sm:px-4 text-ink transition-colors duration-150 hover:bg-page',
         FOCUS_RING,
       )}
     >
       <ArrowLeft aria-hidden size={18} strokeWidth={1.5} />
-      Back to log in
+      Back<span className="sr-only sm:not-sr-only"> to log in</span>
     </Link>
   );
 }

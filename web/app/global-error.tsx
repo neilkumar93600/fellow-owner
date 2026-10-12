@@ -9,8 +9,8 @@ import { DISPLAY_H1 } from '@/lib/constants';
 import { geistMono, inter, newsreader } from '@/lib/fonts';
 
 /**
- * Replaces the root layout when it fails, so it brings its own document, the global styles, both fonts
- * and the aurora backdrop. Back home is a plain link on purpose: a full load rebuilds whatever broke.
+ * Replaces the root layout when it fails, so it brings its own document, the global styles, the fonts
+ * and the wash backdrop. Back home is a plain link on purpose: a full load rebuilds whatever broke.
  */
 export default function GlobalError({
   error,
@@ -36,7 +36,7 @@ export default function GlobalError({
             <h1 className={DISPLAY_H1}>
               Something <em>went wrong</em>.
             </h1>
-            <p className="mt-3 max-w-[44ch] text-body text-ink">
+            <p className="mt-3 max-w-[44ch] text-small text-ink-soft">
               Fellow Owners could not load. Try again in a moment.
             </p>
             <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">

@@ -23,7 +23,7 @@ export function Logo({
         <circle cx="23" cy="11" r="9.25" fill="currentColor" fillOpacity="0.92" />
       </svg>
       {withWordmark ? (
-        <span className="text-[17px] leading-none font-semibold tracking-[-0.02em]">
+        <span className="font-display text-[21px] leading-none tracking-[-0.02em]">
           Fellow Owners
         </span>
       ) : null}

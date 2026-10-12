@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { CommunityIcon, Tint } from './enums.js';
+import { httpUrlSchema } from './schemas/space.js';
 
 // Platform auto-fetch (Round 4 spec §6): a creator pastes a public profile link in onboarding,
 // POST /api/studio/platform-lookup returns the profile, and POST /api/studio/setup-suggestions
@@ -115,3 +116,38 @@ export const setupSuggestionsSchema = z.object({
   profiles: z.array(platformProfileSchema).min(1).max(PLATFORM_LOOKUP_LIMITS.profilesMax),
 });
 export type SetupSuggestionsInput = z.input<typeof setupSuggestionsSchema>;
+
+// ---------------------------------------------------------------- fans from platform comments
+
+/**
+ * POST /api/spaces/:handle/followers/import/platform: the people who comment on a profile's recent
+ * posts become Fans (followers). Also runs once per fetched platform after onboarding creates the
+ * space. Runs (live fetches only) per space per platform per UTC day.
+ */
+export const PLATFORM_FANS_LIMITS = {
+  postsMax: 5,
+  commentsPerPost: 40,
+  peopleMax: 200,
+  runsPerPlatformPerDay: 2,
+} as const;
+
+/**
+ * unsupported: X (count only); sample: no live provider (made-up people are never written);
+ * private / not_found / unavailable: the profile or comment fetch failed; no_comments: nothing to add.
+ */
+export type PlatformFansSkipReason =
+  | 'unsupported'
+  | 'sample'
+  | 'private'
+  | 'not_found'
+  | 'unavailable'
+  | 'no_comments';
+
+export type PlatformFansImport =
+  | { status: 'done'; platform: LookupPlatform; imported: number; existing: number; posts: number }
+  | { status: 'skipped'; platform: LookupPlatform; reason: PlatformFansSkipReason };
+
+export const platformFansImportSchema = z.object({
+  url: httpUrlSchema.max(500, 'Link is too long'),
+});
+export type PlatformFansImportInput = z.input<typeof platformFansImportSchema>;

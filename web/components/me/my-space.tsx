@@ -143,7 +143,7 @@ function ProfileCard({
       <div className="flex flex-wrap items-center gap-4">
         <AvatarInitials name={membership.name} image={image} size={48} />
         <div className="min-w-0 flex-1">
-          <h1 id="profile-name" className="text-h1 text-ink">
+          <h1 id="profile-name" className="text-h1 [overflow-wrap:anywhere] text-ink">
             {membership.name}
           </h1>
           {membership.headline ? (
@@ -180,7 +180,7 @@ function ProfileCard({
         </>
       ) : (
         <>
-          <p className="mt-5 max-w-[68ch] text-body text-ink">
+          <p className="mt-5 max-w-[68ch] font-sans text-body text-ink">
             {profile.intro ||
               'Add a line about where you are from and what you love, so people know who you are.'}
           </p>
@@ -189,7 +189,7 @@ function ProfileCard({
               {profile.skills.map((skill) => (
                 <li
                   key={skill}
-                  className="inline-flex h-7 items-center rounded-full bg-white/70 px-3 text-caption text-ink"
+                  className="inline-flex h-7 items-center rounded-full border border-line bg-white/70 px-3 text-caption text-ink uppercase"
                 >
                   {skill}
                 </li>
@@ -214,7 +214,7 @@ function ProfileCard({
               ))}
             </ul>
           ) : null}
-          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-ink/10 pt-4">
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-line pt-4">
             <p className="mr-1 text-small text-ink-soft">
               Fan since{' '}
               <time dateTime={membership.joinedAt} suppressHydrationWarning>
@@ -300,7 +300,7 @@ function ProfileForm({
           error={errors.skills?.message}
         />
         <LinksField max={LIMITS.membership.links.max} />
-        <div className="flex flex-col gap-3 border-t border-ink/10 pt-6 sm:flex-row">
+        <div className="flex flex-col gap-3 border-t border-line pt-6 sm:flex-row">
           <Button type="submit">Save</Button>
           <Button variant="secondary" onClick={() => onDone()}>
             Cancel

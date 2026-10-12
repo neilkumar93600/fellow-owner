@@ -37,7 +37,7 @@ export interface ChallengeCardProps {
 }
 
 /**
- * A challenge pinned above a community feed: a peach trophy tile, the title and prompt, the countdown and
+ * A challenge pinned above a community feed: a pastel trophy tile, the title and prompt, the countdown and
  * how many entries so far, and "Enter the challenge", which opens the entry form. Once the creator closes
  * it the card shows the shortlist with the reasons and the winner, and no entry button.
  */
@@ -57,15 +57,15 @@ export function ChallengeCard({ handle, challenge, primary = false }: ChallengeC
           <Trophy strokeWidth={1.5} className="size-6 text-lake" />
         </span>
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <p className="text-caption text-ink-soft">
+          <p className="text-caption text-ink-soft uppercase">
             {open ? 'Open challenge' : 'Challenge closed'}
             {challenge.communityName ? ` · ${challenge.communityName}` : ' · All rooms'}
           </p>
-          <h2 id={titleId} className="text-h2 text-ink">
+          <h2 id={titleId} className="text-h2 [overflow-wrap:anywhere] text-ink">
             {challenge.title}
           </h2>
           {challenge.body ? (
-            <p className="line-clamp-3 max-w-[60ch] text-body text-ink">{challenge.body}</p>
+            <p className="line-clamp-3 max-w-[60ch] text-body text-ink-soft">{challenge.body}</p>
           ) : null}
         </div>
       </div>
@@ -95,8 +95,8 @@ export function ChallengeCard({ handle, challenge, primary = false }: ChallengeC
       </div>
 
       {!open && shortlist.length > 0 ? (
-        <div className="mt-5 border-t border-ink/10 pt-4">
-          <h3 className="text-label-strong text-ink">The shortlist</h3>
+        <div className="mt-5 border-t border-line pt-4">
+          <h3 className="font-display text-h2 text-ink">The shortlist</h3>
           <ul className="mt-2 flex flex-col gap-3">
             {shortlist.map((item) => (
               <li key={item.postId} className="flex flex-col gap-0.5">
@@ -106,7 +106,7 @@ export function ChallengeCard({ handle, challenge, primary = false }: ChallengeC
                 >
                   {item.title}
                   {challenge.winnerPostId === item.postId ? (
-                    <span className="ml-2 rounded-full bg-aurora-mint px-2.5 py-0.5 text-caption no-underline">
+                    <span className="ml-2 rounded-full bg-aurora-mint px-2.5 py-0.5 text-caption uppercase no-underline">
                       Winner
                     </span>
                   ) : null}

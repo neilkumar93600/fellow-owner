@@ -1,92 +1,108 @@
 ---
 name: Fellow Owners
-description: "Golden Hour Frost: frosted glass floating over a slow sunset aurora on cream, ink words, and one coral action per screen. A creator's studio and a fan's clubhouse, lit like a travel vlog at golden hour."
+description: "Parchment Frost: the Monad style, adopted by the owner on 2026-10-12, with frosted glassmorphism kept. Frosted glass over soft pastel washes on warm parchment, serif headings at 400, monospace UI, hairline Ash borders, and one Lake Blue action per screen."
 colors:
-  cream: "#FBF7F2"
-  ink: "#1E1B26"
-  ink-soft: "#55506A"
-  ink-muted: "#5F5A70"
-  coral: "#C8432A"
-  coral-hover: "#A9361F"
-  sunset: "#F0603A"
-  sky: "#2B6CA8"
+  parchment: "#F6F3F1"
+  ink: "#242424"
+  graphite: "#4E4D4D"
+  ink-muted: "#6B6968"
+  smoke: "#797776"
+  ash: "#CECAC8"
+  lake: "#2B59D1"
+  lake-hover: "#234AAE"
+  periwinkle: "#CFDAF5"
+  coral: "#FF9473"
+  sky-wash: "#A0B5EB"
+  mint: "#A7FCCD"
+  gold: "#ECDA98"
+  crimson: "#F37A0A"
   success: "#15803D"
   warn-ink: "#A45A00"
   danger: "#E04848"
   danger-deep: "#C42B2B"
-  aurora-peach: "#FFD9C2"
-  aurora-sky: "#BFDDF7"
-  aurora-lilac: "#DCCFF7"
-  aurora-mint: "#CFEFE3"
   glass-soft: "#FFFFFF8C"
   glass-chip: "#FFFFFF9E"
   glass-strong: "#FFFFFFB8"
   glass-fallback: "#FFFFFFEB"
-  glass-edge: "#FFFFFF99"
+  glass-edge: "#CECAC8BF"
   white: "#FFFFFF"
 typography:
-  display-xl:
-    fontFamily: "'Instrument Serif', Georgia, 'Times New Roman', serif"
-    fontSize: "clamp(56px, 6.4vw, 120px)"
-    fontWeight: 400
-    lineHeight: "0.95"
-    letterSpacing: "-0.02em"
   display:
-    fontFamily: "'Instrument Serif', Georgia, 'Times New Roman', serif"
-    fontSize: "36px"
+    fontFamily: "Newsreader, Georgia, 'Times New Roman', serif"
+    fontSize: "40px"
+    fontWeight: 400
+    lineHeight: "1.2"
+    letterSpacing: "-0.01em"
+  h1:
+    fontFamily: "Newsreader, Georgia, 'Times New Roman', serif"
+    fontSize: "32px"
+    fontWeight: 400
+    lineHeight: "1.2"
+    letterSpacing: "-0.02em"
+  h2:
+    fontFamily: "Newsreader, Georgia, 'Times New Roman', serif"
+    fontSize: "24px"
+    fontWeight: 400
+    lineHeight: "1.2"
+    letterSpacing: "-0.02em"
+  hero:
+    fontFamily: "Newsreader, Georgia, 'Times New Roman', serif"
+    fontSize: "clamp(3rem, 1.6rem + 4.4vw, 5rem)"
     fontWeight: 400
     lineHeight: "1.1"
-    letterSpacing: "normal"
-  h1:
-    fontFamily: "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif"
-    fontSize: "24px"
-    fontWeight: 500
-    lineHeight: "32px"
-    letterSpacing: "-0.005em"
-  h2:
-    fontFamily: "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif"
-    fontSize: "20px"
-    fontWeight: 500
-    lineHeight: "28px"
-    letterSpacing: "normal"
+    letterSpacing: "-0.02em"
   stat:
-    fontFamily: "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif"
+    fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
     fontSize: "40px"
     fontWeight: 600
     lineHeight: "44px"
     letterSpacing: "-0.02em"
     fontFeature: "'tnum' 1"
   body:
+    fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: "22px"
+    letterSpacing: "-0.02em"
+  body-long:
     fontFamily: "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif"
     fontSize: "15px"
     fontWeight: 400
     lineHeight: "22px"
-    letterSpacing: "normal"
+    letterSpacing: "-0.006em"
   label:
-    fontFamily: "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif"
+    fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
     fontSize: "15px"
     fontWeight: 500
     lineHeight: "22px"
-    letterSpacing: "normal"
+    letterSpacing: "-0.02em"
+  button:
+    fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+    fontSize: "14px"
+    fontWeight: 500
+    lineHeight: "1"
+    letterSpacing: "-0.02em"
+    textTransform: "uppercase"
   small:
-    fontFamily: "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif"
+    fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
     fontSize: "13px"
     fontWeight: 400
     lineHeight: "18px"
-    letterSpacing: "normal"
+    letterSpacing: "-0.02em"
     fontFeature: "'tnum' 1"
   caption:
-    fontFamily: "Inter, 'Helvetica Neue', Arial, system-ui, sans-serif"
+    fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
     fontSize: "12px"
     fontWeight: 500
     lineHeight: "16px"
     letterSpacing: "0.01em"
+    textTransform: "uppercase"
     fontFeature: "'tnum' 1"
 rounded:
   field: "16px"
-  idea: "24px"
-  panel: "28px"
-  chip: "999px"
+  card: "28px"
+  panel: "40px"
+  chip: "9999px"
 spacing:
   xxs: "4px"
   xs: "8px"
@@ -98,18 +114,18 @@ spacing:
   3xl: "40px"
 components:
   button-primary:
-    backgroundColor: "{colors.coral}"
+    backgroundColor: "{colors.lake}"
     textColor: "{colors.white}"
-    typography: "{typography.label}"
+    typography: "{typography.button}"
     rounded: "{rounded.chip}"
     height: "48px"
-    padding: "0 24px"
+    padding: "0 32px"
   button-primary-hover:
-    backgroundColor: "{colors.coral-hover}"
+    backgroundColor: "{colors.lake-hover}"
   button-secondary:
-    backgroundColor: "{colors.glass-chip}"
+    backgroundColor: "{colors.glass-strong}"
     textColor: "{colors.ink}"
-    typography: "{typography.label}"
+    typography: "{typography.button}"
     rounded: "{rounded.chip}"
     height: "48px"
     padding: "0 20px"
@@ -121,151 +137,160 @@ components:
     backgroundColor: "{colors.glass-strong}"
     textColor: "{colors.ink}"
     rounded: "{rounded.panel}"
-  match-label:
+  tag:
     backgroundColor: "{colors.glass-chip}"
     textColor: "{colors.ink}"
     typography: "{typography.caption}"
     rounded: "{rounded.chip}"
-    height: "28px"
-    padding: "0 12px"
+    height: "32px"
+    padding: "0 14px"
   nav-item-active:
-    backgroundColor: "{colors.glass-strong}"
-    textColor: "{colors.ink}"
+    backgroundColor: "{colors.periwinkle}"
+    textColor: "{colors.lake}"
     rounded: "{rounded.chip}"
-  status-pill-warm:
-    backgroundColor: "{colors.aurora-peach}"
-    textColor: "{colors.ink}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.chip}"
-    height: "24px"
-  status-pill-cool:
-    backgroundColor: "{colors.aurora-sky}"
-    textColor: "{colors.ink}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.chip}"
-    height: "24px"
 ---
 
 # Design System: Fellow Owners
 
-## 1. Overview: Golden Hour Frost
+## 1. Overview: Parchment Frost
 
-**Creative North Star: "the last hour of light on a trip."** Fellow Owners is where a lifestyle and travel creator (the demo is Mira Lane, a fictional LA vlogger) meets the fans who want to plan, shoot and explore with her. The screen should feel like her vlog looks: warm low sun, soft haze, frosted glass you could write on. It is an original system. It does not track any reference screen.
+**Creative North Star: "an editorial journal on warm parchment, lit by frosted glass."** Fellow Owners is where a lifestyle and travel creator (the demo is Mira Lane, a fictional LA vlogger) meets the fans who want to plan, shoot and explore with her. The serif announces, the mono instructs.
+
+**Where this came from.** On 2026-10-12 the owner adopted the "Monad" style reference and asked to keep frosted glassmorphism. Parchment Frost replaces "Golden Hour Frost" (cream, Instrument Serif and Inter, coral action, rainbow marketing button). The foundation lives in `web/app/globals.css`, `web/lib/fonts.ts` and `web/components/ui/button-variants.ts`. Light theme only.
+
+Two owner decisions shape everything below:
+1. **Mono for all UI strings; Inter for long reads.** Post bodies, comments, legal text, newsletter and email content and bio "about" paragraphs use `font-sans` (Inter).
+2. **Lake Blue (#2B59D1) is the one action colour everywhere.** The rainbow button is retired.
 
 **The three layers.**
-1. **The aurora.** A page-wide backdrop on cream (#FBF7F2): four large, soft radial pools of peach (top left, like a low sun), sky and lilac across the top and right, and mint at the foot, with a 3% grain. It drifts for a few 40s passes and then rests. It is static under `prefers-reduced-motion`. It is rendered once, in `app/layout.tsx`, by `AuroraBackdrop`.
-2. **Frosted glass.** Every surface floats directly on the aurora. There is no outer frame, shell or tray around the content.
-3. **Ink and one action.** Words are ink or soft ink. In the app, one coral button per screen marks the thing to do. On the marketing landing, one rainbow button per viewport marks "Try the live demo".
+1. **The washes.** A page-wide backdrop on parchment (#F6F3F1): large, soft radial blobs in the Monad pastels (coral, sky-wash, gold, mint) at 0.5 opacity, with a 3% grain. Each blob is a transformed radial gradient, not a CSS blur filter. It drifts for six 40s alternate passes and then rests, and is static under `prefers-reduced-motion`. It is rendered once, in `app/layout.tsx`, by `AuroraBackdrop` (`.aurora`, `.aurora-blob`, `.grain`).
+2. **Frosted glass.** Every surface floats directly on the washes, with real backdrop blur and an Ash hairline. There is no outer frame, shell or tray around the content.
+3. **Ink and one action.** Words are ink or graphite. One Lake Blue button per screen marks the thing to do.
 
 **Key characteristics**
-- Content floats on the aurora as frosted panels. Nothing is framed.
-- Instrument Serif for display headlines (28px and up only), with the occasional italic accent word. Inter for everything else.
-- One coral action per app screen, and one rainbow marketing action per landing viewport. Everything else is glass, ink or a bare icon.
-- Active navigation is a glass chip with an ink icon and a 3px sunset dot.
+- Content floats on the washes as frosted panels with Ash hairlines and almost no shadow.
+- Newsreader serif headings at weight 400, never bold. Geist Mono for everything else. Inter only for long reads.
+- Nav labels, buttons, tags and small meta are uppercase mono.
+- One Lake Blue action per screen. Everything else is a frosted secondary, a ghost icon, or a text link with an arrow.
+- Active navigation is a periwinkle chip with a lake icon.
 - Matches are words ("Strong match", "Worth a look"), never numbers, outside a side panel.
 - Real-looking golden-hour photography of the creator and her travels. Until a file exists, a same-ratio gradient stands in.
 
 ## 2. Colours
 
-Hex in the frontmatter is normative. The Tailwind names come from the `@theme` block in `web/app/globals.css`. DESIGN.json holds OKLCH values.
+Hex in the frontmatter is normative. The names come from the `@theme` block in `web/app/globals.css`. DESIGN.json holds OKLCH values.
 
-| Token | Hex | Tailwind | Use |
+| Token | Hex | Tailwind | Role |
 |---|---|---|---|
-| cream | #FBF7F2 | `bg-cream` | The page under the aurora, and `<body>`. |
-| ink | #1E1B26 | `text-ink` | Titles, labels, body words and the focus ring. |
-| ink-soft | #55506A | `text-ink-soft` | Secondary words, figures and inactive tabs. |
-| coral | #C8432A | `bg-coral` | The one primary action per screen. White words. |
-| coral-hover | #A9361F | `hover:bg-coral-hover` | Primary hover (darker, never lighter). |
-| sunset | #F0603A | `bg-sunset` | Decoration only: the active nav dot, glows and illustrations. Never text, never under text. |
-| sky | #2B6CA8 | `text-sky` | Links and info. |
+| parchment | #F6F3F1 | `bg-parchment` (`bg-cream` alias) | The canvas under the washes, and `<body>`. |
+| lake | #2B59D1 | `bg-lake`, `text-lake` | The one action per screen. White words on it. |
+| lake-hover | #234AAE | `hover:bg-lake-hover` | Primary hover (darker, never lighter). |
+| periwinkle | #CFDAF5 | `bg-periwinkle` | Soft surface, the active nav chip, text selection. |
+| ash | #CECAC8 | `border-border`, `border-line` | Hairlines: borders, inputs, the glass edge. |
+| ink (off-black) | #242424 | `text-ink` | Titles, labels, body words and the focus ring. |
+| graphite (ink-soft) | #4E4D4D | `text-ink-soft` | Secondary words, figures, inactive tabs. |
+| ink-muted | #6B6968 | `text-ink-muted` | Helper text. AA on parchment. |
+| smoke | #797776 | `text-smoke`, `border-line-field` | Usage limits (below). Large text, field borders and decoration only. |
+| coral | #FF9473 | `bg-coral` | Decorative pastel. Washes, tiles, illustration, avatar tints. |
+| sky-wash | #A0B5EB | `bg-sky-wash` | Decorative pastel. |
+| mint | #A7FCCD | `bg-mint` | Decorative pastel. |
+| gold | #ECDA98 | `bg-gold` | Decorative pastel. |
+| crimson | #F37A0A | `bg-crimson` (`sunset` alias) | Decorative pastel. |
 | success | #15803D | `text-success` | Rising trends and done states. |
 | warn-ink | #A45A00 | `text-warn-ink` | Warnings, always on a light warm fill. |
-| aurora peach / sky / lilac / mint | #FFD9C2 / #BFDDF7 / #DCCFF7 / #CFEFE3 | `bg-aurora-*` | The backdrop pools, community icon tiles, chips and status fills. |
+| danger / danger-deep | #E04848 / #C42B2B | `text-danger`, `text-danger-deep` | Destructive icons and words. `--destructive` is #C42B2B. |
 
-**Coral and sky are darker than the brief.** The brief asked for coral #F0603A and sky #3B82C4. White on #F0603A measures 3.26:1 and #3B82C4 on white measures 4.06:1, so both fail AA for text. The tokens are therefore #C8432A (white on it 4.89:1) and #2B6CA8 (5.51:1 on white). The brief's #F0603A survives as `sunset`, for decoration only. The plan's Global Constraints line should read: coral `#C8432A`, coral-hover `#A9361F`, sky `#2B6CA8`, sunset `#F0603A` (decoration only).
+**Old names still resolve to the new palette:** `cream` is parchment, `ink-soft` is graphite, `sunset` is crimson, `sky` is lake, and `aurora-peach / sky / lilac / mint` are pale tints (#FFD9CC, periwinkle, #DFE5F8, #D2FDE5) for solid fills such as tiles and chips. **`coral` now means the decorative pastel #FF9473.** Every former coral action class was renamed to `lake`.
 
-**Community tints.** The shared `Tint` values map to frosted card washes (`web/components/shared/tint.ts`):
+**Pastels are decoration only.** Coral, sky-wash, mint, gold and crimson never act as text and never sit under text. If a pastel must carry text (a tile, a chip), measure the pair with `node web/scripts/contrast-check.mjs <fg> <bg>` and stay at 4.5:1 or above.
 
-| Tint | Card | Tile and chip | Icon |
-|---|---|---|---|
-| peach | #FFF1E8 at 80%, frosted | aurora-peach | coral |
-| lavender | #F5F0FF at 80%, frosted | aurora-lilac | #5B47A8 |
-| aqua | #EFFAF5 at 80%, frosted | aurora-mint | #22694F |
-| white (and lime) | white at 72%, frosted | white | ink |
-
-### Contrast ledger (WCAG 2.2, measured with `node web/scripts/contrast-check.mjs`)
-
-The worst case is white glass at 55% over the brightest pool (peach), which composites to #FFF0E7.
+### Contrast ledger (WCAG 2.2, from the comment in `globals.css`)
 
 | Pair | Ratio | Needs |
 |---|---|---|
-| ink on #FFF0E7 | 15.22 | 4.5 |
-| ink-soft on #FFF0E7 | 6.88 | 4.5 |
-| ink-muted (legacy) on #FFF0E7 | 5.93 | 4.5 |
-| white on coral | 4.89 | 4.5 |
-| white on coral-hover | 6.49 | 4.5 |
-| coral on cream | 4.59 | 4.5 |
-| sky on white | 5.51 | 4.5 |
-| sky on #FFF0E7 | 4.95 | 4.5 |
-| success on #FFF0E7 | 4.51 | 4.5 |
-| warn-ink on #FFF3E0 | 4.74 | 4.5 |
-| ink on aurora-peach / aurora-sky (status pills) | 12.87 / 12.02 | 4.5 |
-| ink-soft on aurora-peach / lilac / mint (tiles) | 5.82 / 5.22 / 6.24 | 4.5 |
-| coral / #5B47A8 / #22694F icon on its tile | 3.72 / 4.92 / 5.34 | 3 (non-text) |
-| ink focus ring on cream / white / peach | 15.9 / 16.9 / 12.9 | 3 |
+| white on lake | 6.1 | 4.5 |
+| lake on parchment | 5.5 | 4.5 |
+| graphite on parchment | 7.6 | 4.5 |
+| ink-muted #6B6968 on parchment | 4.9 | 4.5 |
+| smoke #797776 on parchment | 4.0 | 3 for large text and field borders only |
+| ink focus ring on parchment | 14 | 3 |
+
+Graphite on any glass fill over the brightest wash stays above 6:1.
 
 ## 3. Glass
 
-| Class | Fill | Use |
-|---|---|---|
-| `.glass` | white 55% | Panels that carry short text: hero cards, stat and idea cards, toolbars and tab bars. |
-| `.glass-strong` | white 72% | Long text, lists, forms, side panels, dialogs, data tables and the icon rail. |
-| `.glass-chip` | white 62%, full pill | Small controls: secondary buttons, match labels, tooltip chips and nav chips. |
+| Class | Fill | Radius | Use |
+|---|---|---|---|
+| `.glass` | white 55% | 40px | Panels that carry short text: hero cards, stat and idea cards, toolbars and tab bars. |
+| `.glass-strong` | white 72% | 40px | Long text, lists, forms, side panels, dialogs, data tables and the icon rail. |
+| `.glass-chip` | white 62% | full pill | Small controls: secondary buttons, tags, nav chips. |
 
 All three share the following:
 - `backdrop-filter: blur(24px) saturate(160%)` (with the `-webkit-` prefix).
-- A 1px `rgba(255,255,255,.6)` edge.
-- A 1px top-left inner highlight, `inset 1px 1px 0 rgba(255,255,255,.7)`.
-- The glass shadow, `0 20px 60px -20px rgba(40,30,60,.18)` (`shadow-glass`). Chips use a tighter `0 6px 18px -10px`.
+- A 1px Ash hairline, `rgb(206 202 200 / 0.75)`: slightly see-through so the wash still glows at the edge.
+- A 1px top-left inner highlight, `inset 1px 1px 0 rgb(255 255 255 / 0.7)`.
+- Almost no shadow: `0 0 10px 0 rgb(0 0 0 / 0.06)` (`shadow-glass`). Chips carry the highlight only.
 
-The radius is 28px for panels (`rounded-panel`) and 999px for chips (`rounded-chip`). The classes live in the components layer, so a caller's `rounded-*`, `bg-*` or `shadow-*` utility overrides them. In React, use `<GlassPanel strength="soft|strong" as="section">`.
+The classes live in the components layer, so a caller's `rounded-*`, `bg-*` or `shadow-*` utility overrides them. Do not make panels opaque.
 
-**Fallback.** Where `@supports not (backdrop-filter: blur(1px))` (older in-app webviews), every glass class and the landing `.btn-secondary` drop to a 92% white fill. Text is never see-through on a busy backdrop.
+**Fallback.** Where `@supports not (backdrop-filter: blur(1px))` (older in-app webviews), every glass class and `.btn-secondary` drop to a 92% white fill. Text is never see-through on a busy backdrop.
 
-**Overlays.** Popovers, menus and the select list are white at 90% with a frost. Tooltips are solid white. All of them use `shadow-overlay`.
+**Overlays.** Dialogs, popovers, menus, the select list and side panels use `shadow-overlay` (`0 24px 64px -16px rgba(45,45,48,.22)`). Nothing else casts a shadow: cards and tiles carry none.
 
 ## 4. Typography
 
-- **Instrument Serif** (`font-display`, `next/font`, variable `--font-instrument-serif`) is for display only, at 28px and up: the landing headlines, page titles (`PageHeading` level 1 at 36px) and the dashboard top-bar title. It is always weight 400. Italic is allowed for one accent word in a headline ("a way to *hear* them").
-- **Inter** (`font-sans`, `--font-inter`) is for all UI and body text. The app scale (`text-h1`, `text-h2`, `text-body`, `text-label`, `text-small`, `text-caption`, `text-stat`) is unchanged. Anything counted uses tabular figures.
-- Never set serif under 28px. Never set a whole paragraph in serif.
+- **Geist Mono** (`font-mono`, `--font-geist-mono`) is the page default (`html` sets it, with -0.02em tracking) and sets every UI string: nav, buttons, badges, tags, chips, tabs, table headers, meta, timestamps, counters, form labels and short body copy.
+- **Newsreader** (`font-display`, `--font-newsreader`) is the serif for headings, weight 400 only, with an italic cut. Every `<h1>` and `<h2>` is serif at 400 automatically (base layer, -0.02em). Other big titles (an h3, a card title of 20px or more, a FAQ question, a big stat written as words) opt in with `font-display`. **Never bold a heading.** A heading that should read as UI (a small card label) opts out with `font-mono`. Italic is allowed for one accent word, in ink or lake.
+- **Inter** (`font-sans`, `--font-inter`, optical-size axis) is for long reads only: post bodies, comments, legal text, newsletter and email content, bio "about" paragraphs, any paragraph read at length. Its tracking is -0.006em instead of the mono's. This is the owner's decision; short UI copy stays mono.
+
+**Scale** (tokens in `globals.css`):
+
+| Role | Size / line | Weight | Face |
+|---|---|---|---|
+| `text-hero` | clamp(3rem, 1.6rem + 4.4vw, 5rem) / 1.1 | 400 | serif, landing |
+| `text-section` | clamp(2.25rem, 1.5rem + 2.4vw, 3rem) / 1.2 | 400 | serif, landing |
+| `text-lead` | clamp(1.125rem, 1rem + 0.4vw, 1.375rem) / 1.45 | | landing lead |
+| `text-display` | 40px / 1.2 | 400 | serif |
+| `text-h1` | 32px / 1.2 | 400 | serif |
+| `text-h2` | 24px / 1.2 | 400 | serif |
+| `text-stat` | 40px / 44px | 600 | mono figures |
+| `text-count` | 24px / 32px | 600 | mono figures |
+| `text-trend` | 18px / 24px | 500 | mono figures |
+| `text-body` | 15px / 22px | | mono |
+| `text-label` / `text-label-strong` | 15px / 22px | 500 / 600 | mono |
+| `text-small` | 13px / 18px | | mono, tabular |
+| `text-caption` | 12px / 16px | 500 | mono, tabular, 0.01em |
+
+Anything counted uses tabular figures (the Counting Rule).
+
+**Uppercase mono.** Nav labels, buttons, tags, badges, eyebrows and small (12px) meta are UPPERCASE mono with tight tracking. Do not uppercase sentences, names, user content or long helper text.
 
 ## 5. Components
 
-- **Buttons** (`components/ui/button-variants.ts`):
-  - `primary`: coral, white label, 48px pill, coral-hover on hover. Use it once per screen.
-  - `secondary`: a glass-chip pill with ink words. On plain white it gains a hairline border.
-  - `ghost`: a bare 40px round icon button with a required `aria-label`. On fan pages it is 44px.
-  - `destructive`: brick-red words.
-  - `rainbow` (`components/ui/rainbow-button.tsx`, landing only): a dark pill (`default`, over the aurora) or a light pill (`outline`, on glass) with a rainbow border and glow. It runs three passes once in view, then rests, and is still under reduced motion. Focus is the ink outline. `DemoButton variant="rainbow"` wears it.
-
-  Press is 0.98 through `press`. Hover only changes colour.
-- **Match label** (`MatchLabel`, creator side only): a glass chip with a tier dot and words. 80 and up reads "Strong match", 60 to 79 reads "Worth a look", and under 60 reads "Not for you". It never shows a number. The "why this one" reason sits beside it as its own line. `FitPill` is a legacy alias that puts the reason in a tooltip.
-- **Tab bar:** a glass pill of 48px tab pills. The active tab is a white chip with a 3px sunset dot under the word.
-- **Status pill:** 24px, caption, with ink words on an aurora tint. Warm is peach, cool is sky, and neutral is white 75% with an ink/10 ring. It never uses bare colour.
-- **Side panel / sheet:** `glass-strong`, 480px from the right, with 28px left corners and `shadow-overlay`.
-- **Data table:** a `glass-strong` panel, a white 70% pill header and rows ruled at ink 10% that lift to white 80%. It sits behind a "Table" toggle. Card lists are the default.
-- **Cards:** idea cards are `.glass` at radius 24. Community and stat cards are frosted tint washes at radius 28, with a solid aurora tile for the icon.
-- **Creator image** (`CreatorImage name alt`): `next/image` once `CREATOR_ASSETS[name].ready` is true. Until then it renders a same-ratio golden-hour gradient in the asset's tone, with `role="img"` and the alt text. It never shows a broken image and never shifts the layout.
-- **Navigation:** the dashboard has a 72px `glass-strong` icon rail on the left, and a bottom bar on mobile. The active item is a glass chip with an ink icon and a 3px sunset dot. There is no lime and no filled pill.
-- **Focus:** a solid 2px ink outline with a 2px offset everywhere. It reads on cream, glass, the aurora and coral.
+- **Buttons** (`components/ui/button-variants.ts`; landing twins `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-ghost`). Always a full pill, mono 14px weight 500, uppercase, -0.02em:
+  - `primary`: Lake Blue fill, white words, 48px, no shadow, `lake-hover` on hover. Use it once per screen.
+  - `secondary`: a frosted `glass-chip` pill with ink words and an Ash hairline (on plain white it gains a `border-line`). Every other action.
+  - `ghost`: a bare 40px round icon button with a required `aria-label`. On fan pages it is 44px (`icon-fan`).
+  - `destructive` and `destructive-secondary`: brick-red words, the second on a glass pill.
+  - Press is a 0.98 scale through `press`. Hover only changes colour, never on a disabled or busy control. The old `rainbow` button is **retired**: no rainbow CTA, no gradient text, no rainbow effects.
+- **Tags and eyebrows** (`.eyebrow`): a 32px hairline pill (Ash border, `glass-chip` fill), mono 12px uppercase, weight 500.
+- **Match label** (`MatchLabel`, creator side only): a tag with a tier dot and words. 80 and up reads "Strong match", 60 to 79 reads "Worth a look", and under 60 reads "Not for you". It never shows a number.
+- **Tab bar:** a glass pill of tab pills in mono. The active tab is a white chip.
+- **Status pill:** 24px, caption, ink words on a pale tint. It never uses bare colour.
+- **Side panel / sheet:** `glass-strong`, 480px from the right, `shadow-overlay`.
+- **Data table:** a `glass-strong` panel with Ash-ruled rows, behind a "Table" toggle. Card lists are the default.
+- **Cards and panels:** radius 24 to 40px, never under 16px; big panels use `rounded-panel` (40px), the card token `rounded-card` is 28px. A 1px Ash hairline, no drop shadow. Icon tiles are solid pale tints.
+- **Creator image** (`CreatorImage name alt`): `next/image` once `CREATOR_ASSETS[name].ready` is true. Until then it renders a same-ratio gradient with `role="img"` and the alt text. It never shows a broken image and never shifts the layout.
+- **Navigation:** the dashboard has a 72px `glass-strong` icon rail on the left and a bottom bar on mobile. **The active item is a periwinkle chip (#CFDAF5) with a lake icon**, replacing the old peach chip, coral icon and sunset dot. Labels are uppercase mono.
+- **Platforms:** a creator adds platforms one link at a time. The links are fetched in order, one after another. A card whose fetch failed shows the error state with **Retry** and a way to enter a **manual count**, so one bad link never blocks the rest.
+- **Focus:** a solid 2px off-black outline (`--color-ink`) with a 2px offset everywhere. It reads on parchment, glass, the washes and Lake Blue. Selection is periwinkle.
 
 ## 6. Motion
 
-- State changes ease out over 150 to 250ms (`--ease-out-quart`). Cards use `motion` springs.
+- State changes ease out over 150 to 250ms (`--ease-out-quart`). Cards use `motion` springs. Reveal on scroll is 600ms.
 - Press is a 0.98 scale.
-- Nothing loops forever in view. The aurora makes six 40s passes and then rests.
-- Under `prefers-reduced-motion`, the aurora is static, there are no slides, and every transition is effectively instant.
+- Nothing loops forever in view. The washes make six 40s alternate passes and then rest. Skeleton and "AI reviewing" blocks sweep every 1.6s and are static under reduced motion.
+- Under `prefers-reduced-motion`, the washes are static and every transition is effectively instant.
 
 ## 7. Imagery
 
@@ -276,24 +301,29 @@ The radius is 28px for panels (`rounded-panel`) and 999px for chips (`rounded-ch
 
 ## 8. Rules
 
-- **One rainbow marketing action per viewport; the app keeps coral.** On the landing, rainbow marks "Try the live demo" (hero, navbar once the hero CTA scrolls away, demo CTA) and never shows twice in one viewport. Dashboard and fan-app screens never use it: one coral per screen. If two things look primary, one of them is secondary.
-- **Words are ink.** Use ink or ink-soft on glass, and never pastel words. Coral is never small text on glass.
+- **One Lake Blue primary per screen.** If two things look primary, one of them is secondary. No other saturated fill marks an action. The rainbow CTA is retired everywhere, landing included (owner decision, 2026-10-12).
+- **Headings are serif at 400, never bold** (Monad rule).
+- **UI strings are mono; long reads are Inter** (owner decision, 2026-10-12).
+- **Uppercase** applies to nav, buttons, tags and 12px meta only.
+- **Words are ink.** Use ink or graphite on glass. Pastels never carry words.
 - **Text on glass reaches AA.** Check new pairs with `node web/scripts/contrast-check.mjs <fg> <bg>`. A `#rrggbbaa` foreground composites over the background.
-- **Glass carries text. The aurora does not.** Body text never sits directly on a bright pool. Display serif on cream is fine.
-- **Serif only at 28px and up.**
+- **Glass carries text. The washes do not.** Body text never sits directly on a bright wash.
+- **Hairlines, not shadows.** 1px Ash borders; no drop shadows on cards; do not make panels opaque.
+- **Radii:** panels 40px, cards 24 to 40px, never under 16px; buttons, tags and chips are full pills.
+- **Monospace is about 20% wider than Inter.** Check every screen at 1440px and 390px for overflow, clipping and ugly wraps (`min-w-0`, `truncate`, `line-clamp`).
 - **No numbers for matches outside a side panel.**
 - **Touch targets of 44px on fan pages.**
 - **The AI never sends anything to fans without a creator click.**
 
 ## 9. Not this
 
-These belong to the old "Clubhouse" system. Do not bring them back:
-- The pewter shell: a 40px-radius grey frame around the app, the hazed shell and the header tray.
-- The lime active pill, or any lime fill.
-- The purple (violet) primary button and the purple focus ring.
-- A pill sidebar with text labels plus a "Welcome 🎉" header tray over a tab bar and a table, which is the old layout.
-- Flat white 45% "glass" with no blur.
-- The clay-diorama sphere canvas, the clay loop video and its frames, and the clay auth/onboarding art.
+Do not bring these back:
+- The Golden Hour Frost look: cream #FBF7F2, Instrument Serif, Inter as the UI face, the coral #C8432A action, the sunset nav dot and the rainbow marketing button.
+- Bold headings, gradient text and rainbow effects.
+- The pewter shell (a grey frame around the app), the lime active pill, the purple primary button and focus ring.
+- Flat white "glass" with no blur, and opaque panels.
+- Drop shadows on cards.
+- The clay-diorama sphere canvas, the clay loop video and the clay auth/onboarding art.
 - Dense admin tables as the default view, raw fit-score bars and "Export CSV" as a primary button.
 
-Legacy Clubhouse tokens (`bg-page`, `text-ink-muted`, `--purple`, `--lime` and similar) remain in `globals.css` under `/* legacy: remove in Task 15 */` until `rg` finds no caller.
+Legacy tokens (`bg-page`, `text-ink-muted`, `--purple`, `--peach`, `--lavender` and similar) remain in `globals.css` under the `legacy:` comments, re-pointed at the new palette, until `rg` finds no caller.

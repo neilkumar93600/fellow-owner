@@ -27,7 +27,7 @@ export function AccountCard({
         !wide && '@3xl:col-span-6',
       )}
     >
-      <span className={cn('grid size-14 shrink-0 place-items-center rounded-md', style.tile)}>
+      <span className={cn('grid size-14 shrink-0 place-items-center rounded-2xl', style.tile)}>
         <Icon aria-hidden="true" strokeWidth={1.5} className={cn('size-6', style.icon)} />
       </span>
       <div className="flex min-w-0 flex-1 flex-col items-start gap-1">

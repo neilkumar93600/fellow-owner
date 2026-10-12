@@ -57,7 +57,7 @@ export function NewsletterForm() {
   const invalid = status.kind === 'error';
 
   return (
-    <section aria-labelledby={`${id}-title`} className="flex w-full flex-col">
+    <section aria-labelledby={`${id}-title`} className="flex w-full min-w-0 flex-col">
       <h2 id={`${id}-title`} className="font-display text-[1.375rem] leading-[1.2] text-ink">
         Creator notes, once a month
       </h2>
@@ -71,7 +71,7 @@ export function NewsletterForm() {
             event.currentTarget.querySelector('input')?.focus();
           }}
           className={cn(
-            'flex w-full items-center rounded-full border border-line-field bg-white p-1 shadow-xs transition-colors duration-150 ease-out-quart',
+            'flex w-full items-center rounded-full border border-line-field bg-white/80 p-1 transition-colors duration-150 ease-out-quart',
             'hover:border-ink-muted',
             'has-focus-visible:border-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink',
             invalid && 'border-danger has-focus-visible:border-danger',
@@ -88,9 +88,15 @@ export function NewsletterForm() {
             onChange={(event) => setEmail(event.target.value)}
             aria-invalid={invalid || undefined}
             aria-describedby={`${id}-status ${id}-fine`}
-            className="h-10 min-w-0 flex-1 border-0 bg-transparent pr-2 pl-4 text-body text-ink outline-none placeholder:text-ink-muted max-sm:text-[1rem]"
+            className="h-10 w-0 min-w-0 flex-1 border-0 bg-transparent pr-2 pl-4 text-body text-ink outline-none placeholder:text-ink-muted max-sm:text-[1rem]"
           />
-          <Button type="submit" size="md" loading={pending} className="h-10 shrink-0 px-5">
+          <Button
+            type="submit"
+            size="md"
+            variant="secondary"
+            loading={pending}
+            className="h-10 shrink-0 px-4 max-[420px]:px-3"
+          >
             Subscribe
           </Button>
         </div>

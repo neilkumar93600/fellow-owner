@@ -7,7 +7,7 @@
 
 .screen {
   --ink-soft: var(--color-ink-soft);
-  --line-field: #8e8e94;
+  --line-field: var(--color-smoke);
   --glass: rgb(255 255 255 / 0.55);
 
   position: relative;
@@ -22,16 +22,16 @@
   user-select: none;
 }
 
-/* The shell's haze, bottom right, kept soft so ink-soft text stays readable over it. */
+/* Soft Monad washes (coral, sky-wash, mint), kept faint so ink-soft text stays readable over them. */
 .screen::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(80% 36% at 0% 0%, rgb(255 217 194 / 0.55), transparent 72%),
-    radial-gradient(70% 34% at 100% 104%, rgb(191 221 247 / 0.5), transparent 72%),
-    radial-gradient(52% 30% at 30% 108%, rgb(220 207 247 / 0.45), transparent 72%);
+    radial-gradient(80% 36% at 0% 0%, rgb(255 148 115 / 0.22), transparent 72%),
+    radial-gradient(70% 34% at 100% 104%, rgb(160 181 235 / 0.3), transparent 72%),
+    radial-gradient(52% 30% at 30% 108%, rgb(167 252 205 / 0.3), transparent 72%);
 }
 
 :where(.screen) p {
@@ -79,7 +79,7 @@
   max-width: 100%;
   overflow: hidden;
   font-size: 0.84em;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -102,7 +102,7 @@
 .label {
   color: var(--ink);
   font-size: 0.86em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .rowHead {
@@ -127,7 +127,7 @@
   height: 2.6em;
   border-radius: 50%;
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0;
 }
 
@@ -234,10 +234,12 @@
   gap: 0.4em;
   height: 3em;
   border-radius: 999px;
-  background: var(--ink);
+  background: var(--color-lake);
   color: #fff;
-  font-size: 0.88em;
-  font-weight: 600;
+  font-size: 0.8em;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 /* ---------- 1. Bio link, then Join (a small bio header, the AI's picks and why) ---------- */
@@ -263,7 +265,7 @@
 
 .miniName {
   font-size: 0.95em;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.01em;
 }
 
@@ -281,14 +283,14 @@
 .joinTitle {
   margin-bottom: 0.7em;
   font-size: 1.15em;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
 }
 
 .fieldLabel {
   margin-bottom: 0.4em;
   font-size: 0.74em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .fieldRow {
@@ -308,7 +310,7 @@
   background: var(--color-aurora-peach);
   color: var(--ink);
   font-size: 0.74em;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -360,7 +362,7 @@
   min-width: 0;
   padding: 0.65em 0.7em 0.65em 0.55em;
   border-radius: 1.1em;
-  box-shadow: inset 0 0 0 1px rgb(45 45 48 / 0.06);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
 }
 
 .tWhite.pick {
@@ -380,7 +382,7 @@
 
 .pickName {
   font-size: 0.86em;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
 }
 
@@ -438,7 +440,7 @@
 }
 
 .join[data-state="typing"] .pickOn {
-  box-shadow: inset 0 0 0 1px rgb(45 45 48 / 0.06);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
 }
 
 .join[data-state="typing"] .confirm {
@@ -481,7 +483,7 @@
 
 .bandName {
   font-size: 1.14em;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.015em;
 }
 
@@ -493,7 +495,7 @@
 .trend {
   margin-left: 0.25em;
   color: var(--success-ink);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .joined {
@@ -505,7 +507,7 @@
   border-radius: 999px;
   background: var(--card-strong);
   font-size: 0.7em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .joined svg {
@@ -532,7 +534,7 @@
 
 .tabOn {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .tabOn::after {
@@ -568,7 +570,7 @@
 
 .ideaName {
   font-size: 0.8em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .ideaWhen {
@@ -585,19 +587,22 @@
   border-radius: 999px;
   background: var(--table-head);
   font-size: 0.66em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .ideaTitle {
   font-size: 1.1em;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.015em;
 }
 
+/* A post body is a long read: Inter. */
 .ideaBody {
   color: var(--ink-muted);
+  font-family: var(--font-sans);
   font-size: 0.78em;
   line-height: 1.45;
+  letter-spacing: -0.006em;
 }
 
 .signals {
@@ -618,7 +623,7 @@
   background: var(--card-strong);
   color: var(--ink);
   font-size: 0.72em;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   transition:
     background-color 250ms var(--ease-out-quart),
@@ -733,13 +738,13 @@
   background: var(--warn-bg);
   color: var(--warn-ink);
   font-size: 0.68em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .projectTitle {
   margin: 0.65em 0 0.45em;
   font-size: 1.42em;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.025em;
 }
@@ -778,7 +783,7 @@
 
 .roleName {
   font-size: 0.9em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .openPill {
@@ -791,7 +796,7 @@
   background: var(--info-bg);
   color: var(--info-ink);
   font-size: 0.66em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .roleNeed {
@@ -819,7 +824,7 @@
   border-radius: 999px;
   background: var(--table-head);
   font-size: 0.68em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .filledBy .avatarXs {
@@ -858,7 +863,7 @@
 
 .teamName {
   font-size: 0.8em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .teamMeta {
@@ -888,7 +893,7 @@
 .commentName {
   display: block;
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* ---------- 4. The AI's weekly digest ---------- */
@@ -917,13 +922,13 @@
   display: flex;
   flex-direction: column;
   font-size: 0.9em;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
 }
 
 .digestStat {
   font-size: 1.9em;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 1.1;
 }
@@ -986,7 +991,7 @@
   border-radius: 50%;
   background: var(--color-aurora-peach);
   font-size: 0.78em;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .standoutText {
@@ -998,7 +1003,7 @@
 .standoutTitle {
   overflow: hidden;
   font-size: 0.8em;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -1039,5 +1044,5 @@
 .lovedChip svg {
   width: 1.1em;
   height: 1.1em;
-  color: var(--color-coral);
+  color: var(--color-lake);
 }

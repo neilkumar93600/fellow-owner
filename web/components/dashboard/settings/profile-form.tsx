@@ -2,38 +2,31 @@
 
 import {
   LIMITS,
-  PLATFORM_LABELS,
-  PLATFORMS,
-  type Platform,
   type PlatformEntry,
-  platformEntrySchema,
   type StudioSpace,
   spaceProfileSchema,
 } from '@fellow-owners/shared';
-import { Check, Globe, Plus, Trash2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 import type * as React from 'react';
 import { useState } from 'react';
-import { PlatformIcon } from '@/components/auth/platform-icons';
 import { ImageUpload } from '@/components/shared/image-upload';
+import { type FansImportView, PlatformConnect } from '@/components/shared/platform-connect';
 import { Button } from '@/components/ui/button';
-import { Field, NativeSelect, TextArea, TextField } from '@/components/ui/field';
+import { Field, TextArea, TextField } from '@/components/ui/field';
+import { useImportPlatformFans } from '@/hooks/queries/use-followers';
 import { useUpdateSettings } from '@/hooks/queries/use-settings';
-import { formatCompact, pluralize } from '@/lib/format';
-import { toastSuccess } from '@/lib/toast';
+import { ApiError } from '@/lib/fetcher';
+
+/** The first message at `path` or under it ("platforms" finds "platforms.1.url"). */
+function issueUnder(errors: Record<string, string>, path: string): string | undefined {
+  return Object.entries(errors).find(([p]) => p === path || p.startsWith(`${path}.`))?.[1];
+}
 
 /** The first message for each field path ("displayName", "promote.2"). */
 export function issuesByPath(issues: readonly { path: PropertyKey[]; message: string }[]) {
   const out: Record<string, string> = {};
   for (const issue of issues) out[issue.path.map(String).join('.')] ??= issue.message;
   return out;
-}
-
-export function PlatformMark({ platform }: { platform: Platform }) {
-  return platform === 'other' ? (
-    <Globe aria-hidden="true" strokeWidth={1.5} className="size-5 shrink-0 text-ink" />
-  ) : (
-    <PlatformIcon platform={platform} />
-  );
 }
 
 export interface ProfileFormProps {
@@ -88,7 +81,7 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
         noValidate
         onSubmit={save}
         aria-labelledby="profile-title"
-        className="col-span-12 flex min-w-0 flex-col gap-6 glass-strong rounded-panel p-6 @4xl:col-span-7"
+        className="glass-strong col-span-12 flex min-w-0 flex-col gap-6 rounded-panel p-6 @4xl:col-span-7"
       >
         <div>
           <h2 id="profile-title" className="text-h2 text-ink">
@@ -151,7 +144,8 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
 
       <SocialAccounts
         platforms={platforms}
-        error={errors.platforms}
+        saved={space.platforms}
+        error={issueUnder(errors, 'platforms')}
         onChange={(next) => {
           setPlatforms(next);
           setErrors(({ platforms: _, ...rest }) => rest);
@@ -161,147 +155,72 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
   );
 }
 
-const FIELD_ERRORS = { platform: '', url: '', followers: '' };
+/** A failed "Import fans from comments", in plain words (the card shows it inline). */
+function importError(err: unknown): string {
+  if (err instanceof ApiError) {
+    if (err.code === 'daily_cap_reached')
+      return 'You can import from this platform again tomorrow.';
+    if (err.status === 429) return 'Too many imports at once. Try again in a minute.';
+    if (err.code === 'validation_error')
+      return 'This link isn’t a profile we can read comments from.';
+  }
+  return 'We couldn’t import fans right now. Try again in a moment.';
+}
 
+/**
+ * The platform cards: paste a link and it fetches; Refresh and "Import fans from comments" on saved
+ * Instagram, TikTok and YouTube profiles (the import reads the saved link, so a new one saves first).
+ */
 function SocialAccounts({
   platforms,
+  saved,
   error,
   onChange,
 }: {
   platforms: PlatformEntry[];
+  saved: PlatformEntry[];
   error?: string;
   onChange: (platforms: PlatformEntry[]) => void;
 }) {
-  const unused = PLATFORMS.find((p) => !platforms.some((entry) => entry.platform === p)) ?? 'other';
-  const [platform, setPlatform] = useState<Platform>(unused);
-  const [url, setUrl] = useState('');
-  const [followers, setFollowers] = useState('');
-  const [fieldErrors, setFieldErrors] = useState(FIELD_ERRORS);
-  const full = platforms.length >= LIMITS.space.platforms.max;
+  const importFans = useImportPlatformFans();
+  const [results, setResults] = useState<Record<string, FansImportView>>({});
+  const savedUrls = new Set(saved.map((p) => p.url));
+  const importState = Object.fromEntries(
+    platforms.map((p) => [
+      p.url,
+      savedUrls.has(p.url) ? (results[p.url] ?? { status: 'idle' }) : { status: 'unsaved' },
+    ]),
+  ) as Record<string, FansImportView>;
 
-  const add = () => {
-    const result = platformEntrySchema.safeParse({
-      platform,
-      url,
-      followers: followers.trim() === '' ? Number.NaN : Number(followers.replace(/[\s,]/g, '')),
-    });
-    if (!result.success) {
-      setFieldErrors({ ...FIELD_ERRORS, ...issuesByPath(result.error.issues) });
-      return;
-    }
-    const next = [...platforms, result.data];
-    onChange(next);
-    setUrl('');
-    setFollowers('');
-    setFieldErrors(FIELD_ERRORS);
-    setPlatform(PLATFORMS.find((p) => !next.some((entry) => entry.platform === p)) ?? 'other');
-    toastSuccess(`${PLATFORM_LABELS[result.data.platform]} added. Save your profile to keep it.`);
+  const onImportFans = (entry: PlatformEntry) => {
+    const set = (view: FansImportView) => setResults((r) => ({ ...r, [entry.url]: view }));
+    set({ status: 'pending' });
+    importFans
+      .mutateAsync({ url: entry.url })
+      .then(set, (err: unknown) => set({ status: 'error', message: importError(err) }));
   };
 
   return (
     <section
       aria-labelledby="social-title"
-      className="col-span-12 flex min-w-0 flex-col gap-4 glass-strong rounded-panel p-6 @4xl:col-span-5"
+      className="glass-strong col-span-12 flex min-w-0 flex-col gap-5 rounded-panel p-6 @4xl:col-span-5"
     >
       <div>
         <h2 id="social-title" className="text-h2 text-ink">
           Connected social accounts
         </h2>
         <p className="mt-1 text-small text-ink-muted">
-          Follower counts show as chips on your bio link.
+          Follower counts show as chips on your bio link. Save your profile to keep changes.
         </p>
       </div>
-
-      {platforms.length > 0 ? (
-        <ul className="divide-y divide-line-row">
-          {platforms.map((entry, index) => (
-            <li
-              key={`${entry.platform}-${entry.url}`}
-              className="flex min-h-16 items-center gap-3 py-2"
-            >
-              <span className="grid size-10 shrink-0 place-items-center rounded-md bg-table-head">
-                <PlatformMark platform={entry.platform} />
-              </span>
-              <span className="flex min-w-0 flex-1 flex-col">
-                <span className="text-small-strong text-ink">
-                  {PLATFORM_LABELS[entry.platform]}
-                </span>
-                <span className="truncate text-small text-ink-muted">
-                  {entry.url.replace(/^https?:\/\//, '')}
-                </span>
-              </span>
-              <span className="shrink-0 text-small text-ink-soft">
-                <span className="tabular-nums">{formatCompact(entry.followers)}</span>{' '}
-                {pluralize(entry.followers, 'follower')}
-              </span>
-              <Button
-                variant="ghost"
-                surface="white"
-                className="text-ink-soft"
-                aria-label={`Remove ${PLATFORM_LABELS[entry.platform]}`}
-                onClick={() => onChange(platforms.filter((_, i) => i !== index))}
-              >
-                <Trash2 />
-              </Button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-body text-ink">
-          No accounts yet. Add one so fans see where else to find you.
-        </p>
-      )}
+      <PlatformConnect
+        value={platforms}
+        onChange={onChange}
+        refresh
+        onImportFans={onImportFans}
+        importState={importState}
+      />
       {error ? <p className="text-small text-danger-deep">{error}</p> : null}
-
-      <div className="flex flex-col gap-4 border-t border-line-row pt-4">
-        <h3 className="text-label-strong text-ink">Add an account</h3>
-        <div className="grid gap-4 @lg:grid-cols-[10rem_minmax(0,1fr)]">
-          <Field label="Platform" disabled={full}>
-            <NativeSelect
-              value={platform}
-              onChange={(event) => setPlatform(event.target.value as Platform)}
-            >
-              {PLATFORMS.map((p) => (
-                <option key={p} value={p}>
-                  {PLATFORM_LABELS[p]}
-                </option>
-              ))}
-            </NativeSelect>
-          </Field>
-          <Field label="Profile link" error={fieldErrors.url} disabled={full}>
-            <TextField
-              type="url"
-              inputMode="url"
-              value={url}
-              onChange={(event) => setUrl(event.target.value)}
-              placeholder="https://tiktok.com/@miralane"
-            />
-          </Field>
-        </div>
-        <Field label="Followers" error={fieldErrors.followers} disabled={full}>
-          <TextField
-            inputMode="numeric"
-            value={followers}
-            onChange={(event) => setFollowers(event.target.value)}
-          />
-        </Field>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <Button
-            variant="secondary"
-            icon={<Plus />}
-            disabled={full}
-            aria-describedby={full ? 'social-full' : undefined}
-            onClick={add}
-          >
-            Add account
-          </Button>
-          {full ? (
-            <p id="social-full" className="text-small text-ink-muted">
-              Up to {LIMITS.space.platforms.max} accounts. Remove one to add another.
-            </p>
-          ) : null}
-        </div>
-      </div>
     </section>
   );
 }

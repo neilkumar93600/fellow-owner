@@ -1,4 +1,4 @@
-import { cva } from 'class-variance-authority';
+import { cva } from "class-variance-authority"
 
 /**
  * DESIGN.md Buttons (Parchment Frost). Always a full pill, mono 14px uppercase. `primary` is the one Lake
@@ -13,61 +13,62 @@ import { cva } from 'class-variance-authority';
  */
 export const buttonVariants = cva(
   [
-    'press relative inline-flex shrink-0 items-center justify-center gap-2 rounded-full font-mono text-[0.875rem] leading-none font-medium tracking-[-0.02em] uppercase whitespace-nowrap select-none',
-    'disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:not-aria-busy:cursor-not-allowed aria-disabled:not-aria-busy:opacity-50 aria-busy:cursor-progress',
-    '[&_svg]:shrink-0 [&_svg]:stroke-[1.5]',
+    "relative inline-flex shrink-0 press items-center justify-center gap-2 rounded-full font-mono text-[0.875rem] leading-none font-medium tracking-[-0.02em] whitespace-nowrap uppercase select-none",
+    "disabled:cursor-not-allowed disabled:opacity-50 aria-busy:cursor-progress aria-disabled:not-aria-busy:cursor-not-allowed aria-disabled:not-aria-busy:opacity-50",
+    "[&_svg]:shrink-0 [&_svg]:stroke-[1.5]",
   ],
   {
     variants: {
       variant: {
         /** The one primary action per screen: Lake Blue, white words. */
-        primary: 'bg-lake text-white not-disabled:not-aria-disabled:hover:bg-lake-hover',
+        primary:
+          "bg-lake text-white not-disabled:not-aria-disabled:hover:bg-lake-hover",
         /** Frosted glass pill, ink words. Every other action. */
         secondary:
-          'glass-chip text-ink not-disabled:not-aria-disabled:hover:bg-white/90',
+          "glass-chip text-ink not-disabled:not-aria-disabled:hover:bg-white/90",
         /** 40px round icon button (aria-label required). Row actions add text-ink-soft. */
-        ghost: 'text-ink',
+        ghost: "text-ink",
         /** Ghost pill with a Signal Red icon and Brick Red words. */
         destructive:
-          'text-danger-deep not-disabled:not-aria-disabled:hover:bg-white/70 [&_svg]:text-danger',
+          "text-danger-deep not-disabled:not-aria-disabled:hover:bg-white/70 [&_svg]:text-danger",
         /** The confirm button of a destructive dialog: a secondary pill in the destructive colours. */
-        'destructive-secondary':
-          'glass-chip text-danger-deep not-disabled:not-aria-disabled:hover:bg-white/90 [&_svg]:text-danger',
+        "destructive-secondary":
+          "glass-chip text-danger-deep not-disabled:not-aria-disabled:hover:bg-white/90 [&_svg]:text-danger",
       },
       size: {
-        lg: 'h-12',
+        lg: "h-12",
         /** Toolbars and the destructive pill. */
-        md: 'h-10 px-4',
-        icon: 'size-10',
+        md: "h-10 px-4",
+        icon: "size-10",
         /** Fan pages: 44px touch targets. */
-        'icon-fan': 'size-11',
+        "icon-fan": "size-11",
       },
-      surface: { white: '', glass: '', card: '' },
+      surface: { white: "", glass: "", card: "" },
     },
     compoundVariants: [
-      { variant: 'primary', size: 'lg', className: 'px-8' },
+      { variant: "primary", size: "lg", className: "px-8" },
       {
-        variant: ['secondary', 'ghost', 'destructive', 'destructive-secondary'],
-        size: 'lg',
-        className: 'px-5',
+        variant: ["secondary", "ghost", "destructive", "destructive-secondary"],
+        size: "lg",
+        className: "px-5",
       },
       // On plain white a glass pill needs a hairline to read as a control.
       {
-        variant: ['secondary', 'destructive-secondary'],
-        surface: 'white',
-        className: 'border-line',
+        variant: ["secondary", "destructive-secondary"],
+        surface: "white",
+        className: "border-line",
       },
       {
-        variant: 'ghost',
-        surface: 'white',
-        className: 'not-disabled:not-aria-disabled:hover:bg-cream',
+        variant: "ghost",
+        surface: "white",
+        className: "not-disabled:not-aria-disabled:hover:bg-cream",
       },
       {
-        variant: 'ghost',
-        surface: ['glass', 'card'],
-        className: 'not-disabled:not-aria-disabled:hover:bg-white/70',
+        variant: "ghost",
+        surface: ["glass", "card"],
+        className: "not-disabled:not-aria-disabled:hover:bg-white/70",
       },
     ],
-    defaultVariants: { variant: 'primary', size: 'lg', surface: 'white' },
-  },
-);
+    defaultVariants: { variant: "primary", size: "lg", surface: "white" },
+  }
+)

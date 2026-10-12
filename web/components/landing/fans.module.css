@@ -1,5 +1,6 @@
 /*
- * For fans (landing brief v2, part 6): the peach field, the step list and the CSS 3D phone.
+ * For fans (landing brief v2, part 6): a frosted field with soft Monad washes, the step list and the CSS
+ * 3D phone.
  *
  * One DOM, four modes (data-mode on .root, set by fans-stage.tsx):
  *  - static (server, no JS) and swipe (< 768px): the phone sits with a slight tilt (in swipe mode it turns a
@@ -14,7 +15,8 @@
 .section {
   --inset: 8px;
   --gutter: 20px;
-  --line-strong: #bdbdc2;
+  /* Pager dots are controls: smoke keeps them at 3:1 on the field. */
+  --line-strong: var(--color-smoke);
 
   position: relative;
   padding: var(--inset);
@@ -34,17 +36,18 @@
   }
 }
 
-/* The section's color field: full bleed inside the page inset, shell corners. */
+/* The section's field: frosted glass tinted by a coral wash and a mint wash, panel corners, hairline. */
 /* overflow: clip (not hidden) keeps the disc and the phone's 3D overhang inside without breaking sticky. */
 .field {
   position: relative;
   overflow: clip;
   border-radius: 28px;
   background:
-    radial-gradient(60% 50% at 78% 40%, rgb(255 217 194 / 0.7), transparent 72%),
+    radial-gradient(60% 50% at 78% 40%, rgb(255 148 115 / 0.26), transparent 72%),
+    radial-gradient(45% 40% at 96% 96%, rgb(167 252 205 / 0.3), transparent 72%),
     linear-gradient(160deg, rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.28));
   border: 1px solid var(--glass-edge);
-  box-shadow: var(--glass-highlight), var(--shadow-glass);
+  box-shadow: var(--glass-highlight);
   padding-block: 72px 28px;
 }
 
@@ -220,8 +223,9 @@
   background: var(--card-strong);
   color: var(--ink);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 /* ---------- Steps ---------- */
@@ -245,7 +249,7 @@
   position: absolute;
   inset: 0 0 auto;
   height: 1px;
-  background: rgb(45 45 48 / 0.12);
+  background: var(--color-ash);
 }
 
 .fill {
@@ -317,9 +321,10 @@
   height: 40px;
   border-radius: 999px;
   background: var(--card-strong);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
   color: var(--ink-soft);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
   transition:
     background-color var(--dur-slow) var(--ease-out-quart),
     color var(--dur-slow) var(--ease-out-quart);
@@ -330,10 +335,12 @@
   color: #fff;
 }
 
+/* Step titles are headings: the serif at 400. */
 .stepTitle {
   color: var(--ink-muted);
-  font-size: clamp(1.375rem, 0.9rem + 0.9vw, 1.875rem);
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1rem + 0.9vw, 2rem);
+  font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.02em;
   transition: color var(--dur-slow) var(--ease-out-quart);
@@ -363,7 +370,7 @@
   content: "";
   display: block;
   height: 1px;
-  background: rgb(45 45 48 / 0.12);
+  background: var(--color-ash);
 }
 
 /* Short laptop screens (1280 x 720, 1366 x 768): the pinned column has to fit in one viewport. */
@@ -469,6 +476,7 @@
   max-width: 520px;
   margin: 0;
   padding: 16px 20px 16px 16px;
+  border: 1px solid var(--glass-edge);
   border-radius: 24px;
   background: var(--card-strong);
   color: var(--ink-soft);
@@ -593,7 +601,10 @@
   }
 }
 
-/* A flat Apricot Tile disc behind the phone gives the object a place to sit. */
+/*
+ * A soft Monad wash behind the phone (coral to sky-wash, its edge faded by a radial mask so it is never
+ * sharp) gives the object a place to sit.
+ */
 .disc {
   position: absolute;
   top: 50%;
@@ -604,7 +615,10 @@
   margin: calc(min(calc(var(--ph) * 0.94), calc(100% + 48px)) / -2) 0 0
     calc(min(calc(var(--ph) * 0.94), calc(100% + 48px)) / -2);
   border-radius: 50%;
-  background: var(--peach-tile);
+  background: linear-gradient(150deg, var(--color-coral) 15%, var(--color-sky-wash) 85%);
+  opacity: 0.8;
+  -webkit-mask-image: radial-gradient(closest-side, #000 45%, transparent);
+  mask-image: radial-gradient(closest-side, #000 45%, transparent);
 }
 
 @media (max-width: 767.98px) {
@@ -614,7 +628,7 @@
   }
 }
 
-/* Contact shadow on the field, warm so it reads as light on peach rather than grey dirt. */
+/* Contact shadow on the field, soft and neutral. */
 .floor {
   position: absolute;
   left: 50%;
@@ -624,7 +638,7 @@
   height: 44px;
   margin-left: calc(var(--pw) * -0.45);
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgb(120 72 18 / 0.2), rgb(120 72 18 / 0));
+  background: radial-gradient(closest-side, rgb(36 36 36 / 0.14), rgb(36 36 36 / 0));
 }
 
 @media (max-width: 767.98px) {
@@ -744,7 +758,7 @@
   padding: 0.35em 2.1em 0 2.4em;
   color: var(--ink);
   font-size: 1em;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.01em;
   pointer-events: none;
 }

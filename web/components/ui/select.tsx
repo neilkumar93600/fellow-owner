@@ -28,9 +28,9 @@ export interface SelectProps<V extends string> {
 }
 
 /**
- * DESIGN.md toolbar dropdown (also the chart range control): a Pure White button, 40px tall, radius 12,
- * no outline, Body label and a 16px chevron, matched to the search square. It opens a Pure White list
- * below it (radius 16, Overlay Soft, 40px rows) with a check on the selected row. Values are strings,
+ * Toolbar dropdown (also the chart range control): a frosted button with a hairline, 40px tall, radius 16,
+ * mono label and a 16px chevron, matched to the search square. It opens a frosted list
+ * below it (radius 16, shadow-overlay, 40px rows) with a check on the selected row. Values are strings,
  * so they round-trip through the URL.
  */
 export function Select<V extends string>({
@@ -59,7 +59,7 @@ export function Select<V extends string>({
       <SelectPrimitive.Trigger
         aria-label={label}
         className={cn(
-          'press inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-white/60 bg-white/72 px-4 text-body backdrop-blur-xl whitespace-nowrap text-ink select-none',
+          'press inline-flex h-10 shrink-0 items-center gap-2 rounded-2xl border border-line bg-white/72 px-4 text-small backdrop-blur-xl whitespace-nowrap text-ink select-none',
           'not-data-disabled:hover:bg-white/90 data-popup-open:bg-white/90 data-disabled:cursor-not-allowed data-disabled:opacity-50',
           className,
         )}
@@ -88,7 +88,7 @@ export function Select<V extends string>({
                 key={option.value}
                 value={option.value}
                 className={cn(
-                  'grid h-10 cursor-pointer grid-cols-[1fr_1rem] items-center gap-3 rounded-sm px-3 text-body text-ink select-none',
+                  'grid h-10 cursor-pointer grid-cols-[1fr_1rem] items-center gap-3 rounded-xl px-3 text-small text-ink select-none',
                   'transition-colors duration-150 ease-out-quart data-highlighted:bg-ink/5',
                 )}
               >

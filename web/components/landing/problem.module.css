@@ -71,14 +71,16 @@
   align-items: center;
   gap: 10px;
   height: 36px;
-  padding: 0 14px 0 6px;
+  padding: 0 14px 0 5px;
+  border: 1px solid var(--glass-edge);
   border-radius: 999px;
   background: var(--glass-strong);
   box-shadow: var(--glass-highlight);
   color: var(--ink);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: -0.005em;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   font-variant-numeric: tabular-nums;
 }
 
@@ -107,7 +109,7 @@
   color: var(--ink);
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.02em;
 }
 
 .titleLine {
@@ -166,6 +168,8 @@
 .board {
   grid-area: board;
   display: grid;
+  /* One column that never grows past the board: the mono rows and picks truncate instead of overflowing. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
   min-width: 0;
 }
@@ -181,11 +185,12 @@
   position: absolute;
   inset: 0;
   border-radius: 32px;
+  /* A frosted tray tinted by two soft Monad washes (coral, sky-wash). */
   background:
-    radial-gradient(70% 90% at 100% 0%, rgb(220 207 247 / 0.5), transparent 70%),
-    linear-gradient(150deg, rgb(255 217 194 / 0.8), rgb(255 255 255 / 0.5));
+    radial-gradient(70% 90% at 100% 0%, rgb(160 181 235 / 0.32), transparent 70%),
+    radial-gradient(80% 100% at 0% 0%, rgb(255 148 115 / 0.26), transparent 75%), var(--glass-soft);
   border: 1px solid var(--glass-edge);
-  box-shadow: var(--glass-highlight), var(--shadow-glass);
+  box-shadow: var(--glass-highlight);
 }
 
 .picksHead {
@@ -214,12 +219,13 @@
   background: var(--color-aurora-peach);
   color: var(--ink);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .picks {
   position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   margin: 0;
   padding: 0;
@@ -233,13 +239,12 @@
   background: var(--card-strong);
 }
 
+/* The card's hairline (no drop shadow); the pinned scene fades it in as the pick rises. */
 .pickShadow {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow:
-    0 1px 2px rgb(45 45 48 / 0.05),
-    0 18px 40px -22px rgb(45 45 48 / 0.35);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
   pointer-events: none;
 }
 
@@ -267,6 +272,8 @@
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   transform-origin: 0 50%;
 }
 
@@ -364,6 +371,7 @@
 .tableCard {
   position: relative;
   padding: 6px 12px 12px;
+  border: 1px solid var(--glass-edge);
   border-radius: 28px;
   background: var(--card-strong);
 }
@@ -434,8 +442,10 @@
   border-radius: 999px;
   background: var(--table-head);
   color: var(--ink);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .tbody {
@@ -510,6 +520,7 @@
 @media (max-width: 767.98px) {
   .tableCard {
     padding: 0;
+    border: 0;
     border-radius: 0;
     background: transparent;
   }
@@ -546,6 +557,7 @@
     padding: 12px 14px;
     border-radius: 20px;
     background: var(--card-strong);
+    box-shadow: inset 0 0 0 1px var(--glass-edge);
     opacity: var(--row-in, 1);
   }
 
@@ -590,7 +602,7 @@
   border-radius: 999px;
   color: var(--ink);
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
@@ -602,14 +614,16 @@
 
 /* ---------- Closing line and tray ---------- */
 
+/* A big callout in words: the serif at 400. */
 .closing {
   grid-area: close;
   position: relative;
   color: var(--ink);
-  font-size: clamp(1.75rem, 1rem + 1.2vw, 2.5rem);
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.2rem + 1.4vw, 2.75rem);
+  font-weight: 400;
   line-height: 1.12;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -638,6 +652,7 @@
   justify-self: start;
   height: 56px;
   padding: 8px 10px 8px 8px;
+  border: 1px solid var(--glass-edge);
   border-radius: 999px;
   background: var(--card-strong);
 }
@@ -682,7 +697,7 @@
   background: var(--color-aurora-peach);
   color: var(--ink);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* ---------- Pile bubbles (pinned only) ---------- */
@@ -700,9 +715,7 @@
   padding: 12px 14px 14px;
   border-radius: 20px;
   background: var(--card-strong);
-  box-shadow:
-    0 1px 2px rgb(45 45 48 / 0.06),
-    0 14px 34px -18px rgb(45 45 48 / 0.3);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
 }
 
 .bTop {
@@ -743,9 +756,11 @@
   border-radius: 999px;
   background: var(--table-head);
   color: var(--ink);
-  font-size: 0.71875rem;
+  font-size: 0.6875rem;
   font-weight: 500;
   line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .bText {
@@ -968,6 +983,7 @@
   z-index: 0;
   grid-area: 1 / 1;
   align-self: start;
+  border-color: transparent;
   background: transparent;
 }
 
@@ -978,6 +994,7 @@
   display: block;
   border-radius: inherit;
   background: var(--card-strong);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
 }
 
 @media (max-width: 767.98px) {
@@ -988,7 +1005,7 @@
 
 /*
  * Fades the lifted inbox out at the bottom of the stage with a real transparency mask. The old
- * page-coloured veil painted a flat cream block over the aurora backdrop, which showed as a hard
+ * page-coloured veil painted a flat block over the washed backdrop, which showed as a hard
  * white panel. The mask image is taller and wider than the board (50vh above, 48px each side) so
  * rising picks and card shadows are never clipped; below the board's bottom edge everything is
  * transparent, which the old veil covered with the page colour.

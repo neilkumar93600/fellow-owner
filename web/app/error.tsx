@@ -8,7 +8,7 @@ import { DISPLAY_H1 } from '@/lib/constants';
 import { routes } from '@/lib/routes';
 
 /**
- * A calm, text-only error panel in the 404's frame: frosted glass on the page aurora. Try again calls
+ * A calm, text-only error panel in the 404's frame: frosted glass on the parchment washes. Try again calls
  * `retry`, which re-fetches and re-renders the segment (Next 16 recommends it over `reset`, which only
  * clears the error state).
  */
@@ -33,7 +33,7 @@ export default function ErrorBoundary({
         <h1 className={DISPLAY_H1}>
           Something <em>went wrong</em>.
         </h1>
-        <p className="mt-3 max-w-[44ch] text-body text-ink">
+        <p className="mt-3 max-w-[44ch] text-small text-ink-soft">
           This page did not load, and it was nothing you did. Try again, or head home and come back
           in a minute.
         </p>

@@ -38,7 +38,7 @@ const plainClick = (event: React.MouseEvent) =>
   !(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0);
 
 /**
- * DESIGN.md Decision card: one frosted glass-strong card (28px) with the fan's face, name and room, the
+ * DESIGN.md Decision card: one frosted glass-strong card (40px, hairline, no shadow) with the fan's face, name and room, the
  * idea in their words, the AI's "Why", the match label, and four actions. The one blue action is
  * Feature when the item can be featured, else Reply. The card itself is the stack's only tab stop
  * (roving tabindex); while it animates out it is inert, so focus never lands on a leaving card.
@@ -66,7 +66,7 @@ export function DecisionCard({
       aria-hidden={isPresent ? undefined : true}
       aria-labelledby={`${id}-title`}
       aria-describedby={`${id}-who`}
-      className="glass-strong flex max-h-[calc(100svh-21rem)] min-h-[320px] flex-col rounded-[28px] p-5 sm:max-h-none sm:min-h-[360px] sm:p-7"
+      className="glass-strong flex max-h-[calc(100svh-21rem)] min-h-[320px] flex-col rounded-panel p-6 sm:max-h-none sm:min-h-[360px] sm:p-8"
     >
       <div className="flex shrink-0 flex-wrap items-start gap-3">
         <AvatarInitials name={item.name} image={item.avatarUrl} size={48} />
@@ -88,13 +88,13 @@ export function DecisionCard({
           {item.title}
         </h3>
         {item.quote && item.quote !== item.title ? (
-          <blockquote className="mt-3 line-clamp-3 text-body text-ink sm:line-clamp-4">
+          <blockquote className="mt-3 line-clamp-3 font-sans text-body text-ink sm:line-clamp-4">
             &ldquo;{item.quote}&rdquo;
           </blockquote>
         ) : null}
         {item.reason ? (
-          <p className="mt-3 text-small text-ink-soft">
-            <span className="font-medium text-ink">Why:</span> {item.reason}
+          <p className="mt-3 font-sans text-small text-ink-soft">
+            <span className="text-caption tracking-wide text-ink uppercase">Why</span> {item.reason}
           </p>
         ) : null}
       </div>
@@ -136,7 +136,7 @@ export function DecisionCard({
             aria-pressed={loved}
             aria-keyshortcuts="L"
             onClick={() => onLove(item)}
-            icon={<Heart aria-hidden className={cn(loved && 'fill-sunset text-sunset')} />}
+            icon={<Heart aria-hidden className={cn(loved && 'fill-lake text-lake')} />}
           >
             {loved ? 'Loved' : 'Love'}
           </Button>

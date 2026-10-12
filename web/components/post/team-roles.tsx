@@ -34,11 +34,11 @@ export function TeamRoles({ post }: { post: PostDetail }) {
   return (
     <>
       {post.roles.length ? (
-        <section aria-labelledby="roles-title" className="mt-6 border-t border-ink/10 pt-6">
+        <section aria-labelledby="roles-title" className="mt-6 border-t border-line pt-6">
           <h2 id="roles-title" className="text-h2 text-ink">
             {post.roles.some((slot) => !slot.filled) ? 'Open spots' : 'Every spot is filled'}
           </h2>
-          <ul className="mt-2 divide-y divide-ink/10">
+          <ul className="mt-2 divide-y divide-line">
             {[...post.roles]
               .sort((a, b) => Number(a.filled) - Number(b.filled))
               .map((slot) => (
@@ -87,7 +87,7 @@ export function TeamRoles({ post }: { post: PostDetail }) {
       ) : null}
 
       {team.length ? (
-        <section aria-labelledby="team-title" className="mt-6 border-t border-ink/10 pt-6">
+        <section aria-labelledby="team-title" className="mt-6 border-t border-line pt-6">
           <h2 id="team-title" className="text-h2 text-ink">
             The crew
           </h2>
@@ -102,7 +102,7 @@ export function TeamRoles({ post }: { post: PostDetail }) {
                   <p className="flex flex-wrap items-center gap-2 text-label-strong text-ink">
                     {member.name}
                     {member.isLead ? (
-                      <span className="inline-flex h-6 items-center rounded-full bg-white/70 px-2.5 text-caption text-ink">
+                      <span className="inline-flex h-6 items-center rounded-full bg-white/70 px-2.5 text-caption text-ink uppercase">
                         Lead
                       </span>
                     ) : null}

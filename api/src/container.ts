@@ -204,7 +204,7 @@ function createBaseServices(deps: CoreDeps) {
       logger,
       storage: deps.storage,
     }),
-    spaces: createSpacesService({ db, repos, access, logger, storage: deps.storage }),
+    spaces: createSpacesService({ db, repos, access, logger, storage: deps.storage, followers }),
     overview: createOverviewService({ repos, analyzer }),
     briefing: createBriefingService({ repos, ai, limits, discovery, logger }),
     promotions: createPromotionsService({

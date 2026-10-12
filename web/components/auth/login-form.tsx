@@ -246,7 +246,7 @@ function DemoRow({ className }: { className?: string }) {
   const buttonClass = cx('h-11 min-w-0 flex-1 px-4', FOCUS_RING);
   return (
     <section aria-labelledby="demo-row-title" className={cx('flex flex-col gap-3', className)}>
-      <h2 id="demo-row-title" className="text-small text-ink-muted">
+      <h2 id="demo-row-title" className="font-mono text-small text-ink-muted">
         Just looking? Open the demo, no account needed.
       </h2>
       <div className="flex gap-3">

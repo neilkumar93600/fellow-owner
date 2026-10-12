@@ -32,7 +32,7 @@ export function MyTeams({ handle, teams }: { handle: string; teams: MySpace['tea
               />
               <StatusPill status={status} />
             </div>
-            <h3 className="mt-3 line-clamp-2 text-h2 text-ink">
+            <h3 className="mt-3 line-clamp-2 font-display text-h2 [overflow-wrap:anywhere] text-ink">
               <Link
                 href={routes.fan.post(handle, post.id)}
                 className="rounded-sm underline-offset-4 group-hover:underline"

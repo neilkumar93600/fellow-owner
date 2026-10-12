@@ -32,8 +32,8 @@ export interface ChoicePillsProps<T extends string> {
   /** register('type'), spread on every radio. */
   input: UseFormRegisterReturn;
   /**
-   * segmented: SegmentedPill's shape off glass, a Dove Grey track with the selected segment in white.
-   * pills: wrapping outlined pills; the selected one takes the pressed look (ink fill, white words).
+   * segmented: SegmentedPill's shape off glass, a hairline-free frosted track with the selected segment in white.
+   * pills: wrapping outlined pills; the selected one takes the pressed look (periwinkle fill, lake words).
    */
   look?: 'segmented' | 'pills';
   helper?: React.ReactNode;
@@ -53,7 +53,7 @@ export function ChoicePills<T extends string>({
   const segmented = look === 'segmented';
   return (
     <fieldset className="flex min-w-0 flex-col">
-      <legend className="mb-1.5 text-small-strong text-ink">{legend}</legend>
+      <legend className="mb-1.5 text-caption text-ink uppercase">{legend}</legend>
       <div
         className={
           segmented ? 'flex rounded-full bg-white/70 p-1 sm:w-fit' : 'flex flex-wrap gap-2'
@@ -67,15 +67,15 @@ export function ChoicePills<T extends string>({
               className={cn(
                 'press inline-flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 select-none',
                 RING_WITHIN,
-                segmented && 'flex-1 sm:flex-none sm:px-6',
+                segmented && 'flex-1 px-2 whitespace-nowrap sm:flex-none sm:px-6',
                 segmented &&
                   (checked
-                    ? 'bg-white text-label text-ink'
-                    : 'text-body text-ink-soft hover:text-ink'),
+                    ? 'bg-white text-caption text-ink uppercase'
+                    : 'text-caption text-ink-soft uppercase hover:text-ink'),
                 !segmented &&
                   (checked
-                    ? 'border border-ink bg-ink text-label text-white'
-                    : 'border border-ink/10 bg-white text-label text-ink hover:bg-white/60'),
+                    ? 'border border-line bg-periwinkle text-caption text-lake uppercase'
+                    : 'border border-line bg-white/70 text-caption text-ink uppercase hover:bg-white'),
               )}
             >
               <input type="radio" value={option.value} className="sr-only" {...input} />
@@ -183,7 +183,7 @@ export function ChipsInput({
           {values.map((value) => (
             <li
               key={value}
-              className="inline-flex h-11 max-w-full items-center rounded-full bg-white/70 pl-4 text-label text-ink"
+              className="inline-flex h-11 max-w-full items-center rounded-full border border-line bg-white/70 pl-4 text-caption text-ink uppercase"
             >
               <span className="truncate">{value}</span>
               <button
@@ -217,8 +217,8 @@ export function LinksField({ max, helper }: { max: number; helper?: string }) {
 
   return (
     <fieldset className="flex min-w-0 flex-col">
-      <legend className="text-small-strong text-ink">
-        Links <span className="font-normal text-ink-soft">(optional)</span>
+      <legend className="text-caption font-medium text-ink uppercase">
+        Links <span className="font-normal text-ink-muted normal-case">(optional)</span>
       </legend>
       <p className="mt-1 text-small text-ink-soft">
         {helper ?? `Up to ${max}, such as a map, a video or your notes.`}

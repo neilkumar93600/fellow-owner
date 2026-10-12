@@ -3,7 +3,7 @@
 import { createSpaceSchema, displayNameSchema } from '@fellow-owners/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLenis } from 'lenis/react';
-import { ArrowLeft, Check, CircleAlert, Eye } from 'lucide-react';
+import { ArrowLeft, Check, CircleAlert, Eye, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -41,6 +41,10 @@ import { PlatformsStep } from './platforms-step';
 import { TasteStep } from './taste-step';
 
 type SubmitProblem = 'unavailable' | 'session' | 'exists';
+
+/** The API imports commenters from fetched Instagram, TikTok and YouTube profiles once the space exists. */
+const FANS_IMPORT_NOTE =
+  'We’re importing fans who comment on your recent posts. They’ll appear in Fans.';
 
 // zod strips the form-only `templateId`, and NaN followers fail as "Enter a number", so the
 // shared schema can validate the slightly looser form shape directly.
@@ -103,7 +107,11 @@ export function OnboardingStepper() {
   const sessionHandle =
     (session.data?.user as { username?: string | null } | undefined)?.username ?? null;
   const [changingHandle, setChangingHandle] = useState(false);
-  const imp = usePlatformImport();
+  const imp = usePlatformImport({
+    form,
+    platforms: values.platforms ?? [],
+    sessionName,
+  });
 
   stepRef.current = step;
 
@@ -275,7 +283,11 @@ export function OnboardingStepper() {
       finished.current = true;
       setProblem(null);
       clearDraft();
-      toast('Your space is live', { description: `${HOST}/${data.handle}` });
+      toast('Your space is live', {
+        description: imp.importsFans
+          ? `${HOST}/${data.handle}. ${FANS_IMPORT_NOTE}`
+          : `${HOST}/${data.handle}`,
+      });
       router.push('/dashboard');
     } catch (error) {
       setSubmitting(false);
@@ -357,7 +369,9 @@ export function OnboardingStepper() {
   async function onSignOut() {
     const result = await signOut().catch(() => ({ error: true }));
     if (result && 'error' in result && result.error) {
-      toast('Could not sign out', { description: 'Check your connection and try again.' });
+      toast('Could not sign out', {
+        description: 'Check your connection and try again.',
+      });
       return;
     }
     clearDraft();
@@ -414,13 +428,7 @@ export function OnboardingStepper() {
             {/* Below 1024px the preview sits under the form, so a jump to it shares the dots' line. */}
             <div className="flex min-h-11 items-center justify-between gap-3">
               <ProgressDots step={step} />
-              <a
-                href="#onboarding-preview"
-                className={cx(
-                  styles.press,
-                  'inline-flex h-11 items-center gap-1.5 rounded-full border border-line px-4 text-small-strong text-ink hover:bg-page lg:hidden',
-                )}
-              >
+              <a href="#onboarding-preview" className="btn btn-secondary h-11 px-4 lg:hidden">
                 <Eye aria-hidden strokeWidth={1.5} className="size-4" />
                 Preview
               </a>
@@ -438,7 +446,7 @@ export function OnboardingStepper() {
             </h1>
             <p className="mt-2 max-w-[46ch] text-body text-pretty text-ink-soft">{meta.helper}</p>
 
-            <div key={step} className={cx(styles.stepEnter, 'mt-8')}>
+            <div key={step} className={cx(styles.stepEnter, 'mt-8', step === 1 && 'hidden')}>
               {waitingForSession ? (
                 <div
                   aria-busy
@@ -460,10 +468,20 @@ export function OnboardingStepper() {
               ) : step === 0 ? (
                 <HandleStep status={handleStatus} handleInputRef={handleInputRef} />
               ) : null}
-              {step === 1 ? <PlatformsStep imp={imp} /> : null}
               {step === 2 ? <CommunitiesStep onEditorPreview={setEditorPreview} imp={imp} /> : null}
               {step === 3 ? <TasteStep imp={imp} /> : null}
             </div>
+            {/* Always mounted: a lookup started here finishes (and saves) after Continue. */}
+            <div hidden={step !== 1} className={cx(styles.stepEnter, 'mt-8')}>
+              <PlatformsStep imp={imp} active={step === 1} />
+            </div>
+
+            {step === LAST_STEP && imp.importsFans ? (
+              <p className="mt-8 flex items-start gap-2 text-small text-ink-soft">
+                <Users aria-hidden strokeWidth={1.5} className="mt-px size-4 shrink-0" />
+                <span>{FANS_IMPORT_NOTE}</span>
+              </p>
+            ) : null}
 
             {problem ? (
               <SubmitAlert
@@ -536,7 +554,7 @@ export function OnboardingStepper() {
 
 /**
  * DESIGN.md Join progress: the current step a 24 by 8px ink pill, done steps 8px ink dots, upcoming
- * 8px Field Grey dots (3.3:1), and "Step n of 4" in Small ink-muted beside them. The dot group carries
+ * 8px Smoke dots (4:1), and "Step n of 4" in mono caps ink-muted beside them. The dot group carries
  * the same text as its label, so the visible copy is hidden from screen readers rather than read twice.
  */
 function ProgressDots({ step }: { step: StepIndex }) {
@@ -549,12 +567,12 @@ function ProgressDots({ step }: { step: StepIndex }) {
             key={s.key}
             className={cx(
               'h-2 rounded-full',
-              i === step ? 'w-6 bg-ink' : i < step ? 'w-2 bg-ink' : 'w-2 bg-(--line-field)',
+              i === step ? 'w-6 bg-ink' : i < step ? 'w-2 bg-ink' : 'w-2 bg-line-field',
             )}
           />
         ))}
       </div>
-      <p aria-hidden className="text-small text-ink-muted">
+      <p aria-hidden className="text-caption text-ink-muted uppercase">
         {text}
       </p>
     </div>

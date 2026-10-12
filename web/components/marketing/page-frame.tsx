@@ -3,7 +3,7 @@ import { cn } from '@/components/ui/cn';
 
 /**
  * The frame for marketing and legal pages, under the landing navbar: one frosted panel floating on the page
- * aurora, so only the reading column sits on glass. It owns <main id="main">, where the navbar's skip link
+ * washes, so only the reading column sits on glass. It owns <main id="main">, where the navbar's skip link
  * lands. `wide` swaps the 720px reading column for a 1120px one that card grids need.
  */
 export function PageFrame({
@@ -41,7 +41,7 @@ export function longDate(iso: string): string {
 /** A Dove Grey date badge: "Last updated October 2, 2026", or a post's date. */
 export function DateBadge({ iso, prefix }: { iso: string; prefix?: string }) {
   return (
-    <span className="inline-flex h-6 items-center rounded-full bg-table-head px-2.5 text-caption text-ink">
+    <span className="glass-chip inline-flex h-6 items-center rounded-full px-2.5 text-caption text-ink uppercase">
       {prefix ? `${prefix} ` : null}
       <time dateTime={iso}>{longDate(iso)}</time>
     </span>

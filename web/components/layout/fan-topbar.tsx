@@ -25,8 +25,8 @@ export interface FanTopbarProps {
 /**
  * DESIGN.md Fan top bar: the creator (avatar and name, back to the bio link) and the viewer's avatar
  * menu in one frosted strip, then the community switcher as horizontal glass pills; the current
- * community is a white chip with Label Strong, a 3px sunset dot and aria-current, and is scrolled into
- * view. It scrolls with the page and never sticks. Every control is 44px.
+ * community is a periwinkle chip with a lake word and aria-current, and is scrolled into
+ * view. Labels are uppercase mono. It scrolls with the page and never sticks. Every control is 44px.
  */
 export function FanTopbar({ space, communities, viewer, className }: FanTopbarProps) {
   const pathname = usePathname();
@@ -54,7 +54,7 @@ export function FanTopbar({ space, communities, viewer, className }: FanTopbarPr
           className="inline-flex h-11 min-w-0 press items-center gap-3 rounded-full pr-4 pl-1 hover:bg-white/60"
         >
           <AvatarInitials name={space.displayName} image={space.avatarUrl} size={40} />
-          <span className="truncate text-label-strong text-ink">{space.displayName}</span>
+          <span className="truncate text-label-strong text-ink uppercase">{space.displayName}</span>
         </Link>
         <div className="flex items-center gap-2">
           <Popover open={notifOpen} onOpenChange={setNotifOpen}>
@@ -95,12 +95,10 @@ export function FanTopbar({ space, communities, viewer, className }: FanTopbarPr
                   href={href}
                   aria-current={current ? 'page' : undefined}
                   className={cn(
-                    'relative inline-flex h-11 press items-center rounded-full px-4 whitespace-nowrap text-ink',
-                    // The active dot: 3px sunset under the word, the same cue as the tab bar.
-                    'after:absolute after:bottom-1 after:left-1/2 after:size-[3px] after:-translate-x-1/2 after:rounded-full after:bg-sunset',
+                    'inline-flex h-11 press items-center rounded-full px-4 text-caption whitespace-nowrap uppercase',
                     current
-                      ? 'glass-chip bg-white/90 text-label-strong'
-                      : 'glass-chip text-label after:hidden hover:bg-white/85',
+                      ? 'glass-chip bg-periwinkle text-lake'
+                      : 'glass-chip text-ink hover:bg-white/85',
                   )}
                 >
                   {community.name}

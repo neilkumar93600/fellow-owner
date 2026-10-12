@@ -6,7 +6,7 @@ import { type CardTint, TINT_STYLES } from './tint';
 export interface EmptyStateProps {
   icon: LucideIcon;
   tint?: CardTint;
-  /** Optional short lead in Label Strong. */
+  /** Optional short serif lead. */
   title?: string;
   /** One sentence that teaches: "No pitches yet. Your bio link has a Send a pitch button." */
   body: string;
@@ -16,7 +16,7 @@ export interface EmptyStateProps {
 }
 
 /**
- * DESIGN.md Empty state: a 56px icon tile in a pastel tint, one Body sentence, one action, centred where
+ * Empty state: a 56px icon tile in a pastel tint, one mono sentence, one action, centred where
  * the list would be. No illustration. Words are ink, so it reads on a card and on the bare shell alike;
  * give it the list's footprint through className (The Same Shape Rule).
  */
@@ -36,12 +36,12 @@ export function EmptyState({
         className,
       )}
     >
-      <span className={cn('grid size-14 place-items-center rounded-md', style.tile)}>
+      <span className={cn('grid size-14 place-items-center rounded-2xl', style.tile)}>
         <Icon aria-hidden="true" strokeWidth={1.5} className={cn('size-6', style.icon)} />
       </span>
       <div className="flex max-w-[44ch] flex-col gap-1">
-        {title ? <p className="text-label-strong text-ink">{title}</p> : null}
-        <p className="text-body text-ink">{body}</p>
+        {title ? <p className="font-display text-h2 text-ink">{title}</p> : null}
+        <p className="text-small text-ink-soft">{body}</p>
       </div>
       {action}
     </div>

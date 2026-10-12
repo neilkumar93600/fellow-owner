@@ -110,7 +110,7 @@ function Section({
 }) {
   return (
     <section aria-labelledby={`${id}-title`} id={id} className={className}>
-      <h2 id={`${id}-title`} className="mb-4 text-h2 text-ink">
+      <h2 id={`${id}-title`} className="mb-4 font-display text-h2 text-ink">
         {title}
       </h2>
       {children}
@@ -120,7 +120,7 @@ function Section({
 
 function WhiteCard({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`rounded-3xl border border-white/70 bg-white/70 p-4 sm:p-6 ${className ?? ''}`}>
+    <div className={`rounded-3xl border border-line bg-white/70 p-4 sm:p-6 ${className ?? ''}`}>
       {children}
     </div>
   );
@@ -179,7 +179,7 @@ export default function PrimitivesKitPage() {
 
           <fieldset
             aria-label="Communities"
-            className="glass scrollbar-band m-0 flex gap-2 rounded-3xl border-0 p-2"
+            className="glass scrollbar-band m-0 min-w-0 flex gap-2 rounded-3xl border-0 p-2"
           >
             {COMMUNITIES.map((name) => (
               <Button key={name} variant="secondary" surface="glass" size="md" className="shrink-0">
@@ -191,12 +191,15 @@ export default function PrimitivesKitPage() {
           <div className="mt-auto grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <div className={`rounded-3xl p-6 ${TINT_STYLES.peach.card}`}>
               <p className="text-small-strong text-ink-soft">Fans</p>
-              <NumberTicker value={1200} className="text-stat text-ink-soft" />
+              <NumberTicker
+                value={1200}
+                className="font-display text-stat font-normal text-ink-soft"
+              />
               <p className="mt-4 text-trend text-success-ink">
                 +18% <span className="text-body text-ink-soft">vs last week</span>
               </p>
             </div>
-            <div className="rounded-3xl border border-white/70 bg-white/60 p-6">
+            <div className="rounded-3xl border border-line bg-white/60 p-6">
               <p className="mb-3 text-small-strong text-ink-soft">Loading, same shape</p>
               <div aria-busy="true" className="flex items-center gap-4">
                 <Skeleton className="size-14 rounded-md" />
@@ -207,17 +210,17 @@ export default function PrimitivesKitPage() {
               </div>
               <Skeleton className="mt-4 h-6 w-full" />
             </div>
-            <div className="rounded-3xl border border-white/70 bg-white/70 p-6">
+            <div className="rounded-3xl border border-line bg-white/70 p-6">
               <p className="mb-3 text-small-strong text-ink-soft">AI chips</p>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex h-6 items-center gap-1.5 rounded-full bg-aurora-mint px-2.5 text-caption text-ink">
+                <span className="inline-flex h-6 items-center gap-1.5 rounded-full bg-periwinkle px-2.5 text-caption text-ink">
                   <Sparkles aria-hidden="true" strokeWidth={1.5} className="size-3.5" />
                   AI pick
                 </span>
                 <span className="text-small text-ink-soft">Priya has made two city food maps.</span>
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="sweep inline-flex h-6 items-center rounded-full border border-white/70 bg-white/60 px-2.5 text-caption text-ink">
+                <span className="sweep inline-flex h-6 items-center rounded-full border border-line bg-white/60 px-2.5 text-caption text-ink">
                   AI reviewing
                 </span>
                 <span className="inline-flex items-center gap-2 text-small text-ink-soft">
@@ -484,10 +487,10 @@ export default function PrimitivesKitPage() {
 
       <Section id="type" title="Type roles">
         <WhiteCard className="flex flex-col gap-3">
-          <p className="text-display text-ink">Display: Good morning, Mira</p>
-          <p className="text-h1 text-ink">H1: Budget Travel</p>
-          <p className="text-h2 text-ink">H2: Your AI briefing</p>
-          <p className="text-stat text-ink-soft">1,200 1,111</p>
+          <p className="font-display text-display text-ink">Display: Good morning, Mira</p>
+          <p className="font-display text-h1 text-ink">H1: Budget Travel</p>
+          <p className="font-display text-h2 text-ink">H2: Your AI briefing</p>
+          <p className="font-display text-stat font-normal text-ink-soft">1,200 1,111</p>
           <p className="text-count text-ink-soft">214 111</p>
           <p className="text-trend text-success-ink">+18% +11%</p>
           <p className="text-body text-ink">

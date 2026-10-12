@@ -12,8 +12,8 @@ export interface FitPillProps {
 }
 
 /**
- * Legacy name for the match label: callers that still render <FitPill score reason /> get the Golden
- * Hour Frost MatchLabel (words, no number) with the reason in a tooltip. New code uses MatchLabel and
+ * Legacy name for the match label: callers that still render <FitPill score reason /> get the Parchment
+ * Frost MatchLabel (words, no number) with the reason in a tooltip. New code uses MatchLabel and
  * shows the reason as its own line. Fit numbers belong in side panels only.
  */
 export function FitPill({ score, reason, className }: FitPillProps) {

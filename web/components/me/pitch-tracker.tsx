@@ -139,14 +139,14 @@ function Dot({ state, label }: { state: StepState; label: string }) {
   switch (state) {
     case 'done':
       return (
-        <span className={cn(base, 'bg-ink text-white')}>
+        <span className={cn(base, 'bg-lake text-white')}>
           <Check {...icon} />
         </span>
       );
     case 'current':
       return (
-        <span className={cn(base, 'border-2 border-ink bg-aurora-peach')}>
-          <span aria-hidden="true" className="size-2 rounded-full bg-ink" />
+        <span className={cn(base, 'border-2 border-lake bg-periwinkle')}>
+          <span aria-hidden="true" className="size-2 rounded-full bg-lake" />
         </span>
       );
     case 'end':

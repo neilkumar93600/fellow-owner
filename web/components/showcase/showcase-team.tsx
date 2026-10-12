@@ -20,11 +20,11 @@ export function ShowcaseTeam({ credits, links }: { credits: PostCredit[]; links:
           {credits.map((credit) => (
             <li
               key={`${credit.name}-${credit.role}`}
-              className="flex items-center gap-3 border-b border-ink/10 py-3 last:border-b-0"
+              className="flex items-center gap-3 border-b border-line py-3 last:border-b-0"
             >
               <AvatarInitials name={credit.name} image={credit.avatarUrl} size={40} />
               <div className="flex min-w-0 flex-col">
-                <p className="text-label text-ink">{credit.name}</p>
+                <p className="truncate text-label text-ink">{credit.name}</p>
                 <p className="text-small text-ink-soft">{credit.role}</p>
               </div>
             </li>
@@ -34,7 +34,7 @@ export function ShowcaseTeam({ credits, links }: { credits: PostCredit[]; links:
 
       {links.length > 0 ? (
         <>
-          <h3 className="mt-6 text-label text-ink">Links</h3>
+          <h3 className="mt-6 text-caption uppercase text-ink-soft">Links</h3>
           <ul className="mt-1 flex flex-col">
             {links.map((link) => (
               <li key={link.url}>

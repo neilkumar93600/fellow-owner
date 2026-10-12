@@ -6,7 +6,7 @@ import { cn } from './cn';
 import { POPUP_SURFACE } from './popover';
 
 /**
- * DESIGN.md Popover and menu: the row menu, the avatar menu. Arrow keys move between items, typing jumps
+ * Popover and menu: the row menu, the avatar menu. Arrow keys move between items, typing jumps
  * to one, Esc closes and focus returns to the trigger (Base UI). Style the trigger through `render`:
  * `<MenuTrigger render={<Button variant="ghost" className="text-ink-soft" aria-label="More actions for Arjun Rao" />}>…`.
  */
@@ -46,9 +46,9 @@ export function MenuContent({
   );
 }
 
-/** 40px rows in Body ink with an optional 16px icon; the highlighted row takes a 5% ink wash. */
+/** 40px rows in mono ink with an optional 16px icon; the highlighted row takes a 5% ink wash. */
 const ITEM = cn(
-  'flex h-10 cursor-pointer items-center gap-3 rounded-sm px-3 text-body text-ink select-none',
+  'flex h-10 cursor-pointer items-center gap-3 rounded-xl px-3 text-small text-ink select-none',
   'transition-colors duration-150 ease-out-quart data-highlighted:bg-ink/5',
   'data-disabled:cursor-not-allowed data-disabled:opacity-50',
   '[&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:stroke-[1.5]',
@@ -57,7 +57,7 @@ const ITEM = cn(
 export type MenuItemProps = Omit<MenuPrimitive.Item.Props, 'className'> & {
   className?: string;
   icon?: React.ReactNode;
-  /** Archive, delete: a Signal Red icon and Brick Red words. */
+  /** Archive, delete: a red icon and deep red words. */
   destructive?: boolean;
 };
 

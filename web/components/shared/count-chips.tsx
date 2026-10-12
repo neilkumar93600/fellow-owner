@@ -17,10 +17,10 @@ export interface CountChipsProps {
 }
 
 /**
- * DESIGN.md Count chips (Ideas): a full-width glass band (radius 28, 8px padding, which is also the focus
+ * Count chips (Ideas): a full-width glass band (radius 40, 8px padding, which is also the focus
  * ring's clearance) that scrolls sideways; the last chip clips at the edge to show there is more. Each
- * chip is an 80px Paper White card, 160px wide or wider for a long name: a Small ink-muted label over a Count figure in ink-soft. Active:
- * ink fill, white words, aria-pressed. Hover: Pure White.
+ * chip is an 80px hairline card, 160px wide or wider for a long name: a mono caps ink-muted label over a serif count figure.
+ * Active: ink fill, white words, aria-pressed. Hover: whiter.
  */
 export function CountChips({ label, chips, className }: CountChipsProps) {
   return (
@@ -37,14 +37,21 @@ export function CountChips({ label, chips, className }: CountChipsProps) {
           aria-pressed={chip.active}
           onClick={chip.onSelect}
           className={cn(
-            'press flex h-20 min-w-40 shrink-0 flex-col items-start justify-center gap-0.5 rounded-xl px-4 py-3 text-left whitespace-nowrap',
-            chip.active ? 'bg-ink text-white' : 'bg-white/60 text-ink-soft hover:bg-white/90',
+            'press flex h-20 min-w-40 shrink-0 flex-col items-start justify-center gap-0.5 rounded-3xl border px-4 py-3 text-left whitespace-nowrap',
+            chip.active
+              ? 'border-ink bg-ink text-white'
+              : 'border-line bg-white/60 text-ink-soft hover:bg-white/90',
           )}
         >
-          <span className={cn('text-small', chip.active ? 'text-white' : 'text-ink-muted')}>
+          <span
+            className={cn(
+              'text-caption tracking-tight uppercase',
+              chip.active ? 'text-white' : 'text-ink-muted',
+            )}
+          >
             {chip.label}
           </span>
-          <span className="text-count">{formatCompact(chip.count)}</span>
+          <span className="font-display text-count font-normal">{formatCompact(chip.count)}</span>
         </button>
       ))}
     </div>

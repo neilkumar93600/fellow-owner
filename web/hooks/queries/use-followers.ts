@@ -8,10 +8,12 @@ import {
   deleteFollower,
   getFollowers,
   importFollowers,
+  importPlatformFans,
   importYoutube,
   tagFollowers,
   updateFollower,
 } from '@/lib/api/followers';
+import { getMySpace } from '@/lib/api/studio';
 import { shouldRetry } from '@/lib/query-client';
 import { toastError } from '@/lib/toast';
 
@@ -108,6 +110,21 @@ export function useImportFollowers() {
 /** Commenters on a YouTube channel; the import panel shows its own errors inline. */
 export function useImportYoutube() {
   return useFollowerMutation(importYoutube, true);
+}
+
+/**
+ * Fans from a profile's comments: `mutate({ url })`. The space handle comes from the studio
+ * space query (fetched once if it is not cached). The platform card shows its own errors inline.
+ */
+export function useImportPlatformFans() {
+  const queryClient = useQueryClient();
+  return useFollowerMutation(async ({ url }: { url: string }) => {
+    const space = await queryClient.ensureQueryData({
+      queryKey: studioKeys.space,
+      queryFn: ({ signal }) => getMySpace(signal),
+    });
+    return importPlatformFans(space.handle, url);
+  }, true);
 }
 
 /** Add or remove one community on the selected followers. */

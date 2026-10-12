@@ -31,11 +31,11 @@ function prefersReducedMotion() {
 }
 
 /**
- * Marketing navbar: transparent bar on the hero, floating glass pill after 24px of scroll, a glass chip with
- * a blue dot on the section in view, glass menu sheet below 1024px. Owner rule: the bar's only button is
+ * Marketing navbar: transparent bar on the hero, floating glass pill after 24px of scroll, a periwinkle chip with
+ * a lake dot on the section in view, glass menu sheet below 1024px. Owner rule: the bar's only button is
  * Get started (to /start, which skips auth for a signed-in visitor). It is glass while the hero's own
- * Get started ([data-hero-cta]) is on screen and rainbow once that scrolls away, so there is at most one
- * rainbow per viewport. The sheet holds the section links and the same one button. Marketing paths only.
+ * Get started ([data-hero-cta]) is on screen and Lake Blue once that scrolls away, so there is at most one
+ * Lake Blue per viewport. The sheet holds the section links and the same one button. Marketing paths only.
  */
 export function Navbar() {
   const pathname = usePathname();
@@ -97,7 +97,7 @@ function SiteNav({ onLanding }: { onLanding: boolean }) {
 
           <div ref={actionsRef} className={styles.actions}>
             <GetStartedButton
-              variant={heroCta ? 'glass' : 'rainbow'}
+              variant={heroCta ? 'glass' : 'primary'}
               className={cn(styles.action, styles.creator, styles.item)}
             />
             <button
@@ -158,7 +158,7 @@ function SiteNav({ onLanding }: { onLanding: boolean }) {
           </nav>
           <div className={styles.sheetActions}>
             <GetStartedButton
-              variant={heroCta ? 'glass' : 'rainbow'}
+              variant={heroCta ? 'glass' : 'primary'}
               size="lg"
               className={styles.sheetButton}
               onClick={close}

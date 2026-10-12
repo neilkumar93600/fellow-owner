@@ -38,8 +38,10 @@ export function FansOfTheWeek({
                   className="ml-auto size-5 shrink-0 text-lake"
                 />
               </figcaption>
-              <blockquote className="line-clamp-5 text-body text-ink">{fan.note}</blockquote>
-              <p className="text-caption text-ink-soft">Spotlight from {firstName}</p>
+              <blockquote className="line-clamp-5 font-sans text-body text-ink">
+                {fan.note}
+              </blockquote>
+              <p className="text-caption uppercase text-ink-soft">Spotlight from {firstName}</p>
             </figure>
           </li>
         ))}

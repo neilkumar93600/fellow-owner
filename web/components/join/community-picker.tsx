@@ -27,7 +27,7 @@ export function CommunityPicker({
 }: CommunityPickerProps) {
   return (
     <fieldset className="min-w-0">
-      <legend className="mb-3 text-small-strong text-ink">Rooms</legend>
+      <legend className="mb-3 text-caption uppercase text-ink-soft">Rooms</legend>
       <div className="grid gap-4 @xl:grid-cols-2">
         {communities.map((community) => {
           const on = selected.includes(community.id);
@@ -66,15 +66,17 @@ export function CommunityPicker({
                 ) : null}
               </span>
               <span className="flex flex-col gap-1.5 p-4">
-                <span id={nameId} className="text-h2 text-ink">
+                <span id={nameId} className="font-display text-h2 text-ink">
                   {community.name}
                 </span>
-                <span className="text-small text-ink-soft">
+                <span className="text-caption uppercase text-ink-soft">
                   <span className="tabular-nums">{formatNumber(community.memberCount)}</span>{' '}
                   {pluralize(community.memberCount, 'fan')}
                 </span>
                 {community.description ? (
-                  <span className="line-clamp-2 text-body text-ink">{community.description}</span>
+                  <span className="line-clamp-2 font-sans text-body text-ink">
+                    {community.description}
+                  </span>
                 ) : null}
                 {reasons[community.id] ? (
                   <span className="flex flex-wrap items-center gap-x-2 gap-y-1">

@@ -118,14 +118,14 @@ export function TasteProfileForm({ space, isPending = false }: TasteProfileFormP
       noValidate
       onSubmit={save}
       aria-labelledby="taste-title"
-      className="flex min-w-0 flex-col gap-8 glass-strong rounded-panel p-6"
+      className="glass-strong flex min-w-0 flex-col gap-8 rounded-panel p-6"
     >
       <div>
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <h2 id="taste-title" className="text-h2 text-ink">
             Your taste
           </h2>
-          <p className="text-small text-ink-muted">Version {version}</p>
+          <p className="text-caption text-ink-muted uppercase">Version {version}</p>
         </div>
         <p className="mt-2 max-w-[68ch] text-body text-ink">
           Your AI reads these lines before it rates an idea or a message, so it judges the way you
@@ -199,7 +199,7 @@ function LineList({
 
   return (
     <section aria-labelledby={titleId} data-list={name} className="min-w-0">
-      <h3 id={titleId} className="text-label-strong text-ink">
+      <h3 id={titleId} className="text-caption font-medium tracking-tight text-ink uppercase">
         {title}
       </h3>
       <p className="mt-1 text-small text-ink-muted">{helper}</p>
@@ -227,6 +227,8 @@ function LineList({
                       value={line.text}
                       rows={3}
                       onChange={(event) => change(event.target.value)}
+                      // Captions and posts: a long read, so the sans.
+                      className="font-sans"
                     />
                   ) : (
                     <TextField value={line.text} onChange={(event) => change(event.target.value)} />

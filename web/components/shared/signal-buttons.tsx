@@ -77,7 +77,9 @@ export function SignalButtons({
             )}
           >
             {SIGNAL_LABELS[kind]}
-            <span className={cn('text-small-strong', pressed ? 'text-white' : 'text-ink-soft')}>
+            <span
+              className={cn('text-small font-medium', pressed ? 'text-white' : 'text-ink-soft')}
+            >
               {formatCompact(count(kind))}
             </span>
           </Button>

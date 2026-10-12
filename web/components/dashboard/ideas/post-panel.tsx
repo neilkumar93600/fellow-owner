@@ -54,7 +54,7 @@ function Section({
   return (
     <section className="flex flex-col gap-3 border-line border-t pt-5">
       <div className="flex min-h-6 items-center justify-between gap-3">
-        <h3 className="text-small-strong text-ink">{title}</h3>
+        <h3 className="text-small-strong text-ink uppercase">{title}</h3>
         {action}
       </div>
       {children}
@@ -68,7 +68,7 @@ function Chips({ items }: { items: string[] }) {
       {items.map((item) => (
         <li
           key={item}
-          className="inline-flex h-6 items-center rounded-full bg-table-head px-2.5 text-caption text-ink"
+          className="inline-flex h-6 items-center rounded-full bg-table-head px-2.5 text-caption text-ink uppercase"
         >
           {item}
         </li>
@@ -80,7 +80,7 @@ function Chips({ items }: { items: string[] }) {
 /**
  * The post side panel on /dashboard/ideas?item=: the AI read (summary, fit with its reason, tags and
  * skills, thumbs on the read), the body at 68ch, roles, team, signals and the comment thread with its
- * box. Footer: Hide (confirmed) or Unhide, Rescore, and the panel's one blue Spotlight, full width.
+ * box. Footer: Hide (confirmed) or Unhide, Rescore, and the panel's one Lake Blue Spotlight, full width.
  * Every change goes to the API; the hooks refresh the lists.
  */
 export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: PostPanelProps) {
@@ -246,12 +246,12 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
             ) : (
               <>
                 {ai.summary ? (
-                  <p className="max-w-[68ch] text-body text-ink">{ai.summary}</p>
+                  <p className="max-w-[68ch] font-sans text-body text-ink">{ai.summary}</p>
                 ) : null}
                 {ai.fitScore != null && ai.fitReason ? (
                   <div className="flex items-start gap-3">
                     <FitPill score={ai.fitScore} reason={ai.fitReason} className="shrink-0" />
-                    <p className="text-small text-ink-soft">
+                    <p className="min-w-0 font-sans text-small text-ink-soft">
                       {ai.fitReason}{' '}
                       <span className="tabular-nums">
                         (match score {Math.round(ai.fitScore)} of 100)
@@ -270,7 +270,7 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
               <dl className="grid grid-cols-[auto_1fr] items-start gap-x-4 gap-y-2">
                 {ai.tags.length ? (
                   <>
-                    <dt className="pt-0.5 text-small text-ink-muted">Tags</dt>
+                    <dt className="pt-0.5 text-caption text-ink-muted uppercase">Tags</dt>
                     <dd>
                       <Chips items={ai.tags} />
                     </dd>
@@ -278,7 +278,7 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
                 ) : null}
                 {ai.skills.length ? (
                   <>
-                    <dt className="pt-0.5 text-small text-ink-muted">Skills</dt>
+                    <dt className="pt-0.5 text-caption text-ink-muted uppercase">Skills</dt>
                     <dd>
                       <Chips items={ai.skills} />
                     </dd>
@@ -289,7 +289,7 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
           </Section>
 
           <Section title={POST_TYPE_LABELS[post.type]}>
-            <p className="max-w-[68ch] text-body whitespace-pre-line text-ink">
+            <p className="max-w-[68ch] font-sans text-body break-words whitespace-pre-line text-ink">
               {full?.body ?? post.excerpt}
             </p>
             {full?.links.length ? (
@@ -300,7 +300,7 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
                       href={link.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-body text-ink underline underline-offset-4"
+                      className="text-body break-all text-ink underline underline-offset-4"
                     >
                       {link.label}
                     </a>
@@ -318,7 +318,9 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
                     key={slot.role}
                     className="flex min-h-11 items-center justify-between gap-3 border-line-row border-b py-2 last:border-b-0"
                   >
-                    <span className="text-body text-ink">{slot.role}</span>
+                    <span className="min-w-0 text-body [overflow-wrap:anywhere] text-ink">
+                      {slot.role}
+                    </span>
                     <span className="flex items-center gap-2">
                       {slot.filled && slot.filledBy ? (
                         <span className="text-small text-ink-muted">{slot.filledBy.name}</span>
@@ -346,7 +348,9 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
                   <li key={member.name} className="flex items-center gap-3">
                     <AvatarInitials name={member.name} image={member.image} size={28} />
                     <span className="min-w-0">
-                      <span className="block text-small-strong text-ink">{member.name}</span>
+                      <span className="block truncate text-small-strong text-ink">
+                        {member.name}
+                      </span>
                       {member.note ? (
                         <span className="block text-small text-ink-muted">{member.note}</span>
                       ) : null}
@@ -362,11 +366,11 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
           <Section title="What fans said">
             <dl className="grid grid-cols-2 gap-3">
               <div>
-                <dt className="text-small text-ink-muted">Would use this</dt>
+                <dt className="text-caption text-ink-muted uppercase">Would use this</dt>
                 <dd className="text-count text-ink-soft">{formatNumber(post.useCount)}</dd>
               </div>
               <div>
-                <dt className="text-small text-ink-muted">Count me in</dt>
+                <dt className="text-caption text-ink-muted uppercase">Count me in</dt>
                 <dd className="text-count text-ink-soft">{formatNumber(post.buildCount)}</dd>
               </div>
             </dl>
@@ -392,7 +396,7 @@ export function PostPanel({ post, detail, open, onOpenChange, finalFocus }: Post
                       </p>
                       <p
                         className={cn(
-                          'mt-1 max-w-[68ch] text-body',
+                          'mt-1 max-w-[68ch] font-sans text-body break-words',
                           comment.hidden ? 'text-ink-muted' : 'text-ink',
                         )}
                       >

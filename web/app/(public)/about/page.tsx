@@ -102,7 +102,7 @@ const PRINCIPLES: readonly { title: string; body: string }[] = [
 function Tile({ tint, icon: Icon }: { tint: CardTint; icon: LucideIcon }) {
   const style = TINT_STYLES[tint];
   return (
-    <span className={cn('grid size-14 shrink-0 place-items-center rounded-md', style.tile)}>
+    <span className={cn('grid size-14 shrink-0 place-items-center rounded-2xl', style.tile)}>
       <Icon aria-hidden className={cn('size-6 stroke-[1.5]', style.icon)} />
     </span>
   );
@@ -138,11 +138,11 @@ export default function Page() {
           {AUDIENCES.map((audience) => (
             <li
               key={audience.title}
-              className={cn('min-w-0 rounded-3xl p-6', TINT_STYLES[audience.tint].card)}
+              className={cn('min-w-0 rounded-panel p-6', TINT_STYLES[audience.tint].card)}
             >
               <div className="flex items-center gap-4">
                 <Tile tint={audience.tint} icon={audience.icon} />
-                <h3 className="text-h1 text-ink">{audience.title}</h3>
+                <h3 className="font-display text-h1 text-ink">{audience.title}</h3>
               </div>
               <p className="mt-5 text-body text-ink">{audience.body}</p>
               <ul className="mt-4 flex flex-col gap-2 text-body text-ink">
@@ -162,13 +162,13 @@ export default function Page() {
         <h2 id="why-title" className="text-h2 text-ink">
           Why fellow owners, not followers
         </h2>
-        <p className="mt-3 text-body text-ink">
+        <p className="mt-3 font-sans text-body text-ink">
           A creator with a million followers gets thousands of messages a week. Brand offers, local
           tips and talented people sit in the same pile as spam and fan mail, so most of them go
           unread. The audience has real skills, from local guides and photographers to video editors
           and translators, but no structure to find each other or make anything together.
         </p>
-        <p className="mt-3 text-body text-ink">
+        <p className="mt-3 font-sans text-body text-ink">
           The usual fixes fall short. Paid DMs sort fans by who can pay, not by the quality of the
           idea. Group chats get loud faster than anyone can read them. Link-in-bio pages and forms
           go one way, with no community and no way to tell the good from the loud. We think the
@@ -185,29 +185,26 @@ export default function Page() {
           {STEPS.map((step, index) => (
             <li
               key={step.title}
-              className={cn('flex min-w-0 flex-col rounded-3xl p-6', TINT_STYLES[step.tint].card)}
+              className={cn('flex min-w-0 flex-col rounded-panel p-6', TINT_STYLES[step.tint].card)}
             >
               <div className="flex items-center justify-between gap-4">
                 <Tile tint={step.tint} icon={step.icon} />
                 <span className="text-small-strong text-ink-soft">Step {index + 1}</span>
               </div>
-              <h3 className="mt-5 text-h2 text-ink">{step.title}</h3>
+              <h3 className="mt-5 font-display text-h2 text-ink">{step.title}</h3>
               <p className="mt-2 text-body text-ink">{step.body}</p>
             </li>
           ))}
         </ol>
       </section>
 
-      <section
-        aria-labelledby="principles-title"
-        className="mt-12 rounded-3xl border border-white/70 bg-white/60 p-6"
-      >
+      <section aria-labelledby="principles-title" className="mt-12 rounded-panel glass p-6">
         <h2 id="principles-title" className="text-h2 text-ink">
           What we hold to
         </h2>
         <dl className="mt-2 grid gap-x-10 md:grid-cols-2">
           {PRINCIPLES.map((principle) => (
-            <div key={principle.title} className="border-b border-ink/10 py-4">
+            <div key={principle.title} className="border-b border-line py-4">
               <dt className="text-label-strong text-ink">{principle.title}</dt>
               <dd className="mt-1 max-w-[60ch] text-body text-ink-soft">{principle.body}</dd>
             </div>

@@ -4,7 +4,7 @@ import { CommunityChip } from '@/components/shared/community-chip';
 import { cn } from '@/components/ui/cn';
 import { countdown } from './countdown-core.mjs';
 
-/** Open: the time left (peach once under a day). Closed: a quiet "Closed". Words are ink on an aurora tint. */
+/** Open: the time left (warm tint once under a day). Closed: a quiet "Closed". Words are ink on a pale tint; uppercase mono caption. */
 export function CountdownPill({
   challenge,
   now,
@@ -18,7 +18,7 @@ export function CountdownPill({
   return (
     <span
       className={cn(
-        'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-caption whitespace-nowrap text-ink',
+        'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-caption whitespace-nowrap text-ink uppercase',
         closed
           ? 'bg-white/75 ring-1 ring-ink/10 ring-inset'
           : left.urgent

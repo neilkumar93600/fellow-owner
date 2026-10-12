@@ -91,11 +91,11 @@ export default function Page() {
           return (
             <li
               key={channel.name}
-              className={cn('flex min-w-0 flex-col rounded-3xl p-6', style.card)}
+              className={cn('flex min-w-0 flex-col rounded-panel p-6', style.card)}
             >
               <div className="flex items-center gap-4">
                 <span
-                  className={cn('grid size-14 shrink-0 place-items-center rounded-md', style.tile)}
+                  className={cn('grid size-14 shrink-0 place-items-center rounded-2xl', style.tile)}
                 >
                   <Icon aria-hidden className={cn('size-6 stroke-[1.5]', style.icon)} />
                 </span>
@@ -121,10 +121,7 @@ export default function Page() {
 
       <ContactForm />
 
-      <section
-        aria-labelledby="post-title"
-        className="mt-5 rounded-3xl border border-white/70 bg-white/60 p-6"
-      >
+      <section aria-labelledby="post-title" className="mt-5 rounded-panel glass p-6">
         <h2 id="post-title" className="text-h2 text-ink">
           By post
         </h2>

@@ -6,7 +6,7 @@ export { MATCH_LABELS, matchTier };
 
 const DOT: Record<MatchTier, string> = {
   strong: 'bg-success',
-  worth: 'bg-sky',
+  worth: 'bg-lake',
   not: 'bg-ink-soft/50',
 };
 
@@ -17,7 +17,7 @@ export interface MatchLabelProps {
 }
 
 /**
- * DESIGN.md Match label (creator side only): a glass chip with words, never a number. 80 and up "Strong
+ * Match label (creator side only): a glass chip with words, never a number. 80 and up "Strong
  * match", 60 to 79 "Worth a look", under 60 "Not for you". The dot repeats the tier; the words carry it.
  */
 export function MatchLabel({ score, className }: MatchLabelProps) {
@@ -26,7 +26,7 @@ export function MatchLabel({ score, className }: MatchLabelProps) {
   return (
     <span
       className={cn(
-        'glass-chip inline-flex h-7 shrink-0 items-center gap-1.5 px-3 text-caption whitespace-nowrap text-ink',
+        'glass-chip inline-flex h-7 shrink-0 items-center gap-1.5 px-3 text-caption whitespace-nowrap text-ink uppercase',
         className,
       )}
     >

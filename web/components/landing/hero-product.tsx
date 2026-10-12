@@ -12,7 +12,6 @@ import { CreatorHeader } from '@/components/bio/creator-header';
 import { DecisionCard } from '@/components/dashboard/today/decision-card';
 import { AvatarStack } from '@/components/shared/avatar-initials';
 import { CreatorImage } from '@/components/shared/creator-image';
-import { RainbowButton } from '@/components/ui/rainbow-button';
 import { routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { DEMO } from './demo-data';
@@ -117,7 +116,7 @@ export function HeroStage() {
 
         <HeroLayer depth={-16} order={4} className={styles.anchor} style={at(CHIPS.credit)}>
           <span className={cn('glass-chip', styles.chipPill)}>
-            <span className={cn(styles.chipIcon, 'bg-ink text-white')}>
+            <span className={cn(styles.chipIcon, 'bg-gold text-ink')}>
               <Star size={13} strokeWidth={2} fill="currentColor" />
             </span>
             {CREDIT_CHIP.title}
@@ -211,10 +210,11 @@ export function HeroClaim() {
             className={styles.claimInput}
           />
         </div>
-        <RainbowButton type="submit" size="lg" data-hero-cta className={styles.claimButton}>
+        {/* The hero's one Lake Blue button; data-hero-cta tells the navbar to step back to glass. */}
+        <button type="submit" data-hero-cta className={cn('btn btn-primary', styles.claimButton)}>
           Get started
           <ArrowRight aria-hidden="true" size={16} />
-        </RainbowButton>
+        </button>
       </div>
       <p id={`${id}-status`} className={styles.claimStatus} data-tone={tone}>
         {text}

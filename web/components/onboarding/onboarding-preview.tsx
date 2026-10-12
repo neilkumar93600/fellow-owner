@@ -121,10 +121,9 @@ export function OnboardingPreview({
             <h2
               id="ob-preview-title"
               className={cx(
-                'inline-flex h-9 items-center gap-2 rounded-full px-4 text-small font-medium text-ink',
+                'glass-chip inline-flex h-9 items-center gap-2 px-4 font-mono text-caption font-medium tracking-tight text-ink uppercase',
                 // Over a step picture the label and caption sit on white (no words on a picture).
                 onArt ? 'lg:bg-card-strong' : null,
-                'glass-pill',
               )}
             >
               <Eye aria-hidden strokeWidth={1.5} className="size-4" />
@@ -154,7 +153,7 @@ export function OnboardingPreview({
                   'relative h-full rounded-[36px] bg-shell px-4 pt-3 pb-6 lg:overflow-y-auto',
                 )}
               >
-                <div className="glass-pill mx-auto flex h-8 max-w-full items-center justify-center gap-1.5 px-3 text-caption text-ink-soft">
+                <div className="glass-chip mx-auto flex h-8 max-w-full items-center justify-center gap-1.5 px-3 text-caption text-ink-soft">
                   <Lock aria-hidden strokeWidth={1.75} className="size-3 shrink-0" />
                   <span className="truncate">
                     {HOST}/
@@ -183,7 +182,7 @@ export function OnboardingPreview({
                     <span
                       aria-hidden
                       className={cx(
-                        'grid size-[76px] place-items-center rounded-full text-h2 font-medium text-ink',
+                        'grid size-[76px] place-items-center rounded-full font-display text-h2 text-ink',
                         avatarTint(name),
                       )}
                     >
@@ -193,7 +192,7 @@ export function OnboardingPreview({
                     <Ghost className="size-[76px]" />
                   )}
                   {name ? (
-                    <p className="mt-3 text-[20px] leading-7 font-medium break-words text-ink">
+                    <p className="mt-3 font-display text-[1.375rem] leading-7 tracking-[-0.02em] break-words text-ink">
                       {name}
                     </p>
                   ) : (
@@ -222,7 +221,7 @@ export function OnboardingPreview({
                         <li
                           // biome-ignore lint/suspicious/noArrayIndexKey: rows have no stable id in the preview
                           key={i}
-                          className="glass-pill inline-flex h-7 items-center gap-1.5 px-3 text-caption text-ink-soft"
+                          className="glass-chip inline-flex h-7 items-center gap-1.5 px-3 text-caption text-ink-soft uppercase"
                         >
                           {PLATFORM_LABELS[p.platform]}
                           {Number.isFinite(p.followers) && p.followers > 0 ? (
@@ -249,7 +248,9 @@ export function OnboardingPreview({
 
                 {/* Communities */}
                 <div data-section="communities" className="mt-7">
-                  <p className="text-body font-medium text-ink">Join a community</p>
+                  <p className="text-caption font-medium tracking-tight text-ink uppercase">
+                    Join a community
+                  </p>
                   <ul className="mt-3 flex flex-col gap-2.5">
                     {communities.length > 0 ? (
                       communities.map((c, i) => (

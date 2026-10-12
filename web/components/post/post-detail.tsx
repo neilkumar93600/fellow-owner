@@ -23,7 +23,7 @@ export function PostDetailView({ handle, post }: { handle: string; post: PostDet
       <div className="flex items-center justify-between gap-3">
         <Link
           href={routes.fan.community(handle, post.community.slug)}
-          className="press -ml-3 inline-flex h-11 w-fit items-center gap-2 rounded-full px-3 text-label text-ink hover:bg-white/60"
+          className="press -ml-3 inline-flex h-11 w-fit items-center gap-2 rounded-full px-3 text-caption text-ink uppercase hover:bg-white/60"
         >
           <ArrowLeft aria-hidden="true" strokeWidth={1.5} className="size-5" />
           Back to {post.community.name}
@@ -62,7 +62,7 @@ export function PostDetailSkeleton() {
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-2/3" />
         </div>
-        <div className="mt-6 flex gap-3 border-t border-ink/10 pt-6">
+        <div className="mt-6 flex gap-3 border-t border-line pt-6">
           <Skeleton className="h-11 w-36" />
           <Skeleton className="h-11 w-44" />
         </div>

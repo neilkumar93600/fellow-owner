@@ -151,7 +151,7 @@ function CommunityForm({
       )}
 
       <fieldset>
-        <legend className="text-small-strong text-ink">Color</legend>
+        <legend className="text-small-strong text-ink uppercase">Color</legend>
         <div className="mt-1.5 grid grid-cols-2 gap-2">
           {TINT_OPTIONS.map((option) => {
             const selected = option.value === tint;
@@ -159,7 +159,7 @@ function CommunityForm({
               <label
                 key={option.value}
                 className={cn(
-                  'press flex h-11 cursor-pointer items-center gap-2 rounded-full border-2 bg-white py-1 pr-4 pl-1 text-body text-ink select-none',
+                  'press flex h-11 cursor-pointer items-center gap-2 rounded-full border-2 bg-white/80 py-1 pr-4 pl-1 text-body text-ink select-none',
                   RADIO_FOCUS,
                   selected ? 'border-ink' : 'border-line hover:bg-white/70',
                 )}
@@ -187,7 +187,7 @@ function CommunityForm({
       </fieldset>
 
       <fieldset>
-        <legend className="text-small-strong text-ink">Icon</legend>
+        <legend className="text-small-strong text-ink uppercase">Icon</legend>
         <div className="mt-1.5 grid grid-cols-[repeat(auto-fill,minmax(44px,1fr))] gap-2">
           {COMMUNITY_ICONS.map((option) => {
             const Icon = COMMUNITY_ICON[option];
@@ -213,7 +213,7 @@ function CommunityForm({
       </fieldset>
 
       <div className="flex flex-col gap-1.5">
-        <p className="text-small-strong text-ink">Preview</p>
+        <p className="text-small-strong text-ink uppercase">Preview</p>
         <div className="flex min-h-11 items-center">
           <CommunityChip name={name.trim() || 'New community'} tint={tint} icon={icon} />
         </div>
@@ -239,7 +239,7 @@ export interface CommunityPanelProps {
 /**
  * Add or edit a community in the side panel: name and description (with counts), the tint as swatches,
  * the icon as a radio grid and a live preview chip, validated with the API's own schema. The footer
- * holds the screen's one blue action (Create or Save community) and, when editing, Archive.
+ * holds the screen's one Lake Blue action (Create or Save community) and, when editing, Archive.
  */
 export function CommunityPanel({
   open,

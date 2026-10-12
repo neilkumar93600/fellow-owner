@@ -48,9 +48,12 @@ export default async function Page({ params }: Props) {
           <h1 className={cn(DISPLAY_H1, 'max-w-[24ch]')}>{post.title}</h1>
           <DateBadge iso={post.date} />
         </header>
-        <p className="mt-6 max-w-[68ch] text-label text-ink">{post.summary}</p>
+        <p className="mt-6 max-w-[68ch] font-sans text-label text-ink">{post.summary}</p>
         {post.body.map((paragraph) => (
-          <p key={paragraph.slice(0, 32)} className="mt-4 max-w-[68ch] text-body text-ink">
+          <p
+            key={paragraph.slice(0, 32)}
+            className="mt-4 max-w-[68ch] font-sans text-body text-ink"
+          >
             {paragraph}
           </p>
         ))}

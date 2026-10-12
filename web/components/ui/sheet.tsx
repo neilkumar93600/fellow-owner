@@ -12,7 +12,7 @@ import { SCRIM } from './dialog';
 export type SheetProps = Omit<DialogPrimitive.Root.Props, 'modal' | 'disablePointerDismissal'>;
 
 /**
- * DESIGN.md Side panel. Below 1024px it is modal: the scrim shows, focus is trapped, the page cannot
+ * Side panel. Below 1024px it is modal: the scrim shows, focus is trapped, the page cannot
  * scroll and a press outside closes it. From 1024px the page beside it stays usable: no scrim, no trap,
  * and presses or focus outside leave it open (a click on another row switches it through the screen's
  * ?item=). Esc closes it at every width. Screens control it with `open` and `onOpenChange`.
@@ -30,7 +30,7 @@ export type SheetContentProps = Omit<DialogPrimitive.Popup.Props, 'className' | 
 };
 
 /**
- * The panel: 480px from the right edge, strong frosted glass (72%), 28px left corners, Overlay Soft; full width with
+ * The panel: 480px from the right edge, strong frosted glass (72%) with a hairline, 40px left corners, shadow-overlay; full width with
  * no radius below 640px. Enters with a 24px slide and a fade over 250ms ease-out-expo and leaves in
  * 150ms; under reduced motion it appears in place (no slide, and the global rule zeroes the fade). Focus
  * moves to the SheetHeader title on open and,
@@ -77,7 +77,7 @@ export function SheetHeader({ title, status, closeLabel = 'Close', className }: 
         <DialogPrimitive.Title
           data-sheet-title=""
           tabIndex={-1}
-          className="min-w-0 text-h2 text-ink outline-none"
+          className="min-w-0 font-display text-h2 font-normal text-ink outline-none"
         >
           {title}
         </DialogPrimitive.Title>

@@ -6,7 +6,7 @@ import { createContext, useContext, useId } from 'react';
 import { cn } from './cn';
 
 /*
- * DESIGN.md Inputs. A Field draws the label, helper, character count and error around one control and
+ * Inputs. A Field draws the label, helper, character count and error around one control and
  * wires them up: the control gets the id, aria-describedby (helper, count, error) and aria-invalid from
  * context. Controls are plain elements, so react-hook-form's register() (ref included) and controlled
  * value/onChange both spread straight onto them.
@@ -50,11 +50,11 @@ function joinIds(...ids: Array<string | undefined>): string | undefined {
 }
 
 export interface FieldProps {
-  /** Small Strong ink, 6px above the control. */
+  /** Mono caps label in ink, 6px above the control. */
   label: React.ReactNode;
   /** Adds " (optional)" to the label; required is the default and is not marked. */
   optional?: boolean;
-  /** Small ink-muted under the control. Never put required information only in a placeholder. */
+  /** Mono ink-muted under the control. Never put required information only in a placeholder. */
   helper?: React.ReactNode;
   /** The message; its presence marks the control invalid. Announced politely. */
   error?: React.ReactNode;
@@ -122,9 +122,9 @@ export function Label({
   ...props
 }: React.ComponentProps<'label'> & { optional?: boolean }) {
   return (
-    <label className={cn('mb-1.5 text-small-strong text-ink', className)} {...props}>
+    <label className={cn('mb-1.5 text-caption font-medium tracking-tight text-ink uppercase', className)} {...props}>
       {children}
-      {optional ? <span className="font-normal text-ink-muted"> (optional)</span> : null}
+      {optional ? <span className="font-normal text-ink-muted normal-case"> (optional)</span> : null}
     </label>
   );
 }
@@ -134,7 +134,7 @@ export function Helper({ className, ...props }: React.ComponentProps<'p'>) {
 }
 
 /**
- * Signal Red icon, Brick Red words, under the control. The region stays in the page while empty so a
+ * Red icon, deep red words, under the control. The region stays in the page while empty so a
  * message that appears in it is announced (aria-live polite).
  */
 export function FieldError({ className, children, ...props }: React.ComponentProps<'p'>) {
@@ -158,7 +158,7 @@ export function FieldError({ className, children, ...props }: React.ComponentPro
 }
 
 /**
- * Caption, tabular: ink-muted, Toffee from 90% of the limit, Brick Red with a Signal Red icon over it.
+ * Caption, tabular: ink-muted, amber from 90% of the limit, deep red with a red icon over it.
  * Screen readers hear "212 of 280 characters" (and how far over) through aria-describedby.
  */
 export function CharCount({
@@ -191,9 +191,9 @@ export function CharCount({
   );
 }
 
-/** Pure White, radius 16, Field Grey border; hover steps the border to ink-muted, focus to ink. */
+/** White, radius 16, 1px smoke border (3:1), mono text; hover steps the border to ink-muted, focus to ink. */
 const CONTROL = cn(
-  'w-full min-w-0 rounded-lg border border-line-field bg-white px-3.5 text-body text-ink max-sm:text-[1rem]',
+  'w-full min-w-0 rounded-lg border border-line-field bg-white px-3.5 text-small text-ink max-sm:text-[1rem]',
   'transition-colors duration-150 ease-out-quart placeholder:text-ink-muted',
   'not-disabled:not-focus-visible:not-aria-invalid:hover:border-ink-muted',
   'focus-visible:border-ink aria-invalid:border-danger disabled:cursor-not-allowed disabled:opacity-50',
@@ -303,7 +303,7 @@ export function InputGroup({
       >
         <span
           aria-hidden="true"
-          className="flex shrink-0 items-center pl-3.5 text-body text-ink-soft max-sm:text-[1rem] [&_svg]:size-5 [&_svg]:stroke-[1.5]"
+          className="flex shrink-0 items-center pl-3.5 text-small text-ink-soft max-sm:text-[1rem] [&_svg]:size-5 [&_svg]:stroke-[1.5]"
         >
           {leading}
         </span>

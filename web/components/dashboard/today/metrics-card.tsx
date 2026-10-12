@@ -21,7 +21,7 @@ function Tile({ label, value, note }: { label: string; value: string; note?: str
   return (
     <div className="flex flex-col gap-0.5">
       <dt className="text-small text-ink-soft">{label}</dt>
-      <dd className="text-h2 text-ink">{value}</dd>
+      <dd className="text-h2 text-ink tabular-nums">{value}</dd>
       {note ? <dd className="text-small text-ink-soft">{note}</dd> : null}
     </div>
   );
@@ -33,9 +33,9 @@ export function MetricsCard() {
   const { data, isPending, isError, isPlaceholderData, refetch } = useMetrics(days);
 
   return (
-    <GlassPanel as="section" aria-labelledby="metrics-card-title" className="p-5">
+    <GlassPanel as="section" aria-labelledby="metrics-card-title" className="rounded-panel p-6">
       <div className="flex items-center justify-between gap-3">
-        <h2 id="metrics-card-title" className="text-label text-ink">
+        <h2 id="metrics-card-title" className="text-caption tracking-wide text-ink-soft uppercase">
           How it's going
         </h2>
         <div className="flex gap-1.5">

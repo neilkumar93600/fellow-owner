@@ -54,10 +54,7 @@ export function ContactForm() {
 
   if (done) {
     return (
-      <section
-        aria-live="polite"
-        className="mt-5 rounded-3xl border border-white/70 bg-white/60 p-6"
-      >
+      <section aria-live="polite" className="mt-5 rounded-panel glass p-6">
         <h2 className="text-h2 text-ink">Message received</h2>
         <p className="mt-2 text-body text-ink">
           Thank you. We will reply to your email. A short confirmation goes there too (once a day at
@@ -72,7 +69,7 @@ export function ContactForm() {
       noValidate
       onSubmit={onSubmit}
       aria-labelledby="contact-form-title"
-      className="relative mt-5 rounded-3xl border border-white/70 bg-white/60 p-6"
+      className="relative mt-5 rounded-panel glass p-6"
     >
       <h2 id="contact-form-title" className="text-h2 text-ink">
         Send a message

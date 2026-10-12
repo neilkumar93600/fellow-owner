@@ -276,7 +276,7 @@ function createScene(root: HTMLElement, onUnfit: () => void): Scene {
 
   /**
    * Opacity only, so content stays in the accessibility tree at every scroll position. `hide` also sets
-   * visibility at zero, for the decorative, aria-hidden layers (bubbles, the peach field, veils, narration).
+   * visibility at zero, for the decorative, aria-hidden layers (bubbles, the tinted picks field, veils, narration).
    */
   function fade(el: HTMLElement | null, opacity: number, hide = false) {
     const o = opacity < 0.001 ? 0 : opacity > 0.999 ? 1 : opacity;

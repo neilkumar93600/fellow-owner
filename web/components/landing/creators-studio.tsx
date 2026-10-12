@@ -51,7 +51,7 @@ function Rail() {
           key={href}
           className={cn(
             'grid size-11 shrink-0 place-items-center rounded-full',
-            index === 0 ? 'bg-aurora-peach text-lake' : 'text-ink-soft',
+            index === 0 ? 'bg-periwinkle text-lake' : 'text-ink-soft',
             index === RAIL.length - 1 && 'mt-auto',
           )}
         >
@@ -65,7 +65,7 @@ function Rail() {
 
 function Studio() {
   return (
-    <div className="@container flex min-h-[650px] gap-4 bg-cream p-4 @max-[700px]:min-h-[750px]">
+    <div className="@container flex min-h-[650px] gap-4 bg-parchment p-4 @max-[700px]:min-h-[750px]">
       <Rail />
       <div className="flex min-w-0 flex-1 flex-col gap-5 pt-2 pr-1">
         <div className="flex items-start justify-between gap-4">

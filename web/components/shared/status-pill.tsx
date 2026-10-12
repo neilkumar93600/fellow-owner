@@ -38,9 +38,9 @@ const TONES: Record<string, StatusTone> = {
 };
 
 const TONE_CLASSES: Record<StatusTone, string> = {
-  warm: 'bg-aurora-peach text-ink',
-  cool: 'bg-aurora-sky text-ink',
-  neutral: 'bg-white/75 text-ink ring-1 ring-ink/10 ring-inset',
+  warm: 'border border-line bg-aurora-peach text-ink',
+  cool: 'border border-line bg-periwinkle text-ink',
+  neutral: 'border border-line bg-white/75 text-ink',
 };
 
 export interface StatusPillProps {
@@ -53,14 +53,14 @@ export interface StatusPillProps {
   className?: string;
 }
 
-/** DESIGN.md Status pill: 24px, 10px side padding, Caption; ink words on an aurora tint (12:1 or more), never bare colour. */
+/** Status pill: 24px hairline pill, mono caps; ink words on a pastel tint (12:1 or more), never bare colour. */
 export function StatusPill({ status, label, tone, className }: StatusPillProps) {
   const words =
     label ?? LABELS[status] ?? status.replaceAll('_', ' ').replace(/^./, (c) => c.toUpperCase());
   return (
     <span
       className={cn(
-        'inline-flex h-6 shrink-0 items-center rounded-full px-2.5 text-caption whitespace-nowrap',
+        'inline-flex h-6 shrink-0 items-center rounded-full px-2.5 text-caption whitespace-nowrap uppercase',
         TONE_CLASSES[tone ?? TONES[status] ?? 'neutral'],
         className,
       )}

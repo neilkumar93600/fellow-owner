@@ -117,7 +117,7 @@ export function QuestionGroupsView({ handle, now }: { handle: string; now: numbe
         <Skeleton className="h-10 w-2/3" />
         <div className="grid gap-5 @3xl:grid-cols-2">
           {[0, 1].map((n) => (
-            <Skeleton key={n} className="h-56 rounded-[24px]" />
+            <Skeleton key={n} className="h-56 rounded-panel" />
           ))}
         </div>
       </div>
@@ -225,7 +225,7 @@ function GroupCard({
 }) {
   const quote = group.askers[0]?.quote;
   return (
-    <article className="glass-strong relative flex h-full flex-col gap-3 rounded-[24px] p-5 transition-colors duration-150 hover:bg-white/85">
+    <article className="glass-strong relative flex h-full flex-col gap-3 rounded-panel p-5 transition-colors duration-150 hover:bg-white/85">
       <p className="text-small text-ink-soft">
         <span className="text-label-strong text-ink tabular-nums">
           {formatNumber(group.askedCount)}
@@ -239,7 +239,7 @@ function GroupCard({
           onClick={onOpen}
           className={cn(
             'rounded-sm text-left',
-            'after:absolute after:inset-0 after:rounded-[24px] after:content-[""]',
+            'after:absolute after:inset-0 after:rounded-panel after:content-[""]',
           )}
         >
           {group.question}
@@ -292,7 +292,7 @@ function AskerStack({ people, total }: { people: { name: string }[]; total: numb
   const more = Math.max(total, people.length) - people.length;
   const label = `${people.map((p) => p.name).join(', ')}${more > 0 ? ` and ${more} more` : ''}`;
   const circle =
-    'grid size-8 shrink-0 place-items-center rounded-full text-[11px] leading-none font-semibold text-ink ring-2 ring-white select-none';
+    'grid size-8 shrink-0 place-items-center rounded-full text-[11px] leading-none text-ink ring-2 ring-white select-none';
   return (
     <span role="img" aria-label={label} className="flex items-center -space-x-1.5">
       {people.map((p, i) => (

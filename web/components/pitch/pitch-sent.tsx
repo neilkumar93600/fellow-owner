@@ -26,11 +26,11 @@ export function PitchSent({
     >
       <span
         aria-hidden="true"
-        className="grid size-14 place-items-center rounded-md bg-aurora-mint"
+        className="grid size-14 place-items-center rounded-2xl bg-aurora-mint"
       >
         <Check strokeWidth={1.5} className="size-6 text-[#22694f]" />
       </span>
-      <h2 id="pitch-sent-title" tabIndex={-1} className="text-h2 text-ink">
+      <h2 id="pitch-sent-title" tabIndex={-1} className="text-h2 text-ink outline-none">
         Idea sent
       </h2>
       <p className="max-w-[60ch] text-body text-ink">

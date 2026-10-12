@@ -1,0 +1,98 @@
+{
+  "instagram": {
+    "posts": 5,
+    "commenters": [
+      {
+        "name": "Lena Ortiz",
+        "handle": "lena.roams",
+        "note": "Saving this for my Lisbon trip in May! Where was the tile cafe?"
+      },
+      {
+        "name": "Theo Grant",
+        "handle": "theo.packslight",
+        "note": "How do you fit two weeks into one carry-on? Need the list"
+      },
+      {
+        "name": "Aiko Mori",
+        "handle": "aiko.eats",
+        "note": "The street food reel was so good, do one in Mexico City please"
+      },
+      {
+        "name": "Ravi Patel",
+        "handle": "ravi.on.trains",
+        "note": "Train vs plane across Europe, I vote train every time"
+      },
+      {
+        "name": "Chloe Martin",
+        "handle": "chloe.solo",
+        "note": "First solo trip next month and this made me less nervous"
+      },
+      {
+        "name": "Marco Silva",
+        "handle": "marco.budget",
+        "note": "Under 60 a day in Lisbon? Show the spreadsheet!"
+      }
+    ]
+  },
+  "tiktok": {
+    "posts": 5,
+    "commenters": [
+      {
+        "name": "jules.wanders",
+        "handle": "jules.wanders",
+        "note": "the hostel tour was so helpful omg"
+      },
+      {
+        "name": "sam.flights",
+        "handle": "sam.flights",
+        "note": "how do you find flights that cheap, tutorial pls"
+      },
+      {
+        "name": "nina.films",
+        "handle": "nina.films",
+        "note": "what app do you edit on? the colors are perfect"
+      },
+      {
+        "name": "kai.backpacks",
+        "handle": "kai.backpacks",
+        "note": "three days one backpack is my whole personality now"
+      },
+      { "name": "lena.roams", "handle": "lena.roams", "note": "lisbon part 2 when" }
+    ]
+  },
+  "youtube": {
+    "posts": 5,
+    "commenters": [
+      {
+        "name": "Dana Kim",
+        "handle": "danakimtravels",
+        "note": "How do you plan a route when you only have a weekend?"
+      },
+      {
+        "name": "Owen Brooks",
+        "handle": "owenbrooks",
+        "note": "Would love a full video on your camera and editing setup"
+      },
+      {
+        "name": "Priya Shah",
+        "handle": "priya.wanders",
+        "note": "More budget city guides please, the Lisbon one was perfect"
+      },
+      {
+        "name": "Leo Martin",
+        "handle": "leomartin",
+        "note": "Solo travel tips for a first trip abroad would be great"
+      },
+      {
+        "name": "Ana Costa",
+        "handle": "anacosta",
+        "note": "The cafe at the end! Adding it to my list"
+      },
+      {
+        "name": "Jo Evans",
+        "handle": "joevans",
+        "note": "Hostel or hotel? I never know what to book"
+      }
+    ]
+  }
+}

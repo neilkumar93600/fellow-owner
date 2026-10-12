@@ -9,7 +9,7 @@ import { routes } from '@/lib/routes';
 export const metadata: Metadata = { title: 'Page not found' };
 
 /**
- * The 404: a frosted glass panel on the page aurora (the root layout paints it), with a Lisbon street
+ * The 404: a frosted glass panel on the parchment washes (the root layout paints them), with a Lisbon street
  * from the demo creator's vlog and a serif headline.
  */
 export default function NotFound() {
@@ -30,7 +30,7 @@ export default function NotFound() {
         <h1 className={`${DISPLAY_H1} mt-8`}>
           This page took a <em>wrong turn</em>.
         </h1>
-        <p className="mt-3 max-w-[46ch] text-body text-ink">
+        <p className="mt-3 max-w-[46ch] text-small text-ink-soft">
           The link may be old, or the space may have a new handle. Head back to the start, or open a
           space of your own.
         </p>

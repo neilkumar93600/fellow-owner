@@ -6,7 +6,7 @@ export function LovedBadge({ creator, className }: { creator: string; className?
   return (
     <span
       className={cn(
-        'inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-aurora-peach px-3 text-caption whitespace-nowrap text-ink',
+        'inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-aurora-peach px-3 text-caption whitespace-nowrap text-ink uppercase',
         className,
       )}
     >

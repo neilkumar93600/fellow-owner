@@ -28,7 +28,7 @@ export interface CommunityHeaderProps {
 
 /**
  * The header of a community feed: the room's cover photo, then a frosted panel that overlaps it with the
- * name (the page's h1, Instrument Serif), the fan count and description, then Joined (or Join) and, from
+ * name (the page's h1, serif 400), the fan count and description, then Joined (or Join) and, from
  * 640px, New post.
  */
 export function CommunityHeader({
@@ -58,16 +58,16 @@ export function CommunityHeader({
         <div className="flex flex-col gap-1">
           <h1
             id="community-title"
-            className="font-display text-[2rem] leading-[1.1] font-normal text-ink sm:text-[2.5rem]"
+            className="text-[2rem] leading-[1.1] text-ink [overflow-wrap:anywhere] sm:text-[2.5rem]"
           >
             {community.name}
           </h1>
-          <p className="text-small text-ink-soft">
+          <p className="text-caption text-ink-soft uppercase">
             <span className="tabular-nums">{formatNumber(fans)}</span> {pluralize(fans, 'fan')}
           </p>
         </div>
         {community.description ? (
-          <p className="max-w-[68ch] text-body text-ink">{community.description}</p>
+          <p className="max-w-[68ch] text-body text-ink-soft">{community.description}</p>
         ) : null}
         {loading ? (
           <div aria-hidden="true" className="flex h-12 items-center">

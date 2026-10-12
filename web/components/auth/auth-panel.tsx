@@ -63,7 +63,7 @@ export async function AuthPanel() {
         </p>
       ) : null}
       <div className="absolute inset-x-4 bottom-4 mx-auto max-w-[32rem] glass-strong !rounded-[1.25rem] p-5 xl:inset-x-6 xl:bottom-6 xl:p-6">
-        <p className="text-h1 text-balance text-ink xl:text-display">
+        <p className="font-display text-h1 text-balance text-ink xl:text-display">
           Turn followers into fellow owners.
         </p>
         <AuthPanelLine className="mt-2 text-body text-pretty text-ink-soft" />

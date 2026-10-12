@@ -32,7 +32,7 @@ interface AuthFieldProps extends InputProps {
 }
 
 /**
- * Label above (Small Strong ink, 6px gap), a 44px white field with a Field Grey border, helper text and
+ * Label above (caption caps, ink, 6px gap), a 44px frosted field with a 1px Smoke border, helper text and
  * the error below. The error is tied to the input with aria-describedby and announced politely.
  */
 export function AuthField({
@@ -69,9 +69,9 @@ export function AuthField({
   return (
     <div className={className}>
       <div className="flex items-baseline justify-between gap-3">
-        <label htmlFor={id} className="block text-small font-medium text-ink">
+        <label htmlFor={id} className="block text-caption uppercase text-ink">
           {label}
-          {optional ? <span className="font-normal text-ink-muted"> (optional)</span> : null}
+          {optional ? <span className="text-ink-muted"> (optional)</span> : null}
         </label>
         {labelAside}
       </div>

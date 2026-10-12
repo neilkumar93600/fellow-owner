@@ -1,8 +1,8 @@
 /*
- * Hero (spec §4b "Framed Golden Hour"): one rounded frame inset from the viewport, a golden-hour landscape
- * inside it, the words on a cream scrim on the left and the product floating over the photo on the right.
- * Phones: the frame is cream glass and the photo sits only behind the phone, in this order: words, claim
- * bar, phone, stats, card.
+ * Hero (Parchment Frost): one rounded parchment frame inset from the viewport with two large, soft Monad
+ * washes inside it (coral to sky-wash, sky-wash to mint), the words on plain parchment on the left and the
+ * frosted product floating over the washes on the right. Phones: the washes sit only behind the phone, in
+ * this order: words, claim bar, phone, stats, card.
  */
 .hero {
   --nav-space: 72px;
@@ -30,8 +30,7 @@
   padding: calc(var(--nav-space) + 8px) 20px 20px;
   border: 1px solid var(--glass-edge);
   border-radius: 32px;
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.62), rgb(255 247 240 / 0.78));
-  box-shadow: var(--glass-highlight), var(--shadow-glass);
+  background: var(--color-parchment);
 }
 
 @media (min-width: 1024px) {
@@ -50,24 +49,6 @@
     min-height: max(calc(92svh - var(--inset)), 640px);
     padding: calc(var(--nav-space) + 8px) 48px 32px;
     border-radius: 40px;
-    /* The photo's average tone while it loads. */
-    background: #f2c6a6;
-  }
-
-  /* The cream scrim: AA for the words on the left, the scenery clear on the right. */
-  .frame::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(
-      90deg,
-      rgb(251 247 242 / 0.94) 0%,
-      rgb(251 247 242 / 0.9) 34%,
-      rgb(251 247 242 / 0.55) 48%,
-      rgb(251 247 242 / 0) 62%
-    );
-    pointer-events: none;
   }
 }
 
@@ -97,12 +78,11 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  min-height: 34px;
-  padding: 6px 14px 6px 12px;
-  color: var(--color-ink);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: -0.005em;
+  height: auto;
+  min-height: 2rem;
+  padding-block: 6px;
+  padding-left: 12px;
+  line-height: 1.3;
 }
 
 .pillDot {
@@ -110,8 +90,7 @@
   height: 8px;
   flex: none;
   border-radius: 999px;
-  background: var(--color-sunset);
-  box-shadow: 0 0 0 4px rgb(240 96 58 / 0.18);
+  background: var(--color-coral);
 }
 
 .title {
@@ -119,8 +98,8 @@
   color: var(--color-ink);
   font-size: clamp(2.75rem, 1.4rem + 3.6vw, 4.75rem);
   font-weight: 400;
-  line-height: 0.98;
-  letter-spacing: -0.015em;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
 }
 
 @media (min-width: 1024px) {
@@ -142,61 +121,10 @@
   display: block;
 }
 
-/*
- * "hear them.": a radial gradient in our palette clipped to the italic, with 3% grain in the same clip and
- * a blurred duplicate behind it for the glow. Every stop is AA on cream (coral 4.59, plum 5.4, violet
- * 6.8, sky 5.3). The sheen makes three passes, then rests.
- */
+/* "hear them.": the one accent, italic serif in Lake Blue (5.5:1 on parchment). No gradient text. */
 .accent {
-  position: relative;
-  z-index: 0;
   font-style: italic;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    radial-gradient(circle at 30% 40%, #c8432a 0%, #a23e8c 38%, #5b47a8 66%, #2b6ca8 100%);
-  background-size:
-    120px 120px,
-    220% 220%;
-  background-position:
-    0 0,
-    0% 50%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
-
-.accent::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: radial-gradient(circle at 30% 40%, #f0603a, #a23e8c 45%, #5b47a8 75%, #2b6ca8);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: blur(12px);
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .accent {
-    animation: hero-sheen 5s ease-in-out 1.2s 3 alternate both;
-  }
-}
-
-@keyframes hero-sheen {
-  from {
-    background-position:
-      0 0,
-      0% 50%;
-  }
-  to {
-    background-position:
-      0 0,
-      100% 50%;
-  }
+  color: var(--color-lake);
 }
 
 .sub {
@@ -229,12 +157,12 @@
 
 .stats li + li {
   padding-left: 14px;
-  border-left: 1px solid rgb(30 27 38 / 0.14);
+  border-left: 1px solid var(--color-ash);
 }
 
 .stats strong {
   color: var(--color-ink);
-  font-weight: 600;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
@@ -273,7 +201,7 @@
   padding-inline: 6px;
   color: var(--color-ink);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .claimRow {
@@ -291,12 +219,13 @@
 
 .claimField {
   display: flex;
-  flex: 1;
+  /* auto basis: stacked on phones it keeps its 48px height instead of collapsing to the text. */
+  flex: 1 1 auto;
   align-items: center;
   min-width: 0;
   height: 48px;
   padding-left: 16px;
-  border: 1px solid rgb(30 27 38 / 0.16);
+  border: 1px solid var(--color-line-field);
   border-radius: 999px;
   background: #fff;
 }
@@ -330,7 +259,7 @@
 }
 
 .claimInput::placeholder {
-  color: rgb(85 80 106 / 0.75);
+  color: var(--color-ink-muted);
   font-weight: 400;
 }
 
@@ -351,7 +280,7 @@
 }
 
 .claimStatus[data-tone="bad"] {
-  color: var(--color-coral);
+  color: var(--color-danger-deep);
 }
 
 /* Bottom-left info card (decorative words, nothing to click). */
@@ -383,7 +312,8 @@
 
 .cardLine {
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .cardSub {
@@ -397,9 +327,16 @@
   height: 36px;
   flex: none;
   place-items: center;
+  border: 1px solid var(--color-ash);
   border-radius: 999px;
-  background: var(--color-ink);
-  color: #fff;
+  color: var(--color-ink);
+}
+
+/* Phones: the arrow steps aside so the card's words keep one line each. */
+@media (max-width: 479.98px) {
+  .cardArrow {
+    display: none;
+  }
 }
 
 /* Scroll cue: decoration, bottom right. */
@@ -411,12 +348,13 @@
   align-self: end;
   justify-self: end;
   padding: 8px 14px;
+  border: 1px solid var(--glass-edge);
   border-radius: 999px;
-  background: rgb(255 255 255 / 0.7);
+  background: var(--glass-chip);
   color: var(--color-ink);
   font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
 }
 
@@ -460,8 +398,8 @@
 }
 
 /*
- * The photo and the product stage. Phones: a 300px rounded window with the photo behind the phone.
- * Desktop: the wrapper is static, so the photo fills the whole frame and the stage takes the right column.
+ * The washes and the product stage. Phones: a 300px rounded window with the washes behind the phone.
+ * Desktop: the wrapper is static, so the washes fill the whole frame and the stage takes the right column.
  */
 .stageWrap {
   position: relative;
@@ -477,22 +415,45 @@
   }
 }
 
-.photo {
+/*
+ * Monad washes: two large blobs, each a two-pastel gradient whose edge a radial mask fades to nothing, so
+ * they are never sharp (no blur filter to repaint). Decoration only: words sit on them only inside glass.
+ */
+.washes {
   position: absolute;
   inset: 0;
   z-index: 0;
-  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
 }
 
-.photoImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 60%;
+.washA,
+.washB {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0.8;
+  -webkit-mask-image: radial-gradient(closest-side, #000 25%, transparent);
+  mask-image: radial-gradient(closest-side, #000 25%, transparent);
+}
+
+.washA {
+  top: -30%;
+  right: -25%;
+  width: 115%;
+  background: linear-gradient(140deg, var(--color-coral) 15%, var(--color-sky-wash) 80%);
+}
+
+.washB {
+  bottom: -55%;
+  left: -30%;
+  width: 110%;
+  background: linear-gradient(160deg, var(--color-sky-wash) 10%, var(--color-mint) 75%);
 }
 
 @media (min-width: 1024px) {
-  /* z-index auto: a grid item with a z-index is a stacking context, and the photo must sit under the scrim. */
+  /* z-index auto: a grid item with a z-index is a stacking context, and the washes must sit under the words. */
   .stageWrap {
     position: static;
     z-index: auto;
@@ -501,6 +462,20 @@
     height: auto;
     overflow: visible;
     border-radius: 0;
+  }
+
+  /* Coral to sky-wash behind the browser, sky-wash to mint rising behind the phone; the words stay on parchment. */
+  .washA {
+    top: -24%;
+    right: -10%;
+    width: 62%;
+  }
+
+  .washB {
+    right: -14%;
+    bottom: -48%;
+    left: auto;
+    width: 56%;
   }
 }
 
@@ -598,7 +573,6 @@
   gap: 8px;
   min-height: 36px;
   padding: 4px 14px 4px 5px;
-  background: rgb(255 255 255 / 0.86);
   color: var(--color-ink);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -623,10 +597,11 @@
   align-items: center;
   min-height: 30px;
   padding: 4px 12px;
-  background: rgb(255 255 255 / 0.9);
   color: var(--color-ink);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -645,7 +620,7 @@
   box-shadow: 0 0 0 2px #fff;
 }
 
-/* Phones: inside the photo window with a 16px inset. Desktop: the stage's bottom-left corner. */
+/* Phones: inside the washes window with a 16px inset. Desktop: the stage's bottom-left corner. */
 .miraAnchor {
   bottom: 16px;
   left: 50%;
@@ -663,7 +638,7 @@
 
 /*
  * Entrance (about 2s). The inline script in hero-intro.tsx sets html[data-intro] before paint, then
- * data-intro="play" once fonts are ready, and removes it when the photo (data-hero-last) has settled. The
+ * data-intro="play" once fonts are ready, and removes it when the washes (data-hero-last) have settled. The
  * stage layers are hidden here and brought in by hero-chips.tsx with a spring.
  */
 @media (prefers-reduced-motion: no-preference) {
@@ -694,8 +669,8 @@
     animation: hero-fade 0.6s var(--ease-soft) both;
   }
 
-  html[data-intro="play"] .photo {
-    animation: hero-photo 1.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  html[data-intro="play"] .washes {
+    animation: hero-washes 1.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   html[data-intro="play"] .pill {
@@ -738,7 +713,7 @@
   html[data-intro="play"] .pill,
   html[data-intro="play"] .lineInner,
   html[data-intro="play"] .sub,
-  html[data-intro="play"] .photo {
+  html[data-intro="play"] .washes {
     will-change: transform, opacity;
   }
 }
@@ -752,11 +727,13 @@
   }
 }
 
-@keyframes hero-photo {
+@keyframes hero-washes {
   from {
+    opacity: 0;
     transform: scale(1.04);
   }
   to {
+    opacity: 1;
     transform: scale(1);
   }
 }

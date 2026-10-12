@@ -4,7 +4,6 @@ import {
   type createSpaceSchema,
   handleSchema,
   LIMITS,
-  LOOKUP_PLATFORMS,
   type LookupPlatform,
   type OnboardingCommunityInput,
   PLATFORMS,
@@ -68,7 +67,8 @@ export const STEPS = [
     key: 'platforms',
     label: 'Platforms',
     title: 'Where your audience is',
-    helper: 'Optional. Follower counts show on your page, and you can change them later.',
+    helper:
+      'Optional. Add a profile link and we fetch the follower count, one platform at a time. You can change them later.',
   },
   {
     key: 'communities',
@@ -101,7 +101,7 @@ export interface PlatformDraft {
   url: string;
   /** NaN while the field is blank or unreadable; zod reports "Enter a number". */
   followers: number;
-  /** Set when the row came from a profile lookup ("Use this"); the daily refresh uses them. */
+  /** Set when the entry came from a profile lookup; the daily refresh and the fans import use them. */
   handle?: string;
   fetchedAt?: string;
 }
@@ -120,16 +120,11 @@ export interface OnboardingValues {
 
 export type OnboardingOutput = z.output<typeof createSpaceSchema>;
 
-export function emptyPlatform(taken: Platform[] = []): PlatformDraft {
-  const next = PLATFORMS.find((p) => p !== 'other' && !taken.includes(p)) ?? 'other';
-  return { platform: next, url: '', followers: Number.NaN };
-}
-
 export const DEFAULT_VALUES: OnboardingValues = {
   handle: '',
   displayName: '',
   bio: '',
-  platforms: [emptyPlatform()],
+  platforms: [],
   communities: [],
   tasteProfile: { promote: [''], never: [''], voice: [''] },
 };
@@ -415,65 +410,7 @@ export const TASTE_EXAMPLES = {
   never: ['Crypto and gambling', 'Get-rich-quick courses', 'Products I have not tried'],
 } as const;
 
-// ---------------------------------------------------------------- platforms
-
-export const PLATFORM_URL_EXAMPLE: Record<Platform, (handle: string) => string> = {
-  youtube: (h) => `https://youtube.com/@${h}`,
-  instagram: (h) => `https://instagram.com/${h}`,
-  x: (h) => `https://x.com/${h}`,
-  tiktok: (h) => `https://tiktok.com/@${h}`,
-  linkedin: (h) => `https://linkedin.com/in/${h}`,
-  other: (h) => `https://${h}.com`,
-};
-
-const PLATFORM_HOSTS: [RegExp, Platform][] = [
-  [/(^|\.)youtube\.com$|(^|\.)youtu\.be$/, 'youtube'],
-  [/(^|\.)instagram\.com$/, 'instagram'],
-  [/(^|\.)x\.com$|(^|\.)twitter\.com$/, 'x'],
-  [/(^|\.)tiktok\.com$/, 'tiktok'],
-  [/(^|\.)linkedin\.com$/, 'linkedin'],
-];
-
-/** Guesses the platform from a profile link, so pasting a TikTok link into a YouTube row fixes the row. */
-export function detectPlatform(url: string): Platform | null {
-  try {
-    const host = new URL(url).host.toLowerCase();
-    for (const [pattern, platform] of PLATFORM_HOSTS) if (pattern.test(host)) return platform;
-  } catch {
-    // not a URL yet
-  }
-  return null;
-}
-
-/** Adds https:// to a bare domain such as "youtube.com/@mira". Leaves anything else as typed. */
-export function withProtocol(value: string): string {
-  const v = value.trim();
-  if (!v || /^[a-z][a-z0-9+.-]*:\/\//i.test(v)) return v;
-  if (/^[\w-]+(\.[\w-]+)+(\/|$)/.test(v)) return `https://${v}`;
-  return v;
-}
-
 // ---------------------------------------------------------------- numbers
-
-/** "410K", "1.2M", "410,000" or "410000" to a whole number; NaN when unreadable. */
-export function parseFollowers(raw: string): number {
-  const v = raw
-    .trim()
-    .replace(/[,\s_]/g, '')
-    .toLowerCase();
-  if (!v) return Number.NaN;
-  const match = /^(\d+(?:\.\d+)?)([kmb])?$/.exec(v);
-  if (!match) return Number.NaN;
-  const base = Number(match[1]);
-  const mult = match[2] === 'k' ? 1e3 : match[2] === 'm' ? 1e6 : match[2] === 'b' ? 1e9 : 1;
-  return Math.round(base * mult);
-}
-
-const fullFormat = new Intl.NumberFormat('en-US');
-
-export function formatFull(n: number): string {
-  return Number.isFinite(n) ? fullFormat.format(n) : '';
-}
 
 /** 410000 to "410K", 1250000 to "1.3M", as on the bio link chips. */
 export function formatCompact(n: number): string {
@@ -561,16 +498,20 @@ export function loadDraft(): OnboardingDraft | null {
   try {
     const data = JSON.parse(raw) as { step?: unknown; values?: Record<string, unknown> };
     const v = data.values ?? {};
+    // Only whole entries: an older draft's half-typed rows have no card to finish them in.
     const platforms = Array.isArray(v.platforms)
-      ? (v.platforms as Record<string, unknown>[]).slice(0, 6).map((p) => ({
-          platform: (PLATFORMS as readonly string[]).includes(p.platform as string)
-            ? (p.platform as Platform)
-            : 'other',
-          url: asString(p.url, 2048),
-          followers: typeof p.followers === 'number' ? p.followers : Number.NaN,
-          handle: typeof p.handle === 'string' ? p.handle.slice(0, 100) : undefined,
-          fetchedAt: typeof p.fetchedAt === 'string' ? p.fetchedAt.slice(0, 40) : undefined,
-        }))
+      ? (v.platforms as Record<string, unknown>[])
+          .filter((p) => asString(p.url, 2048) && Number.isFinite(p.followers))
+          .slice(0, LIMITS.space.platforms.max)
+          .map((p) => ({
+            platform: (PLATFORMS as readonly string[]).includes(p.platform as string)
+              ? (p.platform as Platform)
+              : 'other',
+            url: asString(p.url, 2048),
+            followers: p.followers as number,
+            handle: typeof p.handle === 'string' ? p.handle.slice(0, 100) : undefined,
+            fetchedAt: typeof p.fetchedAt === 'string' ? p.fetchedAt.slice(0, 40) : undefined,
+          }))
       : DEFAULT_VALUES.platforms;
     const communities = Array.isArray(v.communities)
       ? (v.communities as Record<string, unknown>[])
@@ -646,36 +587,32 @@ export function isBlankDraft(values: OnboardingValues): boolean {
 
 // ---------------------------------------------------------------- platform import (spec §6)
 
-export type LookupFailure = 'private' | 'not_found' | 'unavailable' | 'unsupported' | 'busy';
-
-/** One pasted link: one chip. One per platform; a newer link for the same platform replaces it. */
-export interface LookupEntry {
-  platform: LookupPlatform | null;
-  url: string;
-  status: 'pending' | 'ready' | 'failed';
-  profile?: PlatformProfile;
-  reason?: LookupFailure;
+/** Values the setup suggestions put into the form. Such a field may take newer ones; an edited one never. */
+export interface Prefilled {
+  displayName?: string;
+  bio?: string;
+  avatarUrl?: string;
 }
 
-/** What the import has done so far. Saved beside the draft, so a reload keeps the chips and hints. */
+/** What the import has done so far. Saved beside the draft, so a reload keeps avatars, chips and hints. */
 export interface ImportState {
-  entries: LookupEntry[];
+  /** Profiles the lookups found (the platform cards' avatars, names and Sample data chips). */
+  profiles: PlatformProfile[];
   suggestions: SetupSuggestions | null;
+  /** The profiles (keys) the suggestions were made from, so a reload does not ask again. */
+  suggestedFor: string;
   suggesting: boolean;
-  /** "Use this" was pressed: name, photo, bio and follower counts went into the form. */
-  used: boolean;
-  /** "Skip, I'll type it": nothing imported is offered anywhere. */
-  skipped: boolean;
+  prefilled: Prefilled;
   /** Suggestions already poured into a step once, so clearing them there sticks. */
   applied: { taste: boolean; communities: boolean };
 }
 
 export const EMPTY_IMPORT: ImportState = {
-  entries: [],
+  profiles: [],
   suggestions: null,
+  suggestedFor: '',
   suggesting: false,
-  used: false,
-  skipped: false,
+  prefilled: {},
   applied: { taste: false, communities: false },
 };
 
@@ -686,25 +623,9 @@ export const LOOKUP_LABELS: Record<LookupPlatform, string> = {
   x: 'X',
 };
 
-/** The platform a pasted link is for, when it is one the lookup reads; the server parses it again. */
-export function lookupPlatformOf(url: string): LookupPlatform | null {
-  const platform = detectPlatform(url);
-  return platform && (LOOKUP_PLATFORMS as readonly string[]).includes(platform)
-    ? (platform as LookupPlatform)
-    : null;
-}
-
-/** Links in pasted text, split on whitespace and commas, each given https:// if it lacks one. */
-export function linksIn(text: string): string[] {
-  return [
-    ...new Set(
-      text
-        .split(/[\s,]+/)
-        .map((part) => withProtocol(part))
-        .filter(Boolean),
-    ),
-  ];
-}
+/** "instagram:miralane": one profile per platform account. */
+export const profileKey = (p: { platform: Platform; handle: string }) =>
+  `${p.platform}:${p.handle.toLowerCase()}`;
 
 /** "Instagram", "Instagram and YouTube", "Instagram, TikTok and YouTube". */
 export function platformList(platforms: LookupPlatform[]): string {
@@ -715,49 +636,37 @@ export function platformList(platforms: LookupPlatform[]): string {
 
 const IMPORT_KEY = 'fo:onboarding-import:v1';
 
-/** Reads the saved import; in-flight lookups never survive a reload, and a bad profile is dropped. */
+/** Reads the saved import; a bad profile is dropped. Reads the older chip list's profiles too. */
 export function loadImport(): ImportState | null {
   try {
     const raw = window.localStorage.getItem(IMPORT_KEY);
     if (!raw) return null;
-    const data = JSON.parse(raw) as Partial<ImportState>;
-    const entries = (Array.isArray(data.entries) ? data.entries : [])
-      .filter((e) => e && e.status !== 'pending')
-      .slice(0, LOOKUP_PLATFORMS.length)
-      .flatMap((e): LookupEntry[] => {
-        if (e.status === 'ready') {
-          const parsed = platformProfileSchema.safeParse(e.profile);
-          return parsed.success
-            ? [
-                {
-                  platform: parsed.data.platform,
-                  url: asString(e.url, 2048),
-                  status: 'ready',
-                  profile: parsed.data as PlatformProfile,
-                },
-              ]
-            : [];
-        }
-        return [
-          {
-            platform: lookupPlatformOf(asString(e.url, 2048)),
-            url: asString(e.url, 2048),
-            status: 'failed',
-            reason: e.reason,
-          },
-        ];
-      });
+    const data = JSON.parse(raw) as Partial<ImportState> & { entries?: { profile?: unknown }[] };
+    const saved: unknown[] = Array.isArray(data.profiles)
+      ? data.profiles
+      : (Array.isArray(data.entries) ? data.entries : []).map((e) => e?.profile);
+    const profiles = saved.flatMap((p): PlatformProfile[] => {
+      const parsed = platformProfileSchema.safeParse(p);
+      return parsed.success ? [parsed.data as PlatformProfile] : [];
+    });
     const s = data.suggestions;
     const suggestions =
       s && Array.isArray(s.loves) && Array.isArray(s.voice) && Array.isArray(s.communities)
         ? s
         : null;
+    const pre = (data.prefilled ?? {}) as Record<string, unknown>;
+    const text = (v: unknown, max: number) =>
+      typeof v === 'string' && v ? v.slice(0, max) : undefined;
     return {
       ...EMPTY_IMPORT,
-      entries,
+      profiles: profiles.slice(0, LIMITS.space.platforms.max),
       suggestions,
-      used: data.used === true,
-      skipped: data.skipped === true,
+      suggestedFor: typeof data.suggestedFor === 'string' ? data.suggestedFor : '',
+      prefilled: {
+        displayName: text(pre.displayName, 200),
+        bio: text(pre.bio, 1000),
+        avatarUrl: text(pre.avatarUrl, 350_000),
+      },
       applied: {
         taste: data.applied?.taste === true,
         communities: data.applied?.communities === true,

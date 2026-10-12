@@ -48,8 +48,8 @@ export function CommunitiesSkeleton() {
 }
 
 /**
- * /dashboard/communities (DESIGN.md Communities recipe, ref c7c71f): a glass toolbar with the title and
- * "Add community +", then the pastel community cards, two columns at most and one on phones. Each card
+ * /dashboard/communities a glass toolbar with the title and
+ * the Lake Blue "Add community +", then the pastel community cards, two columns at most and one on phones. Each card
  * links to its community; the pencil opens the edit panel. Archived ones sit below, to restore.
  */
 export function CommunitiesView() {
@@ -111,13 +111,7 @@ export function CommunitiesView() {
       <Toolbar
         title="Communities"
         start={
-          <Button
-            variant="secondary"
-            surface="glass"
-            size="md"
-            trailingIcon={<Plus />}
-            onClick={() => openPanel(null)}
-          >
+          <Button size="md" trailingIcon={<Plus />} onClick={() => openPanel(null)}>
             Add community
           </Button>
         }

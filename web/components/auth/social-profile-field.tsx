@@ -44,7 +44,7 @@ export function SocialProfileField({
 }) {
   return (
     <fieldset className={cx('min-w-0', className)}>
-      <legend className="text-small font-medium text-ink">
+      <legend className="text-caption uppercase text-ink">
         Social profile<span className="font-normal text-ink-muted"> (optional)</span>
       </legend>
       <div className={cx(styles.box, 'mt-1.5')} data-invalid={error ? 'true' : undefined}>

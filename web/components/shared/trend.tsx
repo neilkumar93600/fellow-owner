@@ -17,7 +17,7 @@ export interface TrendProps {
 }
 
 /**
- * DESIGN.md Stat card trend row. Rising: a trending-up arrow and "+18%" in success-ink. Falling: a
+ * Stat card trend row. Rising: a trending-up arrow and "+18%" in success-ink. Falling: a
  * trending-down arrow and "−4%" (U+2212) in ink, never red. Flat: a minus and "0%" in ink-soft. The sign
  * lives in the text and the arrow is hidden, so a screen reader hears the direction. For white, Paper
  * White, apricot and aqua surfaces (success-ink fails on glass and the shell).
@@ -53,13 +53,13 @@ export function Trend({
         strokeWidth={1.5}
         className={cn('shrink-0', size === 'trend' ? 'size-5' : 'size-4', arrow)}
       />
-      <span className={cn(size === 'trend' ? 'text-trend' : 'text-small-strong', figure)}>
+      <span className={cn(size === 'trend' ? 'text-trend' : 'text-small font-medium', figure)}>
         {text}
       </span>
       {descriptor ? (
         <span
           className={cn(
-            size === 'trend' ? 'text-body' : 'text-small',
+            size === 'trend' ? 'text-small' : 'text-caption',
             lavender ? 'text-ink-soft' : 'text-ink-muted',
           )}
         >

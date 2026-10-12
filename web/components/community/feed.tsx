@@ -186,11 +186,11 @@ function TipCard() {
         aria-hidden="true"
         className="grid size-10 shrink-0 place-items-center rounded-2xl bg-aurora-lilac"
       >
-        <Lightbulb strokeWidth={1.5} className="size-5 text-[#5b47a8]" />
+        <Lightbulb strokeWidth={1.5} className="size-5 text-lake" />
       </span>
       <p className="min-w-0 flex-1 text-body text-ink">
-        Share an idea, or tap <strong className="font-semibold">Count me in</strong> on something
-        you like.
+        Share an idea, or tap <strong className="font-medium">Count me in</strong> on something you
+        like.
       </p>
       <Button
         variant="ghost"
@@ -297,14 +297,16 @@ function LockedPreview({
   const joinHref = routes.fan.join(handle, routes.fan.community(handle, community.slug));
   return (
     <section aria-labelledby="preview-title" className="flex flex-col gap-4">
-      <h2 id="preview-title" className="font-display text-[1.75rem] leading-[1.15] text-ink">
+      <h2 id="preview-title" className="text-[1.75rem] leading-[1.15] text-ink">
         A look inside {community.name}
       </h2>
       <ul className="flex flex-col gap-4">
         {preview.slice(0, 3).map((item) => (
           <li key={item.id} className="glass p-5">
-            <p className="text-small text-ink-soft">{POST_TYPE_LABELS[item.type]}</p>
-            <p className="mt-1 line-clamp-2 text-h2 text-ink">{item.title}</p>
+            <p className="text-caption text-ink-soft uppercase">{POST_TYPE_LABELS[item.type]}</p>
+            <p className="mt-1 line-clamp-2 font-display text-h2 [overflow-wrap:anywhere] text-ink">
+              {item.title}
+            </p>
           </li>
         ))}
       </ul>

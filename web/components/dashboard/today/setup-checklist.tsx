@@ -69,7 +69,7 @@ export function SetupChecklist({ handle, members, communities }: SetupChecklistP
     },
   ];
   return (
-    <section aria-labelledby="setup-title" className="min-w-0 rounded-card bg-card p-6">
+    <section aria-labelledby="setup-title" className="glass min-w-0 rounded-panel p-6 sm:p-8">
       <h2 id="setup-title" className="text-h2 text-ink">
         Get your space going
       </h2>

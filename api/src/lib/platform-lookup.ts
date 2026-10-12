@@ -366,6 +366,9 @@ export function mapApifyItems(
 // ---------------------------------------------------------------- fixtures and samples
 
 const DEMO_HANDLES = new Set(['miralane', 'mira', 'priya']);
+
+/** Demo handles answer from platform-fixtures/ instead of a live fetch. */
+export const isDemoHandle = (handle: string): boolean => DEMO_HANDLES.has(handle.toLowerCase());
 const FIXTURES: Partial<Record<LookupPlatform, unknown>> = {
   instagram: instagramFixture,
   tiktok: tiktokFixture,
@@ -506,7 +509,7 @@ export function createPlatformLookup(deps: PlatformLookupDeps) {
       options: LookupOptions = {},
     ): Promise<PlatformLookupResult> {
       const recent = options.recent ?? true;
-      if (DEMO_HANDLES.has(target.handle.toLowerCase())) {
+      if (isDemoHandle(target.handle)) {
         const fixture = FIXTURES[target.platform];
         await sleep(800 + Math.floor(Math.random() * 700));
         if (!fixture) return failed('not_found');

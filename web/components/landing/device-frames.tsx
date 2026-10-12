@@ -46,7 +46,7 @@ function Screen({
   }, [designWidth]);
 
   return (
-    <div ref={ref} className={cn('relative overflow-hidden bg-cream', className)}>
+    <div ref={ref} className={cn('relative overflow-hidden bg-parchment', className)}>
       <div style={{ zoom: (designWidth && fit) || scale, width: designWidth }}>{children}</div>
     </div>
   );

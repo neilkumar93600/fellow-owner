@@ -82,10 +82,10 @@ export function PostBody({ handle, post }: { handle: string; post: PostDetail })
           tint={post.community.tint}
           icon={post.community.icon}
         />
-        <span className="text-small text-ink-soft">{POST_TYPE_LABELS[post.type]}</span>
+        <span className="text-caption text-ink-soft uppercase">{POST_TYPE_LABELS[post.type]}</span>
         {post.lovedAt ? <LovedBadge creator={creator} /> : null}
         {post.challenge ? (
-          <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-aurora-lilac px-3 text-caption text-ink">
+          <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-aurora-lilac px-3 text-caption text-ink uppercase">
             <Trophy aria-hidden="true" strokeWidth={1.5} className="size-3.5" />
             Entry: {post.challenge.title}
           </span>
@@ -93,7 +93,7 @@ export function PostBody({ handle, post }: { handle: string; post: PostDetail })
         <StatusPill status={post.status} className="ml-auto" />
       </div>
 
-      <h1 id="post-title" className="mt-4 text-h1 text-ink">
+      <h1 id="post-title" className="mt-4 text-h1 [overflow-wrap:anywhere] text-ink">
         {post.title}
       </h1>
 
@@ -101,7 +101,7 @@ export function PostBody({ handle, post }: { handle: string; post: PostDetail })
         <AvatarInitials name={post.author.name} image={post.author.image} />
         <div className="min-w-0">
           <p className="truncate text-label-strong text-ink">{post.author.name}</p>
-          <p className="text-small text-ink-soft">
+          <p className="text-caption text-ink-soft uppercase">
             {post.author.headline ? `${post.author.headline} · ` : null}
             <time dateTime={post.createdAt} suppressHydrationWarning>
               {formatRelative(post.createdAt)}
@@ -118,7 +118,9 @@ export function PostBody({ handle, post }: { handle: string; post: PostDetail })
           onCancel={closeEditor}
         />
       ) : (
-        <p className="mt-6 max-w-[68ch] whitespace-pre-line text-body text-ink">{post.body}</p>
+        <p className="mt-6 max-w-[68ch] font-sans text-body whitespace-pre-line [overflow-wrap:anywhere] text-ink">
+          {post.body}
+        </p>
       )}
 
       {post.links.length ? (
@@ -133,7 +135,9 @@ export function PostBody({ handle, post }: { handle: string; post: PostDetail })
               >
                 <ExternalLink aria-hidden="true" className="size-4" />
                 <span className="truncate">{link.label}</span>
-                <span className="truncate text-small text-ink-soft">{hostname(link.url)}</span>
+                <span className="truncate text-caption text-ink-soft uppercase">
+                  {hostname(link.url)}
+                </span>
                 <span className="sr-only">(opens in a new tab)</span>
               </a>
             </li>
@@ -143,7 +147,7 @@ export function PostBody({ handle, post }: { handle: string; post: PostDetail })
 
       {post.type === 'project' ? <TeamRoles post={post} /> : null}
 
-      <div className="mt-6 border-t border-ink/10 pt-6">
+      <div className="mt-6 border-t border-line pt-6">
         <SignalButtons
           useCount={post.useCount}
           buildCount={post.buildCount}
@@ -155,7 +159,7 @@ export function PostBody({ handle, post }: { handle: string; post: PostDetail })
       </div>
 
       {post.isAuthor && !editing ? (
-        <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-ink/10 pt-6">
+        <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-line pt-6">
           <Button
             ref={editRef}
             variant="secondary"
@@ -243,7 +247,7 @@ function PostEditor({
         count={{ value: watch('body').length, max: LIMITS.post.body.max }}
         error={errors.body?.message}
       >
-        <TextArea {...register('body')} rows={8} />
+        <TextArea {...register('body')} rows={8} className="font-sans" />
       </Field>
       <div className="flex flex-wrap gap-3">
         <Button type="submit" variant="secondary" className="h-11" loading={saving}>

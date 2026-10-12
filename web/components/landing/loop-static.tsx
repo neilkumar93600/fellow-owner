@@ -42,7 +42,7 @@ export function StoryVisual({ id }: { id: StoryStepId }) {
     case 'followers':
       return (
         <div>
-          <p className="tabular font-display text-[4rem] leading-none text-ink">
+          <p className="tabular text-[3.5rem] leading-none tracking-[-0.04em] text-ink">
             {storyFollowers.total}
           </p>
           <div aria-hidden="true" className={styles.split}>
@@ -70,7 +70,7 @@ export function StoryVisual({ id }: { id: StoryStepId }) {
             return (
               <li
                 key={community.name}
-                className="flex min-w-0 items-center gap-2.5 rounded-2xl bg-white/70 p-2"
+                className="flex min-w-0 items-center gap-2.5 rounded-2xl border border-line bg-white/70 p-2"
               >
                 <span
                   className={cn(
@@ -94,7 +94,7 @@ export function StoryVisual({ id }: { id: StoryStepId }) {
 
     case 'idea':
       return (
-        <div className="rounded-[20px] bg-white/75 p-4">
+        <div className="rounded-[20px] border border-line bg-white/75 p-4">
           <div className="flex items-center gap-2.5">
             <Avatar name={storyIdea.avatar} className="size-8" />
             <span className="text-small text-ink-soft">
@@ -128,7 +128,7 @@ export function StoryVisual({ id }: { id: StoryStepId }) {
           {storyCrew.map((member) => (
             <li
               key={member.role}
-              className="flex items-center gap-3 rounded-2xl bg-white/70 py-2 pr-3 pl-2"
+              className="flex items-center gap-3 rounded-2xl border border-line bg-white/70 py-2 pr-3 pl-2"
             >
               <Avatar name={member.avatar} className="size-9" />
               <span className="min-w-0 flex-1">
@@ -157,9 +157,9 @@ export function StoryVisual({ id }: { id: StoryStepId }) {
             <span className={styles.play} aria-hidden="true">
               <Play size={18} strokeWidth={1.5} fill="currentColor" />
             </span>
-            <span className="glass-chip absolute top-2.5 left-2.5 inline-flex h-7 items-center gap-1.5 bg-white/85 px-3 text-caption text-ink">
-              <Heart aria-hidden="true" size={13} strokeWidth={2} className="text-lake" />
-              Featured in Sunday’s vlog
+            <span className="glass-chip absolute top-2.5 left-2.5 inline-flex h-7 max-w-[calc(100%-1.25rem)] items-center gap-1.5 bg-white/85 px-3 text-caption text-ink">
+              <Heart aria-hidden="true" size={13} strokeWidth={2} className="shrink-0 text-lake" />
+              <span className="truncate">Featured in Sunday’s vlog</span>
             </span>
           </div>
           <div className="flex items-center justify-between gap-3">
@@ -172,7 +172,7 @@ export function StoryVisual({ id }: { id: StoryStepId }) {
               </div>
             </div>
             <div className="text-right">
-              <p className="tabular text-[1.75rem] leading-none font-semibold tracking-[-0.02em] text-ink">
+              <p className="tabular text-[1.75rem] leading-none font-medium tracking-[-0.03em] text-ink">
                 {storyFeatured.clicks.toLocaleString('en-US')}
               </p>
               <p className="mt-1 text-caption font-normal text-ink-soft">clicks since featured</p>
@@ -204,9 +204,7 @@ export function LoopStatic() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 pt-20 pb-24 md:px-8 md:pt-28 md:pb-32">
       <div className="max-w-[40rem]">
-        <p className="glass-chip inline-flex h-8 items-center px-3.5 text-caption text-ink">
-          Example: a travel creator (demo)
-        </p>
+        <p className="eyebrow">Example: a travel creator (demo)</p>
         <h2 className="mt-5 font-display text-[2.75rem] leading-[1.02] text-ink md:text-[4rem]">
           How it works: <em>from follower to featured</em>
         </h2>
@@ -216,19 +214,19 @@ export function LoopStatic() {
         {storySteps.map((step, index) => (
           <li
             key={step.id}
-            className="glass-strong grid items-center gap-5 p-2 pb-6 md:grid-cols-12 md:gap-8 md:p-3"
+            className="glass-strong grid grid-cols-[minmax(0,1fr)] items-center gap-5 p-2 pb-6 md:grid-cols-12 md:gap-8 md:p-3"
           >
             <BrowserFrame
               url={LIVE_URLS[index] ?? LIVE_URLS[0]}
               className={cn('md:col-span-6', index % 2 === 1 && 'md:order-2')}
-              screenClassName="grid aspect-auto min-h-72 place-items-center bg-[linear-gradient(135deg,#fff4ec,#f4effc_55%,#eef6fc)] p-5 md:p-8"
+              screenClassName="grid aspect-auto min-h-72 place-items-center bg-[linear-gradient(135deg,#fff1ec,#eef2fb_55%,#ebfdf3)] p-5 md:p-8"
             >
               <div className="w-full max-w-[420px]">
                 <StoryVisual id={step.id} />
               </div>
             </BrowserFrame>
             <div className={cn('px-4 md:col-span-6 md:px-6', index % 2 === 1 && 'md:order-1')}>
-              <p className="text-caption text-ink-soft">
+              <p className="text-caption text-ink-soft uppercase">
                 {String(index + 1).padStart(2, '0')} / 05 · {step.name}
               </p>
               <h3 className="mt-2 font-display text-[2.25rem] leading-[1.05] text-ink">

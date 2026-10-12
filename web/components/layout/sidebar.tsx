@@ -17,8 +17,8 @@ import { AccountMenu, type HeaderSpace } from './header';
  * their name in a right-hand tooltip (and kept as the link's name, sr-only), a hairline between groups,
  * Help and the avatar menu at the foot. Expanded (248px, 1024px and up, remembered in a cookie): rows are
  * 44px pills with their label, groups get small headings, and the foot adds the name and handle. Icons
- * keep the same x slot in both. The current room is a soft aurora-peach (#FFD9C2) chip with a blue
- * icon (3.7:1 on peach, AA for icons) and an ink label (12.9:1), and no dot.
+ * keep the same x slot in both. The current room is a periwinkle chip with a lake icon and an ink
+ * mono label (small caps), and no dot.
  *
  * Which look applies is pure CSS on the shell's data-sidebar (see AppShell), so below 1024px an expanded
  * cookie still shows the 72px rail and the server HTML never disagrees with the client.
@@ -76,7 +76,7 @@ export function Sidebar({
               {group.label ? (
                 <p
                   id={headingId}
-                  className="sr-only pl-3.5 text-[11px] leading-4 font-medium tracking-[0.08em] whitespace-nowrap text-ink-soft uppercase lg:group-data-[sidebar=expanded]/shell:not-sr-only lg:group-data-[sidebar=expanded]/shell:mb-1 lg:group-data-[sidebar=expanded]/shell:block"
+                  className="sr-only pl-3.5 text-[11px] leading-4 tracking-[0.08em] whitespace-nowrap text-ink-soft uppercase lg:group-data-[sidebar=expanded]/shell:not-sr-only lg:group-data-[sidebar=expanded]/shell:mb-1 lg:group-data-[sidebar=expanded]/shell:block"
                 >
                   {group.label}
                 </p>
@@ -85,7 +85,7 @@ export function Sidebar({
                 <div
                   aria-hidden="true"
                   className={cn(
-                    'mx-2 mb-2 h-px bg-ink/10',
+                    'mx-2 mb-2 h-px bg-line',
                     group.label ? 'lg:group-data-[sidebar=expanded]/shell:hidden' : null,
                   )}
                 />
@@ -124,7 +124,7 @@ export function Sidebar({
 
 /** The label: the link's name when collapsed (sr-only, never display:none), visible text when expanded. */
 const labelClass =
-  'sr-only whitespace-nowrap overflow-hidden text-ellipsis pr-4 text-label lg:group-data-[sidebar=expanded]/shell:not-sr-only';
+  'sr-only whitespace-nowrap overflow-hidden text-ellipsis pr-4 text-small tracking-wide uppercase lg:group-data-[sidebar=expanded]/shell:not-sr-only';
 
 const rowClass =
   'press relative flex h-11 w-full items-center overflow-hidden rounded-full transition-colors duration-150 ease-out-quart';
@@ -145,9 +145,7 @@ function RailLink({
         aria-current={active ? 'page' : undefined}
         className={cn(
           rowClass,
-          active
-            ? 'glass-chip bg-aurora-peach text-ink'
-            : 'text-ink-soft hover:bg-white/60 hover:text-ink',
+          active ? 'bg-periwinkle text-ink' : 'text-ink-soft hover:bg-white/60 hover:text-ink',
         )}
       >
         <span className="grid size-11 shrink-0 place-items-center">
@@ -184,7 +182,7 @@ function EdgeToggle({ expanded, onToggle }: { expanded: boolean; onToggle: () =>
           aria-expanded={expanded}
           aria-controls="sidebar-nav"
           aria-keyshortcuts="["
-          className="relative grid size-7 press place-items-center rounded-full border border-white/80 bg-white/90 text-ink-soft shadow-glass transition-colors duration-150 ease-out-quart before:absolute before:-inset-2 before:content-[''] hover:bg-white hover:text-ink"
+          className="relative grid size-7 press place-items-center rounded-full border border-line bg-white/90 text-ink-soft transition-colors duration-150 ease-out-quart before:absolute before:-inset-2 before:content-[''] hover:bg-white hover:text-ink"
         >
           <Icon aria-hidden className="size-4" strokeWidth={2} />
         </button>

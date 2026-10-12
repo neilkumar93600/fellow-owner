@@ -167,7 +167,7 @@ export function IdeasView() {
         </Banner>
       ) : null}
 
-      {/* Two glass pieces side by side on the shell, never one inside the other. */}
+      {/* Two glass pieces side by side on the washes, never one inside the other. */}
       <div className="flex flex-wrap items-center gap-3">
         <SegmentedPill
           label="Ideas view"

@@ -1,5 +1,6 @@
 /*
- * For creators (landing brief v2, part 5): a lavender field inset from the page with shell corners.
+ * For creators (landing brief v2, part 5): a frosted field tinted by two soft Monad washes (coral, sky-wash),
+ * inset from the page with panel corners and an Ash hairline, no shadow.
  *
  * Phones and tablets (to 1023px): one column, at most 880px wide. Heading, then each step caption
  * over its screen, flat.
@@ -37,11 +38,11 @@
   position: relative;
   border-radius: 28px;
   background:
-    radial-gradient(55% 40% at 100% 100%, rgb(220 207 247 / 0.55), transparent 72%),
-    radial-gradient(40% 30% at 0% 0%, rgb(255 217 194 / 0.5), transparent 72%),
+    radial-gradient(55% 40% at 100% 100%, rgb(160 181 235 / 0.35), transparent 72%),
+    radial-gradient(40% 30% at 0% 0%, rgb(255 148 115 / 0.28), transparent 72%),
     linear-gradient(160deg, rgb(255 255 255 / 0.45), rgb(255 255 255 / 0.25));
   border: 1px solid var(--glass-edge);
-  box-shadow: var(--glass-highlight), var(--shadow-glass);
+  box-shadow: var(--glass-highlight);
   padding-block: 72px 40px;
   /* clip, not hidden: it keeps the sticky column working. */
   overflow: clip;
@@ -167,7 +168,7 @@
   color: var(--ink);
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.02em;
   /* 13cqi keeps "sorted in minutes." (about 7.3em) on one line in the story column. */
   font-size: min(clamp(2.75rem, 1.6rem + 3.6vw, 4.5rem), 13cqi);
   text-wrap: balance;
@@ -208,8 +209,9 @@
   background: var(--card-strong);
   color: var(--ink);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 @media (min-width: 1024px) {
@@ -263,7 +265,7 @@
   background: var(--ink);
   color: #fff;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   transition:
     background-color var(--dur-slow) var(--ease-out-quart),
@@ -280,7 +282,7 @@
 .stepTitle {
   color: var(--ink);
   font-size: 1.0625rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.35;
   letter-spacing: -0.01em;
 }
@@ -332,7 +334,7 @@
 [data-scene="ready"] .step:not([data-active]) .stepNum {
   background: rgb(255 255 255 / 0.7);
   color: var(--ink-soft);
-  box-shadow: inset 0 0 0 1px rgb(45 45 48 / 0.08);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
 }
 
 [data-scene="ready"] .step:not([data-active]) .stepTitle {
@@ -504,9 +506,7 @@
   /* 96% white: the deck's waiting screens sit right behind this one and must not show through. */
   background: rgb(255 255 255 / 0.96);
   border: 1px solid var(--glass-edge);
-  box-shadow:
-    var(--glass-highlight),
-    0 24px 60px -24px rgb(40 30 60 / 0.28);
+  box-shadow: var(--glass-highlight);
   color: var(--ink);
 }
 
@@ -547,12 +547,14 @@
   min-width: 0;
 }
 
+/* The screen's title is the app's page heading: the serif at 400. */
 .screenTitle {
   color: var(--ink);
-  font-size: 1.125rem;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 400;
   line-height: 1.5rem;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
 }
 
 .screenSub {
@@ -564,7 +566,7 @@
 
 @container (min-width: 560px) {
   .screenTitle {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     line-height: 2rem;
   }
 
@@ -589,4 +591,5 @@
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.01em;
+  text-transform: uppercase;
 }

@@ -5,8 +5,8 @@ import type * as React from 'react';
 import { cn } from './cn';
 
 /**
- * DESIGN.md Dialog, for destructive confirmation only: strong frosted glass, radius 28, 440px wide (the screen
- * minus 32px on phones), Overlay Soft, over the ink 20% scrim at every width. Focus is trapped inside
+ * Dialog, for destructive confirmation only: strong frosted glass with a hairline, radius 40, 440px wide (the screen
+ * minus 32px on phones), shadow-overlay, over the ink 20% scrim at every width. Focus is trapped inside
  * and returns to the trigger on close; Esc and Cancel (a `DialogClose`) close it. Controlled through
  * `open` and `onOpenChange` when a menu item opens it.
  */
@@ -41,22 +41,22 @@ export function DialogContent({ className, ...props }: DialogContentProps) {
   );
 }
 
-/** H2, labels the dialog. */
+/** Serif H2, labels the dialog. */
 export function DialogTitle({
   className,
   ...props
 }: Omit<DialogPrimitive.Title.Props, 'className'> & { className?: string }) {
-  return <DialogPrimitive.Title className={cn('text-h2 text-ink', className)} {...props} />;
+  return <DialogPrimitive.Title className={cn('font-display text-h2 font-normal text-ink', className)} {...props} />;
 }
 
-/** Body ink-soft under the title; describes the dialog. */
+/** Mono ink-soft under the title; describes the dialog. */
 export function DialogDescription({
   className,
   ...props
 }: Omit<DialogPrimitive.Description.Props, 'className'> & { className?: string }) {
   return (
     <DialogPrimitive.Description
-      className={cn('mt-2 text-body text-ink-soft', className)}
+      className={cn('mt-2 text-small text-ink-soft', className)}
       {...props}
     />
   );

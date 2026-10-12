@@ -17,19 +17,19 @@ import { DASHBOARD_NAV, HELP_NAV, isNavActive } from './dashboard-nav';
 
 /** 52px cells, icon over a caption: five icon and label pairs side by side do not fit a 360px phone. */
 const ITEM =
-  'press relative flex h-13 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[20px] px-0.5 text-[11px] leading-4 font-medium';
-const CURRENT = 'glass-chip rounded-[20px] bg-white/90 text-ink';
+  'press relative flex h-13 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[20px] px-0.5 text-[11px] leading-4 tracking-wide uppercase';
+const CURRENT = 'rounded-[20px] bg-periwinkle text-ink';
 const IDLE = 'text-ink-soft';
 
 /** The four rooms a phone needs most (and whose names fit a fifth of a 360px dock). */
 const PHONE_ROOMS = ['Today', 'Fan mail', 'Ideas', 'Challenges'];
 
-/** The current item's 3px sunset dot, under its label. */
+/** The current item's 3px lake dot, under its label. */
 function Dot() {
   return (
     <span
       aria-hidden="true"
-      className="absolute bottom-1 left-1/2 size-[3px] -translate-x-1/2 rounded-full bg-sunset"
+      className="absolute bottom-1 left-1/2 size-[3px] -translate-x-1/2 rounded-full bg-lake"
     />
   );
 }
@@ -37,7 +37,7 @@ function Dot() {
 /**
  * Bottom nav (below 768px): a floating frosted dock 12px from the screen edges plus the safe area. The
  * four rooms a phone needs most, then More (the other rooms, Help and Sign out). The current item is the rail's
- * white glass chip with the sunset dot.
+ * periwinkle chip with the lake dot.
  */
 export function BottomNav({ className }: { className?: string }) {
   const pathname = usePathname();
@@ -50,7 +50,7 @@ export function BottomNav({ className }: { className?: string }) {
     <nav
       aria-label="Main"
       className={cn(
-        'glass-strong fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-40 flex items-center gap-1 rounded-[28px] p-1.5 md:hidden',
+        'glass-strong fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-40 flex items-center gap-1 rounded-panel p-1.5 md:hidden',
         className,
       )}
     >

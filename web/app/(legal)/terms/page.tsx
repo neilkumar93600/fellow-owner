@@ -362,12 +362,18 @@ export default function Page() {
             . Hosted locally and unmodified. Copyright &copy; 2016 The Inter Project Authors.
           </li>
           <li>
-            <strong>Instrument Serif typeface:</strong> by Instrument, under the{' '}
+            <strong>Newsreader typeface:</strong> by Production Type, under the{' '}
             <A href="https://openfontlicense.org/open-font-license-official-text/">
               SIL Open Font License 1.1
             </A>
-            . Used for display headlines, unmodified. Copyright &copy; 2022 The Instrument Serif
-            Project Authors.
+            . Used for headlines, unmodified. Copyright &copy; 2020 The Newsreader Project Authors.
+          </li>
+          <li>
+            <strong>Geist Mono typeface:</strong> by Vercel, under the{' '}
+            <A href="https://openfontlicense.org/open-font-license-official-text/">
+              SIL Open Font License 1.1
+            </A>
+            . Used for interface text, unmodified. Copyright &copy; 2024 The Geist Project Authors.
           </li>
           <li>
             <strong>Lucide icons:</strong> licensed under the{' '}

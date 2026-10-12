@@ -63,7 +63,10 @@ function Chips({ community: c }: { community: CommunityActivity }) {
   return (
     <ul className="flex flex-wrap gap-2">
       {counts.map(({ label, n }) => (
-        <li key={label} className="rounded-full bg-white px-3 py-1 text-small text-ink-soft">
+        <li
+          key={label}
+          className="rounded-full border border-line bg-white/70 px-3 py-1 text-caption text-ink-soft uppercase"
+        >
           {formatNumber(n)} {pluralize(n, label)}
         </li>
       ))}
@@ -154,7 +157,7 @@ export function CommunityActivityCard() {
           {list.map((c, i) => (
             <li key={c.id} className="flex flex-col gap-2">
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <span className="text-label text-ink">
+                <span className="min-w-0 text-label [overflow-wrap:anywhere] text-ink">
                   {i + 1}. {c.name}
                 </span>
                 <span className="flex items-center gap-3">
@@ -194,7 +197,7 @@ export function CommunityActivityPanel({ slug }: { slug: string }) {
   return (
     <section
       aria-labelledby="community-activity-title"
-      className="flex flex-col gap-4 glass rounded-panel p-6"
+      className="glass flex flex-col gap-4 rounded-panel p-6"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="community-activity-title" className="text-h2 text-ink">
@@ -211,7 +214,7 @@ export function CommunityActivityPanel({ slug }: { slug: string }) {
             <span className="text-trend text-ink">
               {formatNumber(community.score)} {pluralize(community.score, 'point')}
             </span>
-            <span>
+            <span className="uppercase">
               #{rank + 1} of {data?.communities.length}
             </span>
             <Trend

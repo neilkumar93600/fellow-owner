@@ -16,8 +16,8 @@ export interface ToolbarProps {
 }
 
 /**
- * DESIGN.md Toolbar: a frosted glass pill with 16px padding, so 72px tall around 40px controls. When the two
- * sides do not fit (phones), the right side wraps to its own line and the pill relaxes to a 28px radius.
+ * Toolbar: a frosted glass pill with 16px padding, so 72px tall around 40px controls. When the two
+ * sides do not fit (phones), the right side wraps to its own line and the pill relaxes to a 40px radius.
  */
 export function Toolbar({ title, start, end, className }: ToolbarProps) {
   return (
@@ -50,7 +50,7 @@ export interface SearchSquareProps {
 }
 
 /**
- * DESIGN.md Search square: a 40px frosted glass square (radius 12) that swaps, without
+ * Search square: a 40px frosted glass square (radius 16) that swaps, without
  * animating, into a 280px search input (the free width on phones). It stays open while it holds a value;
  * Esc clears it, collapses it and puts focus back on the square.
  */
@@ -88,7 +88,7 @@ export function SearchSquare({
           setOpen(true);
         }}
         className={cn(
-          'glass-chip press grid size-10 shrink-0 place-items-center rounded-sm text-ink hover:bg-white/90',
+          'glass-chip press grid size-10 shrink-0 place-items-center rounded-2xl text-ink hover:bg-white/90',
           className,
         )}
       >
@@ -100,7 +100,7 @@ export function SearchSquare({
   return (
     <div
       className={cn(
-        'flex h-10 w-[280px] min-w-0 items-center gap-2 rounded-sm border border-white/70 bg-white/85 px-3 backdrop-blur-xl transition-colors duration-150 ease-out-quart max-sm:w-full',
+        'flex h-10 w-[280px] min-w-0 items-center gap-2 rounded-2xl border border-line-field bg-white/85 px-3 backdrop-blur-xl transition-colors duration-150 ease-out-quart max-sm:w-full',
         'has-focus-visible:border-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink',
         className,
       )}
@@ -123,7 +123,7 @@ export function SearchSquare({
         onBlur={() => {
           if (value === '') setOpen(false);
         }}
-        className="h-full min-w-0 flex-1 bg-transparent text-body text-ink placeholder:text-ink-muted focus-visible:outline-none max-sm:text-[1rem] [&::-webkit-search-cancel-button]:hidden"
+        className="h-full min-w-0 flex-1 bg-transparent text-small text-ink placeholder:text-ink-muted focus-visible:outline-none max-sm:text-[1rem] [&::-webkit-search-cancel-button]:hidden"
       />
     </div>
   );

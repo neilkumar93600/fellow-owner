@@ -22,11 +22,11 @@ function IdeaTile({ post, href }: { post: IdeaItem; href: string }) {
   const { ai } = post;
   return (
     <article className="glass group flex min-w-0 flex-1 flex-col overflow-hidden rounded-[24px] transition-colors duration-150 ease-out-quart hover:bg-white/80">
-      {/* Cover tint: the community's aurora colour with its icon, the Loved badge on the corner. */}
+      {/* Cover tint: the community's pale tint with its icon, the Loved badge on the corner. */}
       <div className={`relative flex h-20 items-center px-5 ${styles.tile}`}>
         <Icon aria-hidden="true" strokeWidth={1.5} className={`size-8 ${styles.icon}`} />
         {post.lovedAt ? (
-          <span className="glass-chip absolute top-3 right-3 inline-flex h-7 items-center gap-1.5 px-3 text-caption text-ink">
+          <span className="glass-chip absolute top-3 right-3 inline-flex h-7 items-center gap-1.5 px-3 text-caption text-ink uppercase">
             <Heart aria-hidden="true" className="size-3.5 fill-sunset text-sunset" />
             Loved
           </span>
@@ -48,12 +48,14 @@ function IdeaTile({ post, href }: { post: IdeaItem; href: string }) {
             <MatchLabel score={ai.fitScore} />
           )}
         </div>
-        <h3 className="mt-3 line-clamp-2 text-h2 text-ink">
+        <h3 className="mt-3 line-clamp-2 font-display text-h2 [overflow-wrap:anywhere] text-ink">
           <Link href={href} className="rounded-sm underline-offset-4 group-hover:underline">
             {post.title}
           </Link>
         </h3>
-        <p className="mt-1 truncate text-body text-ink-soft">{post.excerpt}</p>
+        <p className="mt-1 line-clamp-2 font-sans text-body [overflow-wrap:anywhere] text-ink-soft">
+          {post.excerpt}
+        </p>
         <p className="mt-4 text-small text-ink-soft">
           <span className="tabular-nums">{formatNumber(post.useCount)}</span> would use this ·{' '}
           <span className="tabular-nums">{formatNumber(post.buildCount)}</span> count me in

@@ -212,7 +212,7 @@ export function DecisionStack({ items }: { items: DecisionItem[] }) {
           {hasPeek ? (
             <div
               aria-hidden="true"
-              className="glass absolute inset-x-0 top-3 bottom-0 origin-bottom scale-x-[0.96] rounded-[28px]"
+              className="glass absolute inset-x-0 top-3 bottom-0 origin-bottom scale-x-[0.96] rounded-panel"
             />
           ) : null}
           <AnimatePresence initial={false} mode="popLayout" custom={direction}>
@@ -282,7 +282,7 @@ export function DecisionStackSkeleton() {
   return (
     <div aria-hidden="true">
       <Skeleton className="mb-3 h-10 w-40 rounded-full" />
-      <div className="glass-strong flex min-h-[360px] flex-col gap-4 rounded-[28px] p-7">
+      <div className="glass-strong flex min-h-[360px] flex-col gap-4 rounded-panel p-8">
         <div className="flex items-center gap-3">
           <Skeleton className="size-12 rounded-full" />
           <div className="flex flex-col gap-2">

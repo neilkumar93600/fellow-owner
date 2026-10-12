@@ -1,5 +1,6 @@
 /*
- * The three studio screens of "For creators" (creators-panels.tsx), in the Golden Hour Frost look.
+ * The three studio screens of "For creators" (creators-panels.tsx), in the Parchment Frost look: mono UI,
+ * hairlines instead of shadows, Lake Blue on the one primary button of each screen.
  * Every screen sits in a frosted shell (creators.module.css) and responds to its width through container
  * queries on the figure: a phone-width column first, side-by-side from 480 and 560px.
  */
@@ -15,7 +16,7 @@
   border-radius: 999px;
   color: var(--ink);
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
@@ -37,7 +38,7 @@
 .whoName {
   color: var(--ink);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
 }
 
@@ -61,7 +62,7 @@
   white-space: nowrap;
 }
 
-/* Buttons drawn as part of the picture. The one filled action per screen is ink; no coral in the mock-ups. */
+/* Buttons drawn as part of the picture, as the app draws them: the one filled action per screen is Lake Blue. */
 .btnPrimary,
 .btnPrimaryWide,
 .btnGlass,
@@ -75,21 +76,23 @@
   height: 40px;
   padding-inline: 16px;
   border-radius: 999px;
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .btnPrimary,
 .btnPrimaryWide {
-  background: var(--ink);
+  background: var(--color-lake);
   color: #fff;
 }
 
 .btnPrimaryWide {
   width: 100%;
   height: 44px;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .btnGlass {
@@ -156,7 +159,7 @@
 .peekName {
   color: var(--ink);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.2;
 }
 
@@ -168,9 +171,7 @@
   padding: 16px;
   border-radius: 24px;
   background: rgb(255 255 255 / 0.92);
-  box-shadow:
-    inset 1px 1px 0 rgb(255 255 255 / 0.9),
-    0 18px 40px -22px rgb(40 30 60 / 0.3);
+  box-shadow: inset 0 0 0 1px var(--glass-edge);
 }
 
 @container (min-width: 480px) {
@@ -183,6 +184,7 @@
 
 .decisionTop {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
 }
@@ -199,7 +201,8 @@
 
 .who {
   display: flex;
-  flex: 1;
+  /* A 9rem basis: on a narrow screen the match label drops under the name instead of squeezing it. */
+  flex: 1 1 9rem;
   flex-direction: column;
   min-width: 0;
 }
@@ -281,7 +284,7 @@
 .thanksLabel {
   color: var(--ink-soft);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -340,10 +343,10 @@
   background: rgb(255 255 255 / 0.95);
   box-shadow: inset 0 0 0 1px var(--glass-edge);
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
 }
 
-/* Active tab: a 3px coral dot, as in the rail. */
+/* Active tab: a 3px Lake Blue dot, as in the rail. */
 .tabActive::after {
   content: "";
   position: absolute;
@@ -353,7 +356,7 @@
   height: 3px;
   margin-left: -1.5px;
   border-radius: 999px;
-  background: var(--color-sunset);
+  background: var(--color-lake);
 }
 
 .tabWide {
@@ -370,6 +373,14 @@
   margin-left: auto;
 }
 
+/* Mono is wide: on a phone-width screen the tabs tighten so "Filtered" still fits. */
+@container (max-width: 479.98px) {
+  .tab {
+    padding-inline: 8px;
+    font-size: 0.6875rem;
+  }
+}
+
 .tabCount {
   display: inline-grid;
   place-items: center;
@@ -380,7 +391,7 @@
   background: var(--color-aurora-peach);
   color: var(--ink);
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .toolbar {
@@ -431,9 +442,7 @@
 
 .mailHover {
   background: rgb(255 255 255 / 0.96);
-  box-shadow:
-    inset 0 0 0 1px var(--glass-edge),
-    0 12px 28px -18px rgb(40 30 60 / 0.35);
+  box-shadow: inset 0 0 0 1px var(--color-ash);
 }
 
 .mailBody {
@@ -538,9 +547,10 @@
 }
 
 .draftTitle {
+  min-width: 0;
   color: var(--ink);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .draftVoice {
@@ -549,11 +559,13 @@
   gap: 5px;
   height: 24px;
   padding-inline: 9px;
+  flex: none;
   border-radius: 999px;
   background: var(--color-aurora-peach);
   color: var(--ink);
   font-size: 0.75rem;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .draftField {
@@ -564,13 +576,16 @@
   background: #fff;
   box-shadow: inset 0 0 0 1px var(--line);
   color: var(--ink);
+  /* The post body is a long read: Inter. */
+  font-family: var(--font-sans);
   font-size: 0.8125rem;
   line-height: 1.5;
+  letter-spacing: -0.006em;
 }
 
 .draftLink,
 .draftTags {
-  color: var(--sky, #2b6ca8);
+  color: var(--color-lake);
 }
 
 .draftLink {
@@ -650,7 +665,7 @@
 .showcaseTitle {
   color: var(--ink);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .showcasePath {
@@ -670,13 +685,13 @@
   background: #dff3e6;
   color: #0f6a31;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .orderLabel {
   color: var(--ink-soft);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -710,7 +725,7 @@
 .previewTitle {
   color: var(--ink);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
 }
 
@@ -754,7 +769,7 @@
   overflow: hidden;
   color: var(--ink);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -804,7 +819,7 @@
 .clicksValue {
   color: var(--ink);
   font-size: 1.75rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
@@ -815,7 +830,7 @@
   gap: 4px;
   color: var(--success);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .bars {

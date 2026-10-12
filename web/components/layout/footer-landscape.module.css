@@ -1,33 +1,20 @@
-/* Golden-hour landscape: full-bleed generated art that fades up from the cream page at its top edge. */
+/* Monad-style atmospheric wash: coral -> sky-wash -> mint blooms, soft-edged, fading up from parchment. */
 
 .landscape {
-  position: relative;
-  overflow: hidden;
+  height: 160px;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 38%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 38%);
+  background:
+    radial-gradient(60% 120% at 12% 110%, rgb(255 148 115 / 0.55), transparent 70%),
+    radial-gradient(60% 130% at 50% 120%, rgb(160 181 235 / 0.6), transparent 70%),
+    radial-gradient(60% 120% at 88% 110%, rgb(167 252 205 / 0.55), transparent 70%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 70%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 70%);
 }
 
-/* Natural aspect on phones (1200x702); the wide crop (2400x760) from 768px up, capped so it never towers. */
-.art {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* From 768px up the footer caps at one screen (footer.module.css): the art takes what is left, between
-   96px and its natural height, cover-cropped from the bottom. */
 @media (min-width: 768px) {
   .landscape {
-    flex: 1 1 min(520px, 31.67vw);
+    flex: 1 1 200px;
     min-height: 96px;
-  }
-
-  .art {
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    object-fit: cover;
-    object-position: center bottom;
+    max-height: 240px;
   }
 }

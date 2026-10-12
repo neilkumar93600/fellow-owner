@@ -7,6 +7,7 @@ import type {
   FollowersQuery,
   ImportFollowersInput,
   ImportResult,
+  PlatformFansImport,
   TagFollowersInput,
   TagFollowersResult,
   UpdateFollowerInput,
@@ -60,6 +61,18 @@ export function importYoutube(input: YoutubeImportInput): Promise<YoutubeImportR
   return apiFetch<YoutubeImportResult>('/api/studio/followers/import/youtube', {
     method: 'POST',
     json: input,
+  });
+}
+
+/**
+ * POST /api/spaces/:handle/followers/import/platform : people who comment on a profile's recent
+ * posts become Fans (200). `skipped` with a reason when nothing was written (X, sample data,
+ * private, not found, unavailable, no comments); 429 past the daily caps.
+ */
+export function importPlatformFans(handle: string, url: string): Promise<PlatformFansImport> {
+  return apiFetch<PlatformFansImport>(`/api/spaces/${at(handle)}/followers/import/platform`, {
+    method: 'POST',
+    json: { url },
   });
 }
 

@@ -20,7 +20,7 @@ export interface StatCardProps {
 }
 
 /**
- * DESIGN.md Stat card (Today only, three at most): the 56px tile, the Stat number with its Small Strong
+ * Stat card (Today only, three at most): the 56px tile, the serif Stat number with its mono caps
  * label stacked beside it, then the trend row across the card. The whole card links to the list it
  * counts. Hover keeps the tint: the label steps to ink and a chevron fades in; press is 0.98.
  */
@@ -39,7 +39,7 @@ export function StatCard({
     <Link
       href={href}
       className={cn(
-        'group press relative grid grid-cols-[56px_1fr] items-center gap-x-4 gap-y-0.5 rounded-panel p-6 text-ink shadow-[inset_1px_1px_0_rgb(255_255_255/0.7),var(--shadow-glass)] hover:border-white',
+        'group press relative grid grid-cols-[56px_1fr] items-center gap-x-4 gap-y-0.5 rounded-panel p-6 text-ink hover:border-smoke',
         styles.card,
         className,
       )}
@@ -47,8 +47,11 @@ export function StatCard({
       <span className={cn('row-span-2 grid size-14 place-items-center rounded-2xl', styles.tile)}>
         <Icon aria-hidden="true" strokeWidth={1.5} className={cn('size-6', styles.icon)} />
       </span>
-      <NumberTicker value={value} className="self-end text-stat text-ink" />
-      <span className="self-start text-small-strong text-ink-soft transition-colors duration-150 ease-out-quart group-hover:text-ink">
+      <NumberTicker
+        value={value}
+        className="self-end font-display text-stat font-normal text-ink"
+      />
+      <span className="self-start text-caption tracking-tight text-ink-soft uppercase transition-colors duration-150 ease-out-quart group-hover:text-ink">
         {label}
       </span>
       <Trend

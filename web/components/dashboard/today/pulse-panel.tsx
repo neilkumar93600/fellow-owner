@@ -15,16 +15,19 @@ export function PulsePanel({ sentence, stats }: PulsePanelProps) {
   const ideas = stats?.ideasThisWeek.value ?? 0;
   const waiting = stats?.opportunitiesWaiting.value ?? 0;
   return (
-    <GlassPanel as="section" aria-labelledby="pulse-title" className="p-5">
-      <h2 id="pulse-title" className="flex items-center gap-2 text-small-strong text-ink-soft">
+    <GlassPanel as="section" aria-labelledby="pulse-title" className="rounded-panel p-6">
+      <h2
+        id="pulse-title"
+        className="flex items-center gap-2 text-caption tracking-wide text-ink-soft uppercase"
+      >
         <Activity aria-hidden className="size-4" strokeWidth={1.75} />
         This week
       </h2>
-      <p className="mt-2 text-h2 text-ink">
+      <p className="mt-3 font-display text-h2 text-ink">
         {sentence ?? 'A quiet week so far. New ideas from your fans will show up here.'}
       </p>
       {stats ? (
-        <p className="mt-2 text-small text-ink-soft">
+        <p className="mt-3 text-caption tracking-wide text-ink-soft uppercase">
           {formatNumber(ideas)} new {pluralize(ideas, 'idea')} · {formatNumber(waiting)}{' '}
           {pluralize(waiting, 'fan message')} waiting for you
         </p>
