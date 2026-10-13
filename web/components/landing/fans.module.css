@@ -602,6 +602,38 @@
 }
 
 /*
+ * Tablets (768 to 1023): sized by height alone the phone took about 360px of a 768px screen, the steps
+ * column shrank to about 190px and the list ran past the bottom of the pinned stage. The phone is capped
+ * at 40vw wide here so the steps keep about 330px.
+ */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .device {
+    --ph: min(clamp(520px, calc(100svh - 176px), 740px), calc(40vw / 0.4615));
+  }
+
+  .root[data-mode="pin"] .device {
+    --ph: min(clamp(440px, calc(100svh - 168px), 780px), calc(40vw / 0.4615));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) and (max-height: 780px) {
+  .root[data-mode="pin"] .device {
+    --ph: min(clamp(440px, calc(100svh - 128px), 780px), calc(40vw / 0.4615));
+  }
+}
+
+/*
+ * Short windows (1280 x 720, 1024 x 768, a laptop with the bookmarks bar): label, four steps and the
+ * callout ran past the bottom of the pinned stage. The callout is the extra, so the pin drops it; the
+ * tabs and swipe layouts are not pinned and keep it.
+ */
+@media (max-height: 760px), (max-width: 1279.98px) and (max-height: 800px) {
+  .root[data-mode="pin"] .callout {
+    display: none;
+  }
+}
+
+/*
  * A soft Monad wash behind the phone (coral to sky-wash, its edge faded by a radial mask so it is never
  * sharp) gives the object a place to sit.
  */

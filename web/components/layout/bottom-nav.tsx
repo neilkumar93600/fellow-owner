@@ -15,9 +15,13 @@ import {
 import { useSignOut } from '@/hooks/use-sign-out';
 import { DASHBOARD_NAV, HELP_NAV, isNavActive } from './dashboard-nav';
 
-/** 52px cells, icon over a caption: five icon and label pairs side by side do not fit a 360px phone. */
+/**
+ * 52px cells, icon over a caption: five icon and label pairs side by side do not fit a 360px phone.
+ * 10px mono with tight tracking keeps "Challenges" (10 characters, 57.5px) whole in a 60px cell from
+ * 360px up; at 11px wide-tracked it truncated on every phone.
+ */
 const ITEM =
-  'press relative flex h-13 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[20px] px-0.5 text-[11px] leading-4 tracking-wide uppercase';
+  'press relative flex h-13 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[20px] text-[10px] leading-4 tracking-tight uppercase';
 const CURRENT = 'rounded-[20px] bg-periwinkle text-ink';
 const IDLE = 'text-ink-soft';
 
@@ -50,7 +54,7 @@ export function BottomNav({ className }: { className?: string }) {
     <nav
       aria-label="Main"
       className={cn(
-        'glass-strong fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-40 flex items-center gap-1 rounded-panel p-1.5 md:hidden',
+        'glass-strong fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-40 flex items-center gap-0.5 rounded-panel p-1.5 md:hidden',
         className,
       )}
     >

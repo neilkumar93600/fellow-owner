@@ -71,9 +71,14 @@
   padding: 80px 16px 16px;
 }
 
+/*
+ * The middle column's minimum is 0, not its content: the live frames zoom to whatever width they get,
+ * so a content minimum let each step's frame squeeze the heading column differently and the heading
+ * re-wrapped (two lines to four) as the steps changed. The heading column is a fixed share instead.
+ */
 @media (min-width: 768px) {
   .frame {
-    grid-template-columns: minmax(0, 460px) 1fr auto;
+    grid-template-columns: minmax(0, clamp(260px, 36vw, 460px)) minmax(0, 1fr) auto;
     grid-template-rows: auto 1fr;
     gap: 24px;
     padding: 104px 32px 40px;

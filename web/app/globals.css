@@ -677,9 +677,11 @@
 /*
  * Horizontally scrolling glass bands (tab bars, the count chip band, the fan community switcher): a thin
  * native scrollbar under a fine pointer, none under a coarse one. Pad the band at least 4px so the scroll
- * box never clips the focus ring of the controls inside.
+ * box never clips the focus ring of the controls inside. Positioned, so sr-only labels (absolute) in
+ * scrolled-off items stay inside the scroll box instead of widening the page.
  */
 @utility scrollbar-band {
+  position: relative;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;

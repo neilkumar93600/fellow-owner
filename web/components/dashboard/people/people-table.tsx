@@ -81,14 +81,15 @@ export function CommunityChips({
   max?: number;
 }) {
   return (
-    <span className={cn('flex items-center gap-1.5', max === undefined && 'flex-wrap')}>
+    <span className={cn('flex min-w-0 items-center gap-1.5', max === undefined && 'flex-wrap')}>
       {communities.slice(0, max).map((community) => (
         <CommunityChip
           key={community.slug}
           name={community.name}
           tint={community.tint}
           icon={icons[community.slug] ?? 'users'}
-          className="max-w-36"
+          // shrink: on a phone card two long names share the row and truncate instead of overflowing.
+          className="max-w-36 min-w-0 shrink"
         />
       ))}
       {max === undefined ? null : (

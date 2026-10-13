@@ -323,6 +323,37 @@
   opacity: 1;
 }
 
+/*
+ * Short laptop screens (1280 x 720, 1366 x 768, 1536 x 730): the centred story was about 56px taller than
+ * the pinned column and the last step ran off the bottom. Less air and a smaller detail line fit it.
+ */
+@media (min-width: 1024px) and (max-height: 820px) {
+  .aside {
+    padding-block: 76px 12px;
+  }
+
+  .title {
+    font-size: min(clamp(2.5rem, 1.4rem + 3.6vw, 4.5rem), 13cqi, 8.5vh);
+  }
+
+  .steps {
+    margin-top: clamp(12px, 2vh, 24px);
+  }
+
+  .stepLink {
+    padding-block: clamp(6px, 1vh, 12px);
+  }
+
+  .stepDetail {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  [data-scene="ready"] .stepBar {
+    margin-top: 6px;
+  }
+}
+
 /* Reduced motion: no scroll-scrubbed bar; the filled number alone marks the step. */
 @media (prefers-reduced-motion: reduce) {
   [data-scene="ready"] .stepBar {

@@ -120,7 +120,9 @@ export function DataTable<Row>({
         empty
       ) : (
         <>
-          <div className={cn('hidden overflow-x-auto md:block', !full && '-mx-3')}>
+          {/* relative: the sr-only header labels are absolute; without a positioned scroller they
+              escape it and widen the whole page (110px at 1024 with the rail expanded). */}
+          <div className={cn('relative hidden overflow-x-auto md:block', !full && '-mx-3')}>
             <table className="w-full border-separate border-spacing-0 text-small text-ink-soft">
               <caption className="sr-only">{caption}</caption>
               <thead>

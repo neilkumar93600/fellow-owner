@@ -50,7 +50,14 @@ export function HeroStage() {
     <HeroMotion>
       <div className={styles.stage} inert aria-hidden="true">
         <HeroLayer depth={-10} order={0} className={styles.browser}>
-          <BrowserFrame url={HERO_URL} tilt={-2} designWidth={760} scale={0.71}>
+          {/* 16:10, taller than Safari's default screen: the decision card's buttons stay in view. */}
+          <BrowserFrame
+            url={HERO_URL}
+            tilt={-2}
+            designWidth={760}
+            scale={0.71}
+            screenClassName="aspect-[16/10]"
+          >
             <div className="flex flex-col gap-5 p-7">
               <div>
                 <p className="font-display text-[2.5rem] leading-none text-ink">
@@ -74,8 +81,9 @@ export function HeroStage() {
 
         <HeroLayer depth={8} order={1} className={styles.phone}>
           <PhoneFrame designWidth={340} scale={0.62}>
-            {/* Scrolled past the cover, as a fan would be: the name, then the rooms. */}
-            <div className="-mt-[236px] flex flex-col gap-6 pb-6 @container">
+            {/* Scrolled past the cover, as a fan would be: the name (below the island), then the rooms.
+                The header's cover and avatar are 64px shorter under sm, so the scroll is too. */}
+            <div className="-mt-43 flex flex-col gap-6 pb-6 @container sm:-mt-59">
               <CreatorHeader
                 space={LIVE_SPACE}
                 cta={{ href: '#', label: 'Join a room' }}

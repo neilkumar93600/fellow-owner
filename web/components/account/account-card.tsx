@@ -23,7 +23,8 @@ export function AccountCard({
   return (
     <section
       className={cn(
-        'col-span-12 flex items-start gap-4 glass rounded-panel p-6',
+        // Phones stack the tile over the content: beside it, buttons had about 170px and ran off screen.
+        'col-span-12 flex flex-col items-start gap-4 glass rounded-panel p-5 sm:flex-row sm:p-6',
         !wide && '@3xl:col-span-6',
       )}
     >
