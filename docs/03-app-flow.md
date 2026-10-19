@@ -86,7 +86,7 @@ Member opens a Project needing a Designer -> Join as Designer -> author sees the
 `/` -> Start your space -> `/create-account?returnTo=/onboarding` (email and password, then the 6-digit code on `/verify-otp` to confirm the email; or Google, Apple, Facebook) -> `/onboarding` 4 steps -> `/dashboard` with setup checklist -> Copy bio link -> success: `/{handle}` live and shareable.
 
 **J7 · Three-minute judge path (demo mode)**
-`/` -> Enter as creator -> Today (30s: briefing, decision cards, stats) -> Fan mail (30s: Filtered tab shows spam removed; open the top collab and its reason) -> Ideas (30s: ranked list, community chips) -> Promote the top idea (45s: drafts, Publish) -> open the showcase link (15s) -> back to `/` -> Enter as fan -> join flow with AI suggestions (30s). The demo space is reset daily at 09:00 UTC.
+`/` -> Enter as creator -> Today (30s: briefing, decision cards, stats) -> Fan mail (30s: Filtered tab shows spam removed; open the top collab and its reason) -> Ideas (30s: ranked list, community chips) -> Promote the top idea (45s: drafts, Publish) -> open the showcase link (15s) -> back to `/` -> Enter as fan -> join flow with AI suggestions (30s). The demo space is reset daily at 01:00 UTC.
 
 **J8 · Fan mail, answered once**
 Several fans send pitches asking the same thing -> the hourly job groups them (at least 3 within 30 days) -> Fan mail shows a strip of repeated questions -> `/dashboard/inbox/questions` -> open a group -> edit the AI-drafted answer -> Send to everyone (optionally pin it as a post in chosen communities) -> success: every asker sees the reply in My space, the group is `answered`.

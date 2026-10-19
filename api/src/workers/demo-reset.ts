@@ -16,7 +16,7 @@ export interface DemoResetOptions {
 
 /**
  * Demo reset (05-backend-schema section 9): deletes the demo space and reseeds it from
- * data/*.json, so the shared demo is clean again. Runs daily at 09:00 UTC from the hourly cron
+ * data/*.json, so the shared demo is clean again. Runs daily at 01:00 UTC from the hourly cron
  * tick (workers/tick.ts), and on request through /api/cron/demo-reset and the admin route.
  *
  * seedDemoSpace() deletes the demo space itself, which is what makes a reseed idempotent; this

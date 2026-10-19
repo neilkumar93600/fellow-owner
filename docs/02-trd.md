@@ -250,7 +250,8 @@ One Railway cron service calls `POST /api/cron/tick` every hour. The tick (`work
 | `close_challenges` | hourly | Closes overdue challenges (up to 100 per run) with the same path as the Close button, plus the AI recap |
 | `email_digests` | hourly | Sends each person their due unread notifications as one email; a failed send keeps the watermark (`notification_prefs.last_digest_at`) and retries next run |
 | `refresh_followers` | daily 06:00 | Refreshes follower counts of linked profiles in non-demo spaces through Apify, oldest `fetchedAt` first, at most 50 profiles per run; a failed or simulated lookup keeps the old count |
-| `demo_reset` | daily 09:00 | Deletes the demo space and reseeds it from `db/seed/data/*.json`. Skipped when `DEMO_ENABLED=false` |
+| `demo_reset` | daily 01:00 | Deletes the demo space and reseeds it from `db/seed/data/*.json`. Skipped when `DEMO_ENABLED=false` |
+| `demo_briefing` | hourly | Warms today's demo briefing (a DB read when cached), so the first Today load of a day never waits on the model. Skipped when `DEMO_ENABLED=false` |
 | `purge` | daily 09:00 | Retention rules in 05, section 8, including deleting bucket uploads older than 24 hours that no row points at |
 | `community_digests` | Mondays 13:00 | One AI digest per non-archived community with a post in the last 7 days, dated that week's Monday |
 

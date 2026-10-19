@@ -149,19 +149,31 @@
 
 ## Wave 2 (web, parallel)
 
-### Task 6: Hero, product-first, AI twin
+### Task 6: Hero: "Rooms in the sky" (Dioramas Atlas) + AI twin
+
+Owner request 2026-10-19: "select any hero from https://github.com/blendi-remade/dioramas". Pick: **13 · Atlas of
+Drifting Isles** (floating islands = rooms for every interest; its sky-blue/peach/cream palette sits next to Parchment
+Frost). Source (read-only reference, MIT code / CC BY 4.0 models) is checked out at
+`C:/Users/Lenovo/AppData/Local/Temp/claude/e--idea-fellow-owner/8e330d45-9052-4023-b89e-db7c2dd2a3eb/scratchpad/dioramas-src`
+(`examples/atlas/*`, `src/core/*`, `docs/ENGINE.md`, `docs/briefs/atlas.md`, reference still `public/img/index/atlas.webp`).
+Compressed models are already in `web/public/atlas/{lighthouse,windmill,falls,pagoda}.glb` (meshopt + webp, 2.3–3.3 MB).
 
 **Files:**
-- Modify: `web/components/landing/hero.tsx`, `hero-product.tsx`, `hero-product-data.ts`, `hero.module.css`
-- Create: `web/components/landing/twin-brief.tsx`
+- Modify: `web/components/landing/hero.tsx`, `hero-product.tsx`, `hero-product-data.ts`, `hero.module.css`, `web/package.json` (+ lockfile)
+- Create: `web/components/landing/twin-brief.tsx`, `web/components/landing/atlas/*` (scene modules), `web/public/atlas/poster.webp` (+ a mobile crop)
+- Modify: `NOTICE.md` (Dioramas MIT + CC BY 4.0 credit), `web/components/layout/footer.tsx` (one small credit line only)
 
 **Interfaces:**
-- Produces: `export function TwinBrief(props: { compact?: boolean }): JSX.Element`; `HeroStage` exported from `hero-product.tsx` (Task 7 renders it).
+- Produces: `export function TwinBrief(props: { compact?: boolean; room?: string }): JSX.Element`; poster images at `/atlas/poster.webp` and `/atlas/poster-mobile.webp` (Task 7 uses them).
 
-- [ ] **Step 1: Remove** the demo-creator chip (`MIRA_CHIP`, `.miraChip/.miraAvatar/.miraAnchor`) and the phone's `CreatorHeader` + `CommunityGrid`.
-- [ ] **Step 2: Build `TwinBrief`** for the phone: header "Your AI twin" with a one-line brief `Read 1,240 messages in 6 rooms this week. 3 need you.`, then three picks (one line each + a short "why"): the Lisbon idea, Fare Pals, and one collab pitch, using names already in `DEMO`. Footnote `Demo data. Names are made up.`
-- [ ] **Step 3: Copy:** subcopy `One link in your bio gathers your followers into rooms. Your AI twin reads every room and shows you the few ideas and people worth your time. You give them your spotlight.` Stat strip: `1 link in your bio` · `every pick shows why` · `fans credited by name`. Kicker `Demo space. Names are made up.`
-- [ ] **Step 4: Verify** at 1440×900, 768×1024 and 390×844 (Playwright MCP on the local dev server, port 3005): no portrait or follower counts anywhere in the hero; no overlap; reduced-motion renders. `pnpm --filter @fellow-owners/web typecheck` + `pnpm lint` → PASS. Report changed files and screenshots.
+- [ ] **Step 1: Remove** the demo-creator chip (`MIRA_CHIP`, `.miraChip/.miraAvatar/.miraAnchor`), the tilted browser + phone stage and its callouts.
+- [ ] **Step 2: Scene.** Port the Atlas scene as a client-only module loaded with `next/dynamic` (`ssr: false`) after first paint, on desktop-class devices only (width ≥ 1024, WebGL2, no `prefers-reduced-motion`, no `saveData`). Dependencies: `three` (+ `@types/three`) only; replace the `postprocessing`/`n8ao`/`gsap` parts of the engine with built-in three.js (tone mapping, fog/haze, soft sprite clouds) and `requestAnimationFrame`. Keep: sky gradient + warm sun, soft layered clouds, the four islands bobbing, waterfalls if cheap, birds flocking between islands (fans moving between rooms), the airship. Load the main island first, the rest after. Pause rendering when the hero is off-screen or the tab is hidden; cap DPR at 1.5; dispose on unmount. The sky fades into the Parchment canvas at the bottom so the next section continues seamlessly.
+- [ ] **Step 3: Islands are rooms.** Pins: `I Budget Travel`, `II Solo Travelers`, `III Travel Photography`, `IV Food Finds` with member counts from `DEMO`. Hover = rim glow + pin; click an island or pin = the camera flies there and a glass panel shows that room: members, new ideas this week, and the AI twin's top pick with its one-line why (Budget Travel's pick is Fare Pals). Esc / close returns to the overview. Keyboard: pins are buttons.
+- [ ] **Step 4: `TwinBrief` card** in the bottom-right slot (where Atlas has its drift chart): header "Your AI twin", `Read 1,240 messages in 6 rooms this week. 3 need you.`, three picks (Lisbon idea, Fare Pals, one collab pitch) each with a short why, footnote `Demo data. Names are made up.`
+- [ ] **Step 5: Copy (left column).** Keep the H1 and claim form. Subcopy `One link in your bio gathers your followers into rooms. Your AI twin reads every room and shows you the few ideas and people worth your time. You give them your spotlight.` Stat strip: `1 link in your bio` · `every pick shows why` · `fans credited by name`. A hint chip `Click any room to fly there` (desktop scene only).
+- [ ] **Step 6: Poster + fallback.** Screenshot your own scene (Playwright, 2× at 1600×1000, islands framed right, no UI) → `poster.webp` (≤ 250 KB) and a portrait crop `poster-mobile.webp`; render it as the LCP `next/image` (priority) behind the canvas, and as the whole visual on mobile / reduced motion / no WebGL, with the pins and TwinBrief still shown as HTML.
+- [ ] **Step 7: Credit.** NOTICE.md: Dioramas (github.com/blendi-remade/dioramas), MIT code, models CC BY 4.0. Footer: `3D islands: Dioramas (CC BY 4.0)` linking the repo.
+- [ ] **Step 8: Verify** at 1440×900, 1024×768, 768×1024 and 390×844 on `http://localhost:3000` (shared dev server for this repo; don't start another): no portrait or follower counts in the hero; no overlap; 60 fps-ish on desktop (log frame time); network shows the GLBs load after the poster; reduced-motion shows the poster. `pnpm --filter @fellow-owners/web typecheck` + `pnpm lint` + `pnpm --filter @fellow-owners/web build` → PASS. Report files, bundle impact (first-load JS of `/` before/after) and screenshots.
 
 ### Task 7: Auth panel, product art
 
@@ -169,9 +181,9 @@
 - Modify: `web/components/auth/auth-panel.tsx`, `web/components/auth/create-account-form.tsx` (~:257), `web/app/(auth)/layout.tsx` (comment only)
 
 **Interfaces:**
-- Consumes: `HeroStage` from `web/components/landing/hero-product.tsx` (Task 6). If Task 6 hasn't landed, render `TwinBrief` alone and report it.
+- Consumes: `/atlas/poster-mobile.webp` (portrait islands still) and `TwinBrief` from `web/components/landing/twin-brief.tsx` (Task 6, running in parallel). Until they exist, use `/atlas/poster.webp` if present, else a sky-to-parchment CSS gradient, and import `TwinBrief` once the file appears (poll the file; don't create it yourself).
 
-- [ ] **Step 1:** Replace `<CreatorImage name="auth-art">`, the "Demo: …'s space" pill and the room chips with `HeroStage` scaled to fit the panel on the Parchment wash (keep `hidden lg:block`, `aria-hidden`, `inert`). Delete `demoSpace()`/`DEMO_HANDLE`: the panel makes no API call.
+- [ ] **Step 1:** Replace `<CreatorImage name="auth-art">`, the "Demo: …'s space" pill and the room chips with the islands still (object-cover) + a compact `TwinBrief` card floating over it (keep `hidden lg:block`, `aria-hidden`, `inert`). Delete `demoSpace()`/`DEMO_HANDLE`: the panel makes no API call.
 - [ ] **Step 2:** Keep the caption `Turn followers into fellow owners.` and `AuthPanelLine`. Name placeholder → `Your name`.
 - [ ] **Step 3: Verify** `/login`, `/create-account`, `/forgot-password` at 1440×900 and 1024×768 with the API stopped: art renders, no console errors. Typecheck + lint → PASS. Report files + screenshots.
 
@@ -212,6 +224,22 @@
 - [ ] **Step 3: Greeting subline:** `Your AI twin read {ideas} new ideas and {messages} messages. {n} need you.` from counts Today already has (`overview.stats` / the stack length); fall back to the current subline when counts are missing.
 - [ ] **Step 4: Feedback card** in Settings: heading `Tell the founder`, textarea (min/max from `LIMITS.support`), checkbox `You can quote me by name in Fellow Owners' materials.` (unchecked by default), button `Send`. Posts to the existing support request client with kind `contact`, the account's name and email, and the message prefixed `[Product feedback]` and suffixed `Quote consent: yes|no`. `// ponytail: consent lives in the message text; add a kind + column if feedback volume grows.` Success state `Thanks. The founder reads every note.` Hidden for the demo creator account.
 - [ ] **Step 5: Verify** with the local demo creator: rail has 8 items; Today shows the twin card top right and no platform/brand/profile cards; Settings card sends (check the API log or `support_requests`). Typecheck + lint + `pnpm --filter @fellow-owners/web test:e2e` against the local stack → PASS. Report files + screenshots.
+
+### Task 13: Direct Anthropic for the chat tiers (owner pick 2026-10-19)
+
+The owner supplied an Anthropic API key for the app's live AI, to get off the OpenRouter spend cap for chat.
+
+**Files:**
+- Modify: `api/src/ai/provider.ts`, `api/src/config/env.ts`, `api/package.json` (+ lockfile: `@ai-sdk/anthropic` matching the installed `ai`/`@ai-sdk/provider` majors), `api/.env.example` if it exists
+- Test: `api/tests/unit/ai-provider.test.ts` (create or extend), `api/tests/unit/env.test.ts` (extend)
+
+**Interfaces:**
+- Env: `ANTHROPIC_API_KEY` (optional), `ANTHROPIC_MODEL_FAST` (default `claude-haiku-5-5`), `ANTHROPIC_MODEL_SMART` (default `claude-sonnet-5-5`).
+- `createAiModels(env)` keeps its signature/return type. With `ANTHROPIC_API_KEY` set, `fast` and `smart` use `@ai-sdk/anthropic` with those ids (same `extractJsonMiddleware` wrapping); without it, today's OpenRouter behaviour is unchanged. Embeddings always stay on OpenRouter (`OPENROUTER_API_KEY` still required when AI is enabled).
+
+- [ ] **Step 1: Failing tests:** with `ANTHROPIC_API_KEY` the fast/smart refs report ids `claude-haiku-5-5` / `claude-sonnet-5-5` and provider `anthropic`; without it, ids/provider are today's; env parsing accepts the three new vars; the key never appears in logs (`redact` paths include it if the logger redacts env).
+- [ ] **Step 2: Implement.** Check `run.ts` for OpenRouter-only metadata (cost, usage) and report anything that would mis-account Anthropic calls — don't edit `run.ts`.
+- [ ] **Step 3: Run** unit tests + api typecheck → PASS. Orchestrator does one live smoke call locally.
 
 ## Wave 3 (orchestrator)
 
