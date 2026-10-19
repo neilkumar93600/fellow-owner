@@ -105,6 +105,10 @@ so consent is on record.
 
 Get written permission for name, handle and photo.
 
+Only trust "Quote consent: yes" from **Settings → Tell the founder** when the stored `support_requests` row has a
+`user_id` whose account email matches the sender. The public `/contact` form can carry the same text from anyone, so a
+quote from there needs a separate written OK from the creator.
+
 ## If nobody says yes in time (ranked, all real)
 
 1. Real creator feedback that isn't an endorsement: "a 40K creator tried it, liked X, won't adopt until Y, here's what I
