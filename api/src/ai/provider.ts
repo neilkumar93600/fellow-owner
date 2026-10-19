@@ -1,3 +1,4 @@
+import { type AnthropicProvider, createAnthropic } from '@ai-sdk/anthropic';
 import {
   createOpenRouter,
   type OpenRouterChatSettings,
@@ -25,16 +26,25 @@ export const APP_TITLE = 'Fellow Owners';
 
 export type ChatTier = Exclude<AiTier, 'embedding'>;
 
+export type AiProviderName = 'openrouter' | 'anthropic';
+
+/** Defaults for the direct-Anthropic chat tiers (env.ts uses the same ids). */
+export const DEFAULT_ANTHROPIC_FAST = 'claude-haiku-5-5';
+export const DEFAULT_ANTHROPIC_SMART = 'claude-sonnet-5-5';
+
 export interface ChatModelRef {
   tier: ChatTier;
-  /** OpenRouter model id, e.g. `openai/gpt-5.6-luna`. Written to ai_runs.model. */
+  /** Model id: OpenRouter's (`openai/gpt-5.6-luna`) or Anthropic's (`claude-haiku-5-5`). Written to ai_runs.model. */
   id: string;
+  /** Who serves it. Absent in hand-built test refs. */
+  provider?: AiProviderName;
   model: LanguageModel;
 }
 
 export interface EmbeddingModelRef {
   tier: 'embedding';
   id: string;
+  provider?: AiProviderName;
   model: EmbeddingModel;
 }
 
@@ -101,31 +111,64 @@ const TIER_SETTINGS: Record<ChatTier, OpenRouterChatSettings> = {
   smart: { ...BASE_CHAT_SETTINGS },
 };
 
-function chatModel(provider: OpenRouterProvider, tier: ChatTier, id: string): ChatModelRef {
-  const model = wrapLanguageModel({
-    model: provider.chat(id, TIER_SETTINGS[tier]),
-    // Models that ignore response_format sometimes wrap JSON in prose or code fences.
+/** Models that ignore response_format sometimes wrap JSON in prose or code fences. */
+function withJsonExtraction(model: Exclude<LanguageModel, string>): LanguageModel {
+  return wrapLanguageModel({
+    model,
     middleware: extractJsonMiddleware({ transform: extractJsonText }),
   });
-  return { tier, id, model };
 }
 
-/** Builds the three model handles from env. Requires OPENROUTER_API_KEY. */
+function chatModel(provider: OpenRouterProvider, tier: ChatTier, id: string): ChatModelRef {
+  return {
+    tier,
+    id,
+    provider: 'openrouter',
+    model: withJsonExtraction(provider.chat(id, TIER_SETTINGS[tier])),
+  };
+}
+
+/**
+ * Direct Anthropic chat tier. None of the OpenRouter-only settings above apply (response-healing
+ * plugin, usage include, reasoning effort): the Anthropic API reports usage itself.
+ */
+function anthropicChatModel(provider: AnthropicProvider, tier: ChatTier, id: string): ChatModelRef {
+  return { tier, id, provider: 'anthropic', model: withJsonExtraction(provider(id)) };
+}
+
+/**
+ * Builds the three model handles from env. Requires OPENROUTER_API_KEY (embeddings always go
+ * through OpenRouter). With ANTHROPIC_API_KEY the fast and smart chat tiers call Anthropic
+ * directly instead (ANTHROPIC_MODEL_FAST / ANTHROPIC_MODEL_SMART).
+ */
 export function createAiModels(
   env: Pick<
     Env,
     'OPENROUTER_API_KEY' | 'WEB_ORIGIN' | 'AI_MODEL_FAST' | 'AI_MODEL_SMART' | 'AI_EMBEDDING_MODEL'
-  >,
+  > &
+    Partial<Pick<Env, 'ANTHROPIC_API_KEY' | 'ANTHROPIC_MODEL_FAST' | 'ANTHROPIC_MODEL_SMART'>>,
   options: ProviderOptions = {},
 ): AiModels {
   const provider = createOpenRouterProvider(env, options);
   const ids = modelIdsFrom(env);
+  // ponytail: the baseURL override is OpenRouter's proxy; Anthropic uses its default endpoint.
+  const anthropic = env.ANTHROPIC_API_KEY
+    ? createAnthropic({
+        apiKey: env.ANTHROPIC_API_KEY,
+        ...(options.fetch ? { fetch: options.fetch } : {}),
+      })
+    : null;
   return {
-    fast: chatModel(provider, 'fast', ids.fast),
-    smart: chatModel(provider, 'smart', ids.smart),
+    fast: anthropic
+      ? anthropicChatModel(anthropic, 'fast', env.ANTHROPIC_MODEL_FAST ?? DEFAULT_ANTHROPIC_FAST)
+      : chatModel(provider, 'fast', ids.fast),
+    smart: anthropic
+      ? anthropicChatModel(anthropic, 'smart', env.ANTHROPIC_MODEL_SMART ?? DEFAULT_ANTHROPIC_SMART)
+      : chatModel(provider, 'smart', ids.smart),
     embedding: {
       tier: 'embedding',
       id: ids.embedding,
+      provider: 'openrouter',
       model: provider.textEmbeddingModel(ids.embedding),
     },
   };

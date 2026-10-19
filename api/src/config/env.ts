@@ -81,6 +81,9 @@ const rawEnvSchema = z.object({
   AI_MODEL_FAST: optionalString,
   AI_MODEL_SMART: optionalString,
   AI_EMBEDDING_MODEL: optionalString,
+  ANTHROPIC_API_KEY: optionalString,
+  ANTHROPIC_MODEL_FAST: optionalString,
+  ANTHROPIC_MODEL_SMART: optionalString,
   AI_ENABLED: booleanFlag,
 
   FAL_KEY: optionalString,
@@ -175,6 +178,13 @@ export interface Env {
   AI_MODEL_FAST: string;
   AI_MODEL_SMART: string;
   AI_EMBEDDING_MODEL: string;
+  /**
+   * Direct Anthropic for the fast and smart chat tiers (embeddings stay on OpenRouter). Unset keeps
+   * OpenRouter for chat. Server-only secret: never logged.
+   */
+  ANTHROPIC_API_KEY: string | undefined;
+  ANTHROPIC_MODEL_FAST: string;
+  ANTHROPIC_MODEL_SMART: string;
   /** Live AI calls. Defaults to "an OpenRouter key is present"; the fake AI is used otherwise. */
   AI_ENABLED: boolean;
 
@@ -434,6 +444,9 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     AI_MODEL_FAST: raw.AI_MODEL_FAST ?? 'openai/gpt-5.6-luna',
     AI_MODEL_SMART: raw.AI_MODEL_SMART ?? 'anthropic/claude-sonnet-5.5',
     AI_EMBEDDING_MODEL: raw.AI_EMBEDDING_MODEL ?? 'openai/text-embedding-3-small',
+    ANTHROPIC_API_KEY: raw.ANTHROPIC_API_KEY,
+    ANTHROPIC_MODEL_FAST: raw.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-5-5',
+    ANTHROPIC_MODEL_SMART: raw.ANTHROPIC_MODEL_SMART ?? 'claude-sonnet-5-5',
     AI_ENABLED: aiEnabled,
 
     FAL_KEY: raw.FAL_KEY,

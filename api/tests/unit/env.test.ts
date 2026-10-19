@@ -13,6 +13,24 @@ describe('loadEnv', () => {
     expect(loadEnv({ NODE_ENV: 'development', DATABASE_POOL_MAX: '2' }).DATABASE_POOL_MAX).toBe(2);
   });
 
+  it('reads the Anthropic chat settings, with model defaults and an empty key as unset', () => {
+    const base = { NODE_ENV: 'development' };
+    const unset = loadEnv({ ...base, ANTHROPIC_API_KEY: '', ANTHROPIC_MODEL_FAST: '' });
+    expect(unset.ANTHROPIC_API_KEY).toBeUndefined();
+    expect(unset.ANTHROPIC_MODEL_FAST).toBe('claude-haiku-5-5');
+    expect(unset.ANTHROPIC_MODEL_SMART).toBe('claude-sonnet-5-5');
+
+    const set = loadEnv({
+      ...base,
+      ANTHROPIC_API_KEY: 'sk-ant-fake',
+      ANTHROPIC_MODEL_FAST: 'claude-fast-x',
+      ANTHROPIC_MODEL_SMART: 'claude-smart-x',
+    });
+    expect(set.ANTHROPIC_API_KEY).toBe('sk-ant-fake');
+    expect(set.ANTHROPIC_MODEL_FAST).toBe('claude-fast-x');
+    expect(set.ANTHROPIC_MODEL_SMART).toBe('claude-smart-x');
+  });
+
   it('still rejects an unknown LOG_LEVEL', () => {
     expect(() => loadEnv({ NODE_ENV: 'development', LOG_LEVEL: 'loud' })).toThrow(EnvError);
   });

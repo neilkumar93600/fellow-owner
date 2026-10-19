@@ -85,8 +85,14 @@ export function createAiServices(deps: CreateAiServicesDeps): AiServices {
     const models = deps.models ?? createAiModels(deps.env, deps.provider);
     const ids = modelIdsFrom(deps.env);
     deps.logger.info(
-      { ai: 'live', fast: models.fast.id, smart: models.smart.id, embedding: ids.embedding },
-      'AI: live models through OpenRouter',
+      {
+        ai: 'live',
+        chat: models.smart.provider ?? 'openrouter',
+        fast: models.fast.id,
+        smart: models.smart.id,
+        embedding: ids.embedding,
+      },
+      'AI: live models',
     );
     return createLiveAiServices({
       enabled: true,
