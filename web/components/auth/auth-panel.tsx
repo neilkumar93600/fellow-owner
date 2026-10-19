@@ -14,15 +14,23 @@ export function AuthPanel() {
       aria-label="About Fellow Owners"
       className="relative hidden min-w-0 overflow-hidden rounded-2xl bg-[linear-gradient(180deg,#bfe0f2_0%,#f6e3cf_55%,#f4efe4_100%)] lg:block"
     >
-      <Image
-        src="/creator/hero-scenery-mobile.webp"
-        alt=""
-        fill
-        sizes="50vw"
-        className="object-cover"
+      {/* View-transition targets: the hero (other page) names its scenery and twin card the same. */}
+      <div className="absolute inset-0" style={{ viewTransitionName: 'fo-scenery' }}>
+        <Image
+          src="/creator/hero-scenery-mobile.webp"
+          alt=""
+          fill
+          sizes="50vw"
+          className="object-cover"
+          aria-hidden
+        />
+      </div>
+      <div
         aria-hidden
-      />
-      <div aria-hidden inert className="absolute top-6 left-6 w-[20rem] max-w-[calc(100%-3rem)]">
+        inert
+        className="absolute top-6 left-6 w-[20rem] max-w-[calc(100%-3rem)]"
+        style={{ viewTransitionName: 'fo-twin' }}
+      >
         <TwinBrief compact />
       </div>
       <div className="absolute inset-x-4 bottom-4 mx-auto max-w-[32rem] glass-strong !rounded-[1.25rem] p-5 xl:inset-x-6 xl:bottom-6 xl:p-6">

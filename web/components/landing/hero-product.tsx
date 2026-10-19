@@ -1,34 +1,32 @@
 'use client';
 
 import { ArrowRight } from 'lucide-react';
-import { useId, useState } from 'react';
-import {
-  normalizeUsernameInput,
-  type UsernameStatus,
-  useUsernameStatus,
-} from '@/components/auth/username-field';
+import { lazy, Suspense, useId, useState } from 'react';
 import { routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import styles from './hero.module.css';
+import { CLAIM_IDLE_TEXT } from './hero-product-data';
 
-function statusText(status: UsernameStatus, suggestions: string[]): string {
-  switch (status.state) {
-    case 'idle':
-      return 'Pick the link fans will use. You can leave it empty and choose later.';
-    case 'invalid':
-      return status.message;
-    case 'checking':
-      return `Checking ${status.username}…`;
-    case 'available':
-      return `fellowowners.app/${status.username} is free.`;
-    case 'taken':
-      return suggestions.length
-        ? `Taken: try ${suggestions.join(', ')}.`
-        : 'That link is taken. Try another.';
-    case 'unavailable':
-      return 'Could not check right now. You can still continue.';
-  }
+// ponytail: mirrors normalizeUsernameInput (components/auth/username-field) so the hero does not load that
+// module, and with it zod and the onboarding helpers, before anyone types.
+function normalizeHandle(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9_.]/g, '');
 }
+
+/** The idle hint, rendered by the server and until the live check has loaded: same lines, so nothing shifts. */
+function IdleStatus({ id }: { id: string }) {
+  return (
+    <>
+      <p id={id} className={styles.claimStatus} data-tone="idle">
+        {CLAIM_IDLE_TEXT}
+      </p>
+      <p aria-live="polite" className="sr-only" />
+    </>
+  );
+}
+
+const loadStatus = () => import('./hero-claim-status');
+const HeroClaimStatus = lazy(() => loadStatus().then((mod) => ({ default: mod.HeroClaimStatus })));
 
 /**
  * The hero's one control (owner rule: one button): a plain GET form to /start with the handle. /start
@@ -38,14 +36,8 @@ function statusText(status: UsernameStatus, suggestions: string[]): string {
 export function HeroClaim() {
   const id = useId();
   const [handle, setHandle] = useState('');
-  const { status, suggestions } = useUsernameStatus(handle);
-  const text = statusText(status, suggestions);
-  const tone =
-    status.state === 'available'
-      ? 'ok'
-      : status.state === 'taken' || status.state === 'invalid'
-        ? 'bad'
-        : 'idle';
+  // The live check loads on the first keystroke and then stays mounted, so its verdict cache survives.
+  const [typed, setTyped] = useState(false);
 
   return (
     <form action={routes.start()} method="get" className={cn('glass-strong', styles.claim)}>
@@ -61,7 +53,11 @@ export function HeroClaim() {
             id={`${id}-handle`}
             name="handle"
             value={handle}
-            onChange={(event) => setHandle(normalizeUsernameInput(event.target.value))}
+            onChange={(event) => {
+              setTyped(true);
+              setHandle(normalizeHandle(event.target.value));
+            }}
+            onFocus={() => void loadStatus()}
             placeholder="yourname"
             autoComplete="off"
             autoCapitalize="none"
@@ -78,13 +74,13 @@ export function HeroClaim() {
           <ArrowRight aria-hidden="true" size={16} />
         </button>
       </div>
-      <p id={`${id}-status`} className={styles.claimStatus} data-tone={tone}>
-        {text}
-      </p>
-      {/* Settled verdicts only, so "Checking…" never chases each keystroke. */}
-      <p aria-live="polite" className="sr-only">
-        {status.state === 'idle' || status.state === 'checking' ? '' : text}
-      </p>
+      {typed ? (
+        <Suspense fallback={<IdleStatus id={`${id}-status`} />}>
+          <HeroClaimStatus id={`${id}-status`} handle={handle} />
+        </Suspense>
+      ) : (
+        <IdleStatus id={`${id}-status`} />
+      )}
     </form>
   );
 }

@@ -8,6 +8,7 @@ import { NAV_GROUPS } from '@/components/layout/dashboard-nav';
 import { Logo } from '@/components/shared/logo';
 import { MatchLabel } from '@/components/shared/match-label';
 import { cn } from '@/components/ui/cn';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { NEXT_CARD, TODAY_PULSE } from './creators-data';
 import { DEMO } from './demo-data';
 import { BrowserFrame } from './device-frames';
@@ -111,22 +112,19 @@ function Studio() {
   );
 }
 
-/** Wide screens lay the studio out 1040px wide; phones lay it out 600px wide in a taller frame. */
+/**
+ * Wide screens lay the studio out 1040px wide; phones lay it out 600px wide in a taller frame. One frame,
+ * so the studio's copy is in the page once: the screen shape is CSS, the design width follows the viewport.
+ */
 export function StudioShot() {
-  const url = LIVE_URLS[4];
+  const phone = useMediaQuery('(max-width: 639.98px)');
   return (
-    <>
-      <BrowserFrame url={url} designWidth={1040} className="hidden sm:flex">
-        <Studio />
-      </BrowserFrame>
-      <BrowserFrame
-        url={url}
-        designWidth={600}
-        className="sm:hidden"
-        screenClassName="aspect-[4/5]"
-      >
-        <Studio />
-      </BrowserFrame>
-    </>
+    <BrowserFrame
+      url={LIVE_URLS[4]}
+      designWidth={phone ? 600 : 1040}
+      screenClassName="max-sm:aspect-[4/5]"
+    >
+      <Studio />
+    </BrowserFrame>
   );
 }

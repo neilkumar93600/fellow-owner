@@ -139,3 +139,7 @@ export const TWIN_CHAT: readonly TwinQuestion[] = [
     ],
   },
 ];
+
+/** The claim form's hint before anything is typed (hero-product, hero-claim-status). */
+export const CLAIM_IDLE_TEXT =
+  'Pick the link fans will use. You can leave it empty and choose later.';

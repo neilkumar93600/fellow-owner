@@ -1,27 +1,51 @@
 import { getImageProps } from 'next/image';
+import { preload } from 'react-dom';
 import { cn } from '@/lib/utils';
 import styles from './hero.module.css';
 import { HeroIntro } from './hero-intro';
 import { HeroClaim } from './hero-product';
 import { TwinChat } from './twin-chat';
 
-/** Art direction: the wide coast from 1024px, the square crop below. `priority` is deprecated in Next 16, so
- * the one <img> the browser picks is eager with a high fetch priority. */
+const DESKTOP = '(min-width: 1024px)';
+const PHONE = '(max-width: 1023.98px)';
+/** Phone variants: 384 is the image optimizer's nearest default to 390 (its widths are fixed in next.config). */
+const PHONE_WIDTHS = [384, 640, 828];
+
+/** The srcSet entries at these widths. */
+function only(srcSet: string | undefined, widths: number[]) {
+  return (srcSet ?? '')
+    .split(', ')
+    .filter((entry) => widths.some((w) => entry.endsWith(` ${w}w`)))
+    .join(', ');
+}
+
+/**
+ * Art direction: the wide coast from 1024px, the square crop below. The scenery is the LCP image, so the
+ * one <img> the browser picks is eager, high priority and preloaded, and the intro never hides it.
+ * Phones get 384/640/828 only: a 1200w+ file is wasted bytes behind the parchment wash. A sizes without
+ * vw makes getImageProps list every configured width; the element itself says 100vw.
+ */
 const scenery = (() => {
-  const common = { alt: '', sizes: '100vw' };
   const desktop = getImageProps({
-    ...common,
+    alt: '',
+    sizes: '100vw',
     src: '/creator/hero-scenery.webp',
     width: 2400,
     height: 1600,
-  });
+  }).props;
   const mobile = getImageProps({
-    ...common,
+    alt: '',
+    sizes: '384px',
     src: '/creator/hero-scenery-mobile.webp',
     width: 1200,
     height: 1259,
-  });
-  return { desktop: desktop.props.srcSet, mobile: mobile.props };
+  }).props;
+  const mobileSrcSet = only(mobile.srcSet, PHONE_WIDTHS);
+  const mobileSrc = mobileSrcSet.split(', ').at(-1)?.split(' ')[0] ?? mobile.src;
+  return {
+    desktop: { src: desktop.src, srcSet: desktop.srcSet ?? '' },
+    mobile: { ...mobile, src: mobileSrc, srcSet: mobileSrcSet, sizes: '100vw' },
+  };
 })();
 
 /**
@@ -32,14 +56,35 @@ const scenery = (() => {
  * JavaScript.
  */
 export function Hero() {
+  // Preload hints in <head>, one per art-direction branch, so the image request starts with the HTML.
+  preload(scenery.mobile.src, {
+    as: 'image',
+    imageSrcSet: scenery.mobile.srcSet,
+    imageSizes: '100vw',
+    fetchPriority: 'high',
+    media: PHONE,
+  });
+  preload(scenery.desktop.src, {
+    as: 'image',
+    imageSrcSet: scenery.desktop.srcSet,
+    imageSizes: '100vw',
+    fetchPriority: 'high',
+    media: DESKTOP,
+  });
+
   return (
     <>
       <HeroIntro />
       <section id="hero" aria-labelledby="hero-title" className={styles.hero}>
         <div className={styles.frame}>
-          <div className={styles.scenery} aria-hidden="true">
+          {/* Inline, because CSS modules hash view-transition-name. Morphs into the auth panel on /start. */}
+          <div
+            className={styles.scenery}
+            style={{ viewTransitionName: 'fo-scenery' }}
+            aria-hidden="true"
+          >
             <picture>
-              <source media="(min-width: 1024px)" srcSet={scenery.desktop} />
+              <source media={DESKTOP} srcSet={scenery.desktop.srcSet} sizes="100vw" />
               <img
                 {...scenery.mobile}
                 alt=""

@@ -22,7 +22,7 @@ export function getIntroState(): IntroState {
 
 /**
  * Runs during HTML parsing, before the hero paints, and owns the whole entrance so it never waits for
- * React to hydrate (the sub-line is the LCP element):
+ * React to hydrate. The scenery (the LCP image) is never hidden; only the words, claim and chat wait:
  * - sets <html data-intro> (the hero and the navbar hide their parts) unless the visitor prefers reduced
  *   motion or arrived on an anchor;
  * - once fonts are ready (700ms at most), waits two frames, then sets data-intro="play", stamps

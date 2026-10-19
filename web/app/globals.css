@@ -692,3 +692,34 @@
     }
   }
 }
+
+/*
+ * Cross-document view transition: home -> /start (307) -> /create-account used to be a hard cut. The hero's
+ * scenery and AI twin card (named "fo-scenery" / "fo-twin" by the hero) morph into the auth panel's landscape
+ * and twin card; the rest of the page crossfades quickly. Browsers without support just navigate.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 180ms;
+    animation-timing-function: var(--ease-out-quart);
+  }
+
+  ::view-transition-group(fo-scenery),
+  ::view-transition-group(fo-twin) {
+    animation-duration: 450ms;
+    animation-timing-function: var(--ease-out-quint);
+  }
+
+  ::view-transition-old(fo-scenery),
+  ::view-transition-new(fo-scenery),
+  ::view-transition-old(fo-twin),
+  ::view-transition-new(fo-twin) {
+    animation-duration: 450ms;
+    animation-timing-function: var(--ease-out-quint);
+  }
+}

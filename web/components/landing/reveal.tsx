@@ -9,28 +9,33 @@ type Tag = 'div' | 'section' | 'ul' | 'ol' | 'li' | 'header' | 'p' | 'h2' | 'h3'
  * Progressive reveal: the server HTML is always visible (no JavaScript, crawlers, slow hydration).
  * After hydration, elements that start below the fold are hidden and fade + rise 16px into view once
  * (600ms, ease-out-quart; styles in globals.css). Elements already on screen are never hidden.
- * Reduced motion keeps everything shown.
+ * Reduced motion keeps everything shown, including content still pending when the setting turns on.
  */
 function useReveal(attribute: 'data-reveal' | 'data-reveal-group') {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const el = ref.current;
-    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!el || reduce.matches) return;
     if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
       el.setAttribute(attribute, 'shown');
       return;
     }
     el.setAttribute(attribute, 'pending');
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        el.setAttribute(attribute, 'shown');
-        observer.disconnect();
-      },
-      { rootMargin: '0px 0px -80px 0px' },
-    );
+    const show = () => {
+      el.setAttribute(attribute, 'shown');
+      observer.disconnect();
+      reduce.removeEventListener('change', show);
+    };
+    const observer = new IntersectionObserver(([entry]) => entry?.isIntersecting && show(), {
+      rootMargin: '0px 0px -80px 0px',
+    });
     observer.observe(el);
-    return () => observer.disconnect();
+    reduce.addEventListener('change', show);
+    return () => {
+      observer.disconnect();
+      reduce.removeEventListener('change', show);
+    };
   }, [attribute]);
   return ref;
 }

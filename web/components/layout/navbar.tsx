@@ -98,6 +98,7 @@ function SiteNav({ onLanding }: { onLanding: boolean }) {
           <div ref={actionsRef} className={styles.actions}>
             <GetStartedButton
               variant={heroCta ? 'glass' : 'primary'}
+              data-glass={heroCta ? '' : undefined}
               className={cn(styles.action, styles.creator, styles.item)}
             />
             <button

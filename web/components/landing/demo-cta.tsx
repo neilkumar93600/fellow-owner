@@ -6,6 +6,7 @@ import st from './cta.module.css';
 import { CtaStage } from './cta-motion';
 import { CtaOrbit } from './cta-orbit';
 import { DemoButton } from './demo-button';
+import pill from './demo-button.module.css';
 
 /*
  * Closing CTA, the landing's last section, directly above the footer: "Fans orbit". Centered headline
@@ -56,10 +57,14 @@ export function DemoCta() {
           </p>
 
           <div className={cn(st.actions, st.rise)} data-cta-reveal="rise" style={delay(240)}>
-            <Link href={routes.start()} className="btn btn-primary" data-rainbow-cta>
+            <Link
+              href={routes.start()}
+              className={cn('btn btn-primary', pill.primary)}
+              data-rainbow-cta
+            >
               Get started
             </Link>
-            <DemoButton as="creator" variant="secondary">
+            <DemoButton as="creator" variant="secondary" lift>
               Try the live demo
             </DemoButton>
           </div>

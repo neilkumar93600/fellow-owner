@@ -144,7 +144,9 @@ export function TwinChat() {
 
   return (
     <div className={styles.chat} data-hero-last>
-      <div className={cn('glass-strong', styles.panel)}>
+      {/* Cross-document view transition into the auth panel; inline because CSS modules hash the name.
+          Under 768px the chat is display:none, so the name is never captured there. */}
+      <div className={cn('glass-strong', styles.panel)} style={{ viewTransitionName: 'fo-twin' }}>
         <div className={styles.panelHead}>
           <span className={styles.twinIcon} aria-hidden="true">
             <Sparkles size={15} strokeWidth={1.75} />

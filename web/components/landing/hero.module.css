@@ -20,6 +20,16 @@
   }
 }
 
+/* Phones (chat hidden): the hero is as tall as its words and claim, with no bottom inset, so the next
+   section starts at its own rhythm and its first line clears a 844px fold. */
+@media (max-width: 767.98px) {
+  .hero {
+    --nav-space: 64px;
+
+    padding-bottom: 0;
+  }
+}
+
 .frame {
   position: relative;
   isolation: isolate;
@@ -27,10 +37,16 @@
   flex-direction: column;
   gap: 32px;
   overflow: hidden;
-  padding: calc(var(--nav-space) + 8px) 16px 24px;
+  padding: calc(var(--nav-space) + 8px) 16px 16px;
   border: 1px solid var(--glass-edge);
   border-radius: 32px;
   background: var(--color-parchment);
+}
+
+@media (min-width: 768px) {
+  .frame {
+    padding-bottom: 24px;
+  }
 }
 
 @media (min-width: 640px) {
@@ -188,6 +204,17 @@
   margin-top: 28px;
 }
 
+@media (max-width: 767.98px) {
+  .title,
+  .sub {
+    margin-top: 16px;
+  }
+
+  .claimWrap {
+    margin-top: 24px;
+  }
+}
+
 /* The claim bar: the hero's one control. */
 .claim {
   display: flex;
@@ -272,8 +299,59 @@
   font-weight: 400;
 }
 
+/*
+ * The page's primary-CTA hover (same as the navbar's Get started): 2px lift, a deeper soft Lake shadow,
+ * the arrow nudges 4px; a press settles back. focus-visible matches hover; reduced motion keeps the shade
+ * and shadow, drops the movement.
+ */
 .claimButton {
+  --lift-shadow: 0 10px 22px -8px rgb(43 89 209 / 0.38);
+
   flex: none;
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    transform var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart);
+}
+
+.claimButton svg {
+  transition: transform var(--dur-base) var(--ease-out-quart);
+}
+
+.claimButton:focus-visible {
+  background: var(--color-lake-hover);
+  box-shadow: var(--lift-shadow);
+}
+
+@media (hover: hover) {
+  .claimButton:hover {
+    box-shadow: var(--lift-shadow);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .claimButton:focus-visible {
+    transform: translate3d(0, -2px, 0);
+  }
+
+  .claimButton:focus-visible svg {
+    transform: translate3d(4px, 0, 0);
+  }
+
+  @media (hover: hover) {
+    .claimButton:hover {
+      transform: translate3d(0, -2px, 0);
+    }
+
+    .claimButton:hover svg {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+
+  .claimButton:active {
+    transform: scale(0.98);
+    box-shadow: none;
+  }
 }
 
 .claimStatus {
@@ -535,20 +613,51 @@
   border-radius: 999px;
   background: var(--color-parchment);
   color: var(--color-ink);
-  transition: background-color 0.2s ease;
-}
-
-.send:hover {
-  background: var(--color-periwinkle);
-}
-
-.send:active {
-  transform: scale(0.98);
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    transform var(--dur-base) var(--ease-out-quart);
 }
 
 .send:focus-visible {
   outline: 2px solid var(--color-ink);
   outline-offset: 2px;
+}
+
+/*
+ * Chat controls (send and the inactive question tabs) share one hover: the Lake tint of the active nav
+ * pill and a 1px lift. focus-visible matches; reduced motion keeps the tint, drops the lift.
+ */
+.send:focus-visible,
+.tab[aria-selected="false"]:focus-visible {
+  background: var(--color-periwinkle);
+  color: var(--color-ink);
+}
+
+@media (hover: hover) {
+  .send:hover,
+  .tab[aria-selected="false"]:hover {
+    background: var(--color-periwinkle);
+    color: var(--color-ink);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .send:focus-visible,
+  .tab[aria-selected="false"]:focus-visible {
+    transform: translate3d(0, -1px, 0);
+  }
+
+  @media (hover: hover) {
+    .send:hover,
+    .tab[aria-selected="false"]:hover {
+      transform: translate3d(0, -1px, 0);
+    }
+  }
+
+  .send:active,
+  .tab[aria-selected="false"]:active {
+    transform: scale(0.98);
+  }
 }
 
 .panelFoot {
@@ -586,12 +695,9 @@
   white-space: nowrap;
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-
-.tab:hover {
-  color: var(--color-ink);
+    background-color var(--dur-base) var(--ease-out-quart),
+    color var(--dur-base) var(--ease-out-quart),
+    transform var(--dur-base) var(--ease-out-quart);
 }
 
 .tab[aria-selected="true"] {
@@ -635,9 +741,10 @@
 /*
  * Entrance (about 1.5s). The inline script in hero-intro.tsx sets html[data-intro] before paint, then
  * data-intro="play" once fonts are ready, and removes it when the chat (data-hero-last) has settled.
+ * Only the words, the claim and the chat move. The frame and the scenery (the LCP image) paint with the
+ * first HTML: hiding them behind the font wait and a fade pushed phone LCP past 4.5s.
  */
 @media (prefers-reduced-motion: no-preference) {
-  html[data-intro] .frame,
   html[data-intro] .pill,
   html[data-intro] .sub,
   html[data-intro] .claimWrap,
@@ -647,14 +754,6 @@
 
   html[data-intro] .lineInner {
     transform: translate3d(0, 110%, 0);
-  }
-
-  html[data-intro="play"] .frame {
-    animation: hero-fade 0.6s var(--ease-soft) both;
-  }
-
-  html[data-intro="play"] .scenery {
-    animation: hero-sky 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   html[data-intro="play"] .pill {
@@ -685,25 +784,6 @@
   html[data-intro="play"] .lineInner,
   html[data-intro="play"] .sub {
     will-change: transform, opacity;
-  }
-}
-
-@keyframes hero-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Opacity only: the landscape is the LCP image, so it never moves under the reader. */
-@keyframes hero-sky {
-  from {
-    opacity: 0.4;
-  }
-  to {
-    opacity: 1;
   }
 }
 

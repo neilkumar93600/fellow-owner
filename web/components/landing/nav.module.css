@@ -229,6 +229,45 @@
   font-size: 14px;
 }
 
+/*
+ * Get started hover: the page's primary-CTA treatment (2px lift + deeper shadow, same ease as the buttons);
+ * focus-visible matches hover. Reduced motion keeps the shadow and colour change, drops the lift.
+ */
+.creator {
+  transition-property: color, background-color, border-color, opacity, scale, transform, box-shadow;
+}
+
+.creator {
+  --lift-shadow: 0 10px 22px -8px rgb(43 89 209 / 0.38);
+}
+
+/* The glass twin keeps its inner highlight and a neutral shadow. */
+.creator[data-glass] {
+  --lift-shadow: var(--glass-highlight), 0 10px 22px -8px rgb(45 45 48 / 0.28);
+}
+
+.creator:focus-visible {
+  box-shadow: var(--lift-shadow);
+}
+
+@media (hover: hover) {
+  .creator:hover {
+    box-shadow: var(--lift-shadow);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .creator:focus-visible {
+    transform: translate3d(0, -2px, 0);
+  }
+
+  @media (hover: hover) {
+    .creator:hover {
+      transform: translate3d(0, -2px, 0);
+    }
+  }
+}
+
 /* Hidden while the sheet is open: its own Get started stands in for this one. */
 .root:has(.sheet[data-open="true"]) .creator {
   visibility: hidden;

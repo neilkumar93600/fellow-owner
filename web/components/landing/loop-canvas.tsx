@@ -8,7 +8,13 @@ import { createFrameCache, type FrameCache } from './loop-frames';
 /** The blurred product recording (round 4 spec §3): 5 acts of 24 frames, 1280x800. */
 const FRAME_COUNT = 120;
 const EAGER = 12;
-const DPR_CAP = 1.5;
+/**
+ * CSS px per canvas pixel. The recording is drawn this coarse and the browser's smooth upscale blurs it
+ * (about a 40px blur at this size) for free, so only colour shapes survive: no readable product text
+ * behind the live layer, and no per-frame CSS filter.
+ */
+const COARSE = 20;
+const POSTER = '/frames/product/poster.webp';
 const SHOWN = Array.from({ length: FRAME_COUNT }, (_, index) => index);
 const frameUrl = (index: number) =>
   `/frames/product/frame_${String(index + 1).padStart(4, '0')}.webp`;
@@ -17,7 +23,7 @@ const frameUrl = (index: number) =>
  * The loop's background layer: scrubs the recording with the same scroll progress as the live layer, so
  * act i plays behind step i. Bytes load once (12 eager, the rest on idle); loop-frames keeps only a small
  * decoded window and the whole window is released while the canvas is off screen. Never fetches under
- * reduced motion (LoopStatic covers that case); poster.webp is the CSS background for first paint.
+ * reduced motion (LoopStatic covers that case); poster.webp is drawn, equally coarse, until frame 1 decodes.
  */
 export function LoopCanvas({ progress }: { progress: MotionValue<number> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,21 +46,36 @@ export function LoopCanvas({ progress }: { progress: MotionValue<number> }) {
     let visible = false;
     let raf = 0;
 
-    const paint = () => {
-      raf = 0;
-      const hit = cache.nearest(target);
-      if (!hit || hit.frame === drawn) return;
-      const { image, width, height } = hit.decoded;
+    const draw = (image: CanvasImageSource, width: number, height: number) => {
       const scale = Math.max(canvas.width / width, canvas.height / height);
       const w = width * scale;
       const h = height * scale;
       context.drawImage(image, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+    };
+    // The poster stands in (drawn just as coarse) until the first frame decodes.
+    const poster = new Image();
+    poster.src = POSTER;
+    const POSTER_DRAWN = -2;
+
+    const paint = () => {
+      raf = 0;
+      const hit = cache.nearest(target);
+      if (!hit) {
+        if (drawn === -1 && poster.complete && poster.naturalWidth) {
+          draw(poster, poster.naturalWidth, poster.naturalHeight);
+          drawn = POSTER_DRAWN;
+        }
+        return;
+      }
+      if (hit.frame === drawn) return;
+      draw(hit.decoded.image, hit.decoded.width, hit.decoded.height);
       drawn = hit.frame;
     };
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(paint);
     };
     const cache = createFrameCache(SHOWN, schedule);
+    poster.onload = schedule;
 
     const update = (value: number) => {
       // floor(p * 120), not round(p * 119): act i is exactly [i / 5, (i + 1) / 5), like liveStepAt.
@@ -68,9 +89,10 @@ export function LoopCanvas({ progress }: { progress: MotionValue<number> }) {
     engine.current = { cache, update };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-      canvas.width = Math.round(canvas.clientWidth * dpr);
-      canvas.height = Math.round(canvas.clientHeight * dpr);
+      canvas.width = Math.max(1, Math.ceil(canvas.clientWidth / COARSE));
+      canvas.height = Math.max(1, Math.ceil(canvas.clientHeight / COARSE));
+      // Resizing resets the context; average the whole frame on the way down so it never shimmers.
+      context.imageSmoothingQuality = 'high';
       drawn = -1;
       schedule();
     };
@@ -105,6 +127,7 @@ export function LoopCanvas({ progress }: { progress: MotionValue<number> }) {
 
     return () => {
       aborter.abort();
+      poster.onload = null;
       cancelAnimationFrame(raf);
       resizer.disconnect();
       watcher.disconnect();

@@ -1,0 +1,44 @@
+/*
+ * Landing pill hover, one treatment per role (demo-button.tsx `lift`, demo-cta.tsx's Get started).
+ * Primary (Lake Blue): lifts 1px over a deeper Lake shadow. Secondary (glass): inverts to an ink fill with
+ * parchment text and lifts 1px. Keyboard focus gets the same as hover, on top of the focus ring. Reduced
+ * motion keeps the colour change and the shadow, never the lift.
+ */
+
+.primary,
+.secondary {
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    color var(--dur-base) var(--ease-out-quart),
+    border-color var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart),
+    transform var(--dur-fast) var(--ease-out-quart);
+}
+
+.primary:hover,
+.primary:focus-visible {
+  background: var(--color-lake-hover);
+  box-shadow: 0 12px 24px -12px rgb(43 89 209 / 0.6);
+}
+
+.secondary:hover,
+.secondary:focus-visible {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-parchment);
+  box-shadow: 0 12px 24px -14px rgb(45 45 48 / 0.55);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .primary:hover,
+  .primary:focus-visible,
+  .secondary:hover,
+  .secondary:focus-visible {
+    transform: translate3d(0, -1px, 0);
+  }
+
+  .primary:active:not(:disabled),
+  .secondary:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}

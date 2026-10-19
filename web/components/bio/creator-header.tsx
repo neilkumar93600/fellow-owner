@@ -23,6 +23,8 @@ export interface CreatorHeaderProps {
   cta: { href: string; label: string };
   /** The bio page's one h1; a preview inside another page (the landing mockups) passes 'p'. */
   nameAs?: 'h1' | 'p';
+  /** The cover is the bio page's LCP image; a below-the-fold preview passes false so it doesn't compete. */
+  priority?: boolean;
 }
 
 /**
@@ -31,7 +33,12 @@ export interface CreatorHeaderProps {
  * link out, the follower and fan totals and the way in (a glass pill: the page's blue is "Send an
  * idea"). Words sit on glass-strong, so they are ink.
  */
-export function CreatorHeader({ space, cta, nameAs: Name = 'h1' }: CreatorHeaderProps) {
+export function CreatorHeader({
+  space,
+  cta,
+  nameAs: Name = 'h1',
+  priority = true,
+}: CreatorHeaderProps) {
   const first = space.displayName.split(' ')[0];
   const photos = space.isDemo ? DEMO_PHOTOS : undefined;
   return (
@@ -43,12 +50,12 @@ export function CreatorHeader({ space, cta, nameAs: Name = 'h1' }: CreatorHeader
             src={space.coverUrl}
             alt=""
             className="absolute inset-0 size-full object-cover"
-            fetchPriority="high"
+            fetchPriority={priority ? 'high' : 'auto'}
           />
         ) : photos ? (
           <CreatorImage
             fill
-            priority
+            priority={priority}
             name={photos.cover}
             alt={`${first} on the road`}
             sizes="(min-width: 840px) 792px, 100vw"

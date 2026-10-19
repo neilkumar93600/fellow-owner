@@ -4,20 +4,21 @@
   --gutter: 16px;
 
   position: relative;
-  padding: 72px var(--gutter);
+  /* Showcase above and the FAQ below share the washes: about 80px between blocks on phones, 120 on desktop. */
+  padding: 40px var(--gutter);
 }
 
 @media (min-width: 768px) {
   .section {
     --gutter: 32px;
-    padding-block: 104px;
+    padding-block: 56px 48px;
   }
 }
 
 @media (min-width: 1280px) {
   .section {
     --gutter: 40px;
-    padding-block: 128px;
+    padding-block: 64px 56px;
   }
 }
 

@@ -23,8 +23,8 @@ import { ShowcaseStage } from './showcase-motion';
  *
  * One row, so no project is ever on screen twice. The track holds three copies of the list and the middle
  * one is the real list: exposed to assistive tech and the keyboard, while the copies either side are
- * aria-hidden echoes (links out of the tab order, still clickable). The animation keeps the middle copy's
- * start inside the viewport, so any card can be brought to the centre when it takes focus
+ * aria-hidden + inert echoes (no tab stops, no clicks: the real card is a few cards away). The animation
+ * keeps the middle copy's start inside the viewport, so any card can be brought to the centre when it takes focus
  * (showcase-motion.tsx). The row pauses on hover and focus-within, and with the Pause control. Reduced
  * motion: the middle copy alone, as a row that scrolls and snaps.
  */
@@ -80,6 +80,7 @@ export function ShowcaseStrip() {
                     className={st.group}
                     aria-label={real ? 'Featured projects' : undefined}
                     aria-hidden={real ? undefined : true}
+                    inert={!real}
                     data-copy={real ? undefined : ''}
                   >
                     {showcase.map((project, index) => (
@@ -92,7 +93,6 @@ export function ShowcaseStrip() {
                         <ProjectCard
                           project={project}
                           tint={TINTS[index % TINTS.length] ?? 'peach'}
-                          echo={!real}
                         />
                       </li>
                     ))}
@@ -121,16 +121,11 @@ function Maker({ name, large }: { name: string; large?: boolean }) {
 }
 
 /** The card's title: a stretched link when the project has a live showcase page. */
-function CardTitle({ title, slug, echo }: { title: string; slug?: string; echo: boolean }) {
+function CardTitle({ title, slug }: { title: string; slug?: string }) {
   return (
     <h3 className={st.cardTitle}>
       {slug ? (
-        <Link
-          href={`/${creator.handle}/s/${slug}`}
-          prefetch={false}
-          tabIndex={echo ? -1 : undefined}
-          className={st.cardLink}
-        >
+        <Link href={`/${creator.handle}/s/${slug}`} prefetch={false} className={st.cardLink}>
           {title}
         </Link>
       ) : (
@@ -140,21 +135,18 @@ function CardTitle({ title, slug, echo }: { title: string; slug?: string; echo: 
   );
 }
 
-/** echo: a visual copy (aria-hidden by its list). Still clickable, but out of the tab order. */
 function ProjectCard({
   project,
   tint,
-  echo,
 }: {
   project: ShowcaseProject;
   tint: (typeof TINTS)[number];
-  echo: boolean;
 }) {
   const slug = SHOWCASE_SLUGS[project.title];
   return project.title === DEMO.idea.title ? (
-    <MadeItCard project={project} crew={DEMO.crew} slug={slug} echo={echo} />
+    <MadeItCard project={project} crew={DEMO.crew} slug={slug} />
   ) : (
-    <FlatCard project={project} tint={tint} slug={slug} echo={echo} />
+    <FlatCard project={project} tint={tint} slug={slug} />
   );
 }
 
@@ -163,12 +155,10 @@ function MadeItCard({
   project,
   crew,
   slug,
-  echo,
 }: {
   project: ShowcaseProject;
   crew: readonly DemoCrewMember[];
   slug?: string;
-  echo: boolean;
 }) {
   return (
     <article className={st.card}>
@@ -180,7 +170,7 @@ function MadeItCard({
           </span>
         </div>
         <div className={st.pageBody}>
-          <CardTitle title={project.title} slug={slug} echo={echo} />
+          <CardTitle title={project.title} slug={slug} />
           <ul className={st.credits}>
             {crew.map((member) => (
               <li key={member.name}>
@@ -214,12 +204,10 @@ function FlatCard({
   project,
   tint,
   slug,
-  echo,
 }: {
   project: ShowcaseProject;
   tint: (typeof TINTS)[number];
   slug?: string;
-  echo: boolean;
 }) {
   const shown = project.crew.slice(0, 4);
   const more = project.team - shown.length;
@@ -236,7 +224,7 @@ function FlatCard({
             ) : null}
           </span>
         </div>
-        <CardTitle title={project.title} slug={slug} echo={echo} />
+        <CardTitle title={project.title} slug={slug} />
         {slug ? (
           <span className={st.open} aria-hidden="true">
             <ArrowUpRight size={16} strokeWidth={1.5} />

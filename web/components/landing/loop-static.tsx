@@ -202,7 +202,10 @@ export function LoopStatic() {
     <div className="mx-auto max-w-[1200px] px-4 pt-20 pb-24 md:px-8 md:pt-28 md:pb-32">
       <div className="max-w-[40rem]">
         <p className="eyebrow">{storyDisclosure}</p>
-        <h2 className="mt-5 font-display text-[2.75rem] leading-[1.02] text-ink md:text-[4rem]">
+        <h2
+          id="loop-title-static"
+          className="mt-5 font-display text-[2.75rem] leading-[1.02] text-ink md:text-[4rem]"
+        >
           How it works: <em>from follower to featured</em>
         </h2>
       </div>

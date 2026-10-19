@@ -7,23 +7,27 @@ import { enterDemo } from '@/lib/api/demo';
 import { ApiError } from '@/lib/fetcher';
 import { setAuthHint } from '@/lib/local-state';
 import { cn } from '@/lib/utils';
+import pill from './demo-button.module.css';
 
 /**
  * "Enter as creator" / "Enter as fan" (F22). Signs into the seeded demo account through the API and follows
  * its redirect. If the API is unreachable, shows the documented "Demo unavailable" toast and stays put;
  * a 429 (many visitors on one network) says when to retry, from Retry-After.
  * `primary` is the Lake Blue pill (at most one per screen), `secondary` the frosted glass pill.
+ * `lift` opts into the landing pill hover (demo-button.module.css); other callers restyle the button.
  * Extra props (data-*, aria-*, id, ...) land on the button.
  */
 export function DemoButton({
   as,
   variant = as === 'creator' ? 'primary' : 'secondary',
+  lift = false,
   className,
   children,
   ...rest
 }: Omit<React.ComponentProps<'button'>, 'onClick' | 'type'> & {
   as: 'creator' | 'fan';
   variant?: 'primary' | 'secondary';
+  lift?: boolean;
 }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
@@ -67,7 +71,13 @@ export function DemoButton({
       type="button"
       onClick={onClick}
       aria-busy={pending}
-      className={cn('btn', `btn-${variant}`, pending && 'cursor-progress', className)}
+      className={cn(
+        'btn',
+        `btn-${variant}`,
+        lift && pill[variant],
+        pending && 'cursor-progress',
+        className,
+      )}
     >
       {content}
     </button>

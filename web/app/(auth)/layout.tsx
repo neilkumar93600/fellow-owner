@@ -1,4 +1,8 @@
+import type { Metadata } from 'next';
 import { AuthShell } from '@/components/auth/auth-shell';
+
+// Every auth screen stays out of search results; a page can still add its own title and robots.
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 /**
  * Log in, create account, the email code and the password screens share one frame (AuthShell): the

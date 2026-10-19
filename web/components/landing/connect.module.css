@@ -129,9 +129,15 @@
   height: 44px;
   place-items: center;
   border: 0;
+  /* The hover tint fills the content box: a 28px disc inside the 44px target. */
+  padding: 8px;
   border-radius: 999px;
   background: none;
+  background-clip: content-box;
   cursor: pointer;
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart);
 }
 
 .dotMark {
@@ -145,14 +151,25 @@
     opacity 250ms var(--ease-out-quart);
 }
 
-.dot:hover .dotMark {
-  opacity: 0.8;
-}
-
 .dot[aria-current] .dotMark {
   background: var(--ink);
   opacity: 1;
   transform: scaleX(2.5);
+}
+
+/* Stepper hover (shared with creators and fans): an inactive dot sits on a white tint and lifts 1px. */
+.dot:not([aria-current]):is(:hover, :focus-visible) {
+  background-color: rgb(255 255 255 / 0.7);
+}
+
+.dot:not([aria-current]):is(:hover, :focus-visible) .dotMark {
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dot:not([aria-current]):is(:hover, :focus-visible) .dotMark {
+    transform: translate3d(0, -1px, 0);
+  }
 }
 
 /* The row: native snap scroller by default; a translated strip inside a clipped viewport when pinned. */

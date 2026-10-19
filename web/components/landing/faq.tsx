@@ -24,7 +24,7 @@ const FAQ_JSON_LD = JSON.stringify({
 }).replace(/</g, '\\u003c');
 
 const NO_SCRIPT_CSS =
-  '[data-faq-panel]{grid-template-rows:1fr!important;visibility:visible!important}' +
+  '[data-faq-panel]{display:grid!important;grid-template-rows:1fr!important;visibility:visible!important}' +
   '[data-faq-panel] p{opacity:1!important;transform:none!important}';
 
 export function Faq() {
@@ -45,7 +45,7 @@ export function Faq() {
             Questions, answered.
           </h2>
           <p className={st.note}>Still curious? Enter the demo and look around.</p>
-          <DemoButton as="creator" variant="secondary" className={st.noteAction} />
+          <DemoButton as="creator" variant="secondary" lift className={st.noteAction} />
         </div>
 
         <div

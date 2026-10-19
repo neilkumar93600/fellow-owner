@@ -251,7 +251,7 @@
   transition: background-color var(--dur-slow) var(--ease-out-quart);
 }
 
-.stepLink:hover {
+.stepLink:is(:hover, :focus-visible) {
   background: rgb(255 255 255 / 0.45);
 }
 
@@ -269,7 +269,8 @@
   line-height: 1;
   transition:
     background-color var(--dur-slow) var(--ease-out-quart),
-    box-shadow var(--dur-slow) var(--ease-out-quart);
+    box-shadow var(--dur-slow) var(--ease-out-quart),
+    transform var(--dur-fast) var(--ease-out-quart);
 }
 
 .stepText {
@@ -370,6 +371,21 @@
 
 [data-scene="ready"] .step:not([data-active]) .stepTitle {
   color: var(--ink-soft);
+}
+
+/* Stepper hover (shared with fans and connect): an inactive step's number lifts 1px over a soft shadow. */
+[data-scene="ready"] .step:not([data-active]) .stepLink:is(:hover, :focus-visible) .stepNum {
+  background: #fff;
+  color: var(--ink);
+  box-shadow:
+    inset 0 0 0 1px var(--glass-edge),
+    0 6px 14px -8px rgb(45 45 48 / 0.35);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-scene="ready"] .step:not([data-active]) .stepLink:is(:hover, :focus-visible) .stepNum {
+    transform: translate3d(0, -1px, 0);
+  }
 }
 
 [data-scene="ready"] .step[data-active] .stepLink {
@@ -497,16 +513,12 @@
 }
 
 @media (min-width: 1024px) {
-  /* The sticky list carries this copy beside the screens; the caption stays for screen readers. */
+  /*
+   * The sticky list carries this copy beside the screens, so the caption leaves the page (one copy read
+   * aloud, not two). It still names its figure: aria-labelledby reads hidden text.
+   */
   .caption {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+    display: none;
   }
 }
 
@@ -518,9 +530,12 @@
     transform 600ms var(--ease-out-quart);
 }
 
-.inner [data-reveal="pending"] {
-  opacity: 0;
-  transform: translate3d(0, 16px, 0);
+/* Reduced motion never hides content, even content marked pending before the setting changed. */
+@media (prefers-reduced-motion: no-preference) {
+  .inner [data-reveal="pending"] {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
 }
 
 .inner [data-reveal="shown"] {

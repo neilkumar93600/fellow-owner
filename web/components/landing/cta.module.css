@@ -415,9 +415,12 @@
 
 /* ---------- Entrances (cta-motion.tsx arms blocks that start below the fold) ---------- */
 
-.rise[data-armed] {
-  opacity: 0;
-  transform: translateY(28px);
+/* Reduced motion never hides a block, even one armed before the setting changed. */
+@media (prefers-reduced-motion: no-preference) {
+  .rise[data-armed] {
+    opacity: 0;
+    transform: translateY(28px);
+  }
 }
 
 .rise[data-armed][data-inview] {

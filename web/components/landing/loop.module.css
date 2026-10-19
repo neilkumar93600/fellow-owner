@@ -19,14 +19,16 @@
   isolation: isolate;
 }
 
-/* The poster is the first paint; the canvas draws over it once frame 1 decodes. One 1280x800 set, cover-cropped. */
+/* The recording, drawn coarse (loop-canvas.tsx) and upscaled smooth, so it reads as colour shapes only,
+   then faded well back: a hint of the product moving, never legible text competing with the live layer. */
 .canvas {
   position: absolute;
   inset: 0;
   z-index: -3;
   width: 100%;
   height: 100%;
-  background: var(--color-parchment) url("/frames/product/poster.webp") center / cover no-repeat;
+  opacity: 0.25;
+  background: var(--color-parchment);
   /* Soft top and bottom edges: the recording fades into the page washes instead of meeting the
      Problem section above (and the next section below) in a hard line while the scene scrolls in/out. */
   -webkit-mask-image: linear-gradient(
@@ -174,7 +176,8 @@
   cursor: pointer;
   transition:
     background-color var(--dur-base) var(--ease-out-quart),
-    color var(--dur-base) var(--ease-out-quart);
+    color var(--dur-base) var(--ease-out-quart),
+    transform var(--dur-base) var(--ease-out-quart);
 }
 
 @media (min-width: 768px) {
@@ -187,8 +190,19 @@
   }
 }
 
-.chip:hover {
-  background: rgb(255 255 255 / 0.9);
+/* Inactive steps answer hover and keyboard focus alike: a Lake Blue tint and a 1px lift. The active
+   step keeps its periwinkle fill and dot, so it stays distinct. */
+.chip:not([aria-current]):hover,
+.chip:not([aria-current]):focus-visible {
+  background: color-mix(in srgb, var(--color-lake) 9%, rgb(255 255 255 / 0.92));
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip:not([aria-current]):hover,
+  .chip:not([aria-current]):focus-visible {
+    transform: none;
+  }
 }
 
 .chip[aria-current] {

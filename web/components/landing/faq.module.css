@@ -20,7 +20,7 @@
   --pad: 18px;
 
   position: relative;
-  padding-block: 104px 112px;
+  padding-block: 48px 112px;
 }
 
 @media (min-width: 768px) {
@@ -28,7 +28,7 @@
     --gutter: 32px;
     --pad: 24px;
 
-    padding-block: 144px 136px;
+    padding-block: 56px 136px;
   }
 }
 
@@ -37,7 +37,7 @@
     --gutter: 40px;
     --pad: 28px;
 
-    padding-block: 176px 168px;
+    padding-block: 64px 168px;
   }
 }
 
@@ -337,9 +337,11 @@
     transform 600ms var(--ease-out-quart) var(--d, 0ms);
 }
 
-.inner [data-cta-reveal="rise"][data-armed]:not([data-inview]) {
-  opacity: 0;
-  transform: translate3d(0, 16px, 0);
+@media (prefers-reduced-motion: no-preference) {
+  .inner [data-cta-reveal="rise"][data-armed]:not([data-inview]) {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -353,5 +355,10 @@
   .answer,
   .inner [data-cta-reveal] {
     transition: none;
+  }
+
+  /* No height animation to keep, so a closed answer leaves the layout instead of sitting there invisible. */
+  .item:not([data-open]) .panel {
+    display: none;
   }
 }

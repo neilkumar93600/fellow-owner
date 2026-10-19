@@ -7,6 +7,8 @@ const apiUrl =
   (process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : undefined);
 
 const nextConfig: NextConfig = {
+  // AVIF first (smallest), WebP where AVIF is not supported; next/image picks by the Accept header.
+  images: { formats: ['image/avif', 'image/webp'] },
   // Old and commonly typed paths, permanent (308, which search engines treat as 301). Next keeps the
   // query string, so `returnTo` survives the hop, and strips a trailing slash first (/tos/ -> /tos).
   // Redirects run before routes, so a source that is a valid handle (privacy, tos) must also be in
