@@ -3,7 +3,6 @@
 import {
   type CreatePostInput,
   createPostSchema,
-  DAILY_CAPS,
   LIMITS,
   POST_TYPE_LABELS,
   POST_TYPES,
@@ -176,7 +175,7 @@ export function PostForm({
         <div className="flex flex-col-reverse gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p id={capId} className="text-small text-ink-soft">
             {capped ? (
-              `You've reached today's limit of ${DAILY_CAPS.posts} posts. Try again tomorrow.`
+              "You've reached today's limit for posts. More tomorrow."
             ) : (
               <>
                 <span className="tabular-nums">{formatNumber(postsLeftToday)}</span>{' '}

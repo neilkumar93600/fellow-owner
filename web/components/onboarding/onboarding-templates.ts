@@ -431,18 +431,6 @@ export function formatCompact(n: number): string {
   return String(n);
 }
 
-export function totalFollowers(platforms: PlatformDraft[]): { total: number; count: number } {
-  let total = 0;
-  let count = 0;
-  for (const p of platforms) {
-    if (Number.isFinite(p.followers) && p.followers > 0) {
-      total += p.followers;
-      count += 1;
-    }
-  }
-  return { total, count };
-}
-
 // ---------------------------------------------------------------- people
 
 export function initials(name: string): string {

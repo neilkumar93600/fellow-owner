@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-/** Fired on window when <html data-intro="play"> is set; the hero chips time their spring from this moment. */
+/** Fired on window when <html data-intro="play"> is set; the hero entrance listens for it to start timing its last element. */
 export const INTRO_PLAY_EVENT = 'fo:intro-play';
 
 /** 1 = waiting for fonts, 2 = playing, 0 or undefined = no entrance (reduced motion, soft nav, failsafe, done). */

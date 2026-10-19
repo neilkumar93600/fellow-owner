@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, TextArea, TextField } from '@/components/ui/field';
 import { useUpdateSettings } from '@/hooks/queries/use-settings';
-import { issuesByPath } from './profile-form';
+import { DEMO_READ_ONLY, issuesByPath } from './profile-form';
 
 type ListKey = keyof TasteProfile;
 type Line = { id: number; text: string };
@@ -63,7 +63,7 @@ let seq = 0;
 const toLines = (list: string[]): Line[] => list.map((text) => ({ id: seq++, text }));
 
 export interface TasteProfileFormProps {
-  space: Pick<StudioSpace, 'tasteProfile' | 'tasteVersion'>;
+  space: Pick<StudioSpace, 'tasteProfile' | 'tasteVersion' | 'isDemo'>;
   isPending?: boolean;
 }
 
@@ -134,41 +134,46 @@ export function TasteProfileForm({ space, isPending = false }: TasteProfileFormP
         </p>
       </div>
 
-      <div className="grid gap-8 @5xl:grid-cols-2">
-        {LISTS.slice(0, 2).map((list) => (
-          <LineList
-            key={list.name}
-            {...list}
-            lines={lines[list.name]}
-            errors={errors}
-            onChange={(next) => edit(list.name, next)}
-            onAdd={() => {
-              edit(list.name, [...lines[list.name], ...toLines([''])]);
-              setFocusList(list.name);
-            }}
-          />
-        ))}
-      </div>
-      <LineList
-        {...LISTS[2]}
-        multiline
-        lines={lines.voice}
-        errors={errors}
-        onChange={(next) => edit('voice', next)}
-        onAdd={() => {
-          edit('voice', [...lines.voice, ...toLines([''])]);
-          setFocusList('voice');
-        }}
-      />
+      {space.isDemo ? <p className="text-small text-ink-soft">{DEMO_READ_ONLY}</p> : null}
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line-row pt-6">
-        <Button type="submit" icon={<Check />} disabled={isSaving || isPending}>
-          {isSaving ? 'Saving...' : 'Save my taste'}
-        </Button>
-        <p className="max-w-[60ch] text-small text-ink-muted">
-          Saving starts version {version + 1}. Items rated earlier say so until you rescore them.
-        </p>
-      </div>
+      {/* ponytail: a disabled fieldset locks every native input and button inside in one go. */}
+      <fieldset disabled={space.isDemo} className="m-0 flex min-w-0 flex-col gap-8 border-0 p-0">
+        <div className="grid gap-8 @5xl:grid-cols-2">
+          {LISTS.slice(0, 2).map((list) => (
+            <LineList
+              key={list.name}
+              {...list}
+              lines={lines[list.name]}
+              errors={errors}
+              onChange={(next) => edit(list.name, next)}
+              onAdd={() => {
+                edit(list.name, [...lines[list.name], ...toLines([''])]);
+                setFocusList(list.name);
+              }}
+            />
+          ))}
+        </div>
+        <LineList
+          {...LISTS[2]}
+          multiline
+          lines={lines.voice}
+          errors={errors}
+          onChange={(next) => edit('voice', next)}
+          onAdd={() => {
+            edit('voice', [...lines.voice, ...toLines([''])]);
+            setFocusList('voice');
+          }}
+        />
+
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line-row pt-6">
+          <Button type="submit" icon={<Check />} disabled={isSaving || isPending}>
+            {isSaving ? 'Saving...' : 'Save my taste'}
+          </Button>
+          <p className="max-w-[60ch] text-small text-ink-muted">
+            Saving starts version {version + 1}. Items rated earlier say so until you rescore them.
+          </p>
+        </div>
+      </fieldset>
     </form>
   );
 }

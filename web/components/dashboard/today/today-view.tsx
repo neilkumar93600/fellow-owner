@@ -96,10 +96,10 @@ export function TodayGreeting({
         <Skeleton className="mt-3 h-5 w-56" />
       ) : (
         <p className="mt-2 text-body text-ink-soft">
-          {ideas !== undefined && messages !== undefined
-            ? `Your AI twin read ${formatNumber(ideas)} new ${pluralize(ideas, 'idea')} and ${formatNumber(messages)} ${pluralize(messages, 'message')}. ${formatNumber(count)} need you.`
-            : count === 0
-              ? 'Nothing needs you right now.'
+          {count === 0
+            ? 'Nothing needs you right now.'
+            : ideas !== undefined && messages !== undefined
+              ? `Your AI twin read ${formatNumber(ideas)} new ${pluralize(ideas, 'idea')} and ${formatNumber(messages)} ${pluralize(messages, 'message')}. ${formatNumber(count)} ${pluralize(count, 'needs', 'need')} you.`
               : `${formatNumber(count)} ${pluralize(count, 'thing needs', 'things need')} you · about ${estimateMinutes(count)} min`}
         </p>
       )}

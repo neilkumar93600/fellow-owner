@@ -17,6 +17,8 @@ import { useImportPlatformFans } from '@/hooks/queries/use-followers';
 import { useUpdateSettings } from '@/hooks/queries/use-settings';
 import { ApiError } from '@/lib/fetcher';
 
+export const DEMO_READ_ONLY = 'Read-only in the demo. Create your own space to try it.';
+
 /** The first message at `path` or under it ("platforms" finds "platforms.1.url"). */
 function issueUnder(errors: Record<string, string>, path: string): string | undefined {
   return Object.entries(errors).find(([p]) => p === path || p.startsWith(`${path}.`))?.[1];
@@ -32,7 +34,7 @@ export function issuesByPath(issues: readonly { path: PropertyKey[]; message: st
 export interface ProfileFormProps {
   space: Pick<
     StudioSpace,
-    'displayName' | 'bio' | 'avatarUrl' | 'coverUrl' | 'platforms' | 'showReadReceipts'
+    'displayName' | 'bio' | 'avatarUrl' | 'coverUrl' | 'platforms' | 'showReadReceipts' | 'isDemo'
   >;
   isPending?: boolean;
 }
@@ -91,55 +93,59 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
             Fans see this at the top of your bio link and beside your replies.
           </p>
         </div>
+        {space.isDemo ? <p className="text-small text-ink-soft">{DEMO_READ_ONLY}</p> : null}
 
-        <div className="flex flex-col gap-2">
+        {/* ponytail: a disabled fieldset locks every native input and button inside in one go. */}
+        <fieldset disabled={space.isDemo} className="m-0 flex min-w-0 flex-col gap-6 border-0 p-0">
+          <div className="flex flex-col gap-2">
+            <ImageUpload
+              kind="avatar"
+              label="Avatar"
+              name={name.trim() || space.displayName}
+              value={avatarUrl}
+              onChange={setAvatarUrl}
+            />
+            <p className="text-small text-ink-muted">
+              Your initials show until a photo is added. Save your profile to keep the change.
+            </p>
+          </div>
+
           <ImageUpload
-            kind="avatar"
-            label="Avatar"
-            name={name.trim() || space.displayName}
-            value={avatarUrl}
-            onChange={setAvatarUrl}
+            kind="space_cover"
+            label="Cover image"
+            value={coverUrl}
+            onChange={setCoverUrl}
           />
-          <p className="text-small text-ink-muted">
-            Your initials show until a photo is added. Save your profile to keep the change.
-          </p>
-        </div>
 
-        <ImageUpload
-          kind="space_cover"
-          label="Cover image"
-          value={coverUrl}
-          onChange={setCoverUrl}
-        />
+          <Field
+            label="Display name"
+            count={{ value: name.length, max: LIMITS.space.displayName.max }}
+            error={errors.displayName}
+          >
+            <TextField
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              autoComplete="name"
+            />
+          </Field>
 
-        <Field
-          label="Display name"
-          count={{ value: name.length, max: LIMITS.space.displayName.max }}
-          error={errors.displayName}
-        >
-          <TextField
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            autoComplete="name"
-          />
-        </Field>
+          <Field
+            label="One-line bio"
+            optional
+            helper="Sits under your name on the bio link."
+            count={{ value: bio.length, max: LIMITS.space.bio.max }}
+            error={errors.bio}
+          >
+            <TextArea value={bio} onChange={(event) => setBio(event.target.value)} rows={3} />
+          </Field>
 
-        <Field
-          label="One-line bio"
-          optional
-          helper="Sits under your name on the bio link."
-          count={{ value: bio.length, max: LIMITS.space.bio.max }}
-          error={errors.bio}
-        >
-          <TextArea value={bio} onChange={(event) => setBio(event.target.value)} rows={3} />
-        </Field>
-
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <Button type="submit" icon={<Check />} disabled={isSaving || isPending}>
-            {isSaving ? 'Saving...' : 'Save profile'}
-          </Button>
-          <p className="text-small text-ink-muted">Saves your name, bio and social accounts.</p>
-        </div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <Button type="submit" icon={<Check />} disabled={isSaving || isPending}>
+              {isSaving ? 'Saving...' : 'Save profile'}
+            </Button>
+            <p className="text-small text-ink-muted">Saves your name, bio and social accounts.</p>
+          </div>
+        </fieldset>
       </form>
 
       <SocialAccounts

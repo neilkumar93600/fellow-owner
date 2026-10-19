@@ -9,8 +9,6 @@ export type StoryStepId = 'followers' | 'communities' | 'idea' | 'crew' | 'featu
 
 export interface StoryStep {
   id: StoryStepId;
-  /** Optional small text: the day of the example week the step lands on. */
-  day: string;
   /** The pipeline word (Followers → Communities → Ideas → Crews → Featured), for the rail chip. */
   name: string;
   /** The step as a product verb: the card's heading. */
@@ -26,7 +24,6 @@ const { idea, followers } = DEMO;
 export const storySteps: StoryStep[] = [
   {
     id: 'followers',
-    day: '',
     name: 'Followers',
     title: 'Your bio link gathers followers.',
     line: 'Your followers are one big crowd.',
@@ -35,16 +32,14 @@ export const storySteps: StoryStep[] = [
   },
   {
     id: 'communities',
-    day: '',
     name: 'Communities',
-    title: 'Your AI twin sorts them into rooms.',
+    title: 'Your AI twin suggests rooms.',
     line: 'Each fan writes one line; the AI suggests rooms.',
     still: 'vlog-hostel',
     alt: 'Travellers laughing around a table in a hostel common room.',
   },
   {
     id: 'idea',
-    day: '',
     name: 'Ideas',
     title: 'Fans post ideas.',
     line: `${idea.author.split(' ')[0]} shares “${idea.title}”.`,
@@ -53,7 +48,6 @@ export const storySteps: StoryStep[] = [
   },
   {
     id: 'crew',
-    day: '',
     name: 'Crews',
     title: 'A crew forms.',
     line: 'Four fans take the open roles.',
@@ -62,7 +56,6 @@ export const storySteps: StoryStep[] = [
   },
   {
     id: 'featured',
-    day: '',
     name: 'Featured',
     title: 'You feature it, crediting every maker.',
     line: 'Every maker is credited by name.',

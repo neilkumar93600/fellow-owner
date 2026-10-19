@@ -2,7 +2,7 @@ import { AuthShell } from '@/components/auth/auth-shell';
 
 /**
  * Log in, create account, the email code and the password screens share one frame (AuthShell): the
- * hazed shell with the logo and a glass tab bar, the screen's white card, and the product art (islands
+ * hazed shell with the logo and a glass tab bar, the screen's white card, and the art (the golden-hour landscape
  * and the AI twin card) from 1024px. It lives in the layout so the tab bar and the art stay put while only the card changes.
  */
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
