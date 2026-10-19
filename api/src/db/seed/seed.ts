@@ -21,6 +21,7 @@ import { buildContainer, type CoreDeps } from '../../container.js';
 import { daysAgo, utcDayString, weekStart } from '../../lib/dates.js';
 import { contentHash } from '../../lib/hash.js';
 import { closeDb } from '../client.js';
+import { aiFeedback } from '../schema/ai.js';
 import { type NewUserRow, user } from '../schema/auth.js';
 import type { NewCommunityMemberRow } from '../schema/communities.js';
 import { followers } from '../schema/followers.js';
@@ -935,11 +936,19 @@ async function seedNewFeatures(deps: CoreDeps, ctx: NewFeatureContext): Promise<
     if (row) reportIds.push({ id: row.id, type: spec.type, reason: spec.reason, open: spec.open });
   }
 
-  // --- 30 days of bio-page visits: a weekday/weekend rhythm, a few repeat visitors.
-  const visitRows = Array.from({ length: 30 }, (_, d) => {
+  // --- 60 days of bio-page visits. Each day's visitors follow that day's joins (~6.5 visitors per
+  // join, +-20% noise, floor 40), so the join rate sits near 15% in any window and visitor growth
+  // tracks join growth. Joins count only members who joined a community, like joinsBetween.
+  const joinsOnDay = new Map<number, number>();
+  for (const member of data.members) {
+    if (member.communities.length > 0) {
+      joinsOnDay.set(member.joinedDaysAgo, (joinsOnDay.get(member.joinedDaysAgo) ?? 0) + 1);
+    }
+  }
+  const visitRows = Array.from({ length: 60 }, (_, d) => {
     const day = utcDayString(at(d));
-    const weekend = [0, 6].includes(at(d).getUTCDay());
-    const visitors = (weekend ? 5 : 9) + ((d * 7) % 6);
+    const noise = 1 + (((d * 37) % 41) / 40) * 0.4 - 0.2;
+    const visitors = Math.max(40, Math.round((joinsOnDay.get(d) ?? 0) * 6.5 * noise));
     return Array.from({ length: visitors }, (_, n) => ({
       spaceId,
       visitorHash: `seed-visit-${day}-${n}`,
@@ -947,7 +956,37 @@ async function seedNewFeatures(deps: CoreDeps, ctx: NewFeatureContext): Promise<
       visits: 1 + ((d + n) % 3 === 0 ? 1 : 0),
     }));
   }).flat();
-  await db.insert(pageVisits).values(visitRows);
+  for (let i = 0; i < visitRows.length; i += 2000) {
+    await db.insert(pageVisits).values(visitRows.slice(i, i + 2000));
+  }
+
+  // --- ~30 AI thumbs from the creator in the last 30 days, ~80% up, on the best-fit picks.
+  const picks = [
+    ...data.posts.flatMap((post, i) =>
+      ctx.posts[i] && !post.ai.isSpam
+        ? [{ refType: 'post' as const, refId: ctx.posts[i].id, fit: post.ai.fitScore }]
+        : [],
+    ),
+    ...data.pitches.flatMap((pitch, i) =>
+      ctx.pitches[i] && !pitch.ai.isSpam && !pitch.isFiltered
+        ? [{ refType: 'inbound' as const, refId: ctx.pitches[i].id, fit: pitch.ai.fitScore }]
+        : [],
+    ),
+  ]
+    .sort((a, b) => b.fit - a.fit || a.refId.localeCompare(b.refId))
+    .slice(0, 30);
+  if (picks.length > 0) {
+    await db.insert(aiFeedback).values(
+      picks.map((pick, i) => ({
+        spaceId,
+        refType: pick.refType,
+        refId: pick.refId,
+        verdict: i % 5 === 4 ? ('down' as const) : ('up' as const),
+        createdByUserId: ctx.creatorUserId,
+        createdAt: at(i),
+      })),
+    );
+  }
 
   // --- The creator's bell: 5 unread (one report_filed) and 2 read.
   const newest = [...data.pitches.keys()]

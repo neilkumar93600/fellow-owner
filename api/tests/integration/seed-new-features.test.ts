@@ -110,13 +110,14 @@ describe('seed: backend-completion features', () => {
     expect(resolved[0]?.resolvedAt).not.toBeNull();
   });
 
-  it('seeds 30 days of page visits', async () => {
+  it('seeds 60 days of page visits', async () => {
     const rows = await db
       .selectDistinct({ day: pageVisits.day })
       .from(pageVisits)
       .where(eq(pageVisits.spaceId, spaceId));
-    expect(rows).toHaveLength(30);
+    expect(rows).toHaveLength(60);
   });
+
 
   it('gives the creator 5 unread notifications including a report_filed', async () => {
     const [space] = await db

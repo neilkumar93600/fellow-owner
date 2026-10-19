@@ -213,7 +213,7 @@ describe('GET /api/studio/metrics', () => {
 
     const res = await metrics(7).expect(200);
     expect(res.body.days).toBe(7);
-    expect(res.body.bioVisitors).toEqual({ value: 4, previous: 2, changePct: 100 });
+    expect(res.body.bioVisitors).toEqual({ value: 4, previous: 2, changePct: null });
     // 2 seeded + the 2 members above for collabs/promotions also joined this week
     expect(res.body.joins.value).toBe(4);
     expect(res.body.joins.previous).toBe(1);

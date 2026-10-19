@@ -21,11 +21,15 @@ export interface VisitorInfo {
   userAgent: string | null;
 }
 
-function stat(value: number, previous: number): StatValue {
+/** A previous value below this gives no % change: +2850% off a base of 10 only misleads. */
+export const MIN_CHANGE_BASE = 20;
+
+export function stat(value: number, previous: number): StatValue {
   return {
     value,
     previous,
-    changePct: previous === 0 ? null : Math.round(((value - previous) / previous) * 100),
+    changePct:
+      previous < MIN_CHANGE_BASE ? null : Math.round(((value - previous) / previous) * 100),
   };
 }
 
