@@ -13,7 +13,7 @@ import { pluralize } from '@/lib/format';
 import { errorMessage } from '@/lib/toast';
 
 /**
- * Ask your AI (F13) on Today: one question about the space, answered only from the nearest posts
+ * Ask your AI twin (F13) on Today: one question about the space, answered only from the nearest posts
  * and pitches, with each source as a chip linking to it in the dashboard.
  */
 export function AskCard() {
@@ -33,7 +33,7 @@ export function AskCard() {
   return (
     <GlassPanel as="section" aria-labelledby="ask-card-title" className="p-5">
       <h2 id="ask-card-title" className="text-label text-ink">
-        Ask your AI
+        Ask your AI twin
       </h2>
       <p className="mt-1 text-small text-ink-soft">
         Answers come only from what your fans posted and pitched.

@@ -19,13 +19,15 @@ interface TodaySlots {
   pulse: React.ReactNode;
   fans: React.ReactNode;
   communities: React.ReactNode;
-  /** Cards below the communities (Ask your AI, pilot metrics); absent while loading. */
+  /** Your AI twin: first in the right column; absent while loading. */
+  twin?: React.ReactNode;
+  /** Cards under the stack (pilot metrics); absent while loading. */
   extras?: React.ReactNode;
 }
 
 /**
- * DESIGN.md Today. The greeting, then the decision stack beside a right column (pulse, fans to thank,
- * community tiles) once main is 56rem wide, with the extras (platforms, Ask your AI, metrics) under the
+ * DESIGN.md Today. The greeting, then the decision stack beside a right column (your AI twin, pulse, fans to thank,
+ * community tiles) once main is 56rem wide, with the extras (metrics) under the
  * stack; below that everything is one column. Shared by the screen and its skeleton so both hold one shape.
  */
 export function TodayView({
@@ -35,6 +37,7 @@ export function TodayView({
   pulse,
   fans,
   communities,
+  twin,
   extras,
 }: TodaySlots) {
   return (
@@ -45,6 +48,7 @@ export function TodayView({
       <div className="grid items-start gap-6 @4xl:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
         <div className="min-w-0">{stack}</div>
         <div className="flex min-w-0 flex-col gap-4 @4xl:row-span-2">
+          {twin}
           {pulse}
           {fans}
           {communities}
@@ -68,7 +72,17 @@ function partOfDay(hour: number): string {
 }
 
 /** "Good morning, Mira" and "5 things need you · about 6 min". The page's h1 is the sr-only "Today" above. */
-export function TodayGreeting({ firstName, count }: { firstName: string; count: number | null }) {
+export function TodayGreeting({
+  firstName,
+  count,
+  ideas,
+  messages,
+}: {
+  firstName: string;
+  count: number | null;
+  ideas?: number;
+  messages?: number;
+}) {
   return (
     <div>
       {/* The hour is the viewer's; the server's guess may differ. */}
@@ -82,9 +96,11 @@ export function TodayGreeting({ firstName, count }: { firstName: string; count: 
         <Skeleton className="mt-3 h-5 w-56" />
       ) : (
         <p className="mt-2 text-body text-ink-soft">
-          {count === 0
-            ? 'Nothing needs you right now.'
-            : `${formatNumber(count)} ${pluralize(count, 'thing needs', 'things need')} you · about ${estimateMinutes(count)} min`}
+          {ideas !== undefined && messages !== undefined
+            ? `Your AI twin read ${formatNumber(ideas)} new ${pluralize(ideas, 'idea')} and ${formatNumber(messages)} ${pluralize(messages, 'message')}. ${formatNumber(count)} need you.`
+            : count === 0
+              ? 'Nothing needs you right now.'
+              : `${formatNumber(count)} ${pluralize(count, 'thing needs', 'things need')} you · about ${estimateMinutes(count)} min`}
         </p>
       )}
     </div>

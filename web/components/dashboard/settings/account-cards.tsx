@@ -2,6 +2,7 @@ import { KeyRound, LogOut, type LucideIcon, Users } from 'lucide-react';
 import Link from 'next/link';
 import { AccountCard } from '@/components/account/account-card';
 import { AccountSettings } from '@/components/account/account-settings';
+import { FeedbackCard } from '@/components/dashboard/settings/feedback-card';
 import { SIGN_OUT_HREF } from '@/components/layout/dashboard-nav';
 import type { CardTint } from '@/components/shared/tint';
 import { buttonVariants } from '@/components/ui/button-variants';
@@ -37,6 +38,7 @@ export function AccountCards() {
           Sign out
         </Link>
       </AccountCard>
+      <FeedbackCard />
     </div>
   );
 }

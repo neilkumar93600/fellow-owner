@@ -1,8 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
 import {
-  BriefcaseBusiness,
-  CalendarDays,
-  ChartLine,
   CircleHelp,
   HeartHandshake,
   Lightbulb,
@@ -36,7 +33,6 @@ export const NAV_GROUPS: readonly NavGroup[] = [
     items: [
       { href: routes.dashboard.today(), label: 'Today', icon: Sun },
       { href: routes.dashboard.inbox(), label: 'Fan mail', icon: Mail },
-      { href: routes.dashboard.brands(), label: 'Brand deals', icon: BriefcaseBusiness },
       { href: routes.dashboard.ideas(), label: 'Ideas', icon: Lightbulb },
     ],
   },
@@ -60,11 +56,7 @@ export const NAV_GROUPS: readonly NavGroup[] = [
   {
     id: 'grow',
     label: 'Grow',
-    items: [
-      { href: routes.dashboard.planner(), label: 'Planner', icon: CalendarDays },
-      { href: routes.dashboard.performance(), label: 'Performance', icon: ChartLine },
-      { href: routes.dashboard.promote(), label: 'Spotlight', icon: Sparkles },
-    ],
+    items: [{ href: routes.dashboard.promote(), label: 'Spotlight', icon: Sparkles }],
   },
   {
     id: 'settings',
