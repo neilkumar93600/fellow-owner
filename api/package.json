@@ -18,7 +18,8 @@
     "db:seed": "tsx --env-file-if-exists=.env src/db/seed/seed.ts",
     "db:embed": "tsx --env-file-if-exists=.env src/db/seed/embed.ts",
     "db:studio": "drizzle-kit studio",
-    "db:migrate:test": "tsx --env-file-if-exists=.env src/db/migrate.ts --test"
+    "db:migrate:test": "tsx --env-file-if-exists=.env src/db/migrate.ts --test",
+    "preview:audience": "tsx --env-file-if-exists=.env src/scripts/audience-preview.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1149.0",
