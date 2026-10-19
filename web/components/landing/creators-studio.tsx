@@ -73,8 +73,11 @@ function Studio() {
             <p className="font-display text-[2.25rem] leading-none text-ink">
               Good morning, {DEMO.creator.firstName}
             </p>
-            <p className="mt-2 text-body text-ink-soft">5 things need you</p>
+            <p className="mt-2 text-body text-ink-soft">5 things need you · about 6 min</p>
           </div>
+          <span className="glass-chip inline-flex h-8 items-center px-3 text-caption text-ink">
+            Demo
+          </span>
         </div>
         <div className="grid grid-cols-1 items-start gap-5 @[900px]:grid-cols-[minmax(0,1fr)_300px]">
           <div className="flex flex-col gap-4">
