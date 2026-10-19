@@ -3,7 +3,7 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { PlatformConnect } from '@/components/shared/platform-connect';
 import { FieldError, Spinner } from './onboarding-fields';
-import { formatCompact, type OnboardingValues, totalFollowers } from './onboarding-templates';
+import type { OnboardingValues } from './onboarding-templates';
 import { ImportedProfile, type PlatformImport } from './platform-import';
 
 /** The first message anywhere in an RHF error tree (the list, or one entry's url or followers). */
@@ -29,7 +29,6 @@ export function PlatformsStep({ imp, active }: { imp: PlatformImport; active: bo
     formState: { errors },
   } = useFormContext<OnboardingValues>();
   const platforms = useWatch({ control, name: 'platforms' }) ?? [];
-  const { total, count } = totalFollowers(platforms);
   const problem = firstMessage(errors.platforms);
 
   return (
@@ -45,12 +44,6 @@ export function PlatformsStep({ imp, active }: { imp: PlatformImport; active: bo
         onFetched={imp.addProfile}
         profiles={imp.state.profiles}
       />
-      {count > 1 ? (
-        <p className="text-small text-ink-soft">
-          <span className="font-medium text-ink tabular-nums">{formatCompact(total)}</span>{' '}
-          followers across {count} platforms
-        </p>
-      ) : null}
       <FieldError id="ob-platforms-error" message={problem} />
       {active && imp.state.suggesting && !imp.prefilled ? (
         <p className="flex items-center gap-2 text-small text-ink-muted">

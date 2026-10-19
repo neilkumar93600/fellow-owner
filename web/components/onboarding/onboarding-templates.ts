@@ -66,9 +66,9 @@ export const STEPS = [
   {
     key: 'platforms',
     label: 'Platforms',
-    title: 'Where your audience is',
+    title: 'Let your AI twin meet your audience',
     helper:
-      'Optional. Add a profile link and we fetch the follower count, one platform at a time. You can change them later.',
+      'Optional. Paste a profile link. Your AI twin reads recent comments and suggests rooms for your fans.',
   },
   {
     key: 'communities',
@@ -79,9 +79,8 @@ export const STEPS = [
   {
     key: 'taste',
     label: 'What you love',
-    title: 'Tell us what you love',
-    helper:
-      'Your assistant uses this to see how well each idea and brand deal fits you, and to write replies in your voice. Fans never see it.',
+    title: 'Teach your AI twin',
+    helper: 'What you promote, what you never promote, and how you sound. Only you see this.',
   },
 ] as const;
 

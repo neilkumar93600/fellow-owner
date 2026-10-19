@@ -73,7 +73,7 @@ export function TasteStep({ imp }: { imp: PlatformImport }) {
       <LineList
         name="tasteProfile.never"
         title="I never promote"
-        hint={`Things the AI should always flag. Up to ${T.never.max} lines.`}
+        hint={`Things your AI twin should always flag. Up to ${T.never.max} lines.`}
         max={T.never.max}
         itemMax={T.lineMax}
         placeholder="Paid reviews, no visit"

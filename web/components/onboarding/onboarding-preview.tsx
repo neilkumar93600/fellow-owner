@@ -3,28 +3,24 @@
 import { PLATFORM_LABELS } from '@fellow-owners/shared';
 import { Eye, Lock, Send } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { CreatorImage } from '@/components/shared/creator-image';
 import type { EditorPreview } from './communities-step';
 import styles from './onboarding.module.css';
-import { ONBOARDING_ART } from './onboarding-art';
 import { cx } from './onboarding-fields';
 import {
   avatarTint,
   COMMUNITY_ICON_COMPONENTS,
   type CommunityDraft,
   firstName,
-  formatCompact,
   HOST,
   initials,
   type OnboardingValues,
   type StepIndex,
   TINT_STYLES,
-  totalFollowers,
 } from './onboarding-templates';
 
 const CAPTIONS: Record<StepIndex, string> = {
   0: 'Fans land here from the link in your bio.',
-  1: 'Follower counts show as chips under your name.',
+  1: 'Your linked platforms show as chips under your name.',
   2: 'Fans pick the communities they want to join.',
   3: 'What you love stays private. Fans only see this page.',
 };
@@ -41,7 +37,7 @@ const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayout
 
 /**
  * The right-hand panel of onboarding: the creator's bio link page in a phone, updating as they type,
- * over the step's vlog still from 1024px. Phones get it under the form, on the aurora, without art.
+ * on the Parchment wash. Phones get it under the form.
  */
 export function OnboardingPreview({
   values,
@@ -62,7 +58,6 @@ export function OnboardingPreview({
   const platforms = (values.platforms ?? []).filter(
     (p) => p && (p.url?.trim() || (Number.isFinite(p.followers) && p.followers > 0)),
   );
-  const { total, count } = totalFollowers(values.platforms ?? []);
   const communities: (CommunityDraft & { editing?: boolean })[] = [...(values.communities ?? [])];
   if (editor) {
     if (editor.index === null) communities.push({ ...editor.draft, editing: true });
@@ -71,7 +66,6 @@ export function OnboardingPreview({
   }
   const taste = values.tasteProfile ?? { promote: [], never: [], voice: [] };
   const first = firstName(name);
-  const onArt = Boolean(ONBOARDING_ART[step]);
 
   // Scroll the phone to the part the current step edits (only when the phone scrolls on its own).
   const target = STEP_SECTION[step];
@@ -114,29 +108,17 @@ export function OnboardingPreview({
     >
       {/* From 1024px the column sticks (SPLIT_ASIDE) and the step picture fills it, radius 28. */}
       <div className="relative isolate flex h-full flex-col py-2 lg:overflow-hidden lg:rounded-card lg:p-10 xl:p-14">
-        <StepArt step={step} />
         {/* One centred column, the phone's width: the header reads as the phone's label. */}
         <div className="mx-auto flex min-h-0 w-full max-w-[22rem] flex-1 flex-col gap-5">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <h2
               id="ob-preview-title"
-              className={cx(
-                'glass-chip inline-flex h-9 items-center gap-2 px-4 font-mono text-caption font-medium tracking-tight text-ink uppercase',
-                // Over a step picture the label and caption sit on white (no words on a picture).
-                onArt ? 'lg:bg-card-strong' : null,
-              )}
+              className="glass-chip inline-flex h-9 items-center gap-2 px-4 font-mono text-caption font-medium tracking-tight text-ink uppercase"
             >
               <Eye aria-hidden strokeWidth={1.5} className="size-4" />
               Live preview
             </h2>
-            <p
-              className={cx(
-                'text-small text-ink',
-                onArt ? 'lg:rounded-full lg:bg-card-strong lg:px-3 lg:py-1.5' : null,
-              )}
-            >
-              {CAPTIONS[step]}
-            </p>
+            <p className="text-small text-ink">{CAPTIONS[step]}</p>
           </div>
 
           <div className="relative flex min-h-0 flex-1 flex-col">
@@ -224,11 +206,6 @@ export function OnboardingPreview({
                           className="glass-chip inline-flex h-7 items-center gap-1.5 px-3 text-caption text-ink-soft uppercase"
                         >
                           {PLATFORM_LABELS[p.platform]}
-                          {Number.isFinite(p.followers) && p.followers > 0 ? (
-                            <span className="tabular font-semibold text-ink">
-                              {formatCompact(p.followers)}
-                            </span>
-                          ) : null}
                         </li>
                       ))}
                     </ul>
@@ -239,11 +216,6 @@ export function OnboardingPreview({
                       <Ghost className="h-7 w-14" />
                     </span>
                   )}
-                  {count > 1 ? (
-                    <p className="tabular mt-2 text-caption text-ink-soft">
-                      {formatCompact(total)} followers in total
-                    </p>
-                  ) : null}
                 </div>
 
                 {/* Communities */}
@@ -288,40 +260,6 @@ export function OnboardingPreview({
     </section>
   );
 }
-
-/**
- * The step pictures behind the preview, from 1024px (see onboarding-art.ts). Every picture that exists
- * is mounted, so moving between steps crossfades instead of waiting for a download; only the current
- * step's is visible (opacity, 250ms ease-out; instant under reduced motion through the global rule).
- * Decorative: the preview and its caption carry the meaning.
- */
-function StepArt({ step }: { step: StepIndex }) {
-  const pictures = STEP_ORDER.flatMap((index) => {
-    const art = ONBOARDING_ART[index];
-    return art ? [{ index, art }] : [];
-  });
-  if (pictures.length === 0) return null;
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden lg:block">
-      {pictures.map(({ index, art }) => (
-        <CreatorImage
-          key={index}
-          name={art.name}
-          alt=""
-          fill
-          sizes="50vw"
-          className={cx(
-            art.focus,
-            'transition-opacity duration-[250ms] ease-(--ease-out-quart)',
-            index === step ? 'opacity-100' : 'opacity-0',
-          )}
-        />
-      ))}
-    </div>
-  );
-}
-
-const STEP_ORDER: readonly StepIndex[] = [0, 1, 2, 3];
 
 function CommunityPreviewCard({
   community,
