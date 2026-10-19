@@ -9,11 +9,11 @@ import { useCallback } from 'react';
 const ANCHOR_OFFSET = -16;
 
 /**
- * The marketing navbar's and footer's section links (creator pivot spec section 5). "How it works" is the
- * "One week with Mira" story.
+ * The marketing navbar's and footer's section links. "How it works" is the Problem section: thousands of
+ * DMs sorted down to the three that matter.
  */
 export const LANDING_LINKS = [
-  { href: '/#one-week', label: 'How it works' },
+  { href: '/#problem', label: 'How it works' },
   { href: '/#creators', label: 'For creators' },
   { href: '/#fans', label: 'For fans' },
   { href: '/#faq', label: 'FAQ' },

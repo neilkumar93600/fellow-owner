@@ -1,124 +1,117 @@
-import type * as React from 'react';
+import Image from 'next/image';
+import { AvatarStack } from '@/components/shared/avatar-initials';
+import { CREATOR_ASSETS, type CreatorAsset } from '@/lib/creator-assets';
 import { cn } from '@/lib/utils';
 import styles from './creators.module.css';
-import { STEPS } from './creators-data';
-import { CreatorsScene, CreatorsSlot } from './creators-motion';
-import { FanMailScreen, SpotlightScreen, TodayScreen } from './creators-panels';
-import { StudioShot } from './creators-studio';
+import { DemoButton } from './demo-button';
+import { DEMO, showcase } from './demo-data';
 
-const SCREENS: Record<string, () => React.ReactNode> = {
-  today: TodayScreen,
-  fanmail: FanMailScreen,
-  spotlight: SpotlightScreen,
-};
+/** Fare Pals, the one featured fan project (showcase[0]). */
+const FEATURED = showcase[0]!;
+/** Fare Pals' spotlight clicks in the seed (api/src/db/seed/data/promotions.json). */
+const FARE_PALS_CLICKS = 94;
+const FAN_FACES: CreatorAsset[] = ['fan-1', 'fan-2', 'fan-3', 'fan-4', 'fan-5'];
+const THANKS = FEATURED.crew.map((name, index) => ({
+  name,
+  image: CREATOR_ASSETS[FAN_FACES[index % FAN_FACES.length]!].src,
+}));
+
+const PROMISES = [
+  'Every pick shows why',
+  'Fans are never scored in public',
+  'Nothing posts without you',
+] as const;
+
+/** A photo that fills its positioned parent. Decorative: the words beside it carry the meaning. */
+function Photo({ name, sizes }: { name: CreatorAsset; sizes: string }) {
+  return (
+    <Image src={CREATOR_ASSETS[name].src} alt="" fill sizes={sizes} className={styles.photo} />
+  );
+}
 
 /**
- * For creators (creator pivot spec §5, section 5): a frosted field. From 1024px the story sits in a sticky
- * column on the left. With motion allowed the right column pins too: the three real studio screens
- * wait as a deck in 3D depth and swap in place as you scroll, and the step for the screen in front
- * lights up. Phones and tablets stack each step over its screen, flat.
- *
- * Everything is server-rendered flat and complete (no JavaScript, reduced motion: the screens simply
- * follow each other beside the sticky story); the client islands in creators-motion.tsx only add the
- * pin, the swap, the parallax, the step highlight and the reveals.
+ * For creators (landing task 14b): one glance at what a creator gets. A centred serif headline with an
+ * inline product chip, one line, and a few real product cards tilted on grid paper. Server-rendered;
+ * the float and the scroll parallax are CSS only and switch off under reduced motion.
  */
 export function CreatorsSection() {
   return (
     <section id="creators" aria-labelledby="creators-title" className={styles.section}>
-      <div className={styles.field}>
-        {/* Decoration: the whole studio in one shot (icon rail, Today, pulse). The three zoomed screens
-            below carry the meaning, so this is hidden from assistive tech and cannot take focus. */}
-        <div className={styles.studio} aria-hidden="true" inert>
-          <p className={styles.studioCaption}>
-            An AI briefing that turns fan noise into five decisions
-          </p>
-          <StudioShot />
-        </div>
-        <CreatorsScene className={styles.inner}>
-          <div className={styles.grid}>
-            <div className={styles.aside}>
-              <div className={styles.asideInner} data-creators-top>
-                <p className={cn('eyebrow', styles.eyebrow)} data-creators-reveal>
-                  For creators
-                </p>
-                <h2
-                  id="creators-title"
-                  className={cn('text-section', styles.title)}
-                  data-creators-reveal
-                >
-                  Your morning,
-                  <br /> sorted in minutes.
-                </h2>
-                <p className={cn('text-lead', styles.lead)} data-creators-reveal>
-                  Open Today with a coffee. Your AI has already read everything, picked the cards
-                  worth your time, and written down why.
-                </p>
+      <div className={styles.paper}>
+        <div className={styles.stage}>
+          <div className={styles.head}>
+            <p className="eyebrow">For creators</p>
+            <h2 id="creators-title" className={styles.title}>
+              Your fans, sorted.{' '}
+              <span className={styles.chip} aria-hidden="true">
+                <Photo name="vlog-van-coast" sizes="200px" />
+              </span>{' '}
+              Your call.
+            </h2>
+            <p className={styles.lead}>
+              Your AI twin briefs you in minutes and shows why behind every pick. Feature what fans
+              build and credit every maker.
+            </p>
+          </div>
 
-                <p className={styles.demoLabel} data-creators-reveal>
-                  <span className={styles.demoChip}>Demo</span>A demo studio. Every name and number
-                  is made up.
+          <div className={styles.cards}>
+            <div className={cn(styles.slot, styles.slotDecision)}>
+              <article className={cn('glass', styles.card, styles.decision)}>
+                <div className={styles.cover}>
+                  <Photo name="vlog-lisbon" sizes="300px" />
+                </div>
+                <p className={styles.cardTitle}>{DEMO.idea.title}</p>
+                <p className={styles.tag}>Strong match</p>
+                <p className={styles.why}>
+                  <span className={styles.whyLabel}>Why:</span> Matches “budget-honest travel”.{' '}
+                  {DEMO.idea.use} fans would use it.
                 </p>
-
-                <ol className={styles.steps} data-creators-reveal>
-                  {STEPS.map((step, index) => (
-                    <li key={step.id} className={styles.step} data-creators-step>
-                      <a href={`#${step.target}`} className={styles.stepLink}>
-                        <span className={cn(styles.stepNum, 'tabular')} aria-hidden="true">
-                          {index + 1}
-                        </span>
-                        <span className={styles.stepText}>
-                          <span className={styles.stepTitle}>
-                            {step.title}
-                            <span className="sr-only">:</span>
-                          </span>
-                          <span className={styles.stepDetail}>{step.detail}</span>
-                          <span className={styles.stepBar} aria-hidden="true">
-                            <span data-step-fill />
-                          </span>
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+              </article>
             </div>
 
-            <div className={styles.track}>
-              <div className={styles.deck} data-creators-deck>
-                {STEPS.map((step, index) => {
-                  const Screen = SCREENS[step.id]!;
-                  return (
-                    <CreatorsSlot
-                      key={step.id}
-                      index={index}
-                      id={step.target}
-                      className={styles.slot}
-                      tiltClassName={styles.tilt}
-                    >
-                      <figure className={styles.figure} aria-labelledby={`${step.target}-caption`}>
-                        <figcaption id={`${step.target}-caption`} className={styles.caption}>
-                          <span className={cn(styles.stepNum, 'tabular')} aria-hidden="true">
-                            {index + 1}
-                          </span>
-                          <span className={styles.stepText}>
-                            <span className={styles.stepTitle}>
-                              {step.title}
-                              <span className="sr-only">:</span>
-                            </span>
-                            <span className={styles.stepDetail}>{step.detail}</span>
-                          </span>
-                        </figcaption>
-                        <div className={styles.shell}>
-                          <Screen />
-                        </div>
-                      </figure>
-                    </CreatorsSlot>
-                  );
-                })}
-              </div>
+            <div className={cn(styles.slot, styles.slotSpotlight)}>
+              <article className={cn('glass', styles.card, styles.spotlight)}>
+                <div className={styles.cover}>
+                  <Photo name="vlog-hostel" sizes="320px" />
+                  <span className={styles.featured}>Featured</span>
+                </div>
+                <p className={styles.cardTitle}>Fare Pals</p>
+                <p className={styles.meta}>
+                  {FARE_PALS_CLICKS} clicks · crew of {FEATURED.team}
+                </p>
+              </article>
+            </div>
+
+            <div className={cn(styles.slot, styles.slotThanks)}>
+              <article className={cn('glass', styles.card, styles.thanks)}>
+                <p className={styles.metaLabel}>Fans to thank</p>
+                <AvatarStack people={THANKS} max={5} />
+                <p className={styles.meta}>Credited by name</p>
+              </article>
+            </div>
+
+            <div className={cn(styles.slot, styles.slotNote)}>
+              <aside className={styles.note}>
+                <p className={styles.metaLabel}>Why this pick</p>
+                <p className={styles.noteText}>
+                  Four roles filled. Every price dated and checked by a local.
+                </p>
+              </aside>
             </div>
           </div>
-        </CreatorsScene>
+
+          <div className={styles.foot}>
+            <ul className={styles.promises}>
+              {PROMISES.map((promise) => (
+                <li key={promise} className={cn('glass-chip', styles.promise)}>
+                  {promise}
+                </li>
+              ))}
+            </ul>
+            <DemoButton as="creator">Try the creator demo</DemoButton>
+            <p className={styles.demoLabel}>Demo data. Names are made up.</p>
+          </div>
+        </div>
       </div>
     </section>
   );

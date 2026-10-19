@@ -23,7 +23,7 @@ import { isMarketingPath, SOCIAL_LINKS } from '@/lib/constants';
 type FooterLink = { href: string; label: string };
 
 const PRODUCT: FooterLink[] = [
-  { href: '/#one-week', label: 'How it works' },
+  { href: '/#problem', label: 'How it works' },
   { href: '/#creators', label: 'For creators' },
   { href: '/#fans', label: 'For fans' },
   { href: '/pricing', label: 'Pricing' },
