@@ -1,19 +1,31 @@
 /*
- * New ways to connect (connect-section.tsx): two rows of three frosted tiles, each with a tiny picture of
- * the real UI. The page washes show through; text sits on 55% glass, so ink-soft stays above 6:1.
+ * New ways to connect (connect-section.tsx, connect-steps.tsx, connect-visuals.tsx): six numbered steps in
+ * one sideways row. Native: a scroll-snap row with dots. Pinned (data-pin, wide + fine pointer + motion):
+ * a tall track with a sticky 100svh stage; page scroll slides the row (transform only). The row starts
+ * and ends on the heading's gutter (--lead). Text sits on 55% glass or the white
+ * product card, so graphite stays above 6:1.
  */
 
 .section {
   --gutter: 16px;
+  --lead: max(var(--gutter), calc((100% - 1280px) / 2));
+  --card: min(calc(100vw - var(--gutter) - 48px), 400px);
 
   position: relative;
-  padding: 88px var(--gutter);
+  padding-block: 88px;
 }
 
 @media (min-width: 768px) {
   .section {
     --gutter: 32px;
+    --card: min(56vw, 460px);
     padding-block: 120px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    --card: clamp(440px, 36vw, 540px);
   }
 }
 
@@ -24,38 +36,11 @@
   }
 }
 
-.inner {
-  max-width: 1280px;
+.inner,
+.rail {
+  max-width: calc(1280px + 2 * var(--gutter));
   margin-inline: auto;
-}
-
-.groupLabel {
-  margin: 48px 0 16px;
-  color: var(--ink-soft);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-}
-
-.grid {
-  display: grid;
-  gap: 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
-  }
-
-  .gridTwo {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  padding-inline: var(--gutter);
 }
 
 .demoNote {
@@ -64,448 +49,442 @@
   font-size: 0.8125rem;
 }
 
-.tile {
+/* ---------- Track, stage and rail ---------- */
+
+.stage {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 24px;
+  gap: 16px;
+  margin-top: 40px;
 }
 
-/* Tile titles are 20px and up: the serif at 400. */
-.tileTitle {
+.track[data-pin] {
+  height: calc(100svh + (var(--steps) - 1) * 55svh);
+}
+
+.track[data-pin] .stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 0;
+  padding: var(--nav-clear) 0 32px;
+}
+
+.rail {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+}
+
+.counter {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.counter b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.progress {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .rail {
+    gap: 20px;
+  }
+
+  .progress {
+    display: block;
+    flex: 1;
+    max-width: 320px;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--color-ash);
+  }
+
+  .progressFill {
+    display: block;
+    height: 100%;
+    background: var(--ink);
+  }
+}
+
+.dots {
+  display: flex;
+  margin-left: auto;
+}
+
+/* 44px targets; the visible dot is 8px and stretches (transform) when its step is active. */
+.dot {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+}
+
+.dotMark {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ink-muted);
+  opacity: 0.45;
+  transition:
+    transform 250ms var(--ease-out-quart),
+    opacity 250ms var(--ease-out-quart);
+}
+
+.dot:hover .dotMark {
+  opacity: 0.8;
+}
+
+.dot[aria-current] .dotMark {
+  background: var(--ink);
+  opacity: 1;
+  transform: scaleX(2.5);
+}
+
+/* The row: native snap scroller by default; a translated strip inside a clipped viewport when pinned. */
+.viewport {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  padding: 8px var(--lead);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--lead);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  list-style: none;
+}
+
+.row::-webkit-scrollbar {
+  display: none;
+}
+
+.row:focus-visible {
+  outline-offset: -4px;
+}
+
+@media (min-width: 768px) {
+  .row {
+    gap: 24px;
+  }
+}
+
+.track[data-pin] .viewport {
+  overflow: clip;
+}
+
+.track[data-pin] .row {
+  overflow: visible;
+  scroll-snap-type: none;
+  will-change: transform;
+}
+
+/* ---------- Step card ---------- */
+
+.card {
+  display: flex;
+  width: var(--card);
+  flex: none;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 28px;
+  }
+}
+
+.track[data-pin] .card {
+  height: min(560px, calc(100svh - var(--nav-clear) - 128px));
+}
+
+.cardHead {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+
+.cardNum {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding-inline: 12px;
+  border: 1px solid var(--color-ash);
+  border-radius: 999px;
+  background: var(--glass-chip);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.cardTitle {
+  margin-top: 4px;
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 400;
-  line-height: 1.2;
+  line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
-.tileLine {
-  max-width: 34ch;
+@media (min-width: 1024px) {
+  .cardTitle {
+    font-size: 2rem;
+  }
+}
+
+.cardLine {
   color: var(--ink-soft);
   font-size: 0.9375rem;
-  line-height: 1.5;
+  line-height: 1.45;
   text-wrap: pretty;
 }
 
-/* The picture of the product: a white card inside the tile. */
-.snippet {
+/* ---------- The product picture (white card) ---------- */
+
+.visual {
+  position: relative;
   display: flex;
+  min-height: 268px;
   flex: 1;
   flex-direction: column;
   justify-content: center;
-  gap: 8px;
-  min-height: 168px;
-  margin-top: 16px;
-  padding: 14px;
-  border-radius: 20px;
+  gap: 12px;
+  padding: 18px;
+  overflow: hidden;
+  border-radius: 24px;
   background: rgb(255 255 255 / 0.82);
   box-shadow: inset 0 0 0 1px var(--glass-edge);
-}
-
-.snippet p {
-  margin: 0;
-}
-
-.snipTitle {
   color: var(--ink);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  line-height: 1.3;
-}
-
-.snipMeta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--ink-soft);
   font-size: 0.8125rem;
 }
 
-.snipRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.visual p {
+  margin: 0;
+}
+
+.visual b {
+  font-weight: 500;
+}
+
+.muted {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  height: 24px;
-  padding-inline: 9px;
+  height: 26px;
+  padding-inline: 10px;
   border-radius: 999px;
   background: var(--color-aurora-peach);
   color: var(--ink);
   font-size: 0.75rem;
   font-weight: 500;
-}
-
-.pillBtn {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  gap: 6px;
-  height: 32px;
-  padding-inline: 14px;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: inset 0 0 0 1px var(--line-row);
-  color: var(--ink);
-  font-size: 0.8125rem;
-  font-weight: 500;
-}
-
-/* Reply in my voice: a DM, a draft and three dots that type for a few seconds, then rest. */
-.bubble {
-  max-width: 92%;
-  padding: 8px 12px;
-  border-radius: 14px;
-  font-size: 0.8125rem;
-  line-height: 1.4;
-}
-
-.bubble b {
-  margin-right: 4px;
-  font-weight: 500;
-}
-
-.bubbleIn {
-  background: var(--color-aurora-lilac);
-  color: var(--ink);
-}
-
-.bubbleOut {
-  align-self: flex-end;
-  background: var(--color-aurora-peach);
-  color: var(--ink);
-}
-
-.dots {
-  display: inline-flex;
-  gap: 3px;
-  margin-left: 6px;
-  vertical-align: middle;
-}
-
-.dots i {
-  width: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--ink-soft);
-  animation: connect-dot 1.2s ease-in-out 4 both;
-}
-
-.dots i:nth-child(2) {
-  animation-delay: 0.15s;
-}
-
-.dots i:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-@keyframes connect-dot {
-  0%,
-  60%,
-  100% {
-    opacity: 0.35;
-    transform: translateY(0);
-  }
-  30% {
-    opacity: 1;
-    transform: translateY(-3px);
-  }
-}
-
-/* A small caption on a picture, e.g. what the AI did. */
-.snipLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--ink-soft);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-/* Faces (generated fan photos) */
-.faces {
-  display: inline-flex;
+  white-space: nowrap;
 }
 
 .face {
   position: relative;
   display: block;
-  width: 28px;
-  height: 28px;
   flex-shrink: 0;
   overflow: hidden;
   border-radius: 999px;
   box-shadow: 0 0 0 2px #fff;
 }
 
-.faces .face + .face {
-  margin-left: -8px;
+.face_sm {
+  width: 24px;
+  height: 24px;
 }
 
-.shortlist {
+.face_md {
+  width: 40px;
+  height: 40px;
+}
+
+.face_lg {
+  width: 88px;
+  height: 88px;
+}
+
+/* 01 Reply in your voice */
+.bubble {
   display: inline-flex;
+  max-width: 92%;
   align-items: center;
-  gap: 10px;
-  color: var(--ink);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
-/* What fans want */
+.bubbleIn {
+  align-self: flex-start;
+  background: var(--color-aurora-lilac);
+}
+
+.draftRow {
+  display: flex;
+  align-self: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 92%;
+}
+
+.draftRow .bubble {
+  max-width: 100%;
+}
+
+.chipDraft {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--line-row);
+}
+
+.bubbleOut {
+  background: var(--color-aurora-peach);
+}
+
+.typed {
+  display: inline-grid;
+}
+
+.typedGhost,
+.typedLive {
+  grid-area: 1 / 1;
+}
+
+.typedGhost {
+  visibility: hidden;
+}
+
+/* A picture of the creator's own Send: the one action in it. */
+.sendBtn {
+  display: inline-flex;
+  align-self: flex-end;
+  align-items: center;
+  height: 34px;
+  padding-inline: 18px;
+  border-radius: 999px;
+  background: var(--color-lake);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* 02 What fans want */
+.wants {
+  gap: 18px;
+}
+
+.want {
+  display: grid;
+  gap: 8px;
+}
+
 .wantRow {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 8px;
-  color: var(--ink);
+  gap: 10px;
   font-size: 0.875rem;
 }
 
-.wantName {
-  font-weight: 500;
+.asks {
+  flex-shrink: 0;
+  color: var(--ink-soft);
 }
 
-.wantRow b {
-  color: var(--ink-soft);
-  font-size: 0.8125rem;
-  font-weight: 500;
+.asks b {
+  color: var(--ink);
 }
 
 .bar {
   display: block;
-  height: 6px;
-  margin-bottom: 4px;
+  height: 8px;
   overflow: hidden;
   border-radius: 999px;
   background: var(--color-aurora-lilac);
 }
 
-.bar > span {
+.barFill {
   display: block;
   height: 100%;
   border-radius: inherit;
   background: var(--ink);
 }
 
-/* A heart from you */
-.loved {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  gap: 6px;
-  height: 28px;
-  padding-inline: 12px;
-  border-radius: 999px;
-  background: var(--color-aurora-peach);
-  color: var(--ink);
-  font-size: 0.8125rem;
-  font-weight: 500;
-}
-
-.loved svg {
-  color: var(--color-lake);
-}
-
-/* Your idea made it */
-.notice {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--ink);
-  font-size: 0.8125rem;
-  line-height: 1.35;
-}
-
-.notice b {
-  font-weight: 500;
-}
-
-.noticeIcon {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background: var(--color-aurora-sky);
-}
-
-.credits {
-  display: grid;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: var(--ink);
-  font-size: 0.8125rem;
-  font-weight: 500;
-}
-
-.credits li {
-  display: flex;
-  gap: 8px;
-}
-
-.credits span {
-  min-width: 6.5em;
-  color: var(--ink-soft);
-  font-weight: 500;
-}
-
-/* Fan spotlight */
-.shout {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  color: var(--ink);
-  font-size: 0.875rem;
-  line-height: 1.4;
-}
-
-/* ---------- Challenges: its own block (brief, entries, AI shortlist) ---------- */
-
-.challenge {
-  margin-top: 20px;
-}
-
-.challengePanel {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 24px;
-}
-
-@media (min-width: 768px) {
-  .challenge {
-    margin-top: 24px;
-  }
-
-  .challengePanel {
-    gap: 28px;
-    padding: 32px;
-  }
-}
-
-.challengeHead {
-  display: grid;
-  gap: 8px;
-}
-
-.challengeTitle {
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-.challengeLine {
-  max-width: 62ch;
-  color: var(--ink-soft);
-  font-size: 1rem;
-  line-height: 1.55;
-  text-wrap: pretty;
-}
-
-.challengeBody {
-  display: grid;
-  gap: 20px;
-}
-
-@media (min-width: 1024px) {
-  .challengeBody {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.05fr) minmax(0, 1.25fr);
-    gap: 24px;
-  }
-}
-
-.step {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-}
-
-.stepLabel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.8125rem;
-  font-weight: 500;
-}
-
-.stepLabel span {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  background: var(--ink);
-  color: #fff;
-  font-size: 0.6875rem;
-}
-
-/* Each step's picture is a white card, like the tile pictures. */
-.step > .snippet {
-  flex: 1;
-  margin-top: 10px;
-}
-
+/* 03 Run a challenge */
 .brief {
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .briefTitle {
-  color: var(--ink);
-  font-size: 1.0625rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  line-height: 1.3;
 }
 
-.briefBody {
-  color: var(--ink-soft);
-  font-size: 0.8125rem;
-  line-height: 1.45;
-}
-
-.brief .pillBtn {
-  margin-top: auto;
-}
-
-/* The entry grid: six flat tinted cards, each a fan's entry. */
 .entries {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin: 0;
-  padding: 10px;
+  padding: 0;
   list-style: none;
 }
 
-@media (min-width: 480px) {
-  .entries {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 .entry {
+  position: relative;
   display: flex;
   min-width: 0;
   flex-direction: column;
   gap: 4px;
-  padding: 10px;
+  padding: 8px 10px;
   border-radius: 14px;
-  color: var(--ink);
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+
+.entry b {
+  font-size: 0.875rem;
+}
+
+.entryTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tint_peach {
@@ -524,101 +503,247 @@
   background: var(--color-aurora-mint);
 }
 
-.entryTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.faceSm {
-  position: relative;
-  display: block;
-  width: 24px;
-  height: 24px;
-  overflow: hidden;
+.rank,
+.pickRank {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  place-items: center;
   border-radius: 999px;
-  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.9);
-}
-
-.entryTitle {
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.3;
-}
-
-.entryPrice {
-  margin-top: auto;
-  font-size: 0.9375rem;
+  font-size: 0.6875rem;
   font-weight: 500;
 }
 
-/* The AI shortlist: three picks, each with its reason. */
+.rank {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--ink);
+  color: #fff;
+}
+
 .picks {
-  justify-content: flex-start;
-  gap: 0;
+  display: grid;
+  gap: 6px;
   margin: 0;
-  padding: 6px 14px;
+  padding: 0;
   list-style: none;
 }
 
 .pick {
   display: flex;
-  gap: 12px;
-  padding: 12px 0;
-}
-
-.pick + .pick {
-  border-top: 1px solid var(--line-row);
-}
-
-.rank {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background: var(--color-aurora-peach);
-  color: var(--ink);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.pickBody {
-  display: flex;
   min-width: 0;
-  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.pickRank {
+  background: var(--color-aurora-peach);
+}
+
+/* Phones: the dish alone, so the match chip keeps its full width. */
+.city {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .city {
+    display: inline;
+  }
+}
+
+.pickTitle {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 04 A heart from you */
+.postHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.postHead b {
+  display: block;
+  font-size: 0.875rem;
+}
+
+.postTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.prices {
+  display: flex;
+  flex-wrap: wrap;
   gap: 6px;
 }
 
-.pickTop {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 10px;
+.heartStage {
+  position: absolute;
+  top: 26%;
+  right: 56px;
+  width: 0;
+  height: 0;
 }
 
-.pickTop b {
-  color: var(--ink);
+.bigHeart {
+  position: absolute;
+  display: grid;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--line-row);
+  color: var(--color-coral);
+}
+
+.spark {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 999px;
+  background: var(--color-coral);
+}
+
+.spark:nth-child(even) {
+  background: var(--color-gold);
+}
+
+.loved {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding-inline: 12px;
+  border-radius: 999px;
+  background: var(--color-aurora-peach);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.loved svg {
+  color: var(--color-crimson);
+}
+
+/* 05 Your idea made it */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 0.875rem;
   font-weight: 500;
-  line-height: 1.3;
 }
 
-.why {
-  color: var(--ink-soft);
-  font-size: 0.8125rem;
-  line-height: 1.45;
+.noticeIcon {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--color-aurora-sky);
 }
 
-.why b {
+.crew {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crew li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.stamp {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  padding: 6px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.92);
   color: var(--ink);
-  font-weight: 500;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .dots i {
-    animation: none;
-    opacity: 0.7;
-  }
+/* 06 Fan spotlight: centred, the face is the picture. */
+.spotlight {
+  align-items: center;
+  text-align: center;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero b {
+  display: block;
+  font-size: 1rem;
+}
+
+.heroFace {
+  position: relative;
+}
+
+.star {
+  position: absolute;
+  color: var(--color-crimson);
+}
+
+.quote {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.runners {
+  display: flex;
+  align-items: center;
+}
+
+.runners .face + .face {
+  margin-left: -6px;
+}
+
+.runners .muted {
+  margin-left: 10px;
 }
