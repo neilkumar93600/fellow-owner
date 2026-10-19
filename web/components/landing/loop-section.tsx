@@ -4,18 +4,27 @@ import { useEffect, useState } from 'react';
 import { LoopScene } from './loop-scene';
 import { LoopStatic } from './loop-static';
 
-// Without JavaScript the pinned scene has nothing to scrub, so the static stack takes its place.
-const NO_SCRIPT_CSS =
-  '[data-loop-scene]{display:none!important}[data-loop-static]{display:block!important}';
+/**
+ * Without JavaScript the pinned scene has nothing to scrub, so it unpins and its five cards stack in flow
+ * (rail hidden). The words stay in one copy in the server HTML: the scene's cards.
+ */
+const NO_SCRIPT_CSS = [
+  '[data-loop-scene]{display:block!important}',
+  '[data-loop-track]{height:auto!important}',
+  '[data-loop-track]>div{position:relative!important;height:auto!important}',
+  '[data-loop-rail]{display:none!important}',
+  '[data-loop-cards]{display:flex!important;flex-direction:column;gap:16px}',
+  '[data-loop-card]{position:relative!important;inset:auto!important;opacity:1!important;visibility:visible!important;transform:none!important}',
+].join('');
 const REDUCE = '(prefers-reduced-motion: reduce)';
 
 /**
  * How it works (round 4 spec §3): Followers, Communities, Ideas, Crews, Featured, told over a scrubbed
- * recording of the product with the live product UI in front. Reduced motion and no-JS get the five
- * steps stacked instead, and the scene's display:none keeps its canvas from fetching frames.
+ * recording of the product with the live product UI in front. Reduced motion gets the five steps stacked
+ * instead (LoopStatic), and the scene's display:none keeps its canvas from fetching frames.
  *
- * The server (and no-JS) render both copies and CSS shows one, so nothing shifts. Once mounted, the
- * media query is known and the hidden copy is dropped, leaving one heading and one set of steps.
+ * The server renders the scene only, so the page carries one copy of the words. Under reduced motion the
+ * scene is CSS-hidden until mount, then swapped for the static stack (below the fold, so nothing visible shifts).
  */
 export function LoopSection() {
   const [reduce, setReduce] = useState<boolean | null>(null);
@@ -29,20 +38,16 @@ export function LoopSection() {
   }, []);
 
   return (
-    // Named by the rendered copy's heading (a hidden one still names it before mount and without JS).
     <section
       id="one-week"
       aria-labelledby={reduce ? 'loop-title-static' : 'loop-title'}
       className="relative"
     >
-      {reduce !== true && (
+      {reduce ? (
+        <LoopStatic />
+      ) : (
         <div data-loop-scene className="motion-reduce:hidden">
           <LoopScene />
-        </div>
-      )}
-      {reduce !== false && (
-        <div data-loop-static className="hidden motion-reduce:block">
-          <LoopStatic />
         </div>
       )}
       <noscript>

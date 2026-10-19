@@ -1,13 +1,14 @@
 /*
  * Showcase strip (landing brief v2, part 9): on the page background, a heading row, then one full-bleed
  * marquee of project cards in three widths (sm, md, lg) with soft edge masks. One card is a "Made it" page
- * crop, the rest are flat tinted cards with the crew's avatar stack as their picture (no creator photos).
+ * crop, the rest are flat tinted cards with a cover of the made thing and the crew's avatar stack on it.
  *
  * The track holds three identical lists of the six cards (about 2,200px each at desktop) and slides by
  * one list per loop. The loop runs with the middle (real) list's start between 50vw and 50vw minus one
  * list, so every real card can be centred when it takes focus, and the copies either side always fill the
  * screen up to a 2560px viewport. The row pauses on hover and focus-within, on the Pause control
- * (data-paused) and off-screen (data-offscreen).
+ * (data-paused) and off-screen (data-offscreen). The server HTML holds the real list only: the echo
+ * lists either side are empty boxes of the same width (.echo) until they fill in after mount.
  *
  * Reduced motion: no marquee. The real list's six cards form one horizontal row that scrolls and snaps
  * (display: contents flattens the list into it); the copies are hidden.
@@ -253,6 +254,11 @@
   animation-play-state: paused;
 }
 
+/* An echo list's reserved width until its cards are added after mount (showcase-strip.tsx). */
+.echo {
+  flex: none;
+}
+
 .group {
   display: flex;
   gap: var(--gap);
@@ -333,47 +339,36 @@
   background: var(--color-aurora-mint);
 }
 
-/* The crew, as the card's picture: a big avatar stack with the names under it. */
-.makers {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 14px;
+/*
+ * The made thing on top: a cover in the top 56% of the picture area, the crew's avatar stack on its
+ * bottom edge, the title under it. Absolute, so the card keeps the row's height and rhythm.
+ */
+.flat {
+  justify-content: flex-end;
+}
+
+.shot {
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto;
+  height: 56%;
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.35);
 }
 
 .bigStack {
+  position: absolute;
+  top: calc(56% - 28px);
+  left: 11px;
   display: flex;
   align-items: center;
   padding-left: 3px;
 }
 
-.names {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.8125rem;
-  line-height: 1.4;
-  text-wrap: balance;
-}
-
-.coverTop {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.community {
-  display: inline-flex;
-  min-width: 0;
-  align-items: center;
-  height: 28px;
-  padding-inline: 12px;
-  background: rgb(255 255 255 / 0.85);
-  color: var(--ink);
-  font-size: 0.75rem;
-  font-weight: 500;
-  white-space: nowrap;
+@media (min-width: 768px) {
+  .bigStack {
+    left: 13px;
+  }
 }
 
 .cardTitle {
@@ -633,7 +628,8 @@
     display: contents;
   }
 
-  .group[data-copy] {
+  .group[data-copy],
+  .echo {
     display: none;
   }
 

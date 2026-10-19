@@ -42,6 +42,7 @@ function StepCard({ index, progress }: { index: number; progress: MotionValue<nu
 
   return (
     <motion.article
+      data-loop-card
       className={cn('glass-strong', styles.card)}
       style={{ opacity, y, visibility }}
       aria-labelledby={`story-${step.id}`}
@@ -91,7 +92,7 @@ export function LoopScene() {
   }
 
   return (
-    <div ref={trackRef} className={styles.track}>
+    <div ref={trackRef} data-loop-track className={styles.track}>
       <div className={styles.sticky}>
         <LoopCanvas progress={scrollYProgress} />
         <div className={styles.shade} aria-hidden="true" />
@@ -109,7 +110,7 @@ export function LoopScene() {
 
           <LoopLive progress={scrollYProgress} className={styles.live} />
 
-          <nav aria-label="Steps" className={styles.rail}>
+          <nav aria-label="Steps" data-loop-rail className={styles.rail}>
             <ol>
               {storySteps.map((step, index) => (
                 <li key={step.id}>
@@ -128,7 +129,7 @@ export function LoopScene() {
             </ol>
           </nav>
 
-          <div className={styles.cards}>
+          <div data-loop-cards className={styles.cards}>
             {storySteps.map((step, index) => (
               <StepCard key={step.id} index={index} progress={scrollYProgress} />
             ))}

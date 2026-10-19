@@ -116,3 +116,19 @@ export function ShowcaseStage({
     </div>
   );
 }
+
+/**
+ * Renders `fallback` on the server and the first client render, then `children`. The marquee's echo
+ * lists use it, so the server HTML carries each project once; the fallback reserves the same width.
+ */
+export function AfterMount({
+  children,
+  fallback,
+}: {
+  children: React.ReactNode;
+  fallback: React.ReactNode;
+}) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? children : fallback;
+}

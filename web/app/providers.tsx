@@ -2,15 +2,18 @@
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactLenis, useLenis } from 'lenis/react';
-import { CircleAlert, CircleCheck, X } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import type * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Toaster } from 'sonner';
 import { CookieNotice } from '@/components/shared/cookie-notice';
-import { useMediaQuery, usePrefersReducedMotion } from '@/hooks/use-media-query';
+import { usePrefersReducedMotion } from '@/hooks/use-media-query';
 import { isMarketingPath } from '@/lib/constants';
 import { getQueryClient } from '@/lib/query-client';
+
+// sonner loads in its own chunk after hydration instead of in every page's first JS. A toast raised
+// before it mounts is not lost: the Toaster replays active toasts when it subscribes.
+const AppToaster = dynamic(() => import('./toaster'), { ssr: false });
 
 function isSafari(): boolean {
   if (typeof navigator === 'undefined') return false;
@@ -97,41 +100,11 @@ function FocusClear() {
   return null;
 }
 
-/**
- * Phones carry a 64px floating bottom nav 12px above the safe area; toasts sit 12px above it. sonner
- * reads `mobileOffset` up to 600px and `offset` beyond, so both clear it below 768px.
- */
-const NAV_CLEARANCE = { bottom: 'calc(88px + env(safe-area-inset-bottom))' };
-
-const TOAST_ICONS = {
-  success: <CircleCheck aria-hidden className="size-5" strokeWidth={1.5} />,
-  error: <CircleAlert aria-hidden className="size-5 text-danger" strokeWidth={1.5} />,
-  close: <X aria-hidden className="size-5" strokeWidth={1.5} />,
-};
-
-/**
- * DESIGN.md Toast: Pure White, radius 16, 1px line border, flat (no shadow), Body ink. Unstyled sonner,
- * so these classes are the whole look. sonner's own `outline: none` on a toast is unlayered CSS, hence
- * the important focus ring. Retry and the close ghost get a 44px hit area for fan pages.
- */
-const TOAST_CLASSES = {
-  toast:
-    'flex w-(--width) items-center gap-3 rounded-lg border border-line bg-card-strong px-4 py-3 font-sans text-body text-ink focus-visible:outline-2! focus-visible:outline-offset-2! focus-visible:outline-purple! [&[data-expanded=false][data-front=false]>*]:opacity-0',
-  icon: 'flex size-5 shrink-0 items-center justify-center',
-  content: 'flex min-w-0 flex-1 flex-col gap-0.5',
-  description: 'text-small text-ink-muted',
-  actionButton:
-    'relative h-9 shrink-0 rounded-full border border-line bg-card-strong px-4 font-medium text-body text-ink transition-[background-color,transform] duration-150 ease-out-quart before:absolute before:-inset-1 hover:bg-page active:scale-[0.98]',
-  closeButton:
-    'relative order-last grid size-8 shrink-0 place-items-center rounded-full text-ink transition-[background-color,transform] duration-150 ease-out-quart before:absolute before:-inset-1.5 hover:bg-page active:scale-[0.98]',
-};
-
 export function Providers({ children }: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
   // Smooth scroll and the navbar focus guard belong to the marketing chrome; the dashboard and fan
   // pages scroll natively (the creator shell scrolls inside its own container).
   const marketing = isMarketingPath(usePathname());
-  const wide = useMediaQuery('(min-width: 768px)');
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -139,20 +112,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       {marketing ? <FocusClear /> : null}
       {children}
       <CookieNotice />
-      <Toaster
-        position={wide ? 'bottom-right' : 'bottom-center'}
-        offset={wide ? undefined : NAV_CLEARANCE}
-        mobileOffset={NAV_CLEARANCE}
-        duration={6000}
-        gap={12}
-        containerAriaLabel="Notifications"
-        icons={TOAST_ICONS}
-        toastOptions={{
-          unstyled: true,
-          closeButtonAriaLabel: 'Dismiss',
-          classNames: TOAST_CLASSES,
-        }}
-      />
+      <AppToaster />
     </QueryClientProvider>
   );
 }

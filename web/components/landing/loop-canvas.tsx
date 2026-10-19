@@ -10,10 +10,10 @@ const FRAME_COUNT = 120;
 const EAGER = 12;
 /**
  * CSS px per canvas pixel. The recording is drawn this coarse and the browser's smooth upscale blurs it
- * (about a 40px blur at this size) for free, so only colour shapes survive: no readable product text
+ * (about a 64px blur at this size) for free, so only colour shapes survive: no readable product text
  * behind the live layer, and no per-frame CSS filter.
  */
-const COARSE = 20;
+const COARSE = 32;
 const POSTER = '/frames/product/poster.webp';
 const SHOWN = Array.from({ length: FRAME_COUNT }, (_, index) => index);
 const frameUrl = (index: number) =>

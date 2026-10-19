@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'sonner';
 import { enterDemo } from '@/lib/api/demo';
 import { ApiError } from '@/lib/fetcher';
 import { setAuthHint } from '@/lib/local-state';
@@ -40,6 +39,9 @@ export function DemoButton({
       setAuthHint(as);
       router.push(session.redirectTo);
     } catch (error) {
+      setPending(false);
+      // sonner loads only when a toast is needed, so the landing does not ship it up front.
+      const { toast } = await import('sonner');
       if (error instanceof ApiError && error.status === 429) {
         toast('Demo busy', {
           description: `Lots of people are trying the demo. Try again ${retryIn(error.retryAfterSeconds)}.`,
@@ -49,7 +51,6 @@ export function DemoButton({
           description: 'The demo is resting right now. Try again in a moment.',
         });
       }
-      setPending(false);
     }
   }
 

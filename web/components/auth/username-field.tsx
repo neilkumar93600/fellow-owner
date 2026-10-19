@@ -1,11 +1,11 @@
 'use client';
 
-import { LIMITS, usernameSchema } from '@fellow-owners/shared';
+import { isReservedHandle, LIMITS } from '@fellow-owners/shared';
 import { CircleAlert, CircleCheck, Info } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { UseFormRegisterReturn } from 'react-hook-form';
-import { HOST } from '@/components/onboarding/onboarding-templates';
 import { useDebounce } from '@/hooks/use-debounce';
+import { HOST } from '@/lib/host';
 import { checkHandleAvailable } from '@/lib/platform-client';
 import styles from './auth.module.css';
 import { cx, FOCUS_RING, LINK_HIT_AREA } from './auth-classes';
@@ -33,6 +33,24 @@ interface Verdict {
 /** As typed: lowercase, and only the characters a handle can hold (a leading "@" drops out too). */
 export function normalizeUsernameInput(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9_.]/g, '');
+}
+
+/**
+ * usernameSchema's rules and messages without zod, which the landing's claim check would otherwise
+ * download: the first rule that fails wins, in the schema's order (length, characters, reserved).
+ */
+export function parseUsername(
+  value: string,
+): { success: true; data: string } | { success: false; message: string } {
+  const { min, max, pattern } = LIMITS.username;
+  const handle = value.trim().toLowerCase();
+  if (handle.length < min) return { success: false, message: `At least ${min} characters` };
+  if (handle.length > max) return { success: false, message: `Up to ${max} characters` };
+  if (!pattern.test(handle))
+    return { success: false, message: 'Use lowercase letters, numbers, underscores and periods' };
+  if (isReservedHandle(handle))
+    return { success: false, message: 'That handle is reserved. Pick another.' };
+  return { success: true, data: handle };
 }
 
 /** GET /api/handle-available: the verdict, or null when the check itself failed. */
@@ -64,7 +82,7 @@ export function useUsernameStatus(raw: string) {
   const [, setVersion] = useState(0);
 
   useEffect(() => {
-    const parsed = usernameSchema.safeParse(settledValue);
+    const parsed = parseUsername(settledValue);
     if (!parsed.success) return;
     const handle = parsed.data;
     if (verdicts.current.has(handle)) return;
@@ -102,13 +120,13 @@ export function useUsernameStatus(raw: string) {
   let status: UsernameStatus = { state: 'idle' };
   let suggestions: string[] = [];
   if (raw) {
-    const parsed = usernameSchema.safeParse(raw);
+    const parsed = parseUsername(raw);
     if (!parsed.success) {
       // Rules only show once typing pauses, so "At least 3 characters" never chases each keystroke.
       if (raw === settledValue) {
         status = {
           state: 'invalid',
-          message: parsed.error.issues[0]?.message ?? '',
+          message: parsed.message,
         };
       }
     } else {

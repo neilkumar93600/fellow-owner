@@ -30,7 +30,11 @@ const REDUCE = '(prefers-reduced-motion: reduce)';
 type Mode = 'flow' | 'pin';
 
 /** Deck geometry (px, before the fit scale): how far each waiting screen peeks out, and its scale. */
-const PEEK = [0, 16, 30];
+const PEEK = [0, 12, 22];
+/** How far a waiting screen's clipped edge reaches up under the one in front, so no seam shows. */
+const TUCK = 24;
+/** The clip-path of a screen that is not waiting: the whole slot (same function, so it interpolates). */
+const UNCLIPPED = 'inset(0px 0px 0px 0px)';
 const DEPTH_SCALE = [1, 0.94, 0.88];
 /** Room kept under the deck, above the viewport bottom. */
 const DECK_BOTTOM = 20;
@@ -80,6 +84,7 @@ function poseDeck(deck: Deck, active: number) {
     const rel = index - active;
     let transform: string;
     let opacity: number;
+    let clip = UNCLIPPED;
     if (rel < 0) {
       // Gone: tipped back, lifted and receding behind the screen that replaced it.
       transform = 'translate3d(0, -56px, -140px) rotateX(10deg)';
@@ -93,11 +98,15 @@ function poseDeck(deck: Deck, active: number) {
       const peek = PEEK[rel] ?? PEEK[PEEK.length - 1]!;
       const y = front + peek - (deck.heights[index] ?? 0) * scale;
       transform = `translate3d(0, ${y.toFixed(1)}px, 0) scale(${scale})`;
+      // Only the edge that peeks out is drawn: a taller screen would otherwise rise above the front one.
+      const height = deck.heights[index] ?? 0;
+      clip = `inset(${Math.max(0, height - (peek + TUCK) / scale).toFixed(1)}px 0px 0px 0px)`;
       // Opaque, so the screens behind never show through; CSS tints it towards the field instead.
       opacity = 1;
     }
     slot.style.transform = transform;
     slot.style.opacity = String(opacity);
+    slot.style.clipPath = clip;
     slot.style.zIndex = String(rel < 0 ? 0 : 10 - rel);
     if (rel > 0) slot.setAttribute('data-waiting', String(Math.min(rel, 2)));
     else slot.removeAttribute('data-waiting');
@@ -133,6 +142,7 @@ function clearDeck(deck: Deck) {
   for (const slot of deck.slots) {
     slot.style.transform = '';
     slot.style.opacity = '';
+    slot.style.clipPath = '';
     slot.style.zIndex = '';
     slot.removeAttribute('data-waiting');
   }

@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/button-variants';
+import { cn } from '@/components/ui/cn';
 import { DISPLAY_H1 } from '@/lib/constants';
 import { routes } from '@/lib/routes';
 
@@ -38,7 +38,11 @@ export default function ErrorBoundary({
           in a minute.
         </p>
         <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-          <Button onClick={() => retry()}>Try again</Button>
+          {/* The root boundary loads on every route, so Try again is a plain button in Button's
+              primary pill classes rather than the Base UI Button. */}
+          <button type="button" onClick={() => retry()} className={cn(buttonVariants())}>
+            Try again
+          </button>
           <Link
             href={routes.home()}
             className={buttonVariants({ variant: 'secondary', surface: 'glass' })}

@@ -172,6 +172,17 @@
   }
 }
 
+/* The active dot answers too: the same white tint, and its ink bar grows on toward the pill. */
+.dot[aria-current]:is(:hover, :focus-visible) {
+  background-color: rgb(255 255 255 / 0.7);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dot[aria-current]:is(:hover, :focus-visible) .dotMark {
+    transform: scale(3.25, 1.25);
+  }
+}
+
 /* The row: native snap scroller by default; a translated strip inside a clipped viewport when pinned. */
 .viewport {
   width: 100%;

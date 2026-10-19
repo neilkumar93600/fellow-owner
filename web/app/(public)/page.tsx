@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
-import { ConnectSection } from '@/components/landing/connect-section';
-import { CreatorsSection } from '@/components/landing/creators-section';
+import {
+  ConnectSection,
+  CreatorsSection,
+  FansSection,
+  LoopSection,
+  ProblemSection,
+} from '@/components/landing/deferred-sections';
 import { DemoCta } from '@/components/landing/demo-cta';
-import { FansSection } from '@/components/landing/fans-section';
 import { Faq } from '@/components/landing/faq';
 import { Hero } from '@/components/landing/hero';
-import { LoopSection } from '@/components/landing/loop-section';
-import { ProblemSection } from '@/components/landing/problem-section';
 import { ShowcaseStrip } from '@/components/landing/showcase-strip';
 import { TrustSection } from '@/components/landing/trust-section';
 import { JsonLd } from '@/components/shared/json-ld';

@@ -333,6 +333,38 @@
   }
 }
 
+/*
+ * The active row answers the pointer too, and stays clearly active: a fainter tint than an inactive row,
+ * its title slides 4px and its ink hairline thickens (`scale`, so it composes with the inline scaleX the
+ * pinned mode writes). Reduced motion keeps the tint only.
+ */
+@media (min-width: 768px) {
+  .step[data-state="active"] .stepBtn:is(:hover, :focus-visible)::after {
+    background: rgb(255 255 255 / 0.3);
+  }
+}
+
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  /* Raised specificity: beats the later .stepTitle transition and the pinned mode's `transition: none`. */
+  .stepBtn .stepTitle {
+    transition:
+      color var(--dur-slow) var(--ease-out-quart),
+      transform var(--dur-base) var(--ease-out-quart);
+  }
+
+  .step .rule .fill {
+    transition: scale var(--dur-base) var(--ease-out-quart);
+  }
+
+  .step[data-state="active"] .stepBtn:is(:hover, :focus-visible) .stepTitle {
+    transform: translate3d(4px, 0, 0);
+  }
+
+  .step[data-state="active"]:has(.stepBtn:is(:hover, :focus-visible)) .fill {
+    scale: 1 1.75;
+  }
+}
+
 .stepBtn:focus-visible {
   outline: none;
 }

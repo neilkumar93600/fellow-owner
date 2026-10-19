@@ -40,18 +40,8 @@ import type { z } from 'zod';
 
 // Data, types and pure helpers for /onboarding ("Create your space", 03-app-flow §2).
 
-/** The host fans see in the bio link. */
-export const HOST = (() => {
-  const url = process.env.NEXT_PUBLIC_APP_URL;
-  if (url && !url.includes('localhost')) {
-    try {
-      return new URL(url).host;
-    } catch {
-      // fall through
-    }
-  }
-  return 'fellowowners.app';
-})();
+/** The host fans see in the bio link (lib/host). */
+export { HOST } from '@/lib/host';
 
 // ---------------------------------------------------------------- steps
 

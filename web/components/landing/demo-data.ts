@@ -385,7 +385,7 @@ export const showcase: readonly ShowcaseProject[] = [
   {
     title: 'Fare Pals: fare alerts for $60-a-day trips',
     community: 'Budget Travel',
-    cover: 'vlog-hostel',
+    cover: 'cover-budget-travel',
     team: 5,
     hearts: 96,
     crew: ['Lara Haddad', 'Milo Adeyemi', 'Jonas Reyes', 'Dilan Zhang', 'Kemi Hassan'],
@@ -401,7 +401,7 @@ export const showcase: readonly ShowcaseProject[] = [
   {
     title: 'Tokyo cafés under $5',
     community: 'Food Finds',
-    cover: 'vlog-cafe',
+    cover: 'cover-food-finds',
     team: 3,
     hearts: 164,
     crew: ['Yuki Sato', 'Priya Shah', 'Omar Farouk'],
@@ -425,7 +425,7 @@ export const showcase: readonly ShowcaseProject[] = [
   {
     title: 'Film photo zine',
     community: 'Travel Photography',
-    cover: 'vlog-mountain',
+    cover: 'cover-travel-photography',
     team: 3,
     hearts: 98,
     crew: ['Maya Chen', 'Noor Haddad', 'Tomás Rivera'],
@@ -433,7 +433,7 @@ export const showcase: readonly ShowcaseProject[] = [
   {
     title: 'Slow mornings playbook',
     community: 'Slow Living',
-    cover: 'vlog-hostel',
+    cover: 'cover-slow-living',
     team: 2,
     hearts: 119,
     crew: ['Chloe Martin', 'Kofi Mensah'],

@@ -4,6 +4,7 @@ import { ArrowUp, Sparkles } from 'lucide-react';
 import { type KeyboardEvent, useEffect, useId, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import styles from './hero.module.css';
+import { getIntroState, INTRO_PLAY_EVENT } from './hero-intro';
 import { TWIN_CHAT, type TwinQuestion } from './hero-product-data';
 
 /** Characters of the twin's answer, in typing order: the lead, then each pick's title and why. */
@@ -84,33 +85,46 @@ export function TwinChat() {
   const [active, setActive] = useState(0);
   const [n, setN] = useState(Number.POSITIVE_INFINITY);
   const [asked, setAsked] = useState('');
-  const first = useRef(true);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const next = TWIN_CHAT[(active + 1) % TWIN_CHAT.length] ?? TWIN_CHAT[0];
 
   useEffect(() => {
     const q = TWIN_CHAT[active];
-    if (!q || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Reduced motion, or a phone where the chat is display:none: the full answer, no typing.
+    if (
+      !q ||
+      window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 767.98px)').matches
+    ) {
       setN(Number.POSITIVE_INFINITY);
       return;
     }
     const total = answerLength(q);
     let typed = 0;
     let timer = 0;
-    setN(0);
-    // The first answer waits for the hero's entrance; a new question starts almost at once.
-    const start = window.setTimeout(
-      () => {
+    let start = 0;
+    const type = (delay: number) => {
+      window.clearTimeout(start);
+      start = window.setTimeout(() => {
         timer = window.setInterval(() => {
-          typed += 3;
+          typed += 6;
           setN(typed);
           if (typed >= total) window.clearInterval(timer);
         }, 16);
-      },
-      first.current ? 1100 : 250,
-    );
-    first.current = false;
+      }, delay);
+    };
+    setN(0);
+    // The first answer starts typing as the chat rises in (0.44s into the entrance), so it is done about
+    // a second after fonts; a new question starts almost at once.
+    // The intro's 5s failsafe ends it without a play event, so a pending start also gets a late fallback.
+    const intro = getIntroState();
+    const onPlay = () => type(440);
+    if (intro.phase === 'pending') {
+      window.addEventListener(INTRO_PLAY_EVENT, onPlay, { once: true });
+      type(5200);
+    } else if (intro.phase === 'playing') type(Math.max(0, intro.at + 440 - performance.now()));
+    else type(250);
     return () => {
+      window.removeEventListener(INTRO_PLAY_EVENT, onPlay);
       window.clearTimeout(start);
       window.clearInterval(timer);
     };
@@ -162,7 +176,6 @@ export function TwinChat() {
               id={`${id}-panel-${q.id}`}
               role="tabpanel"
               aria-labelledby={`${id}-tab-${q.id}`}
-              tabIndex={index === active ? 0 : -1}
               className={styles.turn}
               data-active={index === active}
             >

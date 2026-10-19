@@ -41,6 +41,7 @@ export function LaterBrowserPage({ step }: { step: number }) {
             handle={LIVE_SPACE.handle}
             communities={LIVE_ROOMS}
             joinedIds={[LIVE_JOINED_ROOM.id]}
+            interactive={false}
           />
         </div>
       );

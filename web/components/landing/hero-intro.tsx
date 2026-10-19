@@ -27,10 +27,10 @@ export function getIntroState(): IntroState {
  *   motion or arrived on an anchor;
  * - once fonts are ready (700ms at most), waits two frames, then sets data-intro="play", stamps
  *   __foIntroAt and fires INTRO_PLAY_EVENT;
- * - removes the attribute 2.4s into the play (the timeline is about 1.5s), or after 5s if play never began.
+ * - removes the attribute 1.4s into the play (the timeline is under 1s), or after 5s if play never began.
  * A data attribute, not a class: Lenis and next-themes rewrite the class list on <html>.
  */
-const INTRO_SCRIPT = `(function(){try{var d=document.documentElement,w=window,A="data-intro";if(location.hash||(w.matchMedia&&w.matchMedia("(prefers-reduced-motion: reduce)").matches))return;d.setAttribute(A,"");w.__foIntro=1;var go=0;function end(){if(w.__foIntro){d.removeAttribute(A);w.__foIntro=0}}function play(){if(go||w.__foIntro!==1)return;go=1;requestAnimationFrame(function(){requestAnimationFrame(function(){if(w.__foIntro!==1)return;w.__foIntro=2;w.__foIntroAt=performance.now();d.setAttribute(A,"play");w.dispatchEvent(new Event("${INTRO_PLAY_EVENT}"));setTimeout(end,2400)})})}var f=document.fonts;if(f&&f.ready)f.ready.then(play,play);setTimeout(play,700);setTimeout(function(){if(w.__foIntro===1)end()},5000)}catch(e){}})();`;
+const INTRO_SCRIPT = `(function(){try{var d=document.documentElement,w=window,A="data-intro";if(location.hash||(w.matchMedia&&w.matchMedia("(prefers-reduced-motion: reduce)").matches))return;d.setAttribute(A,"");w.__foIntro=1;var go=0;function end(){if(w.__foIntro){d.removeAttribute(A);w.__foIntro=0}}function play(){if(go||w.__foIntro!==1)return;go=1;requestAnimationFrame(function(){requestAnimationFrame(function(){if(w.__foIntro!==1)return;w.__foIntro=2;w.__foIntroAt=performance.now();d.setAttribute(A,"play");w.dispatchEvent(new Event("${INTRO_PLAY_EVENT}"));setTimeout(end,1400)})})}var f=document.fonts;if(f&&f.ready)f.ready.then(play,play);setTimeout(play,700);setTimeout(function(){if(w.__foIntro===1)end()},5000)}catch(e){}})();`;
 
 /**
  * Client side of the entrance: ends it early on the portrait frame's animationend ([data-hero-last]) so

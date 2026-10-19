@@ -16,6 +16,9 @@ const DEMO_PHOTOS: { cover: CreatorAsset; portrait: CreatorAsset } = {
   portrait: 'mira-portrait',
 };
 
+const PLATFORM_CHIP =
+  'glass-chip inline-flex h-11 items-center gap-2 px-4 text-small text-ink uppercase';
+
 export interface CreatorHeaderProps {
   /** space.isDemo marks the demo world: it gets the generated cover and portrait. */
   space: PublicSpace;
@@ -25,6 +28,8 @@ export interface CreatorHeaderProps {
   nameAs?: 'h1' | 'p';
   /** The cover is the bio page's LCP image; a below-the-fold preview passes false so it doesn't compete. */
   priority?: boolean;
+  /** False draws the same pills as plain text with no links or tab stops (the landing's decorative mockups). */
+  interactive?: boolean;
 }
 
 /**
@@ -38,9 +43,11 @@ export function CreatorHeader({
   cta,
   nameAs: Name = 'h1',
   priority = true,
+  interactive = true,
 }: CreatorHeaderProps) {
   const first = space.displayName.split(' ')[0];
   const photos = space.isDemo ? DEMO_PHOTOS : undefined;
+  const ctaClass = cn(buttonVariants({ variant: 'secondary' }), 'w-full sm:w-auto sm:min-w-64');
   return (
     <header className="flex flex-col">
       <div className="glass relative h-52 overflow-hidden sm:h-64">
@@ -102,14 +109,9 @@ export function CreatorHeader({
             aria-label={`${first} on other platforms`}
             className="flex flex-wrap justify-center gap-2"
           >
-            {space.platforms.map((entry) => (
-              <li key={entry.url}>
-                <a
-                  href={entry.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass-chip inline-flex h-11 press items-center gap-2 px-4 text-small text-ink uppercase hover:bg-white/90"
-                >
+            {space.platforms.map((entry) => {
+              const chip = (
+                <>
                   {entry.platform === 'other' ? (
                     <Globe aria-hidden="true" strokeWidth={1.5} className="size-5 shrink-0" />
                   ) : (
@@ -117,10 +119,26 @@ export function CreatorHeader({
                   )}
                   <span className="font-medium tabular-nums">{formatCompact(entry.followers)}</span>
                   <span className="text-ink-soft">{PLATFORM_LABELS[entry.platform]}</span>
-                  <span className="sr-only"> followers (opens in a new tab)</span>
-                </a>
-              </li>
-            ))}
+                </>
+              );
+              return (
+                <li key={entry.url}>
+                  {interactive ? (
+                    <a
+                      href={entry.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(PLATFORM_CHIP, 'press hover:bg-white/90')}
+                    >
+                      {chip}
+                      <span className="sr-only"> followers (opens in a new tab)</span>
+                    </a>
+                  ) : (
+                    <span className={PLATFORM_CHIP}>{chip}</span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         ) : null}
 
@@ -130,12 +148,13 @@ export function CreatorHeader({
           {pluralize(space.memberCount, 'fan')} in the space
         </p>
 
-        <Link
-          href={cta.href}
-          className={cn(buttonVariants({ variant: 'secondary' }), 'w-full sm:w-auto sm:min-w-64')}
-        >
-          {cta.label}
-        </Link>
+        {interactive ? (
+          <Link href={cta.href} className={ctaClass}>
+            {cta.label}
+          </Link>
+        ) : (
+          <span className={ctaClass}>{cta.label}</span>
+        )}
       </div>
     </header>
   );

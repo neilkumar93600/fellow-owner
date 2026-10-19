@@ -138,7 +138,7 @@ export const PREVIEW = {
 };
 
 /** Clicks per day for the link, Monday to Sunday (sums to promoteDraft.clicks). */
-export const CLICKS_BY_DAY = [180, 260, 310, 370, 420, 410, 462];
+export const CLICKS_BY_DAY = [6, 9, 12, 14, 18, 23, 41];
 export const CLICKS_TODAY = CLICKS_BY_DAY[CLICKS_BY_DAY.length - 1] ?? 0;
 
 export function formatNumber(value: number): string {

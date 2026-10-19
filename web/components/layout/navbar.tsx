@@ -8,9 +8,11 @@ import type * as React from 'react';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from '@/components/landing/nav.module.css';
 import { LANDING_LINKS, sectionIdFrom, useSectionLink } from '@/components/landing/nav-scroll';
-import { GetStartedButton } from '@/components/shared/get-started-button';
 import { Logo } from '@/components/shared/logo';
+import { buttonVariants } from '@/components/ui/button-variants';
+import { cn as cnButton } from '@/components/ui/cn';
 import { isMarketingPath } from '@/lib/constants';
+import { routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
 /** Scroll distance after which the bar condenses into the floating pill. */
@@ -96,8 +98,8 @@ function SiteNav({ onLanding }: { onLanding: boolean }) {
           </nav>
 
           <div ref={actionsRef} className={styles.actions}>
-            <GetStartedButton
-              variant={heroCta ? 'glass' : 'primary'}
+            <StartLink
+              glass={heroCta}
               data-glass={heroCta ? '' : undefined}
               className={cn(styles.action, styles.creator, styles.item)}
             />
@@ -158,16 +160,39 @@ function SiteNav({ onLanding }: { onLanding: boolean }) {
             </ul>
           </nav>
           <div className={styles.sheetActions}>
-            <GetStartedButton
-              variant={heroCta ? 'glass' : 'primary'}
-              size="lg"
-              className={styles.sheetButton}
-              onClick={close}
-            />
+            <StartLink glass={heroCta} size="lg" className={styles.sheetButton} onClick={close} />
           </div>
         </div>
       </header>
     </>
+  );
+}
+
+/**
+ * Get started (to /start). A plain <a>, not next/link: a full document navigation is what lets the
+ * cross-document view transition (globals.css, fo-scenery / fo-twin) morph the hero into the auth panel.
+ * A soft navigation would swap the page with a hard cut. Same look as GetStartedButton.
+ */
+function StartLink({
+  glass,
+  size = 'md',
+  className,
+  ...rest
+}: { glass: boolean; size?: 'md' | 'lg' } & Omit<
+  React.ComponentPropsWithoutRef<'a'>,
+  'href' | 'children'
+>) {
+  return (
+    <a
+      href={routes.start()}
+      className={cnButton(
+        buttonVariants({ variant: glass ? 'secondary' : 'primary', size }),
+        className,
+      )}
+      {...rest}
+    >
+      Get started
+    </a>
   );
 }
 

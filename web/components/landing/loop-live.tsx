@@ -50,8 +50,14 @@ function BrowserPage({ step }: { step: number }) {
         cta={{ href: '#', label: 'Join a room' }}
         nameAs="p"
         priority={false}
+        interactive={false}
       />
-      <CommunityGrid handle={LIVE_SPACE.handle} communities={LIVE_ROOMS} joinedIds={[]} />
+      <CommunityGrid
+        handle={LIVE_SPACE.handle}
+        communities={LIVE_ROOMS}
+        joinedIds={[]}
+        interactive={false}
+      />
     </div>
   );
 }
@@ -69,6 +75,7 @@ function PhonePage({ step }: { step: number }) {
       cta={{ href: '#', label: 'Join a room' }}
       nameAs="p"
       priority={false}
+      interactive={false}
     />
   );
 }
@@ -121,7 +128,8 @@ export function LoopLiveStep({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.08 }}
         >
-          <PhonePage step={index} />
+          {/* Client only: at step 1 the phone repeats the browser's profile, so the server HTML keeps one copy. */}
+          {mounted ? <PhonePage step={index} /> : null}
         </motion.div>
       </PhoneFrame>
     </div>

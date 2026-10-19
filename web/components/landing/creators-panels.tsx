@@ -25,7 +25,6 @@ import {
   FAN_MAIL_TABS,
   type FanMailRow,
   FILTERED_COUNT,
-  NEXT_CARD,
   PLATFORM_TABS,
   PREVIEW,
   SHOWCASE_PAGE,
@@ -100,9 +99,7 @@ export function TodayScreen() {
 
       <div className={styles.today}>
         <div className={styles.stack}>
-          <div className={styles.peek} aria-hidden="true">
-            <span className={styles.peekName}>{NEXT_CARD.name}</span>
-          </div>
+          <div className={styles.peek} aria-hidden="true" />
           <article className={styles.decision} data-depth={5}>
             <div className={styles.decisionTop}>
               <span className={styles.facePhoto} aria-hidden="true">

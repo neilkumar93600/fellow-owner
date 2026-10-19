@@ -1,6 +1,7 @@
 'use client';
 
 import type { PersonRow } from '@fellow-owners/shared';
+import { useEffect, useState } from 'react';
 import { DecisionCard } from '@/components/dashboard/today/decision-card';
 import { FansToThank } from '@/components/dashboard/today/fans-to-thank';
 import { PulsePanel } from '@/components/dashboard/today/pulse-panel';
@@ -115,16 +116,20 @@ function Studio() {
 /**
  * Wide screens lay the studio out 1040px wide; phones lay it out 600px wide in a taller frame. One frame,
  * so the studio's copy is in the page once: the screen shape is CSS, the design width follows the viewport.
+ * The studio fills the frame after mount: the briefing below carries the same lines (Today's subtitle and
+ * pulse), so the server HTML keeps one copy. The frame's aspect ratio is fixed, so nothing shifts.
  */
 export function StudioShot() {
   const phone = useMediaQuery('(max-width: 639.98px)');
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   return (
     <BrowserFrame
       url={LIVE_URLS[4]}
       designWidth={phone ? 600 : 1040}
       screenClassName="max-sm:aspect-[4/5]"
     >
-      <Studio />
+      {mounted ? <Studio /> : null}
     </BrowserFrame>
   );
 }

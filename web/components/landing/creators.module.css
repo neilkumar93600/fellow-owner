@@ -466,8 +466,27 @@
   transform-origin: 50% 0;
   transition:
     transform 640ms var(--ease-out-quart),
-    opacity 420ms var(--ease-out-quart);
+    opacity 420ms var(--ease-out-quart),
+    clip-path 640ms var(--ease-out-quart);
   will-change: transform, opacity;
+}
+
+/*
+ * A waiting screen is an empty edge: creators-motion.tsx clips it to the strip that peeks out, and its
+ * content stays hidden until it is promoted to the front, where it fades in.
+ */
+.inner[data-mode="pin"] .shell > * {
+  transition:
+    opacity 420ms var(--ease-out-quart) 120ms,
+    visibility 0s linear 0s;
+}
+
+.inner[data-mode="pin"] .slot[data-waiting] .shell > * {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 200ms var(--ease-out-quart),
+    visibility 0s linear 200ms;
 }
 
 /* A waiting screen only shows its edge, tinted towards the field the further back it waits. */
