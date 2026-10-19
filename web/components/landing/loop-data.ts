@@ -21,7 +21,7 @@ export interface StoryStep {
   alt: string;
 }
 
-const { idea } = DEMO;
+const { idea, followers } = DEMO;
 
 export const storySteps: StoryStep[] = [
   {

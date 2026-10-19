@@ -118,7 +118,6 @@ describe('seed: backend-completion features', () => {
     expect(rows).toHaveLength(60);
   });
 
-
   it('gives the creator 5 unread notifications including a report_filed', async () => {
     const [space] = await db
       .select({ owner: spaces.ownerUserId })
