@@ -225,39 +225,6 @@ Compressed models are already in `web/public/atlas/{lighthouse,windmill,falls,pa
 - [ ] **Step 4: Feedback card** in Settings: heading `Tell the founder`, textarea (min/max from `LIMITS.support`), checkbox `You can quote me by name in Fellow Owners' materials.` (unchecked by default), button `Send`. Posts to the existing support request client with kind `contact`, the account's name and email, and the message prefixed `[Product feedback]` and suffixed `Quote consent: yes|no`. `// ponytail: consent lives in the message text; add a kind + column if feedback volume grows.` Success state `Thanks. The founder reads every note.` Hidden for the demo creator account.
 - [ ] **Step 5: Verify** with the local demo creator: rail has 8 items; Today shows the twin card top right and no platform/brand/profile cards; Settings card sends (check the API log or `support_requests`). Typecheck + lint + `pnpm --filter @fellow-owners/web test:e2e` against the local stack → PASS. Report files + screenshots.
 
-### Task 14: Leaner landing (owner picks 2026-10-19, supersedes Task 6's islands)
-
-Owner: the landing "has too much info"; footer, CTA, Problem and FAQ are fine. Owner picked an **Orbito-style hero with no
-3D islands** (reference https://jiro.build/components/header/ai-seo-agency-header-orbito: landscape background, big serif
-H1 left, a live AI chat demo right, tabs under it). For creators follows **MyModz**
-(https://jiro.build/components/header/modboard-organizer-header-mymodz: centered serif headline with an inline image chip,
-a few objects scattered on grid paper, one button). For fans follows **Quotify**
-(https://jiro.build/components/header/quote-generator-header-quotify: centered headline, tall fanned cards at both edges,
-a moving strip of cards, one line, one button). Borrow the technique, never copy code or assets. The islands work is
-removed (no `three`, no GLBs, no Dioramas credit).
-
-New order: Hero → Problem → For creators → For fans → FAQ → CTA → Footer. Removed: How it works (loop), Connect,
-Showcase strip, Trust (its three promises move into For creators as one line of chips).
-
-- **14a Hero** (`hero.tsx`, `hero-product.tsx`, `hero-product-data.ts`, `hero.module.css`, new `twin-chat.tsx`,
-  `twin-brief.tsx`): background `/creator/hero-scenery.webp` (mobile `/creator/hero-scenery-mobile.webp`), `next/image`
-  priority. Left: eyebrow, H1, one-line subcopy, the existing claim form (the only button). Right: a frosted
-  "Ask your AI twin" chat panel with a `Demo` badge; a fan-facing question bubble, then the twin's answer types out
-  (instant under reduced motion): three picks, each with its one-line why and room chip. Under the panel, three question
-  tabs (`What do fans want next?`, `Who should I team up with?`, `What's worth featuring?`) switch to prewritten answers
-  built from `DEMO` (Lisbon idea, Fare Pals, a collab pitch…). Footnote `Demo data. Names are made up.` No portrait, no
-  follower counts, no stat strip, no "In Mira's demo space" card. Keep `TwinBrief({ compact })` working for the auth panel.
-- **14b For creators** (`creators-section.tsx` + its CSS module): parchment grid-paper ground, eyebrow `For creators`,
-  centered serif headline with an inline product chip, one line of copy, 3–4 tilted product cards scattered around
-  (decision card with its why, Fare Pals spotlight with clicks, fans-to-thank avatars, a "why" sticky note), a row of
-  promise chips (`Every pick shows why` · `Fans are never scored in public` · `Nothing posts without you`), one button
-  `Try the creator demo` (existing `DemoButton as="creator"`).
-- **14c For fans** (`fans-section.tsx` + a new CSS module): centered headline `Fans get a door, not a DM.`, tall fanned
-  cards at both edges with real-feeling fan quotes, a slow moving strip of fan project cards (title + "by name" / crew),
-  one line `Join a room in 60 seconds, share an idea, team up, and get credited by name when it's featured.`, one button
-  `Try the fan demo` (`DemoButton as="fan"`). Demo label kept.
-- **14d Orchestrator:** `app/(public)/page.tsx` section list, nav anchors (no `#one-week`), delete files left unused.
-
 ### Task 13: Direct Anthropic for the chat tiers (owner pick 2026-10-19)
 
 The owner supplied an Anthropic API key for the app's live AI, to get off the OpenRouter spend cap for chat.
