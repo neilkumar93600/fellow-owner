@@ -116,6 +116,15 @@ describe('limits service', () => {
     expect(error.code).toBe('daily_cap_reached');
   });
 
+  it('scales the promotion drafts cap in the demo space only', async () => {
+    const at = stubRepos({ promoteDrafts: DAILY_CAPS.promoteDrafts });
+    await expect(at.service.assertPromoteDraftsAllowed(demo)).resolves.toBeUndefined();
+    const error = await caught(at.service.assertPromoteDraftsAllowed(space));
+    expect(error.code).toBe('daily_cap_reached');
+    const demoFull = stubRepos({ promoteDrafts: DAILY_CAPS.promoteDrafts * DEMO_CAP_SCALE });
+    await caught(demoFull.service.assertPromoteDraftsAllowed(demo));
+  });
+
   it('allows 5 briefing regenerations a day', () => {
     const { service } = stubRepos({});
     const max = LIMITS.briefing.regenerationsPerDay;

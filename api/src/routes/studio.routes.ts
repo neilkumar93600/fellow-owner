@@ -30,6 +30,7 @@ import { createPlatformController } from '../controllers/platform.controller.js'
 import { forbidden } from '../lib/errors.js';
 import { noStore } from '../lib/http.js';
 import { redis } from '../lib/redis.js';
+import { demoReadOnly } from '../middlewares/demo-read-only.js';
 import { requireOwner } from '../middlewares/require-owner.js';
 import { requireSession, sessionOf } from '../middlewares/require-session.js';
 import { validate } from '../middlewares/validate.js';
@@ -94,14 +95,12 @@ export function createStudioRoutes(container: Container): Router {
   router.get('/space', owner, controller.getSpace);
   // The demo creator's profile is the public /mira page every visitor sees: read-only. Settings
   // that only affect the studio (showReadReceipts) still save.
-  const demoProfileReadOnly: RequestHandler = (req, _res, next) => {
+  const demoProfileReadOnly = demoReadOnly(container.env, (req) => {
     const body = req.body as { profile?: unknown; tasteProfile?: unknown };
-    const touchesProfile = body.profile !== undefined || body.tasteProfile !== undefined;
-    if (touchesProfile && isDemoEmail(container.env, sessionOf(req).user.email)) {
-      throw forbidden('The demo profile is read-only.');
-    }
-    next();
-  };
+    return body.profile !== undefined || body.tasteProfile !== undefined;
+  });
+  // The demo creator's rooms are part of the public /mira page too.
+  const demoLocked = demoReadOnly(container.env);
   router.put(
     '/settings',
     owner,
@@ -174,6 +173,7 @@ export function createStudioRoutes(container: Container): Router {
   router.post(
     '/communities',
     owner,
+    demoLocked,
     validate({ body: createCommunitySchema }),
     controller.createCommunity,
   );
@@ -186,6 +186,7 @@ export function createStudioRoutes(container: Container): Router {
   router.patch(
     '/communities/:id',
     owner,
+    demoLocked,
     validate({ params: idParamsSchema, body: updateCommunitySchema }),
     controller.updateCommunity,
   );

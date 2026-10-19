@@ -201,6 +201,7 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
       intro: string,
     ): Promise<SuggestCommunitiesResponse> {
       const space = await access.spaceByHandle(handle);
+      await access.assertCanEnter(space, userId);
       const communities = await repos.communities.listBySpace(space.id);
       if (communities.length === 0) return { available: true, suggestions: [] };
       await limits.assertSuggestionsAllowed(userId);

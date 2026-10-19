@@ -113,7 +113,7 @@ export function isBudgetExempt(task: AiTaskName): boolean {
 /**
  * Per-task caps counted from ai_runs (every model call counts, ok or error). In the demo space
  * (shared by every visitor) each max and spaceMax is scaled by dailyCap (x DEMO_CAP_SCALE), except
- * DEMO_UNSCALED_TASKS.
+ * DEMO_UNSCALED_TASKS and BUDGET_EXEMPT_TASKS.
  * briefing and communityDigest are capped by their callers (1 a day + 5 regenerations, one per
  * community a day); the values here are safety nets against retry loops, not product limits.
  */
@@ -148,8 +148,17 @@ export const TASK_CAPS: Partial<Record<AiTaskName, TaskCap>> = {
   brandTriage: { scope: 'space', window: 'day', max: BRAND_LIMITS.triagePerDay },
 };
 
-/** Paid per call (not per token, so the token budget does not bound them): never demo-scaled. */
+/** ai_runs.error of a row preflight reserved and recordRun has not filled in yet. */
+export const IN_PROGRESS_ERROR = 'in progress';
+
+/**
+ * Paid per call (not per token, so the token budget does not bound them): never demo-scaled.
+ * Budget-exempt tasks scale only their per-user cap: every judge shares the one demo creator and
+ * fan, while the space-wide ceiling stays at base because the token budget never bounds them (and
+ * only demo accounts can enter the demo space, so real users cannot reach these caps).
+ */
 const DEMO_UNSCALED_TASKS: readonly AiTaskName[] = ['generateImage', 'generateVideo'];
+const isDemoScaled = (task: AiTaskName) => !DEMO_UNSCALED_TASKS.includes(task);
 
 /**
  * The cap `task` has reached for `ctx`, as a message; null while under every cap. Shared by the
@@ -163,11 +172,12 @@ export async function taskCapReached(
 ): Promise<string | null> {
   const cap = TASK_CAPS[task];
   if (!cap) return null;
-  const space = { isDemo: (ctx.isDemo ?? false) && !DEMO_UNSCALED_TASKS.includes(task) };
+  const space = { isDemo: (ctx.isDemo ?? false) && isDemoScaled(task) };
   const max = dailyCap(cap.max, space);
   const since = cap.window === 'hour' ? hoursAgo(1, now) : startOfUtcDay(now);
   const baseSpaceMax = cap.scope === 'space' ? cap.max : cap.spaceMax;
-  const spaceMax = baseSpaceMax === undefined ? undefined : dailyCap(baseSpaceMax, space);
+  const spaceScaled = cap.scope === 'user' && isBudgetExempt(task) ? { isDemo: false } : space;
+  const spaceMax = baseSpaceMax === undefined ? undefined : dailyCap(baseSpaceMax, spaceScaled);
   if (spaceMax !== undefined) {
     const used = await accounting.countBySpaceTaskSince(ctx.spaceId, task, since);
     if (used >= spaceMax) return `Limit of ${spaceMax} ${task} calls per ${cap.window} reached`;
@@ -225,7 +235,7 @@ export async function preflight(
       ...runRef(task, { ...ctx, spaceId }),
       model: 'pending',
       status: 'error',
-      error: 'in progress',
+      error: IN_PROGRESS_ERROR,
     });
   });
 }

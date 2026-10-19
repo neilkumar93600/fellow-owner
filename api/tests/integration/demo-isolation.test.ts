@@ -35,6 +35,11 @@ const pitch = (who: SignedIn, space: TestSpace) =>
     .post(`/api/spaces/${space.space.handle}/pitches`)
     .set('Cookie', who.cookie)
     .send(pitchBody);
+const suggest = (who: SignedIn, space: TestSpace) =>
+  request(app)
+    .post(`/api/spaces/${space.space.handle}/suggest-communities`)
+    .set('Cookie', who.cookie)
+    .send({ intro: 'solo traveler who loves street food' });
 const coach = (who: SignedIn, space: TestSpace) =>
   request(app)
     .post(`/api/spaces/${space.space.handle}/coach`)
@@ -64,8 +69,17 @@ describe('a real account and the demo space', () => {
     expect(await repos.memberships.findByUser(demoSpace.space.id, real.userId)).toBeNull();
   });
 
+  it('can not ask the demo space for community suggestions (no AI run is spent)', async () => {
+    const res = await suggest(real, demoSpace).expect(403);
+    expect(res.body.error.message).toBe('This is a demo space');
+  });
+
   it('still joins real spaces', async () => {
     await join(real, realSpace).expect(200);
+  });
+
+  it('still gets community suggestions from a real space', async () => {
+    await suggest(real, realSpace).expect(200);
   });
 });
 
@@ -80,6 +94,7 @@ describe('the shared demo accounts', () => {
     expect(res.body.error.message).toBe('The demo accounts can only use the demo space');
     await pitch(demoFan, realSpace).expect(403);
     await coach(demoFan, realSpace).expect(403);
+    await suggest(demoFan, realSpace).expect(403);
     expect(await repos.memberships.findByUser(realSpace.space.id, demoFan.userId)).toBeNull();
   });
 

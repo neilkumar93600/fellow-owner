@@ -5,12 +5,14 @@ import {
   type OpenRouterProvider,
 } from '@openrouter/ai-sdk-provider';
 import {
+  APICallError,
   type EmbeddingModel,
   extractJsonMiddleware,
   type LanguageModel,
   wrapLanguageModel,
 } from 'ai';
 import type { Env } from '../config/env.js';
+import type { Logger } from '../lib/logger.js';
 import { extractJsonText } from './guard.js';
 import type { AiTier } from './types.js';
 
@@ -71,6 +73,8 @@ export interface ProviderOptions {
   fetch?: typeof fetch;
   /** Override the API base URL (proxies). */
   baseURL?: string;
+  /** Where the Anthropic -> OpenRouter fallback logs its warning. */
+  logger?: Pick<Logger, 'warn'>;
 }
 
 /** The OpenRouter provider with app attribution headers (shown on the OpenRouter dashboard). */
@@ -128,18 +132,71 @@ function chatModel(provider: OpenRouterProvider, tier: ChatTier, id: string): Ch
   };
 }
 
+/** Anthropic is overloaded or down: 429, any 5xx (529 included) or no response at all. */
+export function isTransientProviderError(error: unknown): boolean {
+  if (APICallError.isInstance(error)) {
+    const status = error.statusCode;
+    return status === undefined || status === 429 || status >= 500;
+  }
+  return error instanceof TypeError || /overloaded/i.test(String((error as Error)?.message));
+}
+
 /**
  * Direct Anthropic chat tier. None of the OpenRouter-only settings above apply (response-healing
  * plugin, usage include, reasoning effort): the Anthropic API reports usage itself.
+ * When Anthropic answers 429/5xx/overloaded or the network fails, the same call is tried once on
+ * the OpenRouter model of the same tier (`fallback`). Other errors (400, 401...) propagate.
+ * ponytail: a stream that fails after it started is not retried (no way to un-send chunks).
  */
-function anthropicChatModel(provider: AnthropicProvider, tier: ChatTier, id: string): ChatModelRef {
-  return { tier, id, provider: 'anthropic', model: withJsonExtraction(provider(id)) };
+function anthropicChatModel(
+  provider: AnthropicProvider,
+  tier: ChatTier,
+  id: string,
+  fallback: { id: string; model: ReturnType<OpenRouterProvider['chat']> },
+  logger?: Pick<Logger, 'warn'>,
+): ChatModelRef {
+  const warn = (error: unknown) =>
+    logger?.warn(
+      {
+        tier,
+        from: id,
+        to: fallback.id,
+        status: APICallError.isInstance(error) ? error.statusCode : undefined,
+      },
+      'Anthropic failed; falling back to OpenRouter',
+    );
+  const model = wrapLanguageModel({
+    model: provider(id),
+    middleware: {
+      specificationVersion: 'v4',
+      wrapGenerate: async ({ doGenerate, params }) => {
+        try {
+          return await doGenerate();
+        } catch (error) {
+          if (!isTransientProviderError(error)) throw error;
+          warn(error);
+          return fallback.model.doGenerate(params);
+        }
+      },
+      wrapStream: async ({ doStream, params }) => {
+        try {
+          return await doStream();
+        } catch (error) {
+          if (!isTransientProviderError(error)) throw error;
+          warn(error);
+          return fallback.model.doStream(params);
+        }
+      },
+    },
+  });
+  return { tier, id, provider: 'anthropic', model: withJsonExtraction(model) };
 }
 
 /**
  * Builds the three model handles from env. Requires OPENROUTER_API_KEY (embeddings always go
  * through OpenRouter). With ANTHROPIC_API_KEY the fast and smart chat tiers call Anthropic
- * directly instead (ANTHROPIC_MODEL_FAST / ANTHROPIC_MODEL_SMART).
+ * directly instead (ANTHROPIC_MODEL_FAST / ANTHROPIC_MODEL_SMART), falling back to the
+ * OpenRouter model of the same tier (AI_MODEL_FAST / AI_MODEL_SMART) when Anthropic is down.
  */
 export function createAiModels(
   env: Pick<
@@ -158,12 +215,28 @@ export function createAiModels(
         ...(options.fetch ? { fetch: options.fetch } : {}),
       })
     : null;
+  const openRouterFallback = (tier: ChatTier) => ({
+    id: ids[tier],
+    model: provider.chat(ids[tier], TIER_SETTINGS[tier]),
+  });
   return {
     fast: anthropic
-      ? anthropicChatModel(anthropic, 'fast', env.ANTHROPIC_MODEL_FAST ?? DEFAULT_ANTHROPIC_FAST)
+      ? anthropicChatModel(
+          anthropic,
+          'fast',
+          env.ANTHROPIC_MODEL_FAST ?? DEFAULT_ANTHROPIC_FAST,
+          openRouterFallback('fast'),
+          options.logger,
+        )
       : chatModel(provider, 'fast', ids.fast),
     smart: anthropic
-      ? anthropicChatModel(anthropic, 'smart', env.ANTHROPIC_MODEL_SMART ?? DEFAULT_ANTHROPIC_SMART)
+      ? anthropicChatModel(
+          anthropic,
+          'smart',
+          env.ANTHROPIC_MODEL_SMART ?? DEFAULT_ANTHROPIC_SMART,
+          openRouterFallback('smart'),
+          options.logger,
+        )
       : chatModel(provider, 'smart', ids.smart),
     embedding: {
       tier: 'embedding',

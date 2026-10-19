@@ -46,16 +46,18 @@ describe('demo-scaled AI task caps', () => {
     expect(await reason(preflight(rt(full, true), 'askAI', ctx))).toBe('cap');
   });
 
-  it('coach (budget-exempt, per user) reads is_demo without the budget', async () => {
-    const at = { user: LIMITS.coach.perDay, space: 0 };
-    expect(await reason(preflight(rt(at, false), 'coach', ctx))).toBe('cap');
-    expect(await reason(preflight(rt(at, true), 'coach', ctx))).toBeNull();
-  });
-
-  it('the question embeddings (embedItem, per user per hour) scale too', async () => {
-    const at = { user: 30, space: 0 };
-    expect(await reason(preflight(rt(at, false), 'embedItem', ctx))).toBe('cap');
-    expect(await reason(preflight(rt(at, true), 'embedItem', ctx))).toBeNull();
+  it('scales only the per-user cap of budget-exempt tasks (coach, embedItem, suggestCommunities)', async () => {
+    // Every judge shares the one demo creator and fan, so the per-user cap scales x5...
+    const coach = { user: LIMITS.coach.perDay, space: 0 };
+    expect(await reason(preflight(rt(coach, false), 'coach', ctx))).toBe('cap');
+    expect(await reason(preflight(rt(coach, true), 'coach', ctx))).toBeNull();
+    const embed = { user: 30, space: 0 };
+    expect(await reason(preflight(rt(embed, true), 'embedItem', ctx))).toBeNull();
+    // ...but the space-wide ceiling stays at base: the token budget never bounds these tasks.
+    const spaceWide = { user: 0, space: 300 };
+    expect(await reason(preflight(rt(spaceWide, true), 'coach', ctx))).toBe('cap');
+    const suggest = { user: 0, space: 200 };
+    expect(await reason(preflight(rt(suggest, true), 'suggestCommunities', ctx))).toBe('cap');
   });
 
   it('names the scaled limit in the refusal', async () => {

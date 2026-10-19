@@ -13,7 +13,8 @@ const URL_RE = /\b(?:https?:\/\/|www\.)\S+/gi;
 const DOMAIN_RE =
   /\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|net|org|io|co|me|tv|gg|ly|app|dev|xyz|info)\b\S*/gi;
 const EMAIL_RE = /[^\s@]+@[^\s@]+\.[^\s@]+/g;
-const HANDLE_RE = /@[\w.-]+/g;
+// Unicode-aware, so "@José" goes whole instead of leaving "é" behind.
+const HANDLE_RE = /@[\p{L}\p{N}_.-]+/gu;
 // 7+ digits with optional separators: phone numbers, ids.
 const PHONE_RE = /\+?\d[\d\s().-]{5,}\d/g;
 
@@ -21,14 +22,17 @@ const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\
 
 /**
  * Removes what could identify a commenter: links, emails, @handles, phone numbers and, when given,
- * the commenter names/handles from the same batch. Idempotent. The result may be empty.
+ * the commenter names (each word too) and handles from the same batch. Idempotent. The result may be empty.
  */
 export function scrubComment(text: string, names: readonly string[] = []): string {
   let out = text.replace(URL_RE, ' ').replace(EMAIL_RE, ' ').replace(DOMAIN_RE, ' ');
   out = out.replace(HANDLE_RE, ' ').replace(PHONE_RE, ' ');
   for (const name of names) {
-    // Short names would also eat ordinary words, so only 4+ characters are stripped.
-    if (name.length >= 4) out = out.replace(new RegExp(escapeRegExp(name), 'gi'), ' ');
+    // The whole name and each of its words ("Sarah Lee" -> "Sarah"). Short ones would also eat
+    // ordinary words, so only 4+ characters are stripped.
+    for (const part of [name, ...name.split(/\s+/)]) {
+      if (part.length >= 4) out = out.replace(new RegExp(escapeRegExp(part), 'gi'), ' ');
+    }
   }
   return out.replace(/\s+/g, ' ').trim();
 }

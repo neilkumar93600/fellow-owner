@@ -30,8 +30,8 @@ const key = (refType: string, refId: string) => `${refType}:${refId}`;
  * are checked against the matched set (anything else is dropped and the answer renumbered).
  * LIMITS.ask.perDay questions a day (x DEMO_CAP_SCALE in the shared demo space), counted from
  * ai_runs: the question embeddings that succeeded (task embedItem, ref_type 'ask', status ok)
- * minus the answers that failed (task askAI, ref_type 'ask', status error). A question the AI
- * could not answer costs nothing; TASK_CAPS (every attempt counts) still bound retries.
+ * minus the answers that finished with an error (task askAI, ref_type 'ask', status error, not
+ * still in progress). A question the AI could not answer costs nothing; TASK_CAPS (every attempt counts) still bound retries.
  */
 export function createAskService({ repos, ai }: AskServiceDeps) {
   async function usedToday(spaceId: string, now: Date): Promise<number> {
@@ -41,10 +41,11 @@ export function createAskService({ repos, ai }: AskServiceDeps) {
         refType: ASK_REF_TYPE,
         status: 'ok',
       }),
-      // Includes a reserved row still in flight ('in progress' reads as error) for a moment.
+      // Only answers that finished with an error: a row still in flight is not a refund.
       repos.aiRuns.countBySpaceTaskSince(spaceId, 'askAI', since, {
         refType: ASK_REF_TYPE,
         status: 'error',
+        settled: true,
       }),
     ]);
     return Math.max(0, asked - failed);

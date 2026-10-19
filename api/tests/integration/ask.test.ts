@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm';
 import request from 'supertest';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { fakeEmbedding } from '../../src/ai/fake.js';
+import { IN_PROGRESS_ERROR } from '../../src/ai/run.js';
 import { AiUnavailableError } from '../../src/ai/types.js';
 import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
@@ -261,7 +262,9 @@ describe('POST /api/studio/ask', () => {
       await ask(real.who).expect(429);
 
       const demo = await newOwner('democap', true);
-      await fillAskCap(demo.space.space.id, demo.who.userId);
+      // Rows under another user: the per-user hourly embedding cap is not scaled (it is
+      // budget-exempt), so this checks the per-space question count only.
+      await fillAskCap(demo.space.space.id, otherOwner.userId);
       const res = await ask(demo.who).expect(200);
       expect(res.body.asksLeftToday).toBe(LIMITS.ask.perDay * DEMO_CAP_SCALE - 31);
     });
@@ -286,6 +289,22 @@ describe('POST /api/studio/ask', () => {
       await run(spaceId, otherOwner.userId, 'askAI', 'error');
       const res = await ask(real.who).expect(200);
       expect(res.body.asksLeftToday).toBe(0);
+      await ask(real.who).expect(429);
+    });
+
+    it('an answer still in flight is not refunded', async () => {
+      const real = await newOwner('inflightask');
+      const spaceId = real.space.space.id;
+      await fillAskCap(spaceId, otherOwner.userId);
+      await container.repos.aiRuns.insert({
+        spaceId,
+        userId: otherOwner.userId,
+        task: 'askAI',
+        refType: ASK_REF_TYPE,
+        model: 'pending',
+        status: 'error',
+        error: IN_PROGRESS_ERROR,
+      });
       await ask(real.who).expect(429);
     });
   });

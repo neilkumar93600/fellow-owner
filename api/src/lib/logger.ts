@@ -8,12 +8,24 @@ export type { Logger } from 'pino';
  * Keys never written to logs. pino redaction paths are exact, so each key is listed at the top
  * level and up to two levels deep (`*.key`, `*.*.key`), plus request/response header shapes.
  */
-const SENSITIVE_KEYS = ['email', 'cookie', 'authorization', 'password', 'otp'];
+const SENSITIVE_KEYS = [
+  'email',
+  'cookie',
+  'authorization',
+  'password',
+  'otp',
+  'apiKey',
+  'ANTHROPIC_API_KEY',
+  'OPENROUTER_API_KEY',
+];
 
 export const REDACT_PATHS = [
   ...SENSITIVE_KEYS.flatMap((key) => [key, `*.${key}`, `*.*.${key}`]),
   'req.headers.cookie',
   'req.headers.authorization',
+  'req.headers["x-api-key"]',
+  'headers.authorization',
+  'headers["x-api-key"]',
   'headers["set-cookie"]',
   'res.headers["set-cookie"]',
 ];

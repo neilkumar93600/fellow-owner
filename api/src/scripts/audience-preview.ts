@@ -150,14 +150,15 @@ export async function buildPreview(
 
   const rooms: PreviewRoom[] = clustered.communities
     .map((c, index) => ({
-      name: c.name,
-      description: c.description,
+      // The model can echo a commenter into a room's name or description too.
+      name: scrubComment(c.name, identities),
+      description: scrubComment(c.description, identities),
       count: counts.get(`r${index}`) ?? 0,
       quotes: c.sampleQuotes
         .map((quote) => scrubComment(quote, identities))
         .filter((quote) => quote.length >= 12),
     }))
-    .filter((room) => room.count > 0)
+    .filter((room) => room.count > 0 && room.name.length > 0)
     .sort((a, b) => b.count - a.count);
   if (rooms.length === 0) throw new PreviewAbort('No comment fit any suggested room.');
 

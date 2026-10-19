@@ -1,6 +1,11 @@
 import { DEMO_AI_DAILY_TOKEN_BUDGET } from '@fellow-owners/shared';
-import { and, count, eq, gte, lt, notInArray, sql } from 'drizzle-orm';
-import { type AiAccounting, type AiRunResult, BUDGET_EXEMPT_TASKS } from '../ai/run.js';
+import { and, count, eq, gte, isNull, lt, ne, notInArray, or, sql } from 'drizzle-orm';
+import {
+  type AiAccounting,
+  type AiRunResult,
+  BUDGET_EXEMPT_TASKS,
+  IN_PROGRESS_ERROR,
+} from '../ai/run.js';
 import type { Db, DbOrTx } from '../db/client.js';
 import { aiRuns, type NewAiRunRow } from '../db/schema/ai.js';
 import { spaces } from '../db/schema/spaces.js';
@@ -93,7 +98,16 @@ export function createAiRunsRepo(db: Db) {
     spaceId: string,
     task: string,
     since: Date,
-    { refType, status }: { refType?: string; status?: 'ok' | 'error' } = {},
+    {
+      refType,
+      status,
+      settled,
+    }: {
+      refType?: string;
+      status?: 'ok' | 'error';
+      /** true: leave out rows still reserved by a call in flight (error 'in progress'). */
+      settled?: boolean;
+    } = {},
     tx: DbOrTx = db,
   ): Promise<number> {
     const [row] = await tx
@@ -106,6 +120,7 @@ export function createAiRunsRepo(db: Db) {
           gte(aiRuns.createdAt, since),
           refType ? eq(aiRuns.refType, refType) : undefined,
           status ? eq(aiRuns.status, status) : undefined,
+          settled ? or(isNull(aiRuns.error), ne(aiRuns.error, IN_PROGRESS_ERROR)) : undefined,
         ),
       );
     return row?.n ?? 0;

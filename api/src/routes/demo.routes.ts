@@ -10,10 +10,10 @@ import { validate } from '../middlewares/validate.js';
  * or office network), not one person.
  */
 export const DEMO_SESSIONS_PER_MINUTE = 30;
-/** Demo sign-ins one IP may start per hour: half the global cap, so one network cannot drain it. */
+/** Demo sign-ins one IP may start per hour (a tenth of the global cap, so one network cannot drain it). */
 export const DEMO_SESSIONS_PER_IP_PER_HOUR = 150;
 /** Demo sign-ins per hour in all: the per-IP limit alone can be dodged with a forged IP. */
-export const DEMO_SESSIONS_PER_HOUR = 300;
+export const DEMO_SESSIONS_PER_HOUR = 1500;
 
 /**
  * POST /api/demo/session (DEMO_* env, forwards Better Auth Set-Cookie), rate limited per IP (per

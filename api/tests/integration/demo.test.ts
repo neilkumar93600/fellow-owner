@@ -15,7 +15,7 @@ import {
   DEMO_SESSIONS_PER_IP_PER_HOUR,
   DEMO_SESSIONS_PER_MINUTE,
 } from '../../src/routes/demo.routes.js';
-import { cookieHeader } from '../helpers/auth.js';
+import { cookieHeader, signInWithOtp } from '../helpers/auth.js';
 import { createFactories } from '../helpers/factories.js';
 import { closeDb, resetDatabase } from '../helpers/test-db.js';
 
@@ -86,11 +86,11 @@ describe('POST /api/demo/session', () => {
 
     const profile = await put({ profile: { displayName: 'Defaced', bio: 'hi', platforms: [] } });
     expect(profile.status).toBe(403);
-    expect(profile.body.error.message).toBe('The demo profile is read-only.');
+    expect(profile.body.error.message).toBe('This is read-only in the demo.');
 
     const taste = await put({ tasteProfile: { promote: ['anything'], never: [], voice: [] } });
     expect(taste.status).toBe(403);
-    expect(taste.body.error.message).toBe('The demo profile is read-only.');
+    expect(taste.body.error.message).toBe('This is read-only in the demo.');
 
     // Mixed with an allowed field, the whole write is refused.
     await put({ showReadReceipts: false, profile: { displayName: 'X', platforms: [] } }).expect(
@@ -101,6 +101,49 @@ describe('POST /api/demo/session', () => {
     expect(receipts.body.showReadReceipts).toBe(false);
     const space = await request(app).get('/api/studio/space').set('Cookie', cookie).expect(200);
     expect(space.body.displayName).not.toBe('Defaced');
+  });
+
+  it('keeps the demo media kit and rooms read-only, and leaves real owners alone', async () => {
+    const signIn = await request(app).post('/api/demo/session').send({ as: 'creator' }).expect(200);
+    const cookie = cookieHeader(signIn.headers['set-cookie']);
+    const readOnly = 'This is read-only in the demo.';
+
+    const kit = await request(app)
+      .patch('/api/spaces/mira/media-kit')
+      .set('Cookie', cookie)
+      .send({ enabled: true })
+      .expect(403);
+    expect(kit.body.error.message).toBe(readOnly);
+    const created = await request(app)
+      .post('/api/studio/communities')
+      .set('Cookie', cookie)
+      .send({ name: 'Defaced', tint: 'peach', icon: 'users' })
+      .expect(403);
+    expect(created.body.error.message).toBe(readOnly);
+    const [room] = await container.repos.communities.listBySpace(demoSpaceId);
+    const updated = await request(app)
+      .patch(`/api/studio/communities/${room?.id}`)
+      .set('Cookie', cookie)
+      .send({ name: 'Defaced' })
+      .expect(403);
+    expect(updated.body.error.message).toBe(readOnly);
+
+    const real = await signInWithOtp(app, 'owner@readonly.test', 'Real Owner');
+    await factories.space({
+      owner: { id: real.userId, email: real.email, name: 'Real Owner' },
+      handle: 'realowner',
+    });
+    // Past the guard (the media kit service itself may still answer 501 while it is a stub).
+    const realKit = await request(app)
+      .patch('/api/spaces/realowner/media-kit')
+      .set('Cookie', real.cookie)
+      .send({ enabled: true });
+    expect(realKit.status).not.toBe(403);
+    await request(app)
+      .post('/api/studio/communities')
+      .set('Cookie', real.cookie)
+      .send({ name: 'Fresh room', tint: 'peach', icon: 'users' })
+      .expect(201);
   });
 
   // CTO finding 1: every judge is the same demo fan, so the demo space gets DEMO_CAP_SCALE x pitches.
@@ -152,6 +195,7 @@ describe('POST /api/demo/session limits', () => {
   it('sizes the per-IP limits for a room of judges on one network', () => {
     expect(DEMO_SESSIONS_PER_MINUTE).toBe(30);
     expect(DEMO_SESSIONS_PER_IP_PER_HOUR).toBe(150);
+    expect(DEMO_SESSIONS_PER_HOUR).toBe(1500);
   });
 
   it('lets 25 visitors behind one IP sign in within a minute', async () => {

@@ -296,7 +296,12 @@ export function createJobs(services: Services, deps: CoreDeps): Jobs {
     group_questions: () => grouper.groupDueSpaces(new Date()),
     close_challenges: () => challengeCloser.closeOverdue(new Date()),
     email_digests: () => services.notificationEmails.sendDue(new Date()),
-    demo_reset: () => resetDemo(deps),
+    // Every reset path (tick, cron route, admin) re-warms today's briefing; the warm never throws.
+    demo_reset: async () => {
+      const result = await resetDemo(deps);
+      await warmDemoBriefing(bag);
+      return result;
+    },
     demo_briefing: () => warmDemoBriefing(bag),
     purge: () => purgeExpired(bag),
     refresh_followers: () => refreshFollowers(bag),

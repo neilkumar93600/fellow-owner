@@ -149,12 +149,13 @@ export function createLimitsService(deps: { repos: Repos }) {
       }
     },
 
-    /** 429 daily_cap_reached after 10 promote-draft generations today in the space. */
-    async assertPromoteDraftsAllowed(spaceId: string): Promise<void> {
+    /** 429 daily_cap_reached after 10 promote-draft generations today in the space (demo scaled). */
+    async assertPromoteDraftsAllowed(space: SpaceRef): Promise<void> {
+      const target = capSpaceOf(space);
       const now = new Date();
-      const limit = DAILY_CAPS.promoteDrafts;
+      const limit = dailyCap(DAILY_CAPS.promoteDrafts, target);
       const used = await repos.aiRuns.countBySpaceTaskSince(
-        spaceId,
+        target.id,
         'promoteDrafts',
         startOfUtcDay(now),
       );

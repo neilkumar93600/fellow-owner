@@ -82,7 +82,8 @@ export function isLiveAiConfigured(env: AiEnv): boolean {
 export function createAiServices(deps: CreateAiServicesDeps): AiServices {
   const accounting: AiAccounting = deps.repos.aiRuns;
   if (isLiveAiConfigured(deps.env) || deps.models) {
-    const models = deps.models ?? createAiModels(deps.env, deps.provider);
+    const models =
+      deps.models ?? createAiModels(deps.env, { ...deps.provider, logger: deps.logger });
     const ids = modelIdsFrom(deps.env);
     deps.logger.info(
       {

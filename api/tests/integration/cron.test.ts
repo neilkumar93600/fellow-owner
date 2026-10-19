@@ -1,7 +1,7 @@
 import { RETENTION_DAYS } from '@fellow-owners/shared';
 import { sql } from 'drizzle-orm';
 import request from 'supertest';
-import { afterAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
 import type { SeedData } from '../../src/db/seed/seed.js';
@@ -404,8 +404,23 @@ describe('GET|POST /api/cron/demo-reset', () => {
       posts: data.posts.length,
       pitches: data.pitches.length,
     });
-    expect(await repos.spaces.listDemo()).toHaveLength(1);
+    const [demoSpace] = await repos.spaces.listDemo();
+    expect(demoSpace).toBeDefined();
+    // The reset warmed today's briefing, so the first visitor does not wait on the model.
+    expect(await repos.digests.findBriefing(demoSpace?.id ?? '', utcDayString())).not.toBeNull();
   }, 180_000);
+
+  it('runs the demo_reset job (reset, then the briefing warm) and answers its result', async () => {
+    const result = { deleted: 1, seeded: { handle: 'mira' } };
+    const demoReset = vi.fn(async () => result);
+    const stubbed = createApp(buildContainer({ jobs: { demo_reset: demoReset } }));
+    const res = await request(stubbed)
+      .post('/api/cron/demo-reset')
+      .set('Authorization', AUTH)
+      .expect(200);
+    expect(demoReset).toHaveBeenCalledTimes(1);
+    expect(res.body).toEqual({ ok: true, ...result });
+  });
 });
 
 // ---------------------------------------------------------------- helpers

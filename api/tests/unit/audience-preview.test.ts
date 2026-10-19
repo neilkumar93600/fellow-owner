@@ -32,6 +32,16 @@ describe('scrubComment', () => {
     );
   });
 
+  it('removes Unicode handles whole', () => {
+    expect(scrubComment('@José this was great @Zoë_1')).toBe('this was great');
+  });
+
+  it('strips each word of a commenter name, not only the whole name', () => {
+    expect(scrubComment('Sarah told me, and Lee agreed', ['Sarah Lee'])).toBe(
+      'told me, and Lee agreed',
+    );
+  });
+
   it('is idempotent', () => {
     const once = scrubComment('hi @a_b call 415-555-0100 now');
     expect(scrubComment(once)).toBe(once);
@@ -149,6 +159,28 @@ describe('buildPreview', () => {
       expect(html).not.toContain(bad);
     }
     expect(html).toContain('here, mail about street food');
+  });
+
+  it('scrubs commenters out of room names and descriptions too', async () => {
+    const { html } = await buildPreview(
+      '@trips',
+      deps({
+        cluster: async () => ({
+          model: 'm',
+          communities: [
+            {
+              name: "@jane's crew",
+              description: 'Priya wants Lisbon on $60 a day, mail priya@x.com.',
+              sampleQuotes: ['Lisbon on $60 a day please'],
+            },
+          ],
+        }),
+      }),
+    );
+    expect(html).toContain('crew');
+    for (const bad of ['@jane', 'jane', 'Priya', 'priya@x.com']) {
+      expect(html).not.toContain(bad);
+    }
   });
 
   it('aborts with a readable reason and calls no AI when the data is unusable', async () => {

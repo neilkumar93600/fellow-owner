@@ -2,6 +2,7 @@ import {
   type ClickPlatform,
   type cursorQuerySchema,
   DAILY_CAPS,
+  dailyCap,
   type FanSpotlight,
   hasPublishableDraft,
   LIMITS,
@@ -348,11 +349,14 @@ export function createPromotionsService(deps: PromotionsServiceDeps) {
    * limits.assertSuggestReplyAllowed.
    * ponytail: lives here because limits.service.ts belongs to another task; move it there.
    */
-  async function assertSpotlightDraftsAllowed(spaceId: string): Promise<void> {
+  async function assertSpotlightDraftsAllowed(space: {
+    id: string;
+    isDemo: boolean;
+  }): Promise<void> {
     const now = new Date();
-    const limit = DAILY_CAPS.spotlightNote;
+    const limit = dailyCap(DAILY_CAPS.spotlightNote, space);
     const used = await repos.aiRuns.countBySpaceTaskSince(
-      spaceId,
+      space.id,
       'spotlightNote',
       startOfUtcDay(now),
     );
@@ -471,7 +475,7 @@ export function createPromotionsService(deps: PromotionsServiceDeps) {
           break;
         case 'regenerate': {
           const post = await promotablePost(space, promotion.postId);
-          await limits.assertPromoteDraftsAllowed(space.id);
+          await limits.assertPromoteDraftsAllowed(space);
           const platforms = action.platforms?.length
             ? unique(action.platforms)
             : [...PROMOTION_PLATFORMS];
@@ -523,7 +527,7 @@ export function createPromotionsService(deps: PromotionsServiceDeps) {
       const { space } = owner;
       const fan = await spotlightableFan(owner, membershipId);
       if (!deps.ai.spotlightNote) throw aiUnavailable();
-      await assertSpotlightDraftsAllowed(space.id);
+      await assertSpotlightDraftsAllowed(space);
       const [refs, communities, posts] = await Promise.all([
         repos.memberships.refs([fan.id]),
         repos.memberships.communitiesFor([fan.id]),
