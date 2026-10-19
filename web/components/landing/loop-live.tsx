@@ -222,7 +222,7 @@ function PhonePage({ step }: { step: number }) {
             kicker={`${DEMO.idea.author} in ${DEMO.idea.community}`}
             title={DEMO.idea.title}
           >
-            <p className="text-small text-ink-soft">{DEMO.idea.excerpt}</p>
+            <p className="text-small text-ink-soft">Seven days for $420 all in.</p>
             <SignalButtons
               useCount={DEMO.idea.use}
               buildCount={DEMO.idea.build}
@@ -236,9 +236,6 @@ function PhonePage({ step }: { step: number }) {
         <div className="flex flex-col gap-4 px-4 pt-14">
           <PhoneCard kicker="Your crew" title="You’re in as Photographer">
             <AvatarStack people={LIVE_CREW} />
-            <p className="text-small text-ink-soft">
-              {LIVE_CREW.map((member) => member.firstName).join(', ')}
-            </p>
           </PhoneCard>
         </div>
       );

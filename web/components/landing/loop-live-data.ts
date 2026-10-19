@@ -21,7 +21,7 @@ export const LIVE_SPACE: PublicSpace = {
   id: 'demo-space',
   handle: DEMO.creator.handle,
   displayName: DEMO.creator.name,
-  bio: DEMO.creator.bio,
+  bio: 'Slow travel and cheap flights.',
   avatarUrl: DEMO.creator.avatarUrl,
   platforms: DEMO.followers.platforms.map((entry) => ({
     platform: entry.platform,
@@ -35,11 +35,20 @@ export const LIVE_SPACE: PublicSpace = {
   mediaKitEnabled: false,
 };
 
+const SHORT_ROOM: Record<string, string> = {
+  'budget-travel': 'Real prices, cheap flights.',
+  'solo-travelers': 'Going alone, safely.',
+  'travel-photography': 'Better trip photos.',
+  'food-finds': 'Street food and local spots.',
+  'road-trips': 'Cheap campsites, van life.',
+  'slow-living': 'Staying longer, going slower.',
+};
+
 export const LIVE_ROOMS: PublicCommunity[] = DEMO.rooms.map((room, index) => ({
   id: room.slug,
   slug: room.slug,
   name: room.name,
-  description: room.description,
+  description: SHORT_ROOM[room.slug] ?? '',
   tint: room.tint,
   icon: room.icon,
   memberCount: room.members,
@@ -55,7 +64,7 @@ export const LIVE_JOINED_ROOM = budgetTravel;
 
 /** The fan's one line and the rooms the AI suggests for it (the join screen on the phone). */
 export const LIVE_JOIN = {
-  intro: 'Solo traveler from Austin. Cheap flights, street food, real prices.',
+  intro: 'Solo traveler from Austin. Real prices, street food.',
   picks: [
     { room: budgetTravel, why: 'You said real prices.' },
     { room: LIVE_ROOMS[1] ?? budgetTravel, why: 'You travel alone.' },
@@ -119,7 +128,7 @@ export const LIVE_FEED: PostCard[] = [
     type: 'project',
     status: 'forming_team',
     title: DEMO.idea.title,
-    excerpt: DEMO.idea.excerpt,
+    excerpt: 'Seven days for $420 all in.',
     author: { ...memberRef(author.name), image: author.image },
     rolesNeeded: DEMO.crew.map((member) => member.role),
     openRoles: DEMO.crew.slice(1).map((member) => member.role),
@@ -132,8 +141,8 @@ export const LIVE_FEED: PostCard[] = [
   }),
   post({
     id: 'montreal',
-    title: 'A long weekend from New York to Montreal and back for under $250',
-    excerpt: 'Bus, hostel and food for three days, with every price dated.',
+    title: 'Montreal from New York for under $250',
+    excerpt: 'Bus, hostel and food for three days.',
     author: memberRef('Dev Rao'),
     useCount: 15,
     buildCount: 1,
@@ -150,8 +159,8 @@ export const LIVE_DECISION: DecisionItem = {
   avatarUrl: author.image,
   context: DEMO.idea.community,
   title: DEMO.idea.title,
-  quote: DEMO.idea.excerpt,
-  reason: DEMO.idea.reason,
+  quote: 'Seven days in Lisbon for $420 all in.',
+  reason: 'Matches “budget-honest travel”.',
   score: DEMO.idea.fit,
   lovedAt: null,
   href: '#',

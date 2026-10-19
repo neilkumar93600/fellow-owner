@@ -42,8 +42,7 @@ export function FansSection() {
             </Reveal>
             <Reveal className={st.headSide} delay={0.08}>
               <p className={cn('text-lead', st.lead)}>
-                Your bio link opens a home for them: rooms that fit, a feed of ideas, crews to join,
-                and a way to send you something you will actually read.
+                Your bio link opens a home for them: rooms, ideas and crews.
               </p>
             </Reveal>
           </header>
@@ -60,8 +59,7 @@ export function FansSection() {
           })}
           label={
             <p className={st.demoLabel}>
-              <span className={st.demoChip}>Demo</span>
-              Your space, as a fan sees it
+              <span className={st.demoChip}>Demo</span>A fan’s view
             </p>
           }
           callout={
@@ -70,8 +68,7 @@ export function FansSection() {
                 <Timer size={22} strokeWidth={1.5} />
               </span>
               <span>
-                <strong className={st.calloutStrong}>Joining takes under a minute.</strong> It works
-                inside Instagram, TikTok and YouTube.
+                <strong className={st.calloutStrong}>Joining takes under a minute.</strong>
               </span>
             </p>
           }

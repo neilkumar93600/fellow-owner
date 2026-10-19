@@ -198,10 +198,7 @@ export function FeedScreen() {
           </span>
         </div>
         <p className={s.ideaTitle}>Lisbon on $60 a day</p>
-        <p className={s.ideaBody}>
-          Walking routes, a $9 lunch map and a one-week plan. A local guide and a photographer are
-          in. Looking for an editor.
-        </p>
+        <p className={s.ideaBody}>Walking routes, a $9 lunch map and a one-week plan.</p>
         <div className={s.signals}>
           <span className={cn(s.signal, s.signalUse)} data-fans-signal>
             <ThumbsUp strokeWidth={1.75} />
@@ -233,10 +230,7 @@ export function FeedScreen() {
           <span className={s.typeChip}>Idea</span>
         </div>
         <p className={s.ideaTitle}>Tokyo cafés under $5</p>
-        <p className={s.ideaBody}>
-          Thirty cafés where a coffee costs less than five dollars. Need a photographer and a
-          translator.
-        </p>
+        <p className={s.ideaBody}>Thirty cafés where coffee costs under $5.</p>
         <div className={s.signals}>
           <span className={s.signal}>
             <ThumbsUp strokeWidth={1.75} />
@@ -274,9 +268,7 @@ export function ProjectScreen() {
         <Face name="fan-1" className={s.avatarXs} />
         {fan.name} · Budget Travel
       </p>
-      <p className={s.projectBody}>
-        A week in Lisbon, every day under $60. Made by fans, for fans.
-      </p>
+      <p className={s.projectBody}>A week in Lisbon, every day under $60.</p>
 
       <div className={s.rowHead}>
         <p className={s.label}>Open spots</p>
@@ -291,7 +283,7 @@ export function ProjectScreen() {
           <span className={s.roleName}>Video editor</span>
           <span className={s.openPill}>Open</span>
         </div>
-        <p className={s.roleNeed}>Cut a 6-minute guide from the clips the crew has shot.</p>
+        <p className={s.roleNeed}>Cut the guide from the crew’s clips.</p>
         <span className={cn(s.primary, s.roleJoin)}>Join as Video editor</span>
       </div>
 
@@ -318,7 +310,6 @@ export function ProjectScreen() {
           <span className={s.teamName}>
             {DEMO.crew.length - 1} of {DEMO.crew.length} roles filled
           </span>
-          <span className={s.teamMeta}>Priya, Inês and Maya</span>
         </span>
       </div>
 
@@ -329,7 +320,7 @@ export function ProjectScreen() {
       <div className={s.comment}>
         <Avatar initials="SI" tint="lavender" className={s.avatarSm} />
         <p className={s.commentText}>
-          <span className={s.commentName}>Sana Iqbal</span> I’m booking Lisbon with this next month.
+          <span className={s.commentName}>Sana Iqbal</span> Booking this next month.
         </p>
       </div>
     </div>
@@ -402,7 +393,6 @@ export function DigestScreen() {
           </li>
         ))}
       </ol>
-      <p className={s.digestNote}>Demo summary. The numbers are made up.</p>
     </div>
   );
 }

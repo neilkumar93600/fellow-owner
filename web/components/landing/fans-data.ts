@@ -16,28 +16,28 @@ export const FAN_STEPS: readonly FanStep[] = [
   {
     id: 'join',
     title: 'Join in 60 seconds',
-    line: 'Fans tap your bio link, add one line about themselves, and the AI suggests the rooms that fit, with a reason for each.',
+    line: 'Fans add one line about themselves; the AI suggests rooms.',
     pageTitle: 'Join the space',
     path: `/${DEMO.creator.handle}/join`,
   },
   {
     id: 'feed',
     title: 'Share an idea',
-    line: 'Fans post ideas, others say they would use them, and you can love the best ones.',
+    line: 'Fans post ideas; you can love the best.',
     pageTitle: 'Budget Travel',
     path: `/${DEMO.creator.handle}/c/budget-travel`,
   },
   {
     id: 'team',
     title: 'Join a crew',
-    line: 'Every idea lists its open spots. A fan picks one and joins the crew.',
+    line: 'Every idea lists open spots to join.',
     pageTitle: 'Lisbon on $60 a day',
     path: `/${DEMO.creator.handle}/p/lisbon-on-60-a-day`,
   },
   {
     id: 'digest',
     title: 'Catch up in a minute',
-    line: 'Each week the AI sums up what a room talked about, so fans see the top ideas without scrolling.',
+    line: 'Each week the AI sums up what a room talked about.',
     pageTitle: 'Budget Travel',
     path: `/${DEMO.creator.handle}/c/budget-travel`,
   },
@@ -56,8 +56,7 @@ export const FAN_PICKS = LIVE_JOIN.picks.map(({ room, why }) => ({ slug: room.sl
  */
 export const DIGEST = {
   ideas: 41,
-  summary:
-    'Fans swapped real prices for hostels, trams and street food. One idea turned into a crew of four.',
+  summary: 'Fans swapped real prices for hostels, trams and street food.',
   themes: ['hostel prices', 'street food', 'solo safety'],
   top: [
     { title: DEMO.idea.title, why: 'Four roles filled', use: DEMO.idea.use },

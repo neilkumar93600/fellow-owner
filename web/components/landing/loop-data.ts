@@ -21,51 +21,51 @@ export interface StoryStep {
   alt: string;
 }
 
-const { idea, followers } = DEMO;
+const { idea } = DEMO;
 
 export const storySteps: StoryStep[] = [
   {
     id: 'followers',
-    day: 'Mon',
+    day: '',
     name: 'Followers',
     title: 'Your bio link gathers followers.',
-    line: `Your ${followers.label} followers have been one number. Until now.`,
+    line: 'Your followers are one big crowd.',
     still: 'vlog-van-coast',
     alt: 'A camper van parked above the Pacific coast at golden hour.',
   },
   {
     id: 'communities',
-    day: 'Tue',
+    day: '',
     name: 'Communities',
     title: 'Your AI twin sorts them into rooms.',
-    line: 'One link in your bio. Each fan writes one line about themselves, and the AI suggests the rooms that fit.',
+    line: 'Each fan writes one line; the AI suggests rooms.',
     still: 'vlog-hostel',
     alt: 'Travellers laughing around a table in a hostel common room.',
   },
   {
     id: 'idea',
-    day: 'Wed',
+    day: '',
     name: 'Ideas',
     title: 'Fans post ideas.',
-    line: `In ${idea.community}, ${idea.author.split(' ')[0]} shares “${idea.title}”. ${idea.use} fans say they’d use it.`,
+    line: `${idea.author.split(' ')[0]} shares “${idea.title}”.`,
     still: 'vlog-cafe',
     alt: 'A café table by a window with a laptop, a notebook and a coffee.',
   },
   {
     id: 'crew',
-    day: 'Thu',
+    day: '',
     name: 'Crews',
     title: 'A crew forms.',
-    line: 'Four fans take the open roles: a local guide, a photographer, a video editor and a planner.',
+    line: 'Four fans take the open roles.',
     still: 'vlog-lisbon',
     alt: 'A steep Lisbon street with a yellow tram in warm evening light.',
   },
   {
     id: 'featured',
-    day: 'Sun',
+    day: '',
     name: 'Featured',
     title: 'You feature it, crediting every maker.',
-    line: 'You give it your spotlight, and every maker is credited by name.',
+    line: 'Every maker is credited by name.',
     still: 'vlog-mountain',
     alt: 'Sunrise over a mountain ridge, seen from a trail.',
   },

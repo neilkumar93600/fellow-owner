@@ -81,7 +81,6 @@ function ScreenHeader({ title, subtitle }: { title: string; subtitle: string }) 
         <p className={layout.screenSub}>{subtitle}</p>
       </div>
       <div className={layout.tray}>
-        <span className={layout.demoTag}>Demo</span>
         <MiraFace />
       </div>
     </div>
@@ -93,10 +92,7 @@ function ScreenHeader({ title, subtitle }: { title: string; subtitle: string }) 
 export function TodayScreen() {
   return (
     <div className={layout.screen}>
-      <ScreenHeader
-        title={`Good morning, ${creator.firstName}`}
-        subtitle="5 things need you · about 6 min"
-      />
+      <ScreenHeader title={`Good morning, ${creator.firstName}`} subtitle="5 things need you" />
 
       <div className={styles.today}>
         <div className={styles.stack}>
@@ -149,7 +145,6 @@ export function TodayScreen() {
               <Avatar name="Sana Iqbal" />
               <span className={styles.thanksText}>
                 <span className={styles.whoName}>Sana Iqbal</span>
-                <span className={styles.whoMeta}>Rising in Solo Travelers</span>
               </span>
               <Fake className={styles.btnMini}>
                 <Star size={13} {...ICON} />
@@ -185,10 +180,7 @@ function MailCard({ row, hover }: { row: FanMailRow; hover?: boolean }) {
 export function FanMailScreen() {
   return (
     <div className={layout.screen}>
-      <ScreenHeader
-        title="Fan mail"
-        subtitle="The best of your DMs, with why each one stood out."
-      />
+      <ScreenHeader title="Fan mail" subtitle="Best matches first." />
 
       <div className={styles.tabBar}>
         {FAN_MAIL_TABS.map((tab) => (
@@ -211,7 +203,7 @@ export function FanMailScreen() {
 
       <div className={styles.toolbar}>
         <p className={styles.toolbarText}>
-          <span className="tabular">10</span> messages worth a look
+          <span className="tabular">10</span> worth a look
         </p>
         <Fake className={styles.searchSquare}>
           <Search size={17} {...ICON} />

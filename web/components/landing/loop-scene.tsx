@@ -47,8 +47,7 @@ function StepCard({ index, progress }: { index: number; progress: MotionValue<nu
       aria-labelledby={`story-${step.id}`}
     >
       <p className="text-caption text-ink-soft uppercase">
-        {pad(index + 1)} / {pad(COUNT)} · {step.name}
-        {step.day ? <span className="font-normal"> · {step.day}</span> : null}
+        {pad(index + 1)} / {pad(COUNT)}
       </p>
       <h3
         id={`story-${step.id}`}
@@ -99,10 +98,9 @@ export function LoopScene() {
 
         <div className={styles.frame}>
           <header className={cn('glass-strong', styles.head)}>
-            <p className="text-caption text-ink-soft uppercase">Example: a travel creator (demo)</p>
             <h2
               id="loop-title"
-              className="mt-1 font-display text-[1.75rem] leading-[1.05] text-ink md:text-[2.5rem]"
+              className="font-display text-[1.75rem] leading-[1.05] text-ink md:text-[2.5rem]"
             >
               How it works: <em>from follower to featured</em>
             </h2>

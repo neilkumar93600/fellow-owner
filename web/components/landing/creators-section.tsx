@@ -29,9 +29,7 @@ export function CreatorsSection() {
         {/* Decoration: the whole studio in one shot (icon rail, Today, pulse). The three zoomed screens
             below carry the meaning, so this is hidden from assistive tech and cannot take focus. */}
         <div className={styles.studio} aria-hidden="true" inert>
-          <p className={styles.studioCaption}>
-            An AI briefing that turns fan noise into five decisions
-          </p>
+          <p className={styles.studioCaption}>Fan noise in, five decisions out.</p>
           <StudioShot />
         </div>
         <CreatorsScene className={styles.inner}>
@@ -50,13 +48,11 @@ export function CreatorsSection() {
                   <br /> sorted in minutes.
                 </h2>
                 <p className={cn('text-lead', styles.lead)} data-creators-reveal>
-                  Open Today with a coffee. Your AI has already read everything, picked the cards
-                  worth your time, and written down why.
+                  Your AI reads everything and picks the cards worth your time.
                 </p>
 
                 <p className={styles.demoLabel} data-creators-reveal>
-                  <span className={styles.demoChip}>Demo</span>A demo studio. Every name and number
-                  is made up.
+                  <span className={styles.demoChip}>Demo</span>Every name and number is made up.
                 </p>
 
                 <ol className={styles.steps} data-creators-reveal>

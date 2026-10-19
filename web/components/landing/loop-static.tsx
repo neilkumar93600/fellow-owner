@@ -187,9 +187,6 @@ export function StoryVisual({ id }: { id: StoryStepId }) {
               />
             ))}
           </div>
-          <p className="text-caption font-normal text-ink-soft">
-            {storyCrew.map((member) => `${member.name.split(' ')[0]} (${member.role})`).join(', ')}
-          </p>
         </div>
       );
   }
@@ -204,7 +201,7 @@ export function LoopStatic() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 pt-20 pb-24 md:px-8 md:pt-28 md:pb-32">
       <div className="max-w-[40rem]">
-        <p className="eyebrow">Example: a travel creator (demo)</p>
+        <p className="eyebrow">{storyDisclosure}</p>
         <h2 className="mt-5 font-display text-[2.75rem] leading-[1.02] text-ink md:text-[4rem]">
           How it works: <em>from follower to featured</em>
         </h2>
@@ -227,7 +224,7 @@ export function LoopStatic() {
             </BrowserFrame>
             <div className={cn('px-4 md:col-span-6 md:px-6', index % 2 === 1 && 'md:order-1')}>
               <p className="text-caption text-ink-soft uppercase">
-                {String(index + 1).padStart(2, '0')} / 05 · {step.name}
+                {String(index + 1).padStart(2, '0')} / 05
               </p>
               <h3 className="mt-2 font-display text-[2.25rem] leading-[1.05] text-ink">
                 {step.title}
@@ -237,7 +234,6 @@ export function LoopStatic() {
           </li>
         ))}
       </ol>
-      <p className="mt-4 px-2 text-small text-ink-soft">{storyDisclosure}</p>
     </div>
   );
 }
