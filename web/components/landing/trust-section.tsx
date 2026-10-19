@@ -25,11 +25,10 @@ const STATEMENTS: Statement[] = [
   {
     Icon: HandHelping,
     title: 'The AI never acts on its own',
-    line: 'It drafts, ranks and explains. Nothing reaches a fan until you click send.',
+    line: 'Nothing reaches a fan until you send it.',
     snippet: (
       <>
-        <p className={styles.snipLabel}>Draft waiting for you</p>
-        <p className={styles.draft}>“Yes! Send me the dates and I’ll block them out.”</p>
+        <p className={styles.draft}>“Yes! Send me the dates.”</p>
         <p className={styles.row}>
           <span className={styles.sendBtn}>Send</span>
           <span className={styles.muted}>Not sent yet</span>
@@ -40,10 +39,9 @@ const STATEMENTS: Statement[] = [
   {
     Icon: EyeOff,
     title: 'Fans are never scored in public',
-    line: 'Match labels and reasons are for your eyes only. Fans see names, work and hearts, never a ranking.',
+    line: 'Match labels are for your eyes only.',
     snippet: (
       <>
-        <p className={styles.snipLabel}>What a fan sees</p>
         <p className={styles.snipTitle}>{DEMO.idea.title}</p>
         <p className={styles.muted}>
           {DEMO.idea.author} · {DEMO.idea.community}
@@ -53,7 +51,7 @@ const STATEMENTS: Statement[] = [
             <Heart size={14} strokeWidth={1.75} />
             <b className="tabular">{DEMO.idea.use}</b>
           </span>
-          <span className={styles.muted}>No match label, no rank</span>
+          <span className={styles.muted}>No rank</span>
         </p>
       </>
     ),
@@ -61,7 +59,7 @@ const STATEMENTS: Statement[] = [
   {
     Icon: ListChecks,
     title: 'Every pick shows its reason',
-    line: 'Each card says why it made the cut, in your own words, so you can check it and teach it.',
+    line: 'Each card says why it made the cut.',
     snippet: (
       <>
         <p className={styles.row}>
@@ -84,7 +82,7 @@ export function TrustSection() {
           id="trust-title"
           eyebrow="You stay in charge"
           title="Your voice. Your call."
-          lead="The AI is your assistant, not your stand-in. Your AI twin reads like you. It never speaks for you."
+          lead="Your AI twin reads like you. It never speaks for you."
         />
         <RevealGroup as="ul" className={styles.grid}>
           {STATEMENTS.map(({ Icon, title, line, snippet }) => (

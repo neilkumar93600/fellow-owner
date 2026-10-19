@@ -64,11 +64,7 @@ export function ShowcaseStrip() {
             <span className={st.badge}>Demo data</span>
           </div>
         }
-        line={
-          <p className={cn('text-lead', st.line)}>
-            Projects fan crews built in a demo creator’s space.
-          </p>
-        }
+        line={<p className={cn('text-lead', st.line)}>Built by fan crews.</p>}
       >
         <div className={st.rows}>
           <div className={st.row}>
@@ -178,7 +174,6 @@ function MadeItCard({
     <article className={st.card}>
       <div className={cn(st.cover, st.page)}>
         <div className={st.pageBand}>
-          <span className={cn('glass-chip', st.community)}>{project.community}</span>
           <span className={st.status}>
             <Check size={13} strokeWidth={2} aria-hidden="true" />
             Made it
@@ -186,14 +181,12 @@ function MadeItCard({
         </div>
         <div className={st.pageBody}>
           <CardTitle title={project.title} slug={slug} echo={echo} />
-          <p className={st.madeBy}>Made by</p>
           <ul className={st.credits}>
             {crew.map((member) => (
               <li key={member.name}>
                 <Maker name={member.name} large />
                 <span className={st.creditText}>
                   <b>{member.name}</b>
-                  <span>{member.role}</span>
                 </span>
               </li>
             ))}
@@ -233,9 +226,6 @@ function FlatCard({
   return (
     <article className={st.card}>
       <div className={cn(st.cover, st.flat)} data-tint={tint}>
-        <div className={st.coverTop}>
-          <span className={cn('glass-chip', st.community)}>{project.community}</span>
-        </div>
         <div className={st.makers}>
           <span className={st.bigStack} aria-hidden="true">
             {shown.map((name) => (
@@ -245,10 +235,6 @@ function FlatCard({
               <span className={cn(st.avatar, st.avatarLg, st.avatarMore)}>+{more}</span>
             ) : null}
           </span>
-          <p className={st.names}>
-            {project.crew.slice(0, 3).join(', ')}
-            {project.team > 3 ? ` and ${project.team - 3} more` : ''}
-          </p>
         </div>
         <CardTitle title={project.title} slug={slug} echo={echo} />
         {slug ? (

@@ -42,14 +42,14 @@ const CREATOR_TILES: Tile[] = [
   {
     id: 'voice',
     title: 'Reply in my voice',
-    line: 'A draft that sounds like you, ready in a second. You edit it, then you send it.',
+    line: 'Drafts that sound like you.',
     snippet: (
       <>
         <p className={cn(styles.bubble, styles.bubbleIn)}>
-          <b>{ines.firstName}</b> Would you walk Porto with me in October?
+          <b>{ines.firstName}</b> Walk Porto with me?
         </p>
         <p className={cn(styles.bubble, styles.bubbleOut)}>
-          Yes! Send me the dates and I’ll block them out
+          Yes! Send me the dates
           <span className={styles.dots}>
             <i />
             <i />
@@ -58,7 +58,7 @@ const CREATOR_TILES: Tile[] = [
         </p>
         <span className={styles.pillBtn}>
           <Sparkles size={14} strokeWidth={1.75} />
-          Draft in my voice
+          Draft
         </span>
       </>
     ),
@@ -66,12 +66,12 @@ const CREATOR_TILES: Tile[] = [
   {
     id: 'want',
     title: 'What fans want',
-    line: 'Repeated asks become content ideas, with a count. One tap to make it.',
+    line: 'Repeated asks become ideas.',
     snippet: (
       <>
         <p className={styles.snipLabel}>
           <Sparkles size={13} strokeWidth={1.75} />
-          AI groups repeated asks into content ideas
+          Content ideas
         </p>
         <p className={styles.wantRow}>
           <span className={styles.wantName}>Porto on $60 a day</span>
@@ -97,7 +97,7 @@ const FAN_TILES: Tile[] = [
   {
     id: 'loved',
     title: 'A heart from you',
-    line: 'Tap a heart on a post you love. The fan gets a badge and a note about it.',
+    line: 'Heart a post you love.',
     snippet: (
       <>
         <p className={styles.snipTitle}>{DEMO.idea.title}</p>
@@ -114,7 +114,7 @@ const FAN_TILES: Tile[] = [
   {
     id: 'made-it',
     title: 'Your idea made it',
-    line: 'When you feature a fan project, everyone on the crew hears about it and is credited.',
+    line: 'Featured crews get credited.',
     snippet: (
       <>
         <p className={styles.notice}>
@@ -138,7 +138,7 @@ const FAN_TILES: Tile[] = [
   {
     id: 'spotlight',
     title: 'Fan spotlight',
-    line: 'Rising fans get a shout-out on your page. The AI drafts it, and you approve it.',
+    line: 'Rising fans get a shout-out.',
     snippet: (
       <>
         <p className={styles.snipMeta}>
@@ -181,7 +181,7 @@ const FOOD_ROOM = DEMO.rooms.find((room) => room.slug === 'food-finds')?.name ??
 
 const CHALLENGE = {
   title: 'Best $10 meal in your city',
-  body: 'Tell me what it is, where it is, what it cost and why a stranger should walk there.',
+  body: 'Where is it, and what did it cost?',
   daysLeft: 5,
 } as const;
 
@@ -194,8 +194,8 @@ type Entry = {
 };
 
 const ENTRIES: Entry[] = [
-  { title: 'Brisket tacos, Austin', price: '$9.75', face: 'fan-1', Icon: Beef, tint: 'peach' },
-  { title: 'Pho and iced coffee, Houston', price: '$9.50', face: 'fan-2', Icon: Soup, tint: 'sky' },
+  { title: 'Tacos, Austin', price: '$9.75', face: 'fan-1', Icon: Beef, tint: 'peach' },
+  { title: 'Pho, Houston', price: '$9.50', face: 'fan-2', Icon: Soup, tint: 'sky' },
   {
     title: 'Plate lunch, Honolulu',
     price: '$10',
@@ -205,14 +205,14 @@ const ENTRIES: Entry[] = [
   },
   { title: 'Jollof rice, Atlanta', price: '$8', face: 'fan-4', Icon: CookingPot, tint: 'mint' },
   {
-    title: 'Hand-pulled noodles, Flushing',
+    title: 'Noodles, Flushing',
     price: '$8.50',
     face: 'fan-5',
     Icon: Salad,
     tint: 'peach',
   },
   {
-    title: 'Comida corrida, Mexico City',
+    title: 'Comida corrida, CDMX',
     price: '$5',
     face: 'fan-6',
     Icon: Sandwich,
@@ -225,17 +225,17 @@ const SHORTLIST: { entry: number; score: number; why: string }[] = [
   {
     entry: 4,
     score: 91,
-    why: 'Names the price, the place and the best hour, which is what you asked for.',
+    why: 'Names the price, place and best hour.',
   },
   {
     entry: 3,
     score: 86,
-    why: 'The owner’s story is the “why a stranger should walk there” in your brief.',
+    why: 'The owner’s story is the “why”.',
   },
   {
     entry: 5,
     score: 72,
-    why: 'The cheapest of six, with directions anyone can follow.',
+    why: 'Cheapest of six, easy directions.',
   },
 ];
 
@@ -247,10 +247,7 @@ function ChallengeBlock() {
           <h3 id="connect-challenges" className={styles.challengeTitle}>
             Challenges
           </h3>
-          <p className={styles.challengeLine}>
-            Ask your fans for something. They enter, the AI shortlists the best three and says why,
-            and you pick the winner.
-          </p>
+          <p className={styles.challengeLine}>Fans enter, the AI shortlists three, you pick.</p>
         </div>
 
         <div className={styles.challengeBody} aria-hidden="true">
@@ -270,7 +267,7 @@ function ChallengeBlock() {
               <p className={styles.briefBody}>{CHALLENGE.body}</p>
               <span className={styles.pillBtn}>
                 <Sparkles size={14} strokeWidth={1.75} />
-                Close and get the shortlist
+                Get the shortlist
               </span>
             </div>
           </div>
@@ -297,7 +294,7 @@ function ChallengeBlock() {
 
           <div className={styles.step}>
             <p className={styles.stepLabel}>
-              <span>3</span> AI shortlist, with reasons
+              <span>3</span> AI shortlist
             </p>
             <ol className={cn(styles.snippet, styles.picks)}>
               {SHORTLIST.map(({ entry, score, why }, index) => {
@@ -334,9 +331,9 @@ export function ConnectSection() {
           id="connect-title"
           eyebrow="New ways to connect"
           title="Closer to your fans, in small moments."
-          lead="Tools that save you time, a way to ask your fans for more, and moments that make a fan feel seen. The AI drafts, and you decide."
+          lead="Your AI twin drafts. You decide."
         />
-        <p className={styles.demoNote}>Demo data: every name and number here is made up.</p>
+        <p className={styles.demoNote}>Demo data: all made up.</p>
 
         <h3 className={styles.groupLabel}>For you</h3>
         <TileGrid tiles={CREATOR_TILES} columns={2} />
