@@ -1,4 +1,4 @@
-import { DAILY_CAPS, HOURLY_CAPS, LIMITS } from '@fellow-owners/shared';
+import { DAILY_CAPS, dailyCap, HOURLY_CAPS, LIMITS } from '@fellow-owners/shared';
 import type { DbOrTx } from '../db/client.js';
 import { addDays, HOUR_MS, hoursAgo, startOfUtcDay } from '../lib/dates.js';
 import { dailyCapReached, rateLimited } from '../lib/errors.js';
@@ -12,12 +12,22 @@ import type { Repos } from '../repositories/index.js';
  * - promote drafts: 10 per space per UTC day, counted in ai_runs
  * - briefing regenerations: 5 per space per UTC day (digests.regenerations)
  *
+ * The demo space (shared by every visitor) gets each daily cap x DEMO_CAP_SCALE (shared dailyCap);
+ * real spaces keep the numbers above.
+ *
  * Exactness under concurrency: callers check a daily cap inside the same transaction as the
  * insert, after `lockWrites` (an advisory lock on space + user), so two parallel requests cannot
  * both take the last slot.
  */
 
 export type DailyCapKind = 'posts' | 'pitches' | 'comments';
+
+/** What a cap needs to know about the space; a bare id (legacy callers) reads as a real space. */
+type CapSpace = { isDemo: boolean };
+const NOT_DEMO: CapSpace = { isDemo: false };
+type SpaceRef = string | ({ id: string } & CapSpace);
+const capSpaceOf = (space: SpaceRef) =>
+  typeof space === 'string' ? { id: space, ...NOT_DEMO } : space;
 
 export interface CapDetails {
   limit: number;
@@ -36,8 +46,12 @@ export function nextUtcMidnight(now: Date = new Date()): Date {
 }
 
 /** The message shown under the post/pitch form (03 §7 "Daily cap reached"). */
-export function dailyCapMessage(kind: DailyCapKind, spaceName: string): string {
-  const limit = DAILY_CAPS[kind];
+export function dailyCapMessage(
+  kind: DailyCapKind,
+  spaceName: string,
+  space: CapSpace = NOT_DEMO,
+): string {
+  const limit = dailyCap(DAILY_CAPS[kind], space);
   switch (kind) {
     case 'pitches':
       return `You've reached today's limit of ${limit} pitches to ${spaceName}. Try again tomorrow.`;
@@ -72,15 +86,20 @@ export function createLimitsService(deps: { repos: Repos }) {
   return {
     usedToday,
 
-    /** Slots left today for one kind (MySpace.caps). A missing membership has used none. */
+    /**
+     * Slots left today for one kind (MySpace.caps). A missing membership has used none.
+     * Pass the space row (not its id) so the demo space shows its scaled cap.
+     */
     async leftToday(
       kind: DailyCapKind,
-      spaceId: string,
+      space: SpaceRef,
       membershipId: string | null,
       tx?: DbOrTx,
     ): Promise<number> {
-      if (!membershipId) return DAILY_CAPS[kind];
-      return remaining(DAILY_CAPS[kind], await usedToday(kind, spaceId, membershipId, tx));
+      const target = capSpaceOf(space);
+      const limit = dailyCap(DAILY_CAPS[kind], target);
+      if (!membershipId) return limit;
+      return remaining(limit, await usedToday(kind, target.id, membershipId, tx));
     },
 
     /** Serializes one user's capped writes in a space for the rest of transaction `tx`. */
@@ -94,20 +113,20 @@ export function createLimitsService(deps: { repos: Repos }) {
      */
     async assertDailyCap(
       kind: DailyCapKind,
-      space: { id: string; displayName: string },
+      space: { id: string; displayName: string } & CapSpace,
       membershipId: string,
       tx?: DbOrTx,
     ): Promise<void> {
       const now = new Date();
       const used = await usedToday(kind, space.id, membershipId, tx, now);
-      const limit = DAILY_CAPS[kind];
+      const limit = dailyCap(DAILY_CAPS[kind], space);
       if (used >= limit) {
         const details: CapDetails = {
           limit,
           used,
           resetsAt: nextUtcMidnight(now).toISOString(),
         };
-        throw dailyCapReached(dailyCapMessage(kind, space.displayName), details);
+        throw dailyCapReached(dailyCapMessage(kind, space.displayName, space), details);
       }
     },
 
@@ -153,11 +172,12 @@ export function createLimitsService(deps: { repos: Repos }) {
     },
 
     /** 429 daily_cap_reached after DAILY_CAPS.suggestReply reply drafts today in the space. */
-    async assertSuggestReplyAllowed(spaceId: string): Promise<void> {
+    async assertSuggestReplyAllowed(space: SpaceRef): Promise<void> {
+      const target = capSpaceOf(space);
       const now = new Date();
-      const limit = DAILY_CAPS.suggestReply;
+      const limit = dailyCap(DAILY_CAPS.suggestReply, target);
       const used = await repos.aiRuns.countBySpaceTaskSince(
-        spaceId,
+        target.id,
         'suggestReply',
         startOfUtcDay(now),
       );
@@ -174,14 +194,20 @@ export function createLimitsService(deps: { repos: Repos }) {
       }
     },
 
-    /** Briefing regenerations left today (digests.regenerations, max 5). */
-    regenerationsLeft(regenerations: number | null | undefined): number {
-      return remaining(LIMITS.briefing.regenerationsPerDay, regenerations ?? 0);
+    /** Briefing regenerations left today (digests.regenerations, max 5; demo space scaled). */
+    regenerationsLeft(
+      regenerations: number | null | undefined,
+      space: CapSpace = NOT_DEMO,
+    ): number {
+      return remaining(dailyCap(LIMITS.briefing.regenerationsPerDay, space), regenerations ?? 0);
     },
 
-    /** 429 daily_cap_reached when today's briefing was already regenerated 5 times. */
-    assertRegenerationAllowed(regenerations: number | null | undefined): void {
-      const limit = LIMITS.briefing.regenerationsPerDay;
+    /** 429 daily_cap_reached when today's briefing was already regenerated 5 times (demo scaled). */
+    assertRegenerationAllowed(
+      regenerations: number | null | undefined,
+      space: CapSpace = NOT_DEMO,
+    ): void {
+      const limit = dailyCap(LIMITS.briefing.regenerationsPerDay, space);
       const used = regenerations ?? 0;
       if (used >= limit) {
         const details: CapDetails = {

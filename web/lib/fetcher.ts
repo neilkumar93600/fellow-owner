@@ -6,6 +6,8 @@ export class ApiError extends Error {
     readonly code: string,
     message: string,
     readonly details?: unknown,
+    /** Retry-After in seconds, when a 429 or 503 sent one. */
+    readonly retryAfterSeconds?: number,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -48,9 +50,16 @@ export async function apiFetch<T>(
       body?.error?.code ?? 'internal_error',
       body?.error?.message ?? 'Something went wrong.',
       body?.error?.details,
+      retryAfterSeconds(response.headers.get('Retry-After')),
     );
   }
   return data as T;
+}
+
+/** The seconds form of Retry-After; the HTTP-date form (never sent by our API) reads as unknown. */
+function retryAfterSeconds(value: string | null): number | undefined {
+  const seconds = value === null ? Number.NaN : Number(value);
+  return Number.isFinite(seconds) && seconds > 0 ? seconds : undefined;
 }
 
 function safeJson(text: string): unknown {

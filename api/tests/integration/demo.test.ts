@@ -1,3 +1,9 @@
+import {
+  DAILY_CAPS,
+  DEMO_AI_DAILY_TOKEN_BUDGET,
+  DEMO_CAP_SCALE,
+  LIMITS,
+} from '@fellow-owners/shared';
 import request from 'supertest';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { ensureDemoUsers } from '../../src/auth/demo.js';
@@ -25,10 +31,22 @@ afterAll(async () => {
 });
 
 describe('POST /api/demo/session', () => {
+  let demoSpaceId: string;
   beforeAll(async () => {
     await resetDatabase();
     const demo = await ensureDemoUsers(container.auth, container.env);
-    await factories.space({ owner: demo.creator, handle: 'mira', isDemo: true });
+    demoSpaceId = (await factories.space({ owner: demo.creator, handle: 'mira', isDemo: true }))
+      .space.id;
+  });
+
+  it('gives the demo space DEMO_AI_DAILY_TOKEN_BUDGET and real spaces their own budget', async () => {
+    const demo = await container.repos.aiRuns.budgetState(demoSpaceId);
+    expect(demo).toMatchObject({ budget: DEMO_AI_DAILY_TOKEN_BUDGET, isDemo: true });
+    const real = await factories.space({ handle: 'realbudget' });
+    const own = await container.repos.aiRuns.budgetState(real.space.id);
+    expect(own).toMatchObject({ budget: LIMITS.ai.defaultDailyTokenBudget, isDemo: false });
+    expect(await container.repos.aiRuns.isDemoSpace(demoSpaceId)).toBe(true);
+    expect(await container.repos.aiRuns.isDemoSpace(real.space.id)).toBe(false);
   });
 
   it('signs in the demo creator and sends them to Today', async () => {
@@ -59,6 +77,55 @@ describe('POST /api/demo/session', () => {
     expect(res.body.error.code).toBe('validation_error');
   });
 
+  // CTO finding 3: the demo creator's profile is the public /mira page.
+  it('keeps the demo profile read-only but lets studio-only settings save', async () => {
+    const signIn = await request(app).post('/api/demo/session').send({ as: 'creator' }).expect(200);
+    const cookie = cookieHeader(signIn.headers['set-cookie']);
+    const put = (body: object) =>
+      request(app).put('/api/studio/settings').set('Cookie', cookie).send(body);
+
+    const profile = await put({ profile: { displayName: 'Defaced', bio: 'hi', platforms: [] } });
+    expect(profile.status).toBe(403);
+    expect(profile.body.error.message).toBe('The demo profile is read-only.');
+
+    const taste = await put({ tasteProfile: { promote: ['anything'], never: [], voice: [] } });
+    expect(taste.status).toBe(403);
+    expect(taste.body.error.message).toBe('The demo profile is read-only.');
+
+    // Mixed with an allowed field, the whole write is refused.
+    await put({ showReadReceipts: false, profile: { displayName: 'X', platforms: [] } }).expect(
+      403,
+    );
+
+    const receipts = await put({ showReadReceipts: false }).expect(200);
+    expect(receipts.body.showReadReceipts).toBe(false);
+    const space = await request(app).get('/api/studio/space').set('Cookie', cookie).expect(200);
+    expect(space.body.displayName).not.toBe('Defaced');
+  });
+
+  // CTO finding 1: every judge is the same demo fan, so the demo space gets DEMO_CAP_SCALE x pitches.
+  it('lets the shared demo fan pitch past the real-space cap', async () => {
+    const signIn = await request(app).post('/api/demo/session').send({ as: 'fan' }).expect(200);
+    const cookie = cookieHeader(signIn.headers['set-cookie']);
+    const body = {
+      type: 'collab',
+      subject: 'Partnership on a travel series',
+      body: 'We would love to partner with you on a budget travel series for fans next month.',
+      links: [],
+    };
+    for (let i = 0; i <= DAILY_CAPS.pitches; i += 1) {
+      await request(app)
+        .post('/api/spaces/mira/pitches')
+        .set('Cookie', cookie)
+        .send(body)
+        .expect(201);
+    }
+    const me = await request(app).get('/api/spaces/mira/me').set('Cookie', cookie).expect(200);
+    expect(me.body.caps.pitchesLeftToday).toBe(
+      DAILY_CAPS.pitches * DEMO_CAP_SCALE - DAILY_CAPS.pitches - 1,
+    );
+  });
+
   it('answers 403 demo_disabled when DEMO_ENABLED=false', async () => {
     const res = await request(disabled)
       .post('/api/demo/session')
@@ -80,6 +147,31 @@ describe('POST /api/demo/session limits', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  it('sizes the per-IP limits for a room of judges on one network', () => {
+    expect(DEMO_SESSIONS_PER_MINUTE).toBe(30);
+    expect(DEMO_SESSIONS_PER_IP_PER_HOUR).toBe(150);
+  });
+
+  it('lets 25 visitors behind one IP sign in within a minute', async () => {
+    start('2031-01-01T00:00:00Z');
+    for (let i = 0; i < 25; i += 1) {
+      await post('203.0.113.90', { as: i % 2 ? 'fan' : 'creator' }).expect(200);
+    }
+  });
+
+  it('answers a 429 with Retry-After once one IP passes the minute limit', async () => {
+    start('2031-02-01T00:00:00Z');
+    const ip = '203.0.113.91';
+    for (let i = 0; i < DEMO_SESSIONS_PER_MINUTE; i += 1) {
+      await post(ip, { as: 'admin' }).expect(400);
+    }
+    const res = await post(ip, { as: 'creator' }).expect(429);
+    expect(res.body.error.code).toBe('rate_limited');
+    const retryAfter = Number(res.headers['retry-after']);
+    expect(retryAfter).toBeGreaterThan(0);
+    expect(retryAfter).toBeLessThanOrEqual(60);
   });
 
   it(`limits one IP to ${DEMO_SESSIONS_PER_IP_PER_HOUR} an hour across minute windows`, async () => {

@@ -92,10 +92,21 @@ export function createStudioRoutes(container: Container): Router {
     platform.setupSuggestions,
   );
   router.get('/space', owner, controller.getSpace);
+  // The demo creator's profile is the public /mira page every visitor sees: read-only. Settings
+  // that only affect the studio (showReadReceipts) still save.
+  const demoProfileReadOnly: RequestHandler = (req, _res, next) => {
+    const body = req.body as { profile?: unknown; tasteProfile?: unknown };
+    const touchesProfile = body.profile !== undefined || body.tasteProfile !== undefined;
+    if (touchesProfile && isDemoEmail(container.env, sessionOf(req).user.email)) {
+      throw forbidden('The demo profile is read-only.');
+    }
+    next();
+  };
   router.put(
     '/settings',
     owner,
     validate({ body: updateSettingsSchema }),
+    demoProfileReadOnly,
     controller.updateSettings,
   );
 

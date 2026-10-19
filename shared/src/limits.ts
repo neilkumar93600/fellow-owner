@@ -178,6 +178,20 @@ export const DAILY_CAPS = {
   spotlightNote: 30,
 } as const;
 
+/**
+ * The demo space is shared by every visitor (one creator, one fan), so its per-user and per-space
+ * caps are this many times the real ones. Real spaces keep the base caps.
+ */
+export const DEMO_CAP_SCALE = 5;
+
+/** The demo space's daily AI token budget, in place of spaces.ai_daily_token_budget. */
+export const DEMO_AI_DAILY_TOKEN_BUDGET = 1_000_000;
+
+/** A cap for `space`: `base`, or `base * DEMO_CAP_SCALE` in the demo space. */
+export function dailyCap(base: number, space: { isDemo: boolean }): number {
+  return space.isDemo ? base * DEMO_CAP_SCALE : base;
+}
+
 /** Rolling-hour caps per user, counted from ai_runs. */
 export const HOURLY_CAPS = {
   suggestCommunities: 10,

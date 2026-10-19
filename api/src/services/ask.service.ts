@@ -2,6 +2,7 @@ import {
   type AskAiRequestInput,
   type AskAnswer,
   type AskCitation,
+  dailyCap,
   LIMITS,
 } from '@fellow-owners/shared';
 import type { AskAiInput } from '../ai/types.js';
@@ -27,14 +28,27 @@ const key = (refType: string, refId: string) => `${refType}:${refId}`;
  * F13 Ask your AI (owner only): embeds the question, takes the LIMITS.ask.matches nearest posts
  * and pitches of the caller's space, and has the smart model answer from those alone. Citations
  * are checked against the matched set (anything else is dropped and the answer renumbered).
- * LIMITS.ask.perDay questions a day, counted from ai_runs as the question embeddings (task
- * embedItem, ref_type 'ask'): every question costs one, answered or not.
+ * LIMITS.ask.perDay questions a day (x DEMO_CAP_SCALE in the shared demo space), counted from
+ * ai_runs: the question embeddings that succeeded (task embedItem, ref_type 'ask', status ok)
+ * minus the answers that failed (task askAI, ref_type 'ask', status error). A question the AI
+ * could not answer costs nothing; TASK_CAPS (every attempt counts) still bound retries.
  */
 export function createAskService({ repos, ai }: AskServiceDeps) {
-  const usedToday = (spaceId: string, now: Date) =>
-    repos.aiRuns.countBySpaceTaskSince(spaceId, 'embedItem', startOfUtcDay(now), {
-      refType: ASK_REF_TYPE,
-    });
+  async function usedToday(spaceId: string, now: Date): Promise<number> {
+    const since = startOfUtcDay(now);
+    const [asked, failed] = await Promise.all([
+      repos.aiRuns.countBySpaceTaskSince(spaceId, 'embedItem', since, {
+        refType: ASK_REF_TYPE,
+        status: 'ok',
+      }),
+      // Includes a reserved row still in flight ('in progress' reads as error) for a moment.
+      repos.aiRuns.countBySpaceTaskSince(spaceId, 'askAI', since, {
+        refType: ASK_REF_TYPE,
+        status: 'error',
+      }),
+    ]);
+    return Math.max(0, asked - failed);
+  }
 
   async function nearestMatches(spaceId: string, vector: number[]): Promise<Match[]> {
     const k = LIMITS.ask.matches;
@@ -82,7 +96,7 @@ export function createAskService({ repos, ai }: AskServiceDeps) {
       if (!space || space.id !== spaceId) throw notFound('Space');
 
       const now = new Date();
-      const limit = LIMITS.ask.perDay;
+      const limit = dailyCap(LIMITS.ask.perDay, space);
       const used = await usedToday(space.id, now);
       if (used >= limit) {
         throw dailyCapReached(`You've asked ${limit} questions today. Try again tomorrow.`, {
@@ -105,7 +119,7 @@ export function createAskService({ repos, ai }: AskServiceDeps) {
 
       const output = await ai.askAI(
         { question, creatorName: space.displayName, tasteProfile: space.tasteProfile, matches },
-        ctx,
+        { ...ctx, refType: ASK_REF_TYPE },
       );
 
       // Keep only citations from the matched set (titles from our rows, not the model's), then

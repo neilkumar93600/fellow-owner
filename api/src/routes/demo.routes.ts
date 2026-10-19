@@ -5,10 +5,13 @@ import { noStore } from '../lib/http.js';
 import { createCap, createRateLimit } from '../middlewares/rate-limit.js';
 import { validate } from '../middlewares/validate.js';
 
-/** Demo sign-ins one IP may start per minute. */
-export const DEMO_SESSIONS_PER_MINUTE = 10;
-/** Demo sign-ins one IP may start per hour, so one client can use only a small share of the cap. */
-export const DEMO_SESSIONS_PER_IP_PER_HOUR = 20;
+/**
+ * Demo sign-ins one IP may start per minute. Sized for a room of judges behind one NAT (a venue
+ * or office network), not one person.
+ */
+export const DEMO_SESSIONS_PER_MINUTE = 30;
+/** Demo sign-ins one IP may start per hour: half the global cap, so one network cannot drain it. */
+export const DEMO_SESSIONS_PER_IP_PER_HOUR = 150;
 /** Demo sign-ins per hour in all: the per-IP limit alone can be dodged with a forged IP. */
 export const DEMO_SESSIONS_PER_HOUR = 300;
 

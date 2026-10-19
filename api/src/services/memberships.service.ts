@@ -321,8 +321,8 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
           }),
           repos.teams.listByMembership(space.id, membership.id),
           repos.pitches.listBySender(space.id, membership.id, { limit: MY_SPACE_FIRST_PAGE }),
-          limits.leftToday('posts', space.id, membership.id),
-          limits.leftToday('pitches', space.id, membership.id),
+          limits.leftToday('posts', space, membership.id),
+          limits.leftToday('pitches', space, membership.id),
         ]);
 
       const pitches = await pitchViews(space, pitchRows);

@@ -1,4 +1,4 @@
-import { type CoachRequestInput, type CoachResult, LIMITS } from '@fellow-owners/shared';
+import { type CoachRequestInput, type CoachResult, dailyCap, LIMITS } from '@fellow-owners/shared';
 import { plainLine } from '../ai/guard.js';
 import { isAiUnavailable } from '../ai/types.js';
 import type { CoreDeps } from '../container.js';
@@ -16,7 +16,8 @@ const LIMIT_MESSAGE = 'You have used all of today’s coach checks. They reset t
 /**
  * F30 Idea Coach: clarity checks on a pitch or post draft. Any signed-in user may check a pitch
  * (their first pitch creates the membership); only members may check a post. Per-user cap
- * LIMITS.coach.perDay (ai_runs, task `coach`); the call never touches the space's AI budget.
+ * LIMITS.coach.perDay (x DEMO_CAP_SCALE in the shared demo space; ai_runs, task `coach`); the call
+ * never touches the space's AI budget.
  */
 export function createCoachService({ repos, ai, access }: CoachServiceDeps) {
   const usedToday = (userId: string) =>
@@ -36,7 +37,8 @@ export function createCoachService({ repos, ai, access }: CoachServiceDeps) {
         throw forbidden('Join this space to check a post');
       }
 
-      if ((await usedToday(userId)) >= LIMITS.coach.perDay) {
+      const limit = dailyCap(LIMITS.coach.perDay, space);
+      if ((await usedToday(userId)) >= limit) {
         throw rateLimited(LIMIT_MESSAGE, { checksLeftToday: 0 });
       }
 
@@ -51,7 +53,7 @@ export function createCoachService({ repos, ai, access }: CoachServiceDeps) {
           { spaceId: space.id, userId },
         );
         const used = await usedToday(userId);
-        return { ...result, checksLeftToday: Math.max(0, LIMITS.coach.perDay - used) };
+        return { ...result, checksLeftToday: Math.max(0, limit - used) };
       } catch (error) {
         // The AI's own per-user or per-space cap: tell the client it is out of checks.
         if (isAiUnavailable(error) && error.reason === 'cap') {

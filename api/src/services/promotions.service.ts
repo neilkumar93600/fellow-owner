@@ -494,7 +494,7 @@ export function createPromotionsService(deps: PromotionsServiceDeps) {
       if (!pitch) throw notFound('Pitch');
       if (pitch.status === 'withdrawn') throw conflict('This pitch was withdrawn by the sender');
       if (!deps.ai.suggestReply) throw aiUnavailable();
-      await limits.assertSuggestReplyAllowed(space.id);
+      await limits.assertSuggestReplyAllowed(space);
       try {
         const { reply } = await deps.ai.suggestReply(
           {

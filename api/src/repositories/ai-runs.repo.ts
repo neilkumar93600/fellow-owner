@@ -1,3 +1,4 @@
+import { DEMO_AI_DAILY_TOKEN_BUDGET } from '@fellow-owners/shared';
 import { and, count, eq, gte, lt, notInArray, sql } from 'drizzle-orm';
 import { type AiAccounting, type AiRunResult, BUDGET_EXEMPT_TASKS } from '../ai/run.js';
 import type { Db, DbOrTx } from '../db/client.js';
@@ -6,12 +7,14 @@ import { spaces } from '../db/schema/spaces.js';
 import { startOfUtcDay } from '../lib/dates.js';
 
 export interface AiBudgetState {
-  /** spaces.ai_daily_token_budget */
+  /** spaces.ai_daily_token_budget, or DEMO_AI_DAILY_TOKEN_BUDGET for the demo space. */
   budget: number;
   /** input + output tokens of today's (UTC) ai_runs for the space. */
   used: number;
   /** used >= budget: "AI paused until tomorrow". */
   paused: boolean;
+  /** spaces.is_demo (the demo space gets scaled caps, ai/run.ts). Absent reads as false. */
+  isDemo?: boolean;
 }
 
 export function createAiRunsRepo(db: Db) {
@@ -46,13 +49,23 @@ export function createAiRunsRepo(db: Db) {
     tx: DbOrTx = db,
   ): Promise<AiBudgetState> {
     const [space] = await tx
-      .select({ budget: spaces.aiDailyTokenBudget })
+      .select({ budget: spaces.aiDailyTokenBudget, isDemo: spaces.isDemo })
       .from(spaces)
       .where(eq(spaces.id, spaceId))
       .limit(1);
-    const budget = space?.budget ?? 0;
+    const isDemo = space?.isDemo ?? false;
+    const budget = isDemo ? DEMO_AI_DAILY_TOKEN_BUDGET : (space?.budget ?? 0);
     const used = await tokensUsedSince(spaceId, startOfUtcDay(now), tx);
-    return { budget, used, paused: used >= budget };
+    return { budget, used, paused: used >= budget, isDemo };
+  }
+
+  async function isDemoSpace(spaceId: string, tx: DbOrTx = db): Promise<boolean> {
+    const [space] = await tx
+      .select({ isDemo: spaces.isDemo })
+      .from(spaces)
+      .where(eq(spaces.id, spaceId))
+      .limit(1);
+    return space?.isDemo ?? false;
   }
 
   async function countByUserTaskSince(
@@ -80,7 +93,7 @@ export function createAiRunsRepo(db: Db) {
     spaceId: string,
     task: string,
     since: Date,
-    { refType }: { refType?: string } = {},
+    { refType, status }: { refType?: string; status?: 'ok' | 'error' } = {},
     tx: DbOrTx = db,
   ): Promise<number> {
     const [row] = await tx
@@ -92,6 +105,7 @@ export function createAiRunsRepo(db: Db) {
           eq(aiRuns.task, task),
           gte(aiRuns.createdAt, since),
           refType ? eq(aiRuns.refType, refType) : undefined,
+          status ? eq(aiRuns.status, status) : undefined,
         ),
       );
     return row?.n ?? 0;
@@ -102,6 +116,7 @@ export function createAiRunsRepo(db: Db) {
     return {
       insert: (values) => insert(values, tx),
       budgetState: (spaceId, now) => budgetState(spaceId, now, tx),
+      isDemoSpace: (spaceId) => isDemoSpace(spaceId, tx),
       countByUserTaskSince: (userId, task, since) =>
         countByUserTaskSince(userId, task, since, {}, tx),
       countBySpaceTaskSince: (spaceId, task, since) =>
@@ -150,6 +165,9 @@ export function createAiRunsRepo(db: Db) {
 
     /** Today's usage vs the space budget (budget check, Overview.aiPaused). */
     budgetState,
+
+    /** spaces.is_demo, for the demo-scaled AI caps (ai/run.ts). */
+    isDemoSpace,
 
     /** Per-user task cap (e.g. suggestCommunities 10/hour). Every attempt counts. */
     countByUserTaskSince,
