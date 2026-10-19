@@ -15,7 +15,7 @@ export function AuthPanel() {
       className="relative hidden min-w-0 overflow-hidden rounded-2xl bg-[linear-gradient(180deg,#bfe0f2_0%,#f6e3cf_55%,#f4efe4_100%)] lg:block"
     >
       <Image
-        src="/atlas/poster-mobile.webp"
+        src="/creator/hero-scenery-mobile.webp"
         alt=""
         fill
         sizes="50vw"
