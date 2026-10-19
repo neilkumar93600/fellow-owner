@@ -37,7 +37,7 @@ export const storySteps: StoryStep[] = [
     id: 'communities',
     day: 'Tue',
     name: 'Communities',
-    title: 'AI sorts them into rooms.',
+    title: 'Your AI twin sorts them into rooms.',
     line: 'One link in your bio. Each fan writes one line about themselves, and the AI suggests the rooms that fit.',
     still: 'vlog-hostel',
     alt: 'Travellers laughing around a table in a hostel common room.',

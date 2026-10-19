@@ -84,7 +84,7 @@ export function TrustSection() {
           id="trust-title"
           eyebrow="You stay in charge"
           title="Your voice. Your call."
-          lead="The AI is your assistant, not your stand-in."
+          lead="The AI is your assistant, not your stand-in. Your AI twin reads like you. It never speaks for you."
         />
         <RevealGroup as="ul" className={styles.grid}>
           {STATEMENTS.map(({ Icon, title, line, snippet }) => (

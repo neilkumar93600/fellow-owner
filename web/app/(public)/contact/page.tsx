@@ -72,7 +72,14 @@ const CHANNELS: readonly Channel[] = [
   },
 ];
 
-export default function Page() {
+const FOUNDING_PREFILL = "I'd like to be a founding creator. My main channel: ";
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ topic?: string | string[] }>;
+}) {
+  const { topic } = await searchParams;
   return (
     <PageFrame>
       <header className="max-w-[68ch]">
@@ -120,7 +127,7 @@ export default function Page() {
         })}
       </ul>
 
-      <ContactForm />
+      <ContactForm initialMessage={topic === 'founding' ? FOUNDING_PREFILL : ''} />
 
       <section aria-labelledby="post-title" className="mt-5 rounded-panel glass p-6">
         <h2 id="post-title" className="text-h2 text-ink">

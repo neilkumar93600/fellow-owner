@@ -6,7 +6,6 @@ import st from './cta.module.css';
 import { CtaStage } from './cta-motion';
 import { CtaOrbit } from './cta-orbit';
 import { DemoButton } from './demo-button';
-import { DEMO } from './demo-data';
 
 /*
  * Closing CTA, the landing's last section, directly above the footer: "Fans orbit". Centered headline
@@ -15,11 +14,7 @@ import { DEMO } from './demo-data';
  * button (data-rainbow-cta, a legacy name, tells the navbar to step back to glass while it shows).
  */
 
-const STATS = [
-  { value: DEMO.followers.label, label: 'followers' },
-  { value: String(DEMO.rooms.length), label: 'rooms' },
-  { value: DEMO.members.toLocaleString('en-US'), label: 'fans' },
-] as const;
+const STATS = ['1 link', 'Rooms for every interest', 'About 10 minutes a day'] as const;
 
 function delay(ms: number) {
   return { '--d': `${ms}ms` } as React.CSSProperties;
@@ -70,15 +65,20 @@ export function DemoCta() {
           </div>
 
           <div className={cn(st.statsWrap, st.rise)} data-cta-reveal="rise" style={delay(320)}>
-            <ul className={st.stats}>
+            <ul className={cn(st.stats, 'flex-wrap gap-y-2')}>
               {STATS.map((s) => (
-                <li key={s.label} className={st.stat}>
-                  <span className={cn(st.statValue, 'tabular')}>{s.value}</span>
-                  <span className={st.statLabel}>{s.label}</span>
+                <li key={s} className={cn(st.stat, 'max-sm:border-l-0!')}>
+                  <span className={cn(st.statValue, 'text-base! sm:text-xl!')}>{s}</span>
                 </li>
               ))}
             </ul>
-            <p className={st.note}>Demo numbers from {DEMO.creator.firstName}&rsquo;s space.</p>
+            <p className={st.note}>
+              Founding creators: we set it up with you and ship one change you ask for within 48
+              hours.{' '}
+              <Link href="/contact?topic=founding" className="underline">
+                Apply
+              </Link>
+            </p>
           </div>
         </div>
       </CtaStage>

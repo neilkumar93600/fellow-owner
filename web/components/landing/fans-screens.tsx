@@ -106,9 +106,7 @@ export function JoinScreen() {
         <Face name="mira-portrait" className={s.miniAvatar} />
         <span className={s.miniText}>
           <span className={s.miniName}>{creator.name}</span>
-          <span className={s.miniMeta}>
-            @{creator.handle} · <span className="tabular">{creator.followers}</span> followers
-          </span>
+          <span className={s.miniMeta}>@{creator.handle}</span>
         </span>
       </div>
 

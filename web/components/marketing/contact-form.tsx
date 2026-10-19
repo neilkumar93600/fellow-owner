@@ -10,10 +10,10 @@ import { ApiError } from '@/lib/fetcher';
 const S = LIMITS.support;
 
 /** The contact form on /contact. POST /api/support/requests; the hidden `website` field is a honeypot. */
-export function ContactForm() {
+export function ContactForm({ initialMessage = '' }: { initialMessage?: string }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(initialMessage);
   const [website, setWebsite] = useState('');
   const [errors, setErrors] = useState<{ email?: string; message?: string; form?: string }>({});
   const [pending, setPending] = useState(false);
