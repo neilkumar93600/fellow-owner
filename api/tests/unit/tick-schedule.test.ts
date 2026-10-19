@@ -7,6 +7,7 @@ const HOURLY = [
   'close_challenges',
   'email_digests',
   'planner_reminders',
+  'demo_briefing',
 ];
 
 /** 2026-10-12 is a Monday. */
@@ -21,8 +22,28 @@ describe('dueJobs (the schedule, UTC)', () => {
     expect(dueJobs(at('2026-10-13T06:00:00Z'))).toEqual([...HOURLY, 'refresh_followers']);
   });
 
-  it('adds demo_reset and purge at 09:00, at any minute of that hour', () => {
-    expect(dueJobs(at('2026-10-13T09:42:10Z'))).toEqual([...HOURLY, 'demo_reset', 'purge']);
+  it('runs demo_reset at 01:00 (before demo_briefing, so the warm job sees the new space)', () => {
+    expect(dueJobs(at('2026-10-13T01:42:10Z'))).toEqual([
+      'sweep',
+      'group_questions',
+      'close_challenges',
+      'email_digests',
+      'planner_reminders',
+      'demo_reset',
+      'demo_briefing',
+    ]);
+  });
+
+  it('adds only purge at 09:00 (the demo reset moved to 01:00)', () => {
+    const due = dueJobs(at('2026-10-13T09:42:10Z'));
+    expect(due).toEqual([...HOURLY, 'purge']);
+    expect(due).not.toContain('demo_reset');
+  });
+
+  it('runs demo_briefing every hour', () => {
+    for (let hour = 0; hour < 24; hour++) {
+      expect(dueJobs(new Date(Date.UTC(2026, 9, 13, hour)))).toContain('demo_briefing');
+    }
   });
 
   it('adds community_digests on Monday at 13:00 only', () => {
@@ -50,12 +71,12 @@ describe('jobSlot (the slot a missed tick catches up on)', () => {
     );
   });
 
-  it('uses the latest 09:00 for the daily demo reset', () => {
+  it('uses the latest 01:00 for the daily demo reset', () => {
     expect(jobSlot('demo_reset', at('2026-10-13T10:30:00Z')).toISOString()).toBe(
-      '2026-10-13T09:00:00.000Z',
+      '2026-10-13T01:00:00.000Z',
     );
-    expect(jobSlot('demo_reset', at('2026-10-13T08:59:00Z')).toISOString()).toBe(
-      '2026-10-12T09:00:00.000Z',
+    expect(jobSlot('demo_reset', at('2026-10-13T00:59:00Z')).toISOString()).toBe(
+      '2026-10-12T01:00:00.000Z',
     );
   });
 

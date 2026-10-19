@@ -81,6 +81,7 @@ import { createUploadsService } from './services/uploads.service.js';
 import { createAnalyzer } from './workers/analyze-item.js';
 import { createChallengeCloser } from './workers/close-challenges.js';
 import { createDigestWriter } from './workers/community-digests.js';
+import { warmDemoBriefing } from './workers/demo-briefing.js';
 import { resetDemo } from './workers/demo-reset.js';
 import { createQuestionGrouper } from './workers/group-questions.js';
 import { purgeExpired } from './workers/purge.js';
@@ -296,6 +297,7 @@ export function createJobs(services: Services, deps: CoreDeps): Jobs {
     close_challenges: () => challengeCloser.closeOverdue(new Date()),
     email_digests: () => services.notificationEmails.sendDue(new Date()),
     demo_reset: () => resetDemo(deps),
+    demo_briefing: () => warmDemoBriefing(bag),
     purge: () => purgeExpired(bag),
     refresh_followers: () => refreshFollowers(bag),
     community_digests: () => digestWriter.writeDue(new Date()),
