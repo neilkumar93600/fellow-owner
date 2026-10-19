@@ -254,7 +254,7 @@ export function CreateAccountForm({
             autoComplete="name"
             autoCapitalize="words"
             maxLength={LIMITS.membership.name.max + 20}
-            placeholder="Mira Lane"
+            placeholder="Your name"
             error={errors.name?.message}
             {...register('name', { onBlur: checkWhenFilled, onChange: recheck })}
           />
