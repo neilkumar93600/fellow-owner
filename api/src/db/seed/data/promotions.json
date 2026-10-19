@@ -263,5 +263,155 @@
         "count": 2
       }
     ]
+  },
+  {
+    "postIndex": 140,
+    "headline": "Featured: Fare Pals",
+    "drafts": {
+      "x": {
+        "text": "Five of my Budget Travel fans built an app that tells you when a flight or a bed fits your daily budget. 412 people have signed up in a month. Sign-up page below.",
+        "hashtags": [
+          "BudgetTravel",
+          "FanMade"
+        ]
+      },
+      "instagram": {
+        "text": "Fare Pals, built by five fans in Budget Travel.\n\nA developer, a designer, a fare analyst, a local guide and a community host made an app that messages you when a flight or a bed fits your daily budget. Link in bio.",
+        "hashtags": [
+          "BudgetTravel",
+          "FarePals",
+          "FanMade"
+        ]
+      },
+      "youtube": {
+        "text": "Fare Pals: a fare-alert app made by five fans from our Budget Travel room. They met in the comments and launched it a month later. Credits and the sign-up page are in the link below.",
+        "hashtags": []
+      }
+    },
+    "showcaseSlug": "fare-pals",
+    "shortCode": "Fp3Zk8Wd",
+    "publishedDaysAgo": 2,
+    "clicks": [
+      {
+        "platform": "x",
+        "daysAgo": 2,
+        "count": 5
+      },
+      {
+        "platform": "instagram",
+        "daysAgo": 2,
+        "count": 31
+      },
+      {
+        "platform": "youtube",
+        "daysAgo": 2,
+        "count": 18
+      },
+      {
+        "platform": "linkedin",
+        "daysAgo": 2,
+        "count": 2
+      },
+      {
+        "platform": "other",
+        "daysAgo": 2,
+        "count": 4
+      },
+      {
+        "platform": "x",
+        "daysAgo": 1,
+        "count": 2
+      },
+      {
+        "platform": "instagram",
+        "daysAgo": 1,
+        "count": 14
+      },
+      {
+        "platform": "youtube",
+        "daysAgo": 1,
+        "count": 8
+      },
+      {
+        "platform": "other",
+        "daysAgo": 1,
+        "count": 1
+      },
+      {
+        "platform": "instagram",
+        "daysAgo": 0,
+        "count": 6
+      },
+      {
+        "platform": "youtube",
+        "daysAgo": 0,
+        "count": 3
+      }
+    ]
+  },
+  {
+    "postIndex": 49,
+    "headline": "Featured: a carry-on-only packing list",
+    "drafts": {
+      "x": {
+        "text": "Two weeks, one carry-on, no $70 bag fee. A fan in Budget Travel wrote the day-by-day list, with the tourist taxes and the airport transfer counted in. List below.",
+        "hashtags": [
+          "CarryOnOnly",
+          "BudgetTravel"
+        ]
+      },
+      "instagram": {
+        "text": "Two weeks in one carry-on, made by fans in Budget Travel.\n\nThe list that skips the checked-bag fee on every budget airline, day by day, with the tourist taxes and the airport transfer counted in. Link in bio.",
+        "hashtags": [
+          "CarryOnOnly",
+          "BudgetTravel",
+          "FanMade"
+        ]
+      },
+      "youtube": {
+        "text": "A carry-on-only packing list for two weeks, from our Budget Travel room. It saves the $70 checked-bag fee and counts the tourist taxes and the airport transfer most guides leave out. The full list is in the link below.",
+        "hashtags": []
+      }
+    },
+    "showcaseSlug": "carry-on-only-packing-list",
+    "shortCode": "Hc6Vn2Qe",
+    "publishedDaysAgo": 16,
+    "clicks": [
+      {
+        "platform": "x",
+        "daysAgo": 16,
+        "count": 2
+      },
+      {
+        "platform": "instagram",
+        "daysAgo": 16,
+        "count": 9
+      },
+      {
+        "platform": "youtube",
+        "daysAgo": 16,
+        "count": 6
+      },
+      {
+        "platform": "instagram",
+        "daysAgo": 15,
+        "count": 3
+      },
+      {
+        "platform": "youtube",
+        "daysAgo": 15,
+        "count": 2
+      },
+      {
+        "platform": "instagram",
+        "daysAgo": 14,
+        "count": 1
+      },
+      {
+        "platform": "youtube",
+        "daysAgo": 10,
+        "count": 1
+      }
+    ]
   }
 ]

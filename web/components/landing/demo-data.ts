@@ -383,6 +383,14 @@ export interface ShowcaseProject {
 /** Projects shown in the showcase strip as "Made by Mira's fans" (demo data). */
 export const showcase: readonly ShowcaseProject[] = [
   {
+    title: 'Fare Pals: fare alerts for $60-a-day trips',
+    community: 'Budget Travel',
+    cover: 'vlog-hostel',
+    team: 5,
+    hearts: 96,
+    crew: ['Lara Haddad', 'Milo Adeyemi', 'Jonas Reyes', 'Dilan Zhang', 'Kemi Hassan'],
+  },
+  {
     title: 'Lisbon on $60 a day',
     community: 'Budget Travel',
     cover: 'vlog-lisbon',

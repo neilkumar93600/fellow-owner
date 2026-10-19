@@ -7362,5 +7362,184 @@
       ],
       "isSpam": false
     }
+  },
+  {
+    "community": "budget-travel",
+    "authorIndex": 265,
+    "type": "project",
+    "title": "Fare Pals: fare alerts for $60-a-day trips",
+    "body": "A small fare-alert app for people who travel on $60 a day, built and launched by five fans in Budget Travel. A developer wrote it, a designer drew the screens, a fare analyst decides which price drops are real, a local guide adds what to do when you land and a community host answers every question in the room. You pick a city and a daily budget, and it messages you when a flight or a bed fits. 412 people have signed up since launch, and the Lisbon alert for March went out to 61 of them. Sign-up page below.",
+    "status": "launched",
+    "rolesNeeded": [
+      "Developer",
+      "Designer",
+      "Fare analyst",
+      "Local guide",
+      "Community host"
+    ],
+    "links": [
+      {
+        "label": "Sign up for fare alerts",
+        "url": "https://example.com/fare-pals"
+      }
+    ],
+    "createdDaysAgo": 26,
+    "lovedDaysAgo": 2,
+    "signals": {
+      "use": [
+        3,
+        5,
+        9,
+        14,
+        15,
+        16,
+        18,
+        21,
+        22,
+        23,
+        26,
+        28,
+        29,
+        31,
+        34,
+        35,
+        36,
+        38,
+        40,
+        43,
+        48,
+        49,
+        58,
+        61,
+        65,
+        67,
+        68,
+        75,
+        79,
+        83,
+        84,
+        85,
+        88,
+        89,
+        92,
+        95,
+        98,
+        99,
+        101,
+        104,
+        106,
+        109,
+        112,
+        115,
+        117,
+        120,
+        121,
+        126,
+        127,
+        130,
+        132,
+        133,
+        136,
+        137,
+        139,
+        140,
+        141,
+        145,
+        147,
+        148,
+        152,
+        153,
+        157,
+        158,
+        159,
+        161,
+        163,
+        165,
+        167,
+        168,
+        169,
+        174,
+        175,
+        177,
+        181,
+        182,
+        183,
+        186,
+        187,
+        189,
+        191,
+        193,
+        194,
+        195,
+        196,
+        197,
+        200,
+        203,
+        204,
+        205,
+        207,
+        211,
+        213,
+        214,
+        221,
+        223
+      ],
+      "build": [
+        225,
+        229,
+        232,
+        233,
+        235,
+        237,
+        238,
+        239,
+        240,
+        246,
+        251
+      ]
+    },
+    "team": [
+      {
+        "memberIndex": 265,
+        "role": "Developer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 411,
+        "role": "Designer",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 54,
+        "role": "Fare analyst",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 298,
+        "role": "Local guide",
+        "status": "accepted"
+      },
+      {
+        "memberIndex": 253,
+        "role": "Community host",
+        "status": "accepted"
+      }
+    ],
+    "ai": {
+      "summary": "Fare Pals: fare alerts for $60-a-day trips",
+      "category": "project",
+      "fitScore": 95,
+      "fitReason": "Matches \"budget-honest travel, with real prices and the receipts\". Five roles filled and a launched product with 412 sign-ups.",
+      "tags": [
+        "budget",
+        "flights",
+        "points and miles"
+      ],
+      "skills": [
+        "web development",
+        "design"
+      ],
+      "isSpam": false
+    }
   }
 ]

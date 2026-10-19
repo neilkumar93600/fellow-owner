@@ -1510,6 +1510,85 @@ const OAXACA = {
   roles: ['Local guide', 'Translator', 'Photographer'],
 } as const;
 
+/**
+ * "Fare Pals": a business five fans built together and launched. Appended after every random draw so
+ * the rest of the committed seed does not move. Crew are fixed Budget Travel members, in role order.
+ */
+const FARE_PALS = {
+  title: 'Fare Pals: fare alerts for $60-a-day trips',
+  body: 'A small fare-alert app for people who travel on $60 a day, built and launched by five fans in Budget Travel. A developer wrote it, a designer drew the screens, a fare analyst decides which price drops are real, a local guide adds what to do when you land and a community host answers every question in the room. You pick a city and a daily budget, and it messages you when a flight or a bed fits. 412 people have signed up since launch, and the Lisbon alert for March went out to 61 of them. Sign-up page below.',
+  roles: ['Developer', 'Designer', 'Fare analyst', 'Local guide', 'Community host'],
+  crew: [265, 411, 54, 298, 253],
+  link: { label: 'Sign up for fare alerts', url: 'https://example.com/fare-pals' },
+} as const;
+
+const FARE_PALS_PROMOTION: Omit<SeedPromotion, 'postIndex'> = {
+  headline: 'Featured: Fare Pals',
+  drafts: {
+    x: {
+      text: 'Five of my Budget Travel fans built an app that tells you when a flight or a bed fits your daily budget. 412 people have signed up in a month. Sign-up page below.',
+      hashtags: ['BudgetTravel', 'FanMade'],
+    },
+    instagram: {
+      text: 'Fare Pals, built by five fans in Budget Travel.\n\nA developer, a designer, a fare analyst, a local guide and a community host made an app that messages you when a flight or a bed fits your daily budget. Link in bio.',
+      hashtags: ['BudgetTravel', 'FarePals', 'FanMade'],
+    },
+    youtube: {
+      text: 'Fare Pals: a fare-alert app made by five fans from our Budget Travel room. They met in the comments and launched it a month later. Credits and the sign-up page are in the link below.',
+      hashtags: [],
+    },
+  },
+  showcaseSlug: 'fare-pals',
+  shortCode: 'Fp3Zk8Wd',
+  publishedDaysAgo: 2,
+  clicks: [
+    { platform: 'x', daysAgo: 2, count: 5 },
+    { platform: 'instagram', daysAgo: 2, count: 31 },
+    { platform: 'youtube', daysAgo: 2, count: 18 },
+    { platform: 'linkedin', daysAgo: 2, count: 2 },
+    { platform: 'other', daysAgo: 2, count: 4 },
+    { platform: 'x', daysAgo: 1, count: 2 },
+    { platform: 'instagram', daysAgo: 1, count: 14 },
+    { platform: 'youtube', daysAgo: 1, count: 8 },
+    { platform: 'other', daysAgo: 1, count: 1 },
+    { platform: 'instagram', daysAgo: 0, count: 6 },
+    { platform: 'youtube', daysAgo: 0, count: 3 },
+  ],
+};
+
+/** An older spotlight, so the promotion history is not only three days deep. */
+const CARRY_ON_POST_TITLE =
+  'A carry-on-only packing list for two weeks that saves the $70 checked-bag fee on every budget airline';
+const CARRY_ON_PROMOTION: Omit<SeedPromotion, 'postIndex'> = {
+  headline: 'Featured: a carry-on-only packing list',
+  drafts: {
+    x: {
+      text: 'Two weeks, one carry-on, no $70 bag fee. A fan in Budget Travel wrote the day-by-day list, with the tourist taxes and the airport transfer counted in. List below.',
+      hashtags: ['CarryOnOnly', 'BudgetTravel'],
+    },
+    instagram: {
+      text: 'Two weeks in one carry-on, made by fans in Budget Travel.\n\nThe list that skips the checked-bag fee on every budget airline, day by day, with the tourist taxes and the airport transfer counted in. Link in bio.',
+      hashtags: ['CarryOnOnly', 'BudgetTravel', 'FanMade'],
+    },
+    youtube: {
+      text: 'A carry-on-only packing list for two weeks, from our Budget Travel room. It saves the $70 checked-bag fee and counts the tourist taxes and the airport transfer most guides leave out. The full list is in the link below.',
+      hashtags: [],
+    },
+  },
+  showcaseSlug: 'carry-on-only-packing-list',
+  shortCode: 'Hc6Vn2Qe',
+  publishedDaysAgo: 16,
+  clicks: [
+    { platform: 'x', daysAgo: 16, count: 2 },
+    { platform: 'instagram', daysAgo: 16, count: 9 },
+    { platform: 'youtube', daysAgo: 16, count: 6 },
+    { platform: 'instagram', daysAgo: 15, count: 3 },
+    { platform: 'youtube', daysAgo: 15, count: 2 },
+    { platform: 'instagram', daysAgo: 14, count: 1 },
+    { platform: 'youtube', daysAgo: 10, count: 1 },
+  ],
+};
+
 interface EntryDraft {
   title: string;
   body: string;
@@ -1703,7 +1782,7 @@ export function buildData(seed: number = SEED): SeedData {
 
   // ---- posts. Hand-written stories first, so the rest of the feed is drawn around them.
   const posts: SeedPost[] = [];
-  const usedTitles = new Set<string>([LISBON.title, OAXACA.title]);
+  const usedTitles = new Set<string>([LISBON.title, OAXACA.title, FARE_PALS.title]);
   /** Posts the demo-fan reshuffling below must leave alone. */
   const fixed = new Set<SeedPost>();
 
@@ -2220,6 +2299,47 @@ export function buildData(seed: number = SEED): SeedData {
       winnerPostIndex: winnerEntry === null ? null : postIndexOf(entries[winnerEntry]),
     };
   });
+
+  // ---- Fare Pals and the older carry-on promotion. Appended last and drawn without the RNG, so every
+  // earlier post, comment, pitch and promotion keeps its index and content.
+  const farePalsCandidates = poolOf('budget-travel', [...lisbonCrew, ...FARE_PALS.crew]);
+  const farePals: SeedPost = {
+    community: 'budget-travel',
+    authorIndex: FARE_PALS.crew[0],
+    type: 'project',
+    title: FARE_PALS.title,
+    body: FARE_PALS.body,
+    status: 'launched',
+    rolesNeeded: [...FARE_PALS.roles],
+    links: [FARE_PALS.link],
+    createdDaysAgo: 26,
+    lovedDaysAgo: 2,
+    signals: {
+      use: farePalsCandidates.slice(0, 96),
+      build: farePalsCandidates.slice(96, 107),
+    },
+    team: FARE_PALS.crew.map((memberIndex, i) => ({
+      memberIndex,
+      role: FARE_PALS.roles[i] as string,
+      status: 'accepted' as const,
+    })),
+    ai: {
+      summary: FARE_PALS.title,
+      category: 'project',
+      fitScore: 95,
+      fitReason:
+        'Matches "budget-honest travel, with real prices and the receipts". Five roles filled and a launched product with 412 sign-ups.',
+      tags: ['budget', 'flights', 'points and miles'],
+      skills: ['web development', 'design'],
+      isSpam: false,
+    },
+  };
+  posts.push(farePals);
+  promotions.push({ postIndex: posts.length - 1, ...FARE_PALS_PROMOTION });
+
+  const carryOnIndex = posts.findIndex((post) => post.title === CARRY_ON_POST_TITLE);
+  if (carryOnIndex < 0) throw new Error('carry-on post for the second promotion is missing');
+  promotions.push({ postIndex: carryOnIndex, ...CARRY_ON_PROMOTION });
 
   return { space: SPACE, communities, members, posts, comments, pitches, promotions, challenges };
 }
