@@ -1,8 +1,8 @@
 /*
- * Hero (Parchment Frost): one rounded parchment frame inset from the viewport with two large, soft Monad
- * washes inside it (coral to sky-wash, sky-wash to mint), the words on plain parchment on the left and the
- * frosted product floating over the washes on the right. Phones: the washes sit only behind the phone, in
- * this order: words, claim bar, phone, stats, card.
+ * Hero (Parchment Frost): one rounded frame inset from the viewport, filled with a coastal landscape.
+ * A parchment wash keeps the words on the left at AA and fades the land into the canvas at the bottom.
+ * Desktop: words and the claim form left, the "Ask your AI twin" chat right. Phones: words and claim
+ * first, then the chat full width with its tabs scrolling sideways.
  */
 .hero {
   --nav-space: 72px;
@@ -25,53 +25,97 @@
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
   overflow: hidden;
-  padding: calc(var(--nav-space) + 8px) 20px 20px;
+  padding: calc(var(--nav-space) + 8px) 16px 24px;
   border: 1px solid var(--glass-edge);
   border-radius: 32px;
   background: var(--color-parchment);
 }
 
+@media (min-width: 640px) {
+  .frame {
+    padding-inline: 32px;
+  }
+}
+
 @media (min-width: 1024px) {
   .frame {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: 1fr auto auto auto 1fr auto;
-    grid-template-areas:
-      ". stage"
-      "copy stage"
-      "stats stage"
-      "claim stage"
-      ". stage"
-      "card scroll";
-    column-gap: 40px;
-    min-height: max(calc(92svh - var(--inset)), 640px);
-    padding: calc(var(--nav-space) + 8px) 48px 32px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+    align-items: center;
+    column-gap: 48px;
+    min-height: max(calc(92svh - var(--inset)), 680px);
+    padding: calc(var(--nav-space) + 16px) 48px 40px;
     border-radius: 40px;
   }
 }
 
-.copy,
-.claimWrap,
-.stats,
-.card,
-.scroll {
-  position: relative;
-  z-index: 2;
+@media (min-width: 1280px) {
+  .frame {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 480px);
+    column-gap: 64px;
+    padding-inline: 64px;
+  }
 }
 
-.copy {
-  grid-area: copy;
-}
-
-.claimWrap {
-  grid-area: claim;
-}
-
-.grain {
-  z-index: 3;
+/* The landscape and its wash: decoration under everything. */
+.scenery {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
+}
+
+.sceneryImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+
+/* Phones: the words sit on the top part, so the wash is strongest there, then lets the land through
+   behind the chat and melts into parchment at the bottom. */
+.wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(246 243 241 / 0.8) 0%,
+    rgb(246 243 241 / 0.74) 34%,
+    rgb(246 243 241 / 0.3) 52%,
+    rgb(246 243 241 / 0.2) 78%,
+    var(--color-parchment) 100%
+  );
+}
+
+@media (min-width: 1024px) {
+  .sceneryImg {
+    object-position: 60% 50%;
+  }
+
+  /* Parchment behind the words on the left, the coast and the sun open on the right, and the land
+     melting into parchment at the bottom. */
+  .wash {
+    background:
+      linear-gradient(to bottom, rgb(246 243 241 / 0) 68%, var(--color-parchment) 100%),
+      linear-gradient(
+        90deg,
+        rgb(246 243 241 / 0.86) 0%,
+        rgb(246 243 241 / 0.8) 50%,
+        rgb(246 243 241 / 0.35) 63%,
+        rgb(246 243 241 / 0) 75%
+      );
+  }
+}
+
+.copy,
+.chat {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
 }
 
 .pill {
@@ -96,7 +140,7 @@
 .title {
   margin-top: 20px;
   color: var(--color-ink);
-  font-size: clamp(2.75rem, 1.4rem + 3.6vw, 4.75rem);
+  font-size: clamp(2.5rem, 1.4rem + 3.6vw, 4.5rem);
   font-weight: 400;
   line-height: 1.02;
   letter-spacing: -0.02em;
@@ -104,7 +148,7 @@
 
 @media (min-width: 1024px) {
   .title {
-    font-size: clamp(3rem, min(4.3vw, 7.4svh), 4.5rem);
+    font-size: clamp(3rem, min(4.6vw, 7.6svh), 4.75rem);
   }
 }
 
@@ -121,7 +165,7 @@
   display: block;
 }
 
-/* "hear them.": the one accent, italic serif in Lake Blue (5.5:1 on parchment). No gradient text. */
+/* "hear them.": the one accent, italic serif in Lake Blue. No gradient text. */
 .accent {
   font-style: italic;
   color: var(--color-lake);
@@ -129,62 +173,19 @@
 
 .sub {
   margin-top: 20px;
-  max-width: 42ch;
+  max-width: 44ch;
   color: var(--color-ink-soft);
   text-wrap: pretty;
 }
 
-/* Stats: honest words, the figure in ink. */
-.stats {
-  grid-area: stats;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 14px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: var(--color-ink-soft);
-  font-size: 0.875rem;
-  line-height: 1.35;
-}
-
-.stats li {
-  display: flex;
-  align-items: baseline;
-  gap: 0.25em;
-  white-space: nowrap;
-}
-
-.stats li + li {
-  padding-left: 14px;
-  border-left: 1px solid var(--color-ash);
-}
-
-.stats strong {
-  color: var(--color-ink);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
-
-@media (max-width: 1023px) {
-  .stats {
-    flex-direction: column;
-  }
-
-  .stats li + li {
-    padding-left: 0;
-    border-left: 0;
-  }
-}
-
 @media (min-width: 1024px) {
-  .stats {
-    margin-top: 24px;
+  .sub {
+    font-size: clamp(1rem, 0.6rem + 0.55vw, 1.125rem);
   }
+}
 
-  .claimWrap {
-    margin-top: 24px;
-  }
+.claimWrap {
+  margin-top: 28px;
 }
 
 /* The claim bar: the hero's one control. */
@@ -214,6 +215,14 @@
   .claimRow {
     flex-direction: row;
     align-items: center;
+  }
+}
+
+/* Small desktops: the words column is too narrow for the link and the button side by side. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .claimRow {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
 
@@ -283,373 +292,348 @@
   color: var(--color-danger-deep);
 }
 
-/* Bottom-left info card (decorative words, nothing to click). */
-.card {
-  grid-area: card;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  justify-self: start;
-  max-width: 100%;
-  padding: 14px 14px 14px 18px;
-  border-radius: 24px;
-  background: rgb(255 255 255 / 0.72);
-}
-
-.cardText {
+/* "Ask your AI twin": the chat panel, its question tabs and the demo footnote. */
+.chat {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  border-radius: 28px;
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.twinIcon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--color-periwinkle);
+  color: var(--color-lake);
+}
+
+.panelTitle {
+  flex: 1;
   min-width: 0;
   color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.8);
+  color: var(--color-ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* All three conversations share one cell, so the panel is as tall as the longest and never jumps. */
+.thread {
+  display: grid;
+  padding: 14px;
+}
+
+.turn {
+  display: flex;
+  grid-area: 1 / 1;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  border-radius: 12px;
+}
+
+.turn[data-active="false"] {
+  visibility: hidden;
+}
+
+.turn:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 4px;
+}
+
+.ask {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 9px 14px;
+  border-radius: 18px 18px 6px;
+  background: var(--color-periwinkle);
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.from {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-ink-soft);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.fromDot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--color-coral);
+}
+
+.answer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lead {
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.picks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Title and room chip share a row (the chip wraps under a long title); the why runs underneath. */
+.pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 3px 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  background: rgb(255 255 255 / 0.72);
+  transition: opacity 0.25s var(--ease-soft);
+}
+
+.pick[data-on="false"] {
+  opacity: 0;
+}
+
+.pickTitle {
+  min-width: 0;
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.room {
+  order: 1;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 8px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: var(--color-parchment);
+  color: var(--color-ink-soft);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pickWhy {
+  order: 2;
+  flex-basis: 100%;
+  color: var(--color-ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.tag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #ffd9cc;
+  color: var(--color-ink);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+/* Untyped characters keep their space, so typing never reflows the panel. */
+.ghost {
+  visibility: hidden;
+}
+
+/* The fake input: it shows the next question, and the send button asks it. */
+.composer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  margin-inline: 14px;
+  padding: 4px 4px 4px 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: #fff;
+}
+
+.composerText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-ink-muted);
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.send {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  place-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: var(--color-parchment);
+  color: var(--color-ink);
+  transition: background-color 0.2s ease;
+}
+
+.send:hover {
+  background: var(--color-periwinkle);
+}
+
+.send:active {
+  transform: scale(0.98);
+}
+
+.send:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+.panelFoot {
+  padding: 10px 16px 12px;
+  color: var(--color-ink-muted);
+  font-size: 0.75rem;
   line-height: 1.3;
 }
 
-.cardKicker {
-  color: var(--color-ink-soft);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.cardLine {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.cardSub {
-  color: var(--color-ink-soft);
-  font-size: 0.8125rem;
-}
-
-.cardArrow {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  flex: none;
-  place-items: center;
-  border: 1px solid var(--color-ash);
-  border-radius: 999px;
-  color: var(--color-ink);
-}
-
-/* Phones: the arrow steps aside so the card's words keep one line each. */
-@media (max-width: 479.98px) {
-  .cardArrow {
-    display: none;
-  }
-}
-
-/* Scroll cue: decoration, bottom right. */
-.scroll {
-  grid-area: scroll;
-  display: none;
-  align-items: center;
-  gap: 10px;
-  align-self: end;
-  justify-self: end;
-  padding: 8px 14px;
-  border: 1px solid var(--glass-edge);
-  border-radius: 999px;
-  background: var(--glass-chip);
-  color: var(--color-ink);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-}
-
-@media (min-width: 1024px) {
-  .scroll {
-    display: inline-flex;
-  }
-}
-
-.scrollMouse {
-  position: relative;
-  width: 14px;
-  height: 22px;
-  border: 1.5px solid currentColor;
-  border-radius: 999px;
-}
-
-.scrollMouse::after {
-  content: "";
-  position: absolute;
-  top: 4px;
-  left: 50%;
-  width: 2px;
-  height: 5px;
-  margin-left: -1px;
-  border-radius: 2px;
-  background: currentColor;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .scrollMouse::after {
-    animation: hero-scroll 1.6s ease-in-out 2.2s 3;
-  }
-}
-
-@keyframes hero-scroll {
-  50% {
-    transform: translateY(6px);
-    opacity: 0.3;
-  }
-}
-
-/*
- * The washes and the product stage. Phones: a 300px rounded window with the washes behind the phone.
- * Desktop: the wrapper is static, so the washes fill the whole frame and the stage takes the right column.
- */
-.stageWrap {
-  position: relative;
-  z-index: 2;
-  height: 300px;
-  overflow: hidden;
-  border-radius: 24px;
-}
-
-@media (min-width: 640px) {
-  .stageWrap {
-    height: 360px;
-  }
-}
-
-/*
- * Monad washes: two large blobs, each a two-pastel gradient whose edge a radial mask fades to nothing, so
- * they are never sharp (no blur filter to repaint). Decoration only: words sit on them only inside glass.
- */
-.washes {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.washA,
-.washB {
-  position: absolute;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  opacity: 0.8;
-  -webkit-mask-image: radial-gradient(closest-side, #000 25%, transparent);
-  mask-image: radial-gradient(closest-side, #000 25%, transparent);
-}
-
-.washA {
-  top: -30%;
-  right: -25%;
-  width: 115%;
-  background: linear-gradient(140deg, var(--color-coral) 15%, var(--color-sky-wash) 80%);
-}
-
-.washB {
-  bottom: -55%;
-  left: -30%;
-  width: 110%;
-  background: linear-gradient(160deg, var(--color-sky-wash) 10%, var(--color-mint) 75%);
-}
-
-@media (min-width: 1024px) {
-  /* z-index auto: a grid item with a z-index is a stacking context, and the washes must sit under the words. */
-  .stageWrap {
-    position: static;
-    z-index: auto;
-    grid-area: stage;
-    align-self: center;
-    height: auto;
-    overflow: visible;
-    border-radius: 0;
-  }
-
-  /* Coral to sky-wash behind the browser, sky-wash to mint rising behind the phone; the words stay on parchment. */
-  .washA {
-    top: -24%;
-    right: -10%;
-    width: 62%;
-  }
-
-  .washB {
-    right: -14%;
-    bottom: -48%;
-    left: auto;
-    width: 56%;
-  }
-}
-
-.stage {
-  position: absolute;
-  inset: 0;
-}
-
-@media (min-width: 1024px) {
-  .stage {
-    position: relative;
-    inset: auto;
-    z-index: 2;
-    width: min(100%, calc((92svh - 220px) * 1.125));
-    margin-inline: auto 0;
-    aspect-ratio: 720 / 640;
-  }
-}
-
-/* Every stage layer is placed in the 720x640 box. Outer element drifts, inner one runs the entrance. */
-.layer {
-  position: absolute;
-}
-
-.anchor {
-  translate: -50% -50%;
-}
-
-.browser {
-  display: none;
-}
-
-.phone {
-  top: 20px;
-  left: 50%;
-  width: 196px;
-  translate: -50% 0;
-}
-
-@media (min-width: 1024px) {
-  .browser {
-    display: block;
-    top: 9%;
-    left: 0;
-    width: 76%;
-  }
-
-  .phone {
-    top: 22%;
-    left: 68%;
-    width: 30%;
-    translate: none;
-  }
-}
-
-.leaders {
-  position: absolute;
-  inset: 0;
-  display: none;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.leader path {
-  fill: none;
-  stroke: rgb(30 27 38 / 0.6);
-  stroke-width: 1.25;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-}
-
-.leader circle {
-  fill: var(--color-ink);
-  stroke: #fff;
-  stroke-width: 2;
-  vector-effect: non-scaling-stroke;
-}
-
-.anchor {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .leaders,
-  .anchor {
-    display: block;
-  }
-}
-
-.chipPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 4px 14px 4px 5px;
-  color: var(--color-ink);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.chipOnly {
+/* Question tabs. Phones: one row that scrolls sideways. Desktop: three equal tabs, two lines each. */
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
   padding: 4px;
-}
-
-.chipIcon {
-  display: grid;
-  width: 26px;
-  height: 26px;
-  flex: none;
-  place-items: center;
   border-radius: 999px;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
 }
 
-.calloutLabel {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 4px 12px;
-  color: var(--color-ink);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: none;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.25;
   white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-/* The demo creator: a 28px face and one line, the only person in the hero. */
-.miraChip {
-  font-size: 0.75rem;
+.tab:hover {
+  color: var(--color-ink);
 }
 
-.miraAvatar {
-  position: relative;
-  width: 28px;
-  height: 28px;
-  flex: none;
-  overflow: hidden;
-  border-radius: 999px;
-  box-shadow: 0 0 0 2px #fff;
+.tab[aria-selected="true"] {
+  border-color: var(--color-line);
+  background: #fff;
+  color: var(--color-ink);
 }
 
-/* Phones: inside the washes window with a 16px inset. Desktop: the stage's bottom-left corner. */
-.miraAnchor {
-  bottom: 16px;
-  left: 50%;
-  translate: -50% 0;
+.tab:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: -3px;
 }
 
 @media (min-width: 1024px) {
-  .miraAnchor {
-    top: 0;
-    bottom: auto;
-    left: 0;
-    translate: 0 -50%;
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+    border-radius: 24px;
+  }
+
+  .tab {
+    min-height: 52px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    text-align: center;
+    white-space: normal;
+    text-wrap: balance;
   }
 }
 
+.footnote {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.72);
+  color: var(--color-ink-muted);
+  font-size: 0.75rem;
+}
+
 /*
- * Entrance (about 2s). The inline script in hero-intro.tsx sets html[data-intro] before paint, then
- * data-intro="play" once fonts are ready, and removes it when the washes (data-hero-last) have settled. The
- * stage layers are hidden here and brought in by hero-chips.tsx with a spring.
+ * Entrance (about 1.5s). The inline script in hero-intro.tsx sets html[data-intro] before paint, then
+ * data-intro="play" once fonts are ready, and removes it when the chat (data-hero-last) has settled.
  */
 @media (prefers-reduced-motion: no-preference) {
   html[data-intro] .frame,
   html[data-intro] .pill,
   html[data-intro] .sub,
-  html[data-intro] .stats,
   html[data-intro] .claimWrap,
-  html[data-intro] .card,
-  html[data-intro] .scroll,
-  html[data-intro] .pop {
+  html[data-intro] .chat {
     opacity: 0;
   }
 
@@ -657,20 +641,12 @@
     transform: translate3d(0, 110%, 0);
   }
 
-  html[data-intro] .leader path {
-    stroke-dashoffset: 1;
-  }
-
-  html[data-intro] .leader circle {
-    opacity: 0;
-  }
-
   html[data-intro="play"] .frame {
     animation: hero-fade 0.6s var(--ease-soft) both;
   }
 
-  html[data-intro="play"] .washes {
-    animation: hero-washes 1.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  html[data-intro="play"] .scenery {
+    animation: hero-sky 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   html[data-intro="play"] .pill {
@@ -689,31 +665,17 @@
     animation: hero-rise 0.7s var(--ease-soft) 0.5s both;
   }
 
-  html[data-intro="play"] .stats {
-    animation: hero-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) 0.62s both;
-  }
-
   html[data-intro="play"] .claimWrap {
-    animation: hero-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
+    animation: hero-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) 0.65s both;
   }
 
-  html[data-intro="play"] .card,
-  html[data-intro="play"] .scroll {
-    animation: hero-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
-  }
-
-  html[data-intro="play"] .leader path {
-    animation: hero-draw 0.5s cubic-bezier(0.65, 0, 0.35, 1) both;
-  }
-
-  html[data-intro="play"] .leader circle {
-    animation: hero-fade 0.2s ease-out both;
+  html[data-intro="play"] .chat {
+    animation: hero-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
   }
 
   html[data-intro="play"] .pill,
   html[data-intro="play"] .lineInner,
-  html[data-intro="play"] .sub,
-  html[data-intro="play"] .washes {
+  html[data-intro="play"] .sub {
     will-change: transform, opacity;
   }
 }
@@ -727,23 +689,13 @@
   }
 }
 
-@keyframes hero-washes {
+/* Opacity only: the landscape is the LCP image, so it never moves under the reader. */
+@keyframes hero-sky {
   from {
-    opacity: 0;
-    transform: scale(1.04);
+    opacity: 0.4;
   }
   to {
     opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes hero-draw {
-  from {
-    stroke-dashoffset: 1;
-  }
-  to {
-    stroke-dashoffset: 0;
   }
 }
 

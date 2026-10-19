@@ -1,17 +1,35 @@
-import { ArrowUpRight } from 'lucide-react';
-import { AvatarStack } from '@/components/shared/avatar-initials';
+import { getImageProps } from 'next/image';
 import { cn } from '@/lib/utils';
 import styles from './hero.module.css';
 import { HeroIntro } from './hero-intro';
-import { HeroClaim, HeroStage } from './hero-product';
-import { HERO_CARD, HERO_STATS, LIVE_CREW } from './hero-product-data';
+import { HeroClaim } from './hero-product';
+import { TwinChat } from './twin-chat';
+
+/** Art direction: the wide coast from 1024px, the square crop below. `priority` is deprecated in Next 16, so
+ * the one <img> the browser picks is eager with a high fetch priority. */
+const scenery = (() => {
+  const common = { alt: '', sizes: '100vw' };
+  const desktop = getImageProps({
+    ...common,
+    src: '/creator/hero-scenery.webp',
+    width: 2400,
+    height: 1600,
+  });
+  const mobile = getImageProps({
+    ...common,
+    src: '/creator/hero-scenery-mobile.webp',
+    width: 1200,
+    height: 1259,
+  });
+  return { desktop: desktop.props.srcSet, mobile: mobile.props };
+})();
 
 /**
- * Hero (Parchment Frost): one rounded parchment frame with two soft Monad washes (coral to sky-wash,
- * sky-wash to mint) behind the frosted product. On the left, on plain parchment: the page's only h1, the
- * sub line, honest stats and the claim bar, the hero's one control (the one Lake Blue button). On the right
- * the product (hero-product.tsx), decorative and inert. Copy is server-rendered and complete without
- * JavaScript; the entrance, springs and drift are client enhancements.
+ * Hero (Parchment Frost): a coastal landscape in one rounded frame, washed with parchment on the left so
+ * the serif h1 reads, and fading into the canvas at the bottom. Left: eyebrow, h1, one line, the claim
+ * form (the one Lake Blue button). Right: "Ask your AI twin", a demo chat with three question tabs.
+ * Phones: words and claim first, then the chat full width. Copy is server-rendered and complete without
+ * JavaScript.
  */
 export function Hero() {
   return (
@@ -19,10 +37,24 @@ export function Hero() {
       <HeroIntro />
       <section id="hero" aria-labelledby="hero-title" className={styles.hero}>
         <div className={styles.frame}>
+          <div className={styles.scenery} aria-hidden="true">
+            <picture>
+              <source media="(min-width: 1024px)" srcSet={scenery.desktop} />
+              <img
+                {...scenery.mobile}
+                alt=""
+                fetchPriority="high"
+                loading="eager"
+                className={styles.sceneryImg}
+              />
+            </picture>
+            <span className={styles.wash} />
+          </div>
+
           <div className={styles.copy}>
             <p className={cn('eyebrow', styles.pill)}>
               <span className={styles.pillDot} aria-hidden="true" />
-              The operating system for your fanbase
+              Fan rooms + your AI twin
             </p>
 
             <h1 id="hero-title" className={cn('font-display', styles.title)}>
@@ -39,52 +71,16 @@ export function Hero() {
             </h1>
 
             <p className={cn('text-lead', styles.sub)}>
-              One link in your bio gathers your followers into communities. AI finds the best ideas
-              and people. You give them your spotlight.
+              One link in your bio gathers fans into rooms. Your AI twin reads every room and
+              answers you with the few ideas and people worth your time.
             </p>
-          </div>
 
-          <div className={styles.claimWrap}>
-            <HeroClaim />
-          </div>
-
-          <div className={styles.stageWrap}>
-            {/* The washes: decoration only. data-hero-last ends the entrance on its animationend. */}
-            <div className={styles.washes} data-hero-last aria-hidden="true">
-              <span className={styles.washA} />
-              <span className={styles.washB} />
+            <div className={styles.claimWrap}>
+              <HeroClaim />
             </div>
-            <HeroStage />
           </div>
 
-          <ul className={styles.stats}>
-            {HERO_STATS.map((stat) => (
-              <li key={stat.strong}>
-                {stat.before}
-                <strong>{stat.strong}</strong>
-                {stat.after}
-              </li>
-            ))}
-          </ul>
-
-          <div className={cn('glass', styles.card)}>
-            <AvatarStack people={LIVE_CREW} />
-            <p className={styles.cardText}>
-              <span className={styles.cardKicker}>{HERO_CARD.kicker}</span>
-              <span className={styles.cardLine}>{HERO_CARD.line}</span>
-              <span className={styles.cardSub}>{HERO_CARD.sub}</span>
-            </p>
-            <span className={styles.cardArrow} aria-hidden="true">
-              <ArrowUpRight size={18} strokeWidth={1.75} />
-            </span>
-          </div>
-
-          <p className={styles.scroll} aria-hidden="true">
-            <span className={styles.scrollMouse} />
-            Scroll to explore
-          </p>
-
-          <div className={cn('grain', styles.grain)} aria-hidden="true" />
+          <TwinChat />
         </div>
       </section>
     </>
