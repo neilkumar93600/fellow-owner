@@ -15,12 +15,8 @@ import {
   sql,
 } from 'drizzle-orm';
 import { chunk, type Db, type DbOrTx, inTransaction, likePattern, qcol } from '../db/client.js';
-import { type NewUserRow, user } from '../db/schema/auth.js';
-import {
-  communities,
-  communityMembers,
-  type NewCommunityMemberRow,
-} from '../db/schema/communities.js';
+import { user } from '../db/schema/auth.js';
+import { communities, communityMembers } from '../db/schema/communities.js';
 import { inbound } from '../db/schema/inbound.js';
 import {
   type MembershipRow,
@@ -564,13 +560,6 @@ export function createMembershipsRepo(db: Db) {
       });
     },
 
-    /** Bulk community_members insert without counter updates (seed; follow with recountMembers). */
-    async insertCommunityMembers(rows: NewCommunityMemberRow[], tx: DbOrTx = db): Promise<void> {
-      for (const part of chunk(rows, 1000)) {
-        await tx.insert(communityMembers).values(part).onConflictDoNothing();
-      }
-    },
-
     /** MemberRef data for many memberships (user name/image + headline). */
     async refs(membershipIds: string[], tx: DbOrTx = db): Promise<Map<string, MemberRefRow>> {
       const out = new Map<string, MemberRefRow>();
@@ -868,13 +857,6 @@ export function createMembershipsRepo(db: Db) {
           ),
         );
       return { pitchCount: pitchRow?.n ?? 0, postCount: postRow?.n ?? 0 };
-    },
-
-    /** Seed only: users are normally created by Better Auth. Existing emails are skipped. */
-    async insertUsers(rows: NewUserRow[], tx: DbOrTx = db): Promise<void> {
-      for (const part of chunk(rows)) {
-        await tx.insert(user).values(part).onConflictDoNothing();
-      }
     },
   };
 }

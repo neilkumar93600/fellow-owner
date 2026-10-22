@@ -33,7 +33,6 @@ export const spaces = pgTable(
     aiDailyTokenBudget: integer('ai_daily_token_budget')
       .notNull()
       .default(LIMITS.ai.defaultDailyTokenBudget),
-    isDemo: boolean('is_demo').notNull().default(false),
     /** Uploaded cover (/api/media/<key>) or an image link. */
     coverUrl: text('cover_url'),
     /** Pitch Tracker (F31): fans see when their pitch was read. */

@@ -4,10 +4,11 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { env } from '../../src/config/env.js';
 import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
+import travelProfile from '../fixtures/youtube-travel-profile.json' with { type: 'json' };
 import { type SignedIn, signInWithOtp } from '../helpers/auth.js';
 import { closeDb, resetDatabase } from '../helpers/test-db.js';
 
-// Never call Apify from tests: no token means simulated profiles for non-demo handles.
+// Never call Apify from tests: no token means simulated profiles.
 const container = buildContainer({ env: { ...env, APIFY_TOKEN: undefined, APIFY_ENABLED: false } });
 const app = createApp(container);
 let creator: SignedIn;
@@ -34,11 +35,11 @@ describe('POST /api/studio/platform-lookup', () => {
     await lookup(null, 'https://www.instagram.com/miralane').expect(401);
   });
 
-  it('demo handles answer from fixtures', async () => {
+  it('answers labelled sample data without an Apify token', async () => {
     const res = await lookup(creator, 'https://www.youtube.com/@miralane').expect(200);
     expect(res.body).toMatchObject({
       status: 'ready',
-      profile: { platform: 'youtube', handle: 'miralane', followers: 620_000, source: 'fixture' },
+      profile: { platform: 'youtube', handle: 'miralane', source: 'simulated' },
     });
   });
 
@@ -69,16 +70,15 @@ describe('POST /api/studio/platform-lookup', () => {
 
 describe('POST /api/studio/setup-suggestions', () => {
   it('turns profiles into loves, voice and groups with demand hints', async () => {
-    const found = await lookup(other, 'https://www.tiktok.com/@miralane').expect(200);
-    const profile = found.body.profile as PlatformProfile;
+    const profile = travelProfile as PlatformProfile;
     const res = await request(app)
       .post('/api/studio/setup-suggestions')
       .set('Cookie', other.cookie)
       .send({ profiles: [profile] })
       .expect(200);
     expect(res.body).toMatchObject({
-      displayName: 'Mira Lane',
-      avatarUrl: '/demo/mira.jpg',
+      displayName: 'Sample Traveler',
+      avatarUrl: null,
       bio: expect.any(String),
     });
     expect(res.body.loves.length).toBeGreaterThan(0);

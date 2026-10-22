@@ -1,4 +1,4 @@
-// Generates the demo creator imagery (Mira Lane, fictional) with fal.ai into web/public/creator/.
+// Generates the example creator imagery (Mira Lane, fictional) with fal.ai into web/public/creator/.
 // FAL_KEY comes from the environment or .env.fal.local (gitignored); it is never logged.
 // Resumable: existing files are skipped. Usage: node web/scripts/generate-creator-media.mjs [images|clip]
 // Needs `sharp` (resolved from web/, or from SHARP_FROM=<dir containing node_modules/sharp>).

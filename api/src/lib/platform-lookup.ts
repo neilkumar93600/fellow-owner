@@ -6,19 +6,14 @@ import {
   type PlatformProfile,
   type PlatformRecentPost,
 } from '@fellow-owners/shared';
-import instagramFixture from './platform-fixtures/instagram-miralane.json' with { type: 'json' };
-import tiktokFixture from './platform-fixtures/tiktok-miralane.json' with { type: 'json' };
-import youtubeFixture from './platform-fixtures/youtube-miralane.json' with { type: 'json' };
 
 /**
  * Platform auto-fetch (Round 4 spec §6): a pasted profile link -> a public PlatformProfile.
  *
  * Resolution order:
- * 1. fixtures: demo handles (miralane, mira, priya) answer from platform-fixtures/ after a short
- *    delay, with the seed's follower counts
- * 2. simulated: no APIFY_TOKEN or APIFY_ENABLED=false -> a deterministic sample profile
+ * 1. simulated: no APIFY_TOKEN or APIFY_ENABLED=false -> a deterministic sample profile
  *    (`source: 'simulated'`, the UI shows a "Sample data" chip)
- * 3. Apify run-sync with a 60 s abort and maxTotalChargeUsd; failures become `failed`, except X,
+ * 2. Apify run-sync with a 60 s abort and maxTotalChargeUsd; failures become `failed`, except X,
  *    whose free quota is tiny: any X failure answers the labelled sample instead
  *
  * Security: links are parsed strictly (https, exact host allowlist, no credentials or port, a
@@ -363,17 +358,7 @@ export function mapApifyItems(
   }
 }
 
-// ---------------------------------------------------------------- fixtures and samples
-
-const DEMO_HANDLES = new Set(['miralane', 'mira', 'priya']);
-
-/** Demo handles answer from platform-fixtures/ instead of a live fetch. */
-export const isDemoHandle = (handle: string): boolean => DEMO_HANDLES.has(handle.toLowerCase());
-const FIXTURES: Partial<Record<LookupPlatform, unknown>> = {
-  instagram: instagramFixture,
-  tiktok: tiktokFixture,
-  youtube: youtubeFixture,
-};
+// ---------------------------------------------------------------- samples
 
 function hash(text: string): number {
   let h = 2166136261;
@@ -416,7 +401,7 @@ export function simulatedProfile(
     return {
       title: topic,
       url: `${profileUrlFor({ platform, handle })}#sample-${i + 1}`,
-      views: Math.round(followers * (0.05 + ((seed >> i) % 20) / 100)),
+      views: Math.round(followers * (0.05 + ((seed >>> i) % 20) / 100)),
       likes: Math.round(followers * 0.01),
       postedAt: new Date(now.getTime() - (i + 1) * 3 * 864e5).toISOString(),
     };
@@ -443,7 +428,6 @@ export interface PlatformLookupDeps {
   /** env.APIFY_ENABLED (already false without a token). */
   enabled: boolean;
   fetch?: typeof fetch;
-  sleep?: (ms: number) => Promise<void>;
   now?: () => Date;
   /** Client-side abort for one Apify call (default 60 s; the run itself is capped at 45 s). */
   timeoutMs?: number;
@@ -461,7 +445,6 @@ const MAX_CHARGE_USD = '0.05';
 
 export function createPlatformLookup(deps: PlatformLookupDeps) {
   const doFetch = deps.fetch ?? fetch;
-  const sleep = deps.sleep ?? ((ms: number) => new Promise((r) => setTimeout(r, ms)));
   const now = deps.now ?? (() => new Date());
   const timeoutMs = deps.timeoutMs ?? 60_000;
 
@@ -509,17 +492,6 @@ export function createPlatformLookup(deps: PlatformLookupDeps) {
       options: LookupOptions = {},
     ): Promise<PlatformLookupResult> {
       const recent = options.recent ?? true;
-      if (isDemoHandle(target.handle)) {
-        const fixture = FIXTURES[target.platform];
-        await sleep(800 + Math.floor(Math.random() * 700));
-        if (!fixture) return failed('not_found');
-        const profile = {
-          ...(fixture as PlatformProfile),
-          fetchedAt: now().toISOString(),
-        };
-        if (!recent) profile.recent = [];
-        return { status: 'ready', profile };
-      }
       if (!deps.enabled || !deps.token) {
         return {
           status: 'ready',

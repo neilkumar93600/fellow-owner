@@ -21,13 +21,12 @@ pnpm install
 docker compose up db            # Postgres with pgvector on :5432
 cp api/.env.example api/.env    # defaults work for development
 pnpm db:migrate                 # apply the SQL migrations
-pnpm db:seed                    # load the demo space (Mira Lane, a travel creator)
 pnpm dev                        # web and api through Turborepo; api on :4000
 ```
 
 The web app rewrites `/api/*` and `/r/*` to the API (`API_URL`, `http://localhost:4000` in development). Without `OPENROUTER_API_KEY` a deterministic fake AI answers, so every screen works with no keys. `docker compose up --build` runs the database and the API in containers instead.
 
-Scripts (root `package.json`): `pnpm dev`, `build`, `typecheck`, `lint` (Biome), `test:unit`, `test:integration` (needs the Postgres from Docker), `test:e2e` (Playwright smoke test), `db:generate`, `db:migrate`, `db:seed`, `db:embed` (backfill embeddings, needs an AI key), `db:studio`.
+Scripts (root `package.json`): `pnpm dev`, `build`, `typecheck`, `lint` (Biome), `test:unit`, `test:integration` (needs the Postgres from Docker), `test:e2e` (Playwright smoke test), `db:generate`, `db:migrate`, `db:embed` (backfill embeddings, needs an AI key), `db:studio`.
 
 ## Deploy
 
@@ -40,10 +39,10 @@ Production is one Railway project plus one Vercel project. Details and every var
 | `api` | Build from `api/Dockerfile` (context: repo root; `.railwayignore` trims the upload). Pre-deploy command: `node dist/db/migrate.js`, so migrations run before traffic moves. Health check: `GET /api/health` (503 when the database is down). Set `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` so open requests finish on a deploy. Per-IP limits use Railway's `X-Real-IP`, or the visitor IP that `web/proxy.ts` sends as `x-edge-client-ip` when the request also carries `x-edge-key` = `INTERNAL_API_KEY`, so set the same `INTERNAL_API_KEY` on both services |
 | `pgvector` | Postgres with the `vector` extension. `DATABASE_URL` on `api` points at it |
 | Redis | `REDIS_URL` on `api`: rate-limit counters, daily caps, code throttle and live notifications across replicas. Optional |
-| `cron` | Schedule `0 * * * *`. Its start command calls `POST /api/cron/tick` on `api` with `Authorization: Bearer $CRON_SECRET`. The tick runs the hourly jobs (sweep, question grouping, challenge closing, email digests) and the daily and weekly ones (follower refresh 06:00 UTC, demo reset 01:00 UTC, retention purge 09:00 UTC, demo briefing warm-up hourly, community digests Mondays 13:00 UTC). A missed hour catches up on the next tick. `GET /api/cron/status` shows recent runs; `POST /api/cron/tick?job=<name>` runs one job now |
+| `cron` | Schedule `0 * * * *`. Its start command calls `POST /api/cron/tick` on `api` with `Authorization: Bearer $CRON_SECRET`. The tick runs the hourly jobs (sweep, question grouping, challenge closing, email digests) and the daily and weekly ones (follower refresh 06:00 UTC, retention purge 09:00 UTC, community digests Mondays 13:00 UTC). A missed hour catches up on the next tick. `GET /api/cron/status` shows recent runs; `POST /api/cron/tick?job=<name>` runs one job now |
 | `media` bucket | S3-compatible bucket for image uploads. Give `api` its `BUCKET_ENDPOINT`, `BUCKET_NAME`, `BUCKET_ACCESS_KEY_ID` and `BUCKET_SECRET_ACCESS_KEY` (all four, or uploads stay off). Set the bucket's CORS once so browsers can PUT and GET from the web origins (production, previews, localhost) |
 
-First deploy: after the migration runs, load the demo with `POST /api/cron/tick?job=demo_reset` (or `pnpm db:seed` against the database), then run `pnpm db:embed` against the database with an AI key to backfill embeddings.
+Rows written while AI was off have no embeddings: run `pnpm db:embed` against the database with an AI key to backfill them.
 
 ### Vercel (web)
 
@@ -54,12 +53,15 @@ Project `fellow-owners-web` (the Next.js app in `web/`). Environment variables:
 | `API_URL` | Origin of the Railway `api` service. The rewrites and server-side reads use it |
 | `NEXT_PUBLIC_APP_URL` | The public web origin, for links people copy or scan. Optional |
 | `INTERNAL_API_KEY` | Server-only, 32+ characters, the same value as on `api`; lets the web server's reads skip the API's per-IP rate limits, and `proxy.ts` (which rewrites `/api/*` to `API_URL`) sends it as `x-edge-key` with the visitor's IP as `x-edge-client-ip`, so the API counts the visitor's IP, not Vercel's |
+| `NEXT_PUBLIC_GA_ID` | Google Analytics 4 measurement id (`G-…`). Optional; loads only after a visitor accepts analytics cookies. Set before building |
+| `GOOGLE_SITE_VERIFICATION` | Google Search Console HTML-tag token (the `content` value only). Optional |
+| `BING_SITE_VERIFICATION` | Bing Webmaster Tools `msvalidate.01` token. Optional; Bing's index also feeds ChatGPT search and Copilot |
 
 On `api`, set `WEB_ORIGIN` and `BETTER_AUTH_URL` to the web origin (auth is reached through the web rewrite), and `TRUSTED_ORIGINS` for preview deployments.
 
 ### Where secrets live
 
-Only in the Railway and Vercel environment variables. `api/.env.example` lists names, never values; `api/src/config/env.ts` checks them on boot and stops the process with the full list of problems. In production the API requires `DATABASE_URL`, `BETTER_AUTH_SECRET` (32+ characters), `RESEND_API_KEY` with `EMAIL_FROM`, `CRON_SECRET` and `CLICK_SALT`, plus `DEMO_CREATOR_EMAIL`, `DEMO_FAN_EMAIL` and `DEMO_PASSWORD` while `DEMO_ENABLED` is on. Optional keys switch features on: `OPENROUTER_API_KEY` (live AI), `GOOGLE_*`, `APPLE_*`, `FACEBOOK_*` (sign-in), `APIFY_TOKEN` (profile lookups), `YOUTUBE_API_KEY` (comment import), `FAL_KEY` (seed media), `ADMIN_EMAILS` (admin allowlist).
+Only in the Railway and Vercel environment variables. `api/.env.example` lists names, never values; `api/src/config/env.ts` checks them on boot and stops the process with the full list of problems. In production the API requires `DATABASE_URL`, `BETTER_AUTH_SECRET` (32+ characters), `RESEND_API_KEY` with `EMAIL_FROM`, `CRON_SECRET` and `CLICK_SALT`. Optional keys switch features on: `OPENROUTER_API_KEY` (live AI), `GOOGLE_*`, `APPLE_*`, `FACEBOOK_*` (sign-in), `APIFY_TOKEN` (profile lookups), `YOUTUBE_API_KEY` (comment import), `FAL_KEY` (media generation), `ADMIN_EMAILS` (admin allowlist).
 
 ## The build docs
 

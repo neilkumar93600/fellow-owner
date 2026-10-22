@@ -14,7 +14,7 @@ import { CreatorHeader } from '@/components/bio/creator-header';
 import { cn } from '@/components/ui/cn';
 import { segment } from '@/hooks/use-scroll-scene';
 import { BrowserFrame, PhoneFrame } from './device-frames';
-import { LIVE_ROOMS, LIVE_SPACE, LIVE_URLS } from './loop-live-data';
+import { LIVE_PHOTOS, LIVE_ROOMS, LIVE_SPACE, LIVE_URLS } from './loop-live-data';
 
 /** Five steps: followers, communities, idea, crew, featured (the order of storySteps). */
 export const LIVE_STEP_COUNT = LIVE_URLS.length;
@@ -47,6 +47,7 @@ function BrowserPage({ step }: { step: number }) {
     <div className={BIO}>
       <CreatorHeader
         space={LIVE_SPACE}
+        photos={LIVE_PHOTOS}
         cta={{ href: '#', label: 'Join a room' }}
         nameAs="p"
         priority={false}
@@ -72,6 +73,7 @@ function PhonePage({ step }: { step: number }) {
   return (
     <CreatorHeader
       space={LIVE_SPACE}
+      photos={LIVE_PHOTOS}
       cta={{ href: '#', label: 'Join a room' }}
       nameAs="p"
       priority={false}

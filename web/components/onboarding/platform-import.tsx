@@ -197,11 +197,8 @@ function prefill(
     bio:
       oneLine(s.bio ?? profiles.find((p) => p.bio)?.bio ?? '').slice(0, LIMITS.space.bio.max) ||
       undefined,
-    // Saved only when the server fetched it (a data: URL) or it is one of our own demo pictures.
-    avatarUrl:
-      s.avatarUrl ??
-      profiles.map((p) => p.avatarUrl).find((u) => u?.startsWith('/demo/')) ??
-      undefined,
+    // Saved only when the server fetched it (a data: URL).
+    avatarUrl: s.avatarUrl ?? undefined,
   };
   const next: Prefilled = { ...state.prefilled };
   for (const field of ['displayName', 'bio', 'avatarUrl'] as const) {

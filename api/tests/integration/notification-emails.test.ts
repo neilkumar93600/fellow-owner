@@ -152,21 +152,10 @@ describe('sendDue', () => {
     expect(sent[0]?.text).not.toContain('Replies off');
   });
 
-  it('never emails example.com addresses (demo and seed users)', async () => {
-    const demo = await newFan('priya@example.com');
-    await notify(demo, 'reply_received', hoursAgo(2));
+  it('never emails reserved example.com addresses', async () => {
+    const example = await newFan('priya@example.com');
+    await notify(example, 'reply_received', hoursAgo(2));
     expect(await notificationEmails.sendDue(NOW)).toBe(0);
-    expect(sent).toHaveLength(0);
-  });
-
-  it('never emails the shared demo accounts, whatever their domain', async () => {
-    const demoEnv = { ...env, DEMO_FAN_EMAIL: 'priya@fellow-test.dev' };
-    const demoEmails = buildContainer({
-      env: demoEnv,
-      mailer: { send: async (m) => void sent.push(m) },
-    }).services.notificationEmails;
-    await notify(fan, 'reply_received', hoursAgo(2));
-    expect(await demoEmails.sendDue(NOW)).toBe(0);
     expect(sent).toHaveLength(0);
   });
 

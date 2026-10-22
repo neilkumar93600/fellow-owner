@@ -15,7 +15,6 @@ describe('GET /api/config', () => {
     const res = await request(app).get('/api/config').expect(200);
     expect(res.body).toEqual({
       providers: { google: false, apple: false, facebook: false },
-      demoEnabled: true,
       uploads: false,
       youtubeImport: false,
     });
@@ -30,7 +29,6 @@ describe('GET /api/config', () => {
           ...env,
           GOOGLE_ENABLED: true,
           FACEBOOK_ENABLED: true,
-          DEMO_ENABLED: false,
           UPLOADS_ENABLED: true,
           YOUTUBE_ENABLED: true,
         },
@@ -39,7 +37,6 @@ describe('GET /api/config', () => {
     const res = await request(app).get('/api/config').expect(200);
     expect(res.body).toEqual({
       providers: { google: true, apple: false, facebook: true },
-      demoEnabled: false,
       uploads: true,
       youtubeImport: true,
     });

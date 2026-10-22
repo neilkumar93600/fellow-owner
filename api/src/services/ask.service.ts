@@ -2,7 +2,6 @@ import {
   type AskAiRequestInput,
   type AskAnswer,
   type AskCitation,
-  dailyCap,
   LIMITS,
 } from '@fellow-owners/shared';
 import type { AskAiInput } from '../ai/types.js';
@@ -28,7 +27,7 @@ const key = (refType: string, refId: string) => `${refType}:${refId}`;
  * F13 Ask your AI (owner only): embeds the question, takes the LIMITS.ask.matches nearest posts
  * and pitches of the caller's space, and has the smart model answer from those alone. Citations
  * are checked against the matched set (anything else is dropped and the answer renumbered).
- * LIMITS.ask.perDay questions a day (x DEMO_CAP_SCALE in the shared demo space), counted from
+ * LIMITS.ask.perDay questions a day, counted from
  * ai_runs: the question embeddings that succeeded (task embedItem, ref_type 'ask', status ok)
  * minus the answers that finished with an error (task askAI, ref_type 'ask', status error, not
  * still in progress). A question the AI could not answer costs nothing; TASK_CAPS (every attempt counts) still bound retries.
@@ -97,7 +96,7 @@ export function createAskService({ repos, ai }: AskServiceDeps) {
       if (!space || space.id !== spaceId) throw notFound('Space');
 
       const now = new Date();
-      const limit = dailyCap(LIMITS.ask.perDay, space);
+      const limit = LIMITS.ask.perDay;
       const used = await usedToday(space.id, now);
       if (used >= limit) {
         throw dailyCapReached(`You've asked ${limit} questions today. Try again tomorrow.`, {

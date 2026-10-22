@@ -39,6 +39,11 @@ export function createPublicController(deps: PublicControllerDeps) {
       res.json(await deps.spaces.checkHandle(h));
     },
 
+    /** GET /api/sitemap -> { spaces: [{ handle }] } */
+    async sitemap(_req: Request, res: Response): Promise<void> {
+      setPublicCache(res).json(await deps.spaces.sitemap());
+    },
+
     /** GET /api/spaces/:handle -> SpacePage */
     async spacePage(req: Request, res: Response): Promise<void> {
       const { handle } = paramsOf(req, handleParamsSchema);

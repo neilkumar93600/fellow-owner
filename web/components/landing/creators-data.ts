@@ -1,7 +1,7 @@
-// Content for "For creators" (creator pivot spec §5, section 5). Built from the demo in demo-data.ts; the
-// extra lines here (quotes, reasons, tabs) describe the same Mira Lane demo space.
+// Content for "For creators" (creator pivot spec §5, section 5). Built from the example in example-data.ts; the
+// extra lines here (quotes, reasons, tabs) describe the same Mira Lane example space.
 
-import { promoteDraft } from './demo-data';
+import { promoteDraft } from './example-data';
 
 export interface CreatorsStep {
   id: 'today' | 'fanmail' | 'spotlight';
@@ -61,7 +61,7 @@ export interface FanMailRow {
   score: number;
 }
 
-/** The four best non-spam messages in the demo fan mail. */
+/** The four best non-spam messages in the example fan mail. */
 export const FAN_MAIL_ROWS: FanMailRow[] = [
   {
     id: 'm1',

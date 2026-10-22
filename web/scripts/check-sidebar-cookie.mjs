@@ -1,19 +1,11 @@
-// Sidebar cookie check. Usage: node scripts/check-sidebar-cookie.mjs [origin=http://localhost:3006]
-// Signs in as the demo creator, then asks /dashboard for its HTML with each fo_sidebar value and checks
-// the server-rendered shell: "expanded" -> data-sidebar="expanded", "collapsed", junk and no cookie ->
-// data-sidebar="collapsed" (so there is no flash and no hydration mismatch). Exits 1 on any miss.
+// Sidebar cookie check. Usage: FO_SESSION_COOKIE="<name>=<value>" node scripts/check-sidebar-cookie.mjs [origin=http://localhost:3006]
+// FO_SESSION_COOKIE is the session cookie of a signed-in creator (copy it from the browser). Asks /dashboard for
+// its HTML with each fo_sidebar value and checks the server-rendered shell: "expanded" -> data-sidebar="expanded",
+// "collapsed", junk and no cookie -> data-sidebar="collapsed" (so there is no flash and no hydration mismatch).
+// Exits 1 on any miss.
 const origin = process.argv[2] ?? 'http://localhost:3006';
-
-const res = await fetch(`${origin}/api/demo/session`, {
-  method: 'POST',
-  headers: { 'content-type': 'application/json' },
-  body: JSON.stringify({ as: 'creator' }),
-});
-if (!res.ok) throw new Error(`demo session failed: ${res.status}`);
-const session = res.headers
-  .getSetCookie()
-  .map((c) => c.split(';')[0])
-  .join('; ');
+const session = process.env.FO_SESSION_COOKIE;
+if (!session) throw new Error('Set FO_SESSION_COOKIE to a signed-in creator session cookie.');
 
 const cases = [
   ['expanded', 'expanded'],

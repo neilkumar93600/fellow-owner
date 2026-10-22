@@ -31,6 +31,23 @@ describe('loadEnv', () => {
     expect(set.ANTHROPIC_MODEL_SMART).toBe('claude-smart-x');
   });
 
+  it('ignores the retired DEMO_* variables still set on old deployments', () => {
+    const env = loadEnv({
+      NODE_ENV: 'production',
+      DATABASE_URL: 'postgres://u:p@db:5432/app',
+      BETTER_AUTH_SECRET: 'x'.repeat(40),
+      CRON_SECRET: 'cron',
+      CLICK_SALT: 'salt',
+      RESEND_API_KEY: 're_test',
+      EMAIL_FROM: 'Fellow Owners <hi@example.com>',
+      DEMO_ENABLED: 'yes please',
+      DEMO_CREATOR_EMAIL: 'not-an-email',
+      DEMO_FAN_EMAIL: '',
+      DEMO_PASSWORD: 'x',
+    });
+    expect(Object.keys(env).some((key) => key.startsWith('DEMO_'))).toBe(false);
+  });
+
   it('still rejects an unknown LOG_LEVEL', () => {
     expect(() => loadEnv({ NODE_ENV: 'development', LOG_LEVEL: 'loud' })).toThrow(EnvError);
   });

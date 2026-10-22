@@ -4,7 +4,6 @@ import {
   PLATFORM_FANS_LIMITS,
   type PlatformFansSkipReason,
 } from '@fellow-owners/shared';
-import demoFixture from './platform-fixtures/commenters-miralane.json' with { type: 'json' };
 import { createPlatformLookup, type ProfileTarget, profileUrlFor } from './platform-lookup.js';
 import {
   createYoutubeClient,
@@ -94,14 +93,6 @@ export function mapCommenters(
     });
   }
   return [...byHandle.values()];
-}
-
-const DEMO = demoFixture as Record<FansPlatform, { posts: number; commenters: Commenter[] }>;
-
-/** Demo handles (miralane, mira, priya): saved commenters, no network. Demo spaces only. */
-export function demoFans(platform: FansPlatform): FansFetch {
-  const { posts, commenters } = DEMO[platform];
-  return { status: 'ok', posts, commenters: commenters.map((c) => ({ ...c })) };
 }
 
 export interface PlatformFansDeps {

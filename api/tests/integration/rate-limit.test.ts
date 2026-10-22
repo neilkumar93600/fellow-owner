@@ -8,8 +8,6 @@ import { buildContainer } from '../../src/container.js';
 import { PLATFORM_LOOKUPS_PER_DAY } from '../../src/controllers/platform.controller.js';
 import { createApp } from '../../src/create-app.js';
 import { session } from '../../src/db/schema/auth.js';
-import { withinCap } from '../../src/middlewares/rate-limit.js';
-import { DEMO_SESSIONS_PER_HOUR, DEMO_SESSIONS_PER_MINUTE } from '../../src/routes/demo.routes.js';
 import { signInWithOtp, TEST_ORIGIN } from '../helpers/auth.js';
 import { closeDb, db, resetDatabase } from '../helpers/test-db.js';
 
@@ -60,15 +58,6 @@ describe('public limiter', () => {
       .set('X-Real-IP', ip)
       .expect(429);
     expect(res.headers['ratelimit-limit']).toBe('30');
-  });
-
-  it(`demo sessions: ${DEMO_SESSIONS_PER_MINUTE} per minute per IP`, async () => {
-    const ip = '203.0.113.4';
-    for (let i = 0; i < DEMO_SESSIONS_PER_MINUTE; i += 1) {
-      // An invalid body is still counted: the limiter runs first.
-      await request(app).post('/api/demo/session').set('X-Real-IP', ip).send({}).expect(400);
-    }
-    await request(app).post('/api/demo/session').set('X-Real-IP', ip).send({}).expect(429);
   });
 
   it('the web server skips the limits with x-internal-key (INTERNAL_API_KEY); a wrong key does not', async () => {
@@ -148,25 +137,6 @@ describe('client IP (lib/client-ip.ts)', () => {
       .from(session)
       .where(eq(session.userId, res.body.user.id));
     expect(row?.ip).toBe('203.0.113.63');
-  });
-});
-
-describe('demo sessions: global hourly cap', () => {
-  it(`after ${DEMO_SESSIONS_PER_HOUR} an hour in all, any IP gets 429`, async () => {
-    for (let i = 0; i < DEMO_SESSIONS_PER_HOUR; i += 1) {
-      await withinCap({
-        name: 'demo-session-hour',
-        key: 'all',
-        windowSeconds: 3600,
-        max: DEMO_SESSIONS_PER_HOUR,
-        redis: null,
-      });
-    }
-    await request(app)
-      .post('/api/demo/session')
-      .set('X-Real-IP', '203.0.113.70')
-      .send({ as: 'creator' })
-      .expect(429);
   });
 });
 

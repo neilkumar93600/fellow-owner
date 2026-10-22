@@ -53,7 +53,6 @@ export function createFactories(container: Container) {
       displayName?: string;
       communities?: Array<{ name: string; slug: string; tint?: Tint; icon?: CommunityIcon }>;
       tasteProfile?: SpaceRow['tasteProfile'];
-      isDemo?: boolean;
     } = {},
   ): Promise<TestSpace> {
     const owner = overrides.owner ?? (await user());
@@ -61,7 +60,6 @@ export function createFactories(container: Container) {
       ownerUserId: owner.id,
       handle: overrides.handle ?? `space_${next()}`.slice(0, 30),
       displayName: overrides.displayName ?? owner.name,
-      isDemo: overrides.isDemo ?? false,
       tasteProfile: overrides.tasteProfile ?? {
         promote: ['fitness apps for creators', 'design tools'],
         never: ['crypto schemes'],

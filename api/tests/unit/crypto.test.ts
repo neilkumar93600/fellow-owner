@@ -61,7 +61,6 @@ describe('creator-suite env', () => {
     CLICK_SALT: 'salt',
     RESEND_API_KEY: 're_test',
     EMAIL_FROM: 'Fellow Owners <hi@example.com>',
-    DEMO_ENABLED: 'false',
   };
   const meta = { META_APP_ID: '123', META_APP_SECRET: 'app-secret', META_VERIFY_TOKEN: 'verify' };
 

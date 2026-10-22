@@ -18,7 +18,8 @@ const publicReads = () =>
   createRateLimit({ name: 'public', windowSeconds: 60, max: PUBLIC_READS_PER_MINUTE });
 
 /**
- * Public API (mounted at /api): GET /spaces/:handle (bio page, cached 60s),
+ * Public API (mounted at /api): GET /sitemap (every creator's handle, cached 60s),
+ * GET /spaces/:handle (bio page, cached 60s),
  * GET /spaces/:handle/showcase/:slug and GET /handle-available?h= (never cached).
  * Rate limited per IP (Redis when set, in process otherwise). No session is read here: the
  * responses never carry a Set-Cookie.
@@ -37,6 +38,7 @@ export function createPublicRoutes(container: Container): Router {
     validate({ query: handleAvailableQuerySchema }),
     controller.handleAvailable,
   );
+  router.get('/sitemap', limit, controller.sitemap);
   router.get(
     '/spaces/:handle',
     limit,

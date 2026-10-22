@@ -2,7 +2,7 @@ import { EyeOff, HandHelping, Heart, ListChecks, type LucideIcon } from 'lucide-
 import type * as React from 'react';
 import { MatchLabel } from '@/components/shared/match-label';
 import { cn } from '@/lib/utils';
-import { DEMO } from './demo-data';
+import { EXAMPLE } from './example-data';
 import { RevealGroup, RevealItem } from './reveal';
 import { SectionHeading } from './section-heading';
 import styles from './trust.module.css';
@@ -11,7 +11,7 @@ import styles from './trust.module.css';
  * You stay in charge (round 4 spec section 2, "Trust"): three plain statements about what the AI will
  * never do, each with an icon and a small picture of the real UI. The pictures are decoration
  * (aria-hidden): the title and line carry the meaning. Static, server-rendered, readable without
- * JavaScript. Names and numbers come from DEMO.
+ * JavaScript. Names and numbers come from EXAMPLE.
  */
 
 type Statement = {
@@ -42,14 +42,14 @@ const STATEMENTS: Statement[] = [
     line: 'Match labels are for your eyes only.',
     snippet: (
       <>
-        <p className={styles.snipTitle}>{DEMO.idea.title}</p>
+        <p className={styles.snipTitle}>{EXAMPLE.idea.title}</p>
         <p className={styles.muted}>
-          {DEMO.idea.author} · {DEMO.idea.community}
+          {EXAMPLE.idea.author} · {EXAMPLE.idea.community}
         </p>
         <p className={styles.row}>
           <span className={styles.hearts}>
             <Heart size={14} strokeWidth={1.75} />
-            <b className="tabular">{DEMO.idea.use}</b>
+            <b className="tabular">{EXAMPLE.idea.use}</b>
           </span>
           <span className={styles.muted}>No rank</span>
         </p>
@@ -63,11 +63,11 @@ const STATEMENTS: Statement[] = [
     snippet: (
       <>
         <p className={styles.row}>
-          <span className={styles.snipTitle}>{DEMO.idea.title}</span>
+          <span className={styles.snipTitle}>{EXAMPLE.idea.title}</span>
         </p>
-        <MatchLabel score={DEMO.idea.fit} className="self-start" />
+        <MatchLabel score={EXAMPLE.idea.fit} className="self-start" />
         <p className={styles.why}>
-          <b>Why:</b> {DEMO.idea.reason}
+          <b>Why:</b> {EXAMPLE.idea.reason}
         </p>
       </>
     ),

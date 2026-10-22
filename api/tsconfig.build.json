@@ -8,5 +8,5 @@
     "declaration": false
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "src/db/seed/data"]
+  "exclude": ["node_modules", "dist"]
 }

@@ -64,9 +64,6 @@ export const rateLimited = (message = 'Too many requests, try again soon', detai
 export const editWindowClosed = (message = 'Posts can only be edited within 24 hours') =>
   new AppError('edit_window_closed', 403, message);
 
-export const demoDisabled = (message = 'Demo mode is turned off') =>
-  new AppError('demo_disabled', 403, message);
-
 export const aiUnavailable = (message = 'AI is unavailable right now', details?: unknown) =>
   new AppError('ai_unavailable', 503, message, details);
 

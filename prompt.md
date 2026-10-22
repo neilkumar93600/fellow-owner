@@ -39,11 +39,11 @@ Notes for this machine: `python3` opens the Microsoft Store stub, so use `python
 Throw it away and run again if you see:
 - text, letters, numbers, a logo, a sign, a screen, or a star, sparkle or asterisk shape
 - faces on the figurines, glow, neon, a dark mood, or a purple flood
-- busy detail in the lower left or the top-left corner (the caption card and the demo pill cover them)
+- busy detail in the lower left (the caption card covers it)
 
 ### How it is used
 
-The picture fills the whole column in a panel with 28px corners, cropped to the window's shape: about 3:4 portrait on a 1024 x 768 screen, a little wider than square on most laptops, about 3:2 at 1920 x 1080. A white demo pill sits on its top-left corner and a white caption card ("Turn followers into fellow owners." plus one line) on its lower left, so no words ever sit on the picture. The switch and the crop point live in `web/components/auth/auth-art.ts`:
+The picture fills the whole column in a panel with 28px corners, cropped to the window's shape: about 3:4 portrait on a 1024 x 768 screen, a little wider than square on most laptops, about 3:2 at 1920 x 1080. A white caption card ("Turn followers into fellow owners." plus one line) sits on its lower left, so no words ever sit on the picture. The switch and the crop point live in `web/components/auth/auth-art.ts`:
 
 ```ts
 export const AUTH_ART: AuthArt | null = {
@@ -54,7 +54,7 @@ export const AUTH_ART: AuthArt | null = {
 };
 ```
 
-Set it to `null` and the column shows real product moments from the demo space instead. A new picture with its subject elsewhere only needs a different `focus` (a CSS `object-position`).
+Set it to `null` and the column shows real product moments instead. A new picture with its subject elsewhere only needs a different `focus` (a CSS `object-position`).
 
 ## 1b. /gpt-image-2: onboarding, one image per step
 
@@ -193,8 +193,8 @@ Auth: self-hosted Better Auth 1.7 on our own Express API, with same-site cookie 
 Audience: creators with 100K to 2M followers, on a laptop between shoots, and their fans, who arrive on a phone from a bio link inside the Instagram, TikTok or YouTube in-app browser and decide in seconds.
 Pages (dedicated pages on the main domain, already built):
 - /create-account (the old /sign-up redirects here permanently): Google, Apple, Facebook; then full name and email on one line, username with a live availability check, an optional social profile (a platform icon picker plus handle), password with a strength meter and show/hide, confirm password, a line confirming 18 or older and agreeing to the Terms of Service and Privacy Policy, and one purple "Create account" button.
-- /login: Google, Apple, Facebook; then email or username, password with "Forgot password?" on the label row, "Log in", the legal line, a link to create an account, and a no-account demo (Creator view, Fan view).
-Media: from 1024px wide, a two-column layout: one image column beside the form, shared by every auth screen (our own generated artwork under a white demo pill and a white caption card with the headline). No stock art.
+- /login: Google, Apple, Facebook; then email or username, password with "Forgot password?" on the label row, "Log in", the legal line, and a link to create an account.
+Media: from 1024px wide, a two-column layout: one image column beside the form, shared by every auth screen (our own generated artwork under a white caption card with the headline). No stock art.
 Code: web/app/(auth)/ and web/components/auth/.
 
 Give me: the domain and URL check, modal or page, the page structure (headline, trust signals that suit a free product with no payment step, media, form), the robots meta for each auth URL, and anything that would cost sign-ups inside in-app browsers. Keep the field list: the username powers username log-in and the social profile is optional. List findings first and change nothing until I confirm.
@@ -244,7 +244,7 @@ Checked on 2026-10-02: every line runs. The design-system call suggests a vibran
 ```text
 /ui-ux-pro-max Review the redesigned auth pages of Fellow Owners against your Quick Reference: /login, /create-account, /verify-otp, /forgot-password and /reset-password. Code: web/app/(auth)/ and web/components/auth/ (shell in auth-shell.tsx, tab bar in auth-nav.tsx, the image column in auth-panel.tsx with its picture in auth-art.ts, the platform icon picker in social-profile-field.tsx), with the Magic UI pieces in web/components/magicui/.
 
-DESIGN.md at the repo root wins every conflict with your database, even where you would choose differently: Inter only (weights 400 to 600, no uppercase labels), the pewter shell with its haze, glass only for navigation chrome on the shell and never with backdrop blur, flat cards and buttons with no shadows, exactly one purple button per screen, lime only as a "you are here" marker, only ink words on the bare shell and words over the picture only on white (the demo pill and the caption card), 150 to 250ms motion that never bounces, light theme only, and no em dashes in copy. Do not propose new fonts, palettes, gradients, glow, dark mode or a different style. Where one of your rules disagrees with DESIGN.md, note it in one line and move on.
+DESIGN.md at the repo root wins every conflict with your database, even where you would choose differently: Inter only (weights 400 to 600, no uppercase labels), the pewter shell with its haze, glass only for navigation chrome on the shell and never with backdrop blur, flat cards and buttons with no shadows, exactly one purple button per screen, lime only as a "you are here" marker, only ink words on the bare shell and words over the picture only on white (the caption card), 150 to 250ms motion that never bounces, light theme only, and no em dashes in copy. Do not propose new fonts, palettes, gradients, glow, dark mode or a different style. Where one of your rules disagrees with DESIGN.md, note it in one line and move on.
 
 Check in this order: accessibility, touch and interaction, performance, layout and responsive, forms and feedback, animation. Test at 360px (fans arrive inside Instagram and TikTok in-app browsers), 768px, 1024px and 1440px, and with prefers-reduced-motion on.
 

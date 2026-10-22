@@ -7,7 +7,7 @@ import {
 import { waitUntil } from '@vercel/functions';
 import { type BetterAuthRateLimitStorage, betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { APIError, createAuthMiddleware, getSessionFromCtx } from 'better-auth/api';
+import { APIError, createAuthMiddleware } from 'better-auth/api';
 import { verifyPassword } from 'better-auth/crypto';
 import { emailOTP } from 'better-auth/plugins/email-otp';
 import { username } from 'better-auth/plugins/username';
@@ -22,7 +22,6 @@ import { createStorage, mediaImageProblem, type Storage } from '../lib/storage.j
 import { withinCap } from '../middlewares/rate-limit.js';
 import { createRepos } from '../repositories/index.js';
 import { createAccountService } from '../services/account.service.js';
-import { isDemoEmail } from './demo.js';
 import {
   createEmailSender,
   createSendThrottle,
@@ -46,21 +45,6 @@ const DAY_SECONDS = 60 * 60 * 24;
  * stops someone rotating IPs and addresses from running up Resend until the domain is suspended.
  */
 export const OTP_EMAILS_PER_HOUR = 300;
-
-/** What the shared demo accounts may not do: change themselves, or see and end other visitors' sessions. */
-const DEMO_LOCKED_PATHS = new Set([
-  '/update-user',
-  '/delete-user',
-  '/delete-user/callback',
-  '/change-password',
-  '/change-email',
-  '/list-sessions',
-  '/revoke-session',
-  '/revoke-sessions',
-  '/revoke-other-sessions',
-  '/link-social',
-  '/unlink-account',
-]);
 
 export interface AuthDeps {
   db?: Db;
@@ -139,14 +123,12 @@ export function redisRateLimitStorage(redis: Redis, logger: Logger): BetterAuthR
  *   their bucket images; it is safe to run again when the delete itself failed.
  * - An uploaded avatar (`image` = /api/media/<key>) must be a real JPEG, PNG or WebP
  *   (lib/storage.ts mediaImageProblem); other image links keep their rules.
- *   The demo accounts can't do either (DEMO_LOCKED_PATHS).
  * - One namespace (spec §11): a username is a handle. Same rules as a space handle (shared
  *   `LIMITS.username`, reserved words refused), and a username that is another person's space
  *   handle answers 409 HANDLE_TAKEN (databaseHooks). Space creation (spaces.service.ts) writes the
  *   owner's username = handle in its transaction, so the username unique constraint settles a
  *   race between the two. The optional social profile is `socialPlatform` + `socialHandle`,
  *   checked with the shared schemas.
- * - The demo accounts are ordinary, already confirmed password accounts (`ensureDemoUsers()`).
  * - `baseURL` is the WEB origin: the browser reaches /api/auth through the Next.js rewrite, so
  *   cookies are first-party and OAuth callbacks land on the web origin.
  * - Sessions: 7 days, refreshed daily; httpOnly, sameSite=lax, secure in production. They live in
@@ -288,25 +270,6 @@ export function createAuth(deps: AuthDeps = {}) {
         if (ctx.path === '/email-otp/verify-email' && ctx.request) {
           confirmPasswords.set(ctx.request, body.password);
         }
-
-        if (DEMO_LOCKED_PATHS.has(ctx.path)) {
-          const current = await getSessionFromCtx(ctx);
-          if (current && isDemoEmail(env, current.user.email)) {
-            throw new APIError('FORBIDDEN', {
-              code: 'DEMO_READ_ONLY',
-              message: 'The demo accounts can’t be changed.',
-            });
-          }
-        }
-
-        if (
-          ctx.path === '/sign-in/email' &&
-          !env.DEMO_ENABLED &&
-          typeof body.email === 'string' &&
-          isDemoEmail(env, body.email)
-        ) {
-          throw new APIError('FORBIDDEN', { code: 'DEMO_DISABLED', message: 'The demo is off.' });
-        }
       }),
     },
     databaseHooks: {
@@ -342,12 +305,6 @@ export function createAuth(deps: AuthDeps = {}) {
           deliver({ to: owner.email, code: token, type: 'delete-account' });
         },
         beforeDelete: async (owner) => {
-          if (isDemoEmail(env, owner.email)) {
-            throw new APIError('FORBIDDEN', {
-              code: 'DEMO_READ_ONLY',
-              message: 'The demo accounts can’t be changed.',
-            });
-          }
           await accountService.beforeDelete(owner.id);
         },
       },

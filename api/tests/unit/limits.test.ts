@@ -1,4 +1,4 @@
-import { DAILY_CAPS, DEMO_CAP_SCALE, dailyCap, HOURLY_CAPS, LIMITS } from '@fellow-owners/shared';
+import { DAILY_CAPS, HOURLY_CAPS, LIMITS } from '@fellow-owners/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { AppError } from '../../src/lib/errors.js';
 import type { Repos } from '../../src/repositories/index.js';
@@ -30,8 +30,7 @@ function stubRepos(counts: {
   return { repos, service: createLimitsService({ repos: repos as unknown as Repos }) };
 }
 
-const space = { id: 'space-1', displayName: 'Mira', isDemo: false };
-const demo = { id: 'demo-1', displayName: 'Mira', isDemo: true };
+const space = { id: 'space-1', displayName: 'Mira' };
 
 async function caught(promise: Promise<unknown>): Promise<AppError> {
   try {
@@ -116,65 +115,12 @@ describe('limits service', () => {
     expect(error.code).toBe('daily_cap_reached');
   });
 
-  it('scales the promotion drafts cap in the demo space only', async () => {
-    const at = stubRepos({ promoteDrafts: DAILY_CAPS.promoteDrafts });
-    await expect(at.service.assertPromoteDraftsAllowed(demo)).resolves.toBeUndefined();
-    const error = await caught(at.service.assertPromoteDraftsAllowed(space));
-    expect(error.code).toBe('daily_cap_reached');
-    const demoFull = stubRepos({ promoteDrafts: DAILY_CAPS.promoteDrafts * DEMO_CAP_SCALE });
-    await caught(demoFull.service.assertPromoteDraftsAllowed(demo));
-  });
-
   it('allows 5 briefing regenerations a day', () => {
     const { service } = stubRepos({});
     const max = LIMITS.briefing.regenerationsPerDay;
     expect(service.regenerationsLeft(undefined)).toBe(max);
     expect(service.regenerationsLeft(2)).toBe(max - 2);
     expect(() => service.assertRegenerationAllowed(max - 1)).not.toThrow();
-    expect(() => service.assertRegenerationAllowed(max)).toThrow(AppError);
-  });
-});
-
-describe('demo space caps (shared by every visitor)', () => {
-  it('scales by DEMO_CAP_SCALE only in the demo space', () => {
-    expect(DEMO_CAP_SCALE).toBe(5);
-    expect(dailyCap(30, { isDemo: true })).toBe(150);
-    expect(dailyCap(30, { isDemo: false })).toBe(30);
-  });
-
-  it('allows the demo fan a 6th pitch and refuses a real fan', async () => {
-    const sixth = stubRepos({ pitches: DAILY_CAPS.pitches });
-    await expect(sixth.service.assertDailyCap('pitches', demo, 'm-1')).resolves.toBeUndefined();
-    const error = await caught(sixth.service.assertDailyCap('pitches', space, 'm-1'));
-    expect(error.details).toMatchObject({ limit: DAILY_CAPS.pitches });
-
-    const full = stubRepos({ pitches: DAILY_CAPS.pitches * DEMO_CAP_SCALE });
-    const demoError = await caught(full.service.assertDailyCap('pitches', demo, 'm-1'));
-    expect(demoError.details).toMatchObject({ limit: 25 });
-    expect(demoError.message).toContain('limit of 25 pitches');
-  });
-
-  it('scales posts and shows the scaled slots left', async () => {
-    const { service } = stubRepos({ posts: DAILY_CAPS.posts });
-    await expect(service.assertDailyCap('posts', demo, 'm-1')).resolves.toBeUndefined();
-    await expect(service.leftToday('posts', demo, 'm-1')).resolves.toBe(
-      DAILY_CAPS.posts * DEMO_CAP_SCALE - DAILY_CAPS.posts,
-    );
-    await expect(service.leftToday('posts', space, 'm-1')).resolves.toBe(0);
-    await expect(service.leftToday('posts', 'space-1', 'm-1')).resolves.toBe(0);
-  });
-
-  it('scales reply drafts and briefing regenerations, defaulting to the real caps', async () => {
-    const replies = stubRepos({ promoteDrafts: DAILY_CAPS.suggestReply });
-    await expect(replies.service.assertSuggestReplyAllowed(demo)).resolves.toBeUndefined();
-    await caught(replies.service.assertSuggestReplyAllowed('space-1'));
-    await caught(replies.service.assertSuggestReplyAllowed(space));
-
-    const { service } = stubRepos({});
-    const max = LIMITS.briefing.regenerationsPerDay;
-    expect(service.regenerationsLeft(max)).toBe(0);
-    expect(service.regenerationsLeft(max, { isDemo: true })).toBe(max * DEMO_CAP_SCALE - max);
-    expect(() => service.assertRegenerationAllowed(max, { isDemo: true })).not.toThrow();
     expect(() => service.assertRegenerationAllowed(max)).toThrow(AppError);
   });
 });

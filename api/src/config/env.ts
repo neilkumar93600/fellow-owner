@@ -108,11 +108,6 @@ const rawEnvSchema = z.object({
   BUCKET_ACCESS_KEY_ID: optionalString,
   BUCKET_SECRET_ACCESS_KEY: optionalString,
 
-  DEMO_ENABLED: booleanFlag,
-  DEMO_CREATOR_EMAIL: optionalString.pipe(z.email().optional()),
-  DEMO_FAN_EMAIL: optionalString.pipe(z.email().optional()),
-  DEMO_PASSWORD: optionalString,
-
   ADMIN_EMAILS: commaList,
   CRON_SECRET: optionalString,
   CLICK_SALT: optionalString,
@@ -233,11 +228,6 @@ export interface Env {
   /** True when the bucket is configured: uploads on, /api/media serves objects. */
   UPLOADS_ENABLED: boolean;
 
-  DEMO_ENABLED: boolean;
-  DEMO_CREATOR_EMAIL: string;
-  DEMO_FAN_EMAIL: string;
-  DEMO_PASSWORD: string;
-
   /** Lowercased platform admin allowlist. */
   ADMIN_EMAILS: string[];
   CRON_SECRET: string;
@@ -303,23 +293,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
   const secret = required(issues, raw, 'BETTER_AUTH_SECRET', DEV_SECRET);
   if (isProduction && secret && secret.length < 32) {
     issues.push('BETTER_AUTH_SECRET must be at least 32 characters (openssl rand -base64 32)');
-  }
-
-  const demoEnabled = raw.DEMO_ENABLED ?? true;
-  const demoPassword = demoEnabled
-    ? required(issues, raw, 'DEMO_PASSWORD', 'demo-password-123', 'required when DEMO_ENABLED')
-    : (raw.DEMO_PASSWORD ?? '');
-  if (demoEnabled && demoPassword && demoPassword.length < 8) {
-    issues.push('DEMO_PASSWORD must be at least 8 characters');
-  }
-  const demoCreatorEmail = demoEnabled
-    ? required(issues, raw, 'DEMO_CREATOR_EMAIL', 'mira@example.com', 'required when DEMO_ENABLED')
-    : (raw.DEMO_CREATOR_EMAIL ?? 'mira@example.com');
-  const demoFanEmail = demoEnabled
-    ? required(issues, raw, 'DEMO_FAN_EMAIL', 'priya@example.com', 'required when DEMO_ENABLED')
-    : (raw.DEMO_FAN_EMAIL ?? 'priya@example.com');
-  if (demoEnabled && demoCreatorEmail.toLowerCase() === demoFanEmail.toLowerCase()) {
-    issues.push('DEMO_CREATOR_EMAIL and DEMO_FAN_EMAIL must differ');
   }
 
   const cronSecret = required(issues, raw, 'CRON_SECRET', 'dev-cron-secret');
@@ -474,11 +447,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     BUCKET_ACCESS_KEY_ID: raw.BUCKET_ACCESS_KEY_ID,
     BUCKET_SECRET_ACCESS_KEY: raw.BUCKET_SECRET_ACCESS_KEY,
     UPLOADS_ENABLED: uploadsEnabled,
-
-    DEMO_ENABLED: demoEnabled,
-    DEMO_CREATOR_EMAIL: demoCreatorEmail.toLowerCase(),
-    DEMO_FAN_EMAIL: demoFanEmail.toLowerCase(),
-    DEMO_PASSWORD: demoPassword,
 
     ADMIN_EMAILS: raw.ADMIN_EMAILS.map((email) => email.toLowerCase()),
     CRON_SECRET: cronSecret,

@@ -92,16 +92,14 @@ Defined and checked with zod in `api/src/config/env.ts`; a bad or missing value 
 | `AI_MODEL_SMART` | | Smart tier model, default `anthropic/claude-sonnet-5.5` |
 | `AI_EMBEDDING_MODEL` | | Embedding model, default `openai/text-embedding-3-small` (1536 dimensions, fixed by the schema) |
 | `AI_ENABLED` | | Kill switch. Defaults to "an OpenRouter key is present"; `true` without a key stops the boot |
-| `FAL_KEY` | optional | fal.ai key for image and video generation (seed assets; no v1 route generates media) |
+| `FAL_KEY` | optional | fal.ai key for image and video generation (no v1 route generates media) |
 | `APIFY_TOKEN` | optional | Server-only token for public profile lookups in onboarding, the daily follower refresh and the Instagram and TikTok fans import. Never logged |
 | `APIFY_ENABLED` | | Live Apify lookups; defaults to "`APIFY_TOKEN` is set". Without it lookups answer labelled sample profiles and the Instagram and TikTok fans import skips with `sample` (it never writes made-up people) |
 | `YOUTUBE_API_KEY` | optional | YouTube Data API v3 key for comment import. Without it the studio import returns labelled sample data and the YouTube fans import skips with `sample` |
 | `BUCKET_ENDPOINT` | optional | S3-compatible bucket endpoint (a URL). `BUCKET_ENDPOINT`, `BUCKET_NAME`, `BUCKET_ACCESS_KEY_ID` and `BUCKET_SECRET_ACCESS_KEY` come as a set, or none; a partial set stops the boot. With none, uploads are off (`/api/uploads/presign` and `/api/media` answer 503 `uploads_disabled`) |
 | `BUCKET_REGION` | | Default `auto` |
 | `BUCKET_NAME`, `BUCKET_ACCESS_KEY_ID`, `BUCKET_SECRET_ACCESS_KEY` | with the set | The rest of the bucket credentials |
-| `DEMO_ENABLED` | | Demo mode, default true. Off: no demo sign-in, no demo reset |
-| `DEMO_CREATOR_EMAIL`, `DEMO_FAN_EMAIL`, `DEMO_PASSWORD` | required when demo is on | The two seeded demo accounts (the emails must differ; password at least 8 characters) |
-| `ADMIN_EMAILS` | | Comma-separated platform admin allowlist (lowercased); guards `POST /api/admin/demo-reset` |
+| `ADMIN_EMAILS` | | Comma-separated admin emails (lowercased); they get the contact and privacy request notices |
 | `CRON_SECRET` | required | Bearer secret for `/api/cron/*` |
 | `CLICK_SALT` | required | Salt for visitor hashes in click and page-visit counts |
 | `INTERNAL_API_KEY` | optional | 32+ characters; requests sending it as `x-internal-key` skip the API's per-IP rate limits, and as `x-edge-key` have the forwarded client IP (`x-edge-client-ip`) trusted (see Client IP). Same value as on the web project. Without it every browser request counts as the Vercel IP that forwarded it |
@@ -122,9 +120,9 @@ Web routes live under `/dashboard`; the matching creator API lives under `/api/s
 
 | Area | Endpoints |
 |------|-----------|
-| Platform | `GET /api/health` (`{ status, db, ai, version }`; 503 when the database is down), `GET /api/config` (public: enabled providers, demo, uploads, YouTube import), `POST /api/support/requests` (contact and privacy forms; 5 per hour per IP; the fixed-text acknowledgement email goes at most once per address per 24 hours and 50 times a day in all, admin notices at most 200 a day; the request is stored either way), `POST /api/newsletter` (5 per minute and 20 per UTC day per IP; confirmation emails at most once per address per 24 hours and 200 a day in all, and a send that fails or hits the daily cap leaves the address free to try again), `GET/POST /api/newsletter/confirm`, `GET/POST /api/newsletter/unsubscribe` (a GET only redirects to the web page with the token; the POST, from that page's button or a mail client's one-click unsubscribe, changes the state) |
-| Auth | `/api/auth/*` (Better Auth), `POST /api/demo/session` (30 per minute and 150 per hour per IP, and 1500 per hour in all; a malformed body is rejected before the hourly cap, so it never uses it up). The demo space only takes the shared demo accounts, and those accounts cannot create a space, join or pitch any other space (403) |
-| Public | `GET /api/spaces/:handle`, `GET /api/spaces/:handle/showcase/:slug`, `GET /api/handle-available` (30 per minute), `GET /r/:code` (a click counts once per visitor, platform and UTC day, and at most 5,000 per promotion per day; past that it still redirects); public reads are limited to 120 per minute per IP. `POST /api/spaces/:handle/visit` counts a bio-page visit (30 per minute; at most 5,000 new visitors counted per space per day, repeat visits never use that cap) |
+| Platform | `GET /api/health` (`{ status, db, ai, version }`; 503 when the database is down), `GET /api/config` (public: enabled providers, uploads, YouTube import), `POST /api/support/requests` (contact and privacy forms; 5 per hour per IP; the fixed-text acknowledgement email goes at most once per address per 24 hours and 50 times a day in all, admin notices at most 200 a day; the request is stored either way), `POST /api/newsletter` (5 per minute and 20 per UTC day per IP; confirmation emails at most once per address per 24 hours and 200 a day in all, and a send that fails or hits the daily cap leaves the address free to try again), `GET/POST /api/newsletter/confirm`, `GET/POST /api/newsletter/unsubscribe` (a GET only redirects to the web page with the token; the POST, from that page's button or a mail client's one-click unsubscribe, changes the state) |
+| Auth | `/api/auth/*` (Better Auth) |
+| Public | `GET /api/sitemap` (`{ spaces: [{ handle }] }`, every space's handle; cached 60 seconds), `GET /api/spaces/:handle`, `GET /api/spaces/:handle/showcase/:slug`, `GET /api/handle-available` (30 per minute), `GET /r/:code` (a click counts once per visitor, platform and UTC day, and at most 5,000 per promotion per day; past that it still redirects); public reads are limited to 120 per minute per IP. `POST /api/spaces/:handle/visit` counts a bio-page visit (30 per minute; at most 5,000 new visitors counted per space per day, repeat visits never use that cap) |
 | Account | `GET /api/me/export` (the signed-in person's data), `GET/PUT /api/me/notification-prefs`, `GET/POST /api/email/unsubscribe` (signed token; a GET only redirects to `/email-preferences?token=`, the POST from that page's button or a mail client's one-click unsubscribe unsubscribes), `POST /api/uploads/presign` (30 per hour and 100 per day per user), `GET /api/media/*key` (600 per minute per IP) |
 | Member | `GET /api/spaces/:handle/membership`, `POST .../join`, `POST .../suggest-communities`, `GET/PATCH .../me` (GET holds the first 100 of the member's own posts and pitches), `GET .../me/posts`, `GET .../me/pitches` (older ones, `?before=<oldest id held>&limit=`), `DELETE .../me` (leave), `GET .../communities/:slug/posts`, `POST .../posts`, `POST .../pitches`, `POST .../coach` (Idea Coach), `GET .../challenges`, `POST .../challenges/:id/entries`, `POST .../followers/import/platform` (owner only, see Creator: audience); `GET/PATCH/DELETE /api/posts/:id` (holds the newest 50 visible comments), `GET /api/posts/:id/comments` (older comments, `?before=<oldest id held>&limit=`, oldest first), `POST /api/posts/:id/comments`, `DELETE /api/posts/:id/comments/:commentId`, `PUT/DELETE /api/posts/:id/signals/:kind`, `POST /api/posts/:id/team`, `PATCH /api/posts/:id/team/:membershipId`, `GET /api/posts/:postId/similar`, `POST /api/posts/:postId/report`, `POST /api/comments/:commentId/report`, `PATCH /api/pitches/:id` (withdraw) |
 | Notifications | `GET /api/notifications`, `GET /api/notifications/unread`, `GET /api/notifications/stream` (SSE), `POST /api/notifications/read` |
@@ -135,9 +133,9 @@ Web routes live under `/dashboard`; the matching creator API lives under `/api/s
 | Creator: audience | `GET/POST /api/studio/followers`, `POST .../import`, `POST .../import/youtube` (live imports of a valid channel link: 3 per space per day, 50 per day in all; sample data and invalid links do not count), `POST /api/spaces/:handle/followers/import/platform` (body `{ url }`, owner only: 401 signed out, 404 for a space the caller does not own, 400 for a link that is not a profile; answers 200 `PlatformFansImport`, see "Fans from platform comments"), `POST .../tag`, `POST .../auto-tag`, `PATCH/DELETE .../:id`; `GET /api/studio/analytics/communities`; `GET /api/studio/export/:kind` (ideas, people, followers, pitches as CSV) |
 | Creator: challenges | `GET/POST /api/studio/challenges`, `GET /api/studio/challenges/:id`, `POST .../:id/close`, `POST .../:id/winner` |
 | Creator: answer once and moderation | `GET /api/studio/question-groups`, `POST .../:id/answer`, `POST .../:id/redraft`, `POST .../:id/dismiss`, `DELETE .../:id/askers/:pitchId`; `GET /api/studio/reports`, `PATCH /api/studio/reports/:id`, `PATCH /api/studio/posts/:postId/comments/:commentId` (hide or unhide; `GET /api/studio/posts/:id` lists hidden comments too, flagged `hidden: true`, fans never see them) |
-| Admin and cron | `POST /api/admin/demo-reset` (session whose email is in `ADMIN_EMAILS`); `GET/POST /api/cron/tick[?job=<name>]`, `GET /api/cron/status`, `GET /api/cron/ip` (which client headers arrive and the IP used; for checking the Vercel to Railway chain), `GET/POST /api/cron/demo-reset`, `GET/POST /api/cron/purge`, `GET/POST /api/cron/refresh-followers` (all `Authorization: Bearer $CRON_SECRET`) |
+| Cron | `GET/POST /api/cron/tick[?job=<name>]`, `GET /api/cron/status`, `GET /api/cron/ip` (which client headers arrive and the IP used; for checking the Vercel to Railway chain), `GET/POST /api/cron/purge`, `GET/POST /api/cron/refresh-followers` (all `Authorization: Bearer $CRON_SECRET`) |
 
-Per-IP limits key IPv4 addresses whole and IPv6 addresses by their /64 (IPv4-mapped IPv6 counts as IPv4), so one network cannot rotate addresses for fresh buckets. Other limits: platform profile lookups are 5 per minute and 30 per day per user, and 500 per day across the platform; onboarding setup suggestions are 10 per day per user; live fans imports from platform comments are 2 per space per platform per UTC day and 50 per UTC day across the platform (429 `daily_cap_reached`; X, demo fixtures and sample mode are not counted, the onboarding auto-import is).
+Per-IP limits key IPv4 addresses whole and IPv6 addresses by their /64 (IPv4-mapped IPv6 counts as IPv4), so one network cannot rotate addresses for fresh buckets. Other limits: platform profile lookups are 5 per minute and 30 per day per user, and 500 per day across the platform; onboarding setup suggestions are 10 per day per user; live fans imports from platform comments are 2 per space per platform per UTC day and 50 per UTC day across the platform (429 `daily_cap_reached`; X and sample mode are not counted, the onboarding auto-import is).
 
 ### Fans from platform comments
 
@@ -146,9 +144,8 @@ A creator adds social platforms one by one (onboarding and settings); each is fe
 - The link is parsed by the strict profile parser (`parseProfileUrl`). X answers `skipped` / `unsupported` (count only: replies cost too much).
 - Instagram and TikTok: the profile lookup with recent posts gives up to 5 post URLs, then one Apify run reads their comments: `apify~instagram-comment-scraper` (`directUrls`, `resultsLimit` 40, `includeNestedComments` false) or `clockworks~tiktok-comments-scraper` (`postURLs`, `commentsPerPost` 40, `maxRepliesPerComment` 0); run timeout 50 s, 60 s client abort, `maxTotalChargeUsd` 0.50. YouTube: `lib/youtube.ts` (latest 5 videos, up to 200 comments).
 - Commenters become rows `{ name, handle, platform, note }` (their comments joined into the note), one per platform + handle, the creator's own replies dropped, at most 200, written through the same import path as CSV and YouTube: an `imports` row (`youtube`, or `paste` for Instagram and TikTok), dedupe against the roster on platform + handle, and AI community suggestions from the notes. Answer: `{ status: 'done', platform, imported, existing, posts }`.
-- Nothing is written when the answer is `{ status: 'skipped', platform, reason }`: `sample` (no live provider, or a demo fixture handle outside the demo space), `private`, `not_found`, `unavailable` (the lookup or comment run failed) or `no_comments`. The web card then offers a retry, or the creator types the count.
-- Demo handles (`miralane`, `mira`, `priya`) answer from `platform-fixtures/commenters-miralane.json`, in the demo space only.
-- Auto-import: after `POST /api/studio/space` creates a non-demo space, every `platforms` entry with a `handle` (it was fetched) on Instagram, TikTok or YouTube whose provider is live is imported one after another in the background (`background.run`). Failures are logged and never affect space creation; nothing is scheduled in sample mode.
+- Nothing is written when the answer is `{ status: 'skipped', platform, reason }`: `sample` (no live provider), `private`, `not_found`, `unavailable` (the lookup or comment run failed) or `no_comments`. The web card then offers a retry, or the creator types the count.
+- Auto-import: after `POST /api/studio/space` creates a space, every `platforms` entry with a `handle` (it was fetched) on Instagram, TikTok or YouTube whose provider is live is imported one after another in the background (`background.run`). Failures are logged and never affect space creation; nothing is scheduled in sample mode.
 
 ## 4. Authentication and roles
 
@@ -159,17 +156,16 @@ A creator adds social platforms one by one (onboarding and settings); each is fe
 - Someone may sign up first with another person's email, so confirming an account that has a password also needs that password (`password` in the `verify-email` body; 401 `INVALID_EMAIL_OR_PASSWORD` otherwise, and the owner resets the password instead). Confirming or resetting drops every OAuth link and session made before the inbox was proven.
 - Passwords: 8 to 128 characters, stored as Better Auth's salted scrypt hash in `account.password`. A reset by code ends every session (`revokeSessionsOnPasswordReset`). The link-based reset is disabled (`/request-password-reset`, `/reset-password`, `/forget-password`). `/change-password` is on: it needs the current password and ends the other sessions. `/list-sessions` and `/revoke-other-sessions` back the Account tab. `/sign-in/email-otp` stays on for API clients and the test helpers. Usernames follow the space-handle rules (shared `usernameSchema`) and are one namespace with space handles: a username that is another person's space handle answers 409 `HANDLE_TAKEN`.
 - Deleting an account: `POST /delete-user` emails a 6-digit code (Better Auth's delete token, no link); sending it back as `{ token }` deletes the user. Before that, `beforeDelete` (`services/account.service.ts`) deletes the user's own space and their memberships elsewhere (their posts stay as "Former member"). The delete token lives as long as an auth code (10 minutes).
-- Demo mode: `POST /api/demo/session { "as": "creator" | "fan" }` signs into the seeded demo accounts on the server and sets the session cookie. Off when `DEMO_ENABLED=false`. The demo accounts cannot change themselves or end other sessions (profile, password, email, delete, sessions and account-linking paths answer 403 `DEMO_READ_ONLY`).
 - Rate limits: Better Auth's defaults per client IP (`x-fo-client-ip`, see Client IP in §3) and path, on in production only: sign-in and sign-up 3 per 10 seconds, the email-code endpoints 3 per minute, anything else 100 per 10 seconds; `/get-session` is not limited. With `REDIS_URL` set the counters live in Redis (shared by replicas, kept across deploys, each key expiring with its window; fails open if Redis is unreachable); without it they stay in process memory. Sessions stay in Postgres.
 - Sessions: httpOnly, secure, `sameSite=lax` cookies; 7-day expiry, refreshed daily, with a 5-minute signed cookie cache so most API calls skip the session query. `baseURL` is the web origin; `trustedOrigins` is `WEB_ORIGIN` plus `TRUSTED_ORIGINS`. Google, Apple and Facebook tokens are stored encrypted with `BETTER_AUTH_SECRET`.
-- Roles are per space: `owner` (the creator) and `member`. Platform `admin` is an email allowlist in env (`ADMIN_EMAILS`: demo reset). In the MVP a user owns at most one space and can be a member of many.
+- Roles are per space: `owner` (the creator) and `member`. In the MVP a user owns at most one space and can be a member of many.
 
 ## 5. External services and APIs
 
 | Provider | Purpose | Limits and notes | Credentials owner |
 |----------|---------|------------------|-------------------|
 | OpenRouter, through the Vercel AI SDK | Triage, suggestions, briefing, drafts, embeddings | Two chat tiers set in env: `AI_MODEL_FAST`, `AI_MODEL_SMART`, plus `AI_EMBEDDING_MODEL`. Per-space daily token budget (`spaces.ai_daily_token_budget`, default 200,000). Without a key the deterministic fake AI answers | Nilesh |
-| fal.ai | Image and video generation (seed assets) | No v1 route generates media | Nilesh |
+| fal.ai | Image and video generation | No v1 route generates media | Nilesh |
 | Apify | Public profile lookups for onboarding and the daily follower refresh; Instagram and TikTok comments for the fans import | Monthly spend limit set in the Apify console; per-user and platform-wide daily lookup caps in the API; fans imports capped per space per platform and platform-wide per day, `maxTotalChargeUsd` 0.05 per lookup and 0.50 per comment run | Nilesh |
 | YouTube Data API v3 | Comment import (`POST /api/studio/followers/import/youtube`) and the YouTube fans import | Up to 10 videos and 500 comments per studio import, 5 videos and 200 comments per fans import; daily quota applies | Nilesh |
 | Railway | Hosts the API, Postgres with pgvector, Redis, the cron service and the media bucket | See "Railway services" | Nilesh |
@@ -217,7 +213,7 @@ flowchart LR
 ```
 fellow-owners/
   web/                Next.js 16
-  api/                Express 5, including db/ (Drizzle schema, migrations, seed)
+  api/                Express 5, including db/ (Drizzle schema, migrations)
   shared/             zod schemas, enums, limits used by both
   docs/               build docs
   .github/            CI workflows
@@ -249,13 +245,11 @@ One Railway cron service calls `POST /api/cron/tick` every hour. The tick (`work
 | `group_questions` | hourly | Answer Once grouping (flow 8): spaces with a groupable pitch in the last 2 hours; per space it embeds at most 50 pitches missing an embedding and clusters the newest 200 ungrouped pitches. A cluster the AI says is not a question is excluded and never sent to the AI again |
 | `close_challenges` | hourly | Closes overdue challenges (up to 100 per run) with the same path as the Close button, plus the AI recap |
 | `email_digests` | hourly | Sends each person their due unread notifications as one email; a failed send keeps the watermark (`notification_prefs.last_digest_at`) and retries next run |
-| `refresh_followers` | daily 06:00 | Refreshes follower counts of linked profiles in non-demo spaces through Apify, oldest `fetchedAt` first, at most 50 profiles per run; a failed or simulated lookup keeps the old count |
-| `demo_reset` | daily 01:00 | Deletes the demo space and reseeds it from `db/seed/data/*.json`. Skipped when `DEMO_ENABLED=false` |
-| `demo_briefing` | hourly | Warms today's demo briefing (a DB read when cached), so the first Today load of a day never waits on the model. Skipped when `DEMO_ENABLED=false` |
+| `refresh_followers` | daily 06:00 | Refreshes follower counts of linked profiles through Apify, oldest `fetchedAt` first, at most 50 profiles per run; a failed or simulated lookup keeps the old count |
 | `purge` | daily 09:00 | Retention rules in 05, section 8, including deleting bucket uploads older than 24 hours that no row points at |
 | `community_digests` | Mondays 13:00 | One AI digest per non-archived community with a post in the last 7 days, dated that week's Monday |
 
-The per-job endpoints (`/api/cron/demo-reset`, `/purge`, `/refresh-followers`) run to completion before answering, so their status code says whether the run succeeded.
+The per-job endpoints (`/api/cron/purge`, `/refresh-followers`) run to completion before answering, so their status code says whether the run succeeded.
 
 ### AI tasks
 
@@ -279,7 +273,7 @@ Code: `api/src/ai/tasks/*` (prompt, output schema, normalization) behind `ai/run
 | `challengeSummary` | fast | a closed challenge's entries | a short private recap; never ranks or judges entrants | 20 per space per day |
 | `suggestSetup` | fast | imported public profiles in onboarding | "What you love" lines, voice quotes, up to 4 suggested groups; numbers are counted in code | No space yet, so no budget or `ai_runs` row; 10 per user per day |
 
-Every call except `suggestSetup` writes a row to `ai_runs` (task, model, tokens, latency, status). Budget and cap checks read from it. Image and video generation (`ai/media.ts`, fal.ai) is available to the seed script and is not wired to any route.
+Every call except `suggestSetup` writes a row to `ai_runs` (task, model, tokens, latency, status). Budget and cap checks read from it. Image and video generation (`ai/media.ts`, fal.ai) is not wired to any route.
 
 ### Ranking (deterministic code, unit tested)
 
@@ -330,7 +324,7 @@ The model scores single items and writes text. Code does all ordering, so rankin
 | Briefing generation (cold) | < 20 s; cached < 300 ms |
 | Promote drafts | < 20 s |
 | Availability | Best effort on Railway + Vercel; no SLA in the MVP |
-| Backups | Not configured by the repo. Demo data is reproducible from seed (`demo_reset`) |
+| Backups | Not configured by the repo |
 
 If the LLM is down or the budget is used up, everything except AI fields keeps working. Items show "AI pending" and the next sweep picks them up.
 
@@ -345,7 +339,7 @@ If the LLM is down or the budget is used up, everything except AI fields keeps w
 - `pnpm dev` runs both apps through Turborepo; web rewrites `/api/*` to `localhost:4000`.
 - CI on every PR and on pushes to `main` (GitHub Actions, `.github/workflows/ci.yml`): install, lint (Biome), typecheck, unit tests, integration tests (Vitest + Supertest against a `pgvector/pgvector:pg17` service container), a check that `pnpm db:generate` leaves the migrations unchanged, a web build, and a Docker build of `api/Dockerfile`.
 - Browser smoke test: `pnpm test:e2e` (Playwright, `web/e2e/smoke.spec.ts`). It is not part of CI.
-- Deploy: the `api` service builds from `api/Dockerfile`; its pre-deploy command runs the migrations, so a failed migration stops the deploy before traffic moves. Vercel deploys `web` from `main`. Seed (`pnpm db:seed`) and embedding backfill (`pnpm db:embed`) are run by hand against the target database; the daily `demo_reset` job reseeds the demo space.
+- Deploy: the `api` service builds from `api/Dockerfile`; its pre-deploy command runs the migrations, so a failed migration stops the deploy before traffic moves. Vercel deploys `web` from `main`. The embedding backfill (`pnpm db:embed`) is run by hand against the target database.
 - Rollback: Vercel instant rollback for web; redeploy a previous image on Railway for the api. Migrations in v1 are additive only.
 
 ## 10. Key technical decisions and tradeoffs
@@ -360,7 +354,6 @@ If the LLM is down or the budget is used up, everything except AI fields keeps w
 | D6 | Background work in the process plus an hourly tick, not a queue | One always-on API process and one cron call; the sweep and the job slots give at-least-once processing | pg-boss or Redis queue: another moving part for this volume |
 | D7 | AI scores single items, code ranks lists | Explainable, testable, cheap, stable | LLM-ranked lists: opaque and non-deterministic |
 | D8 | Copy and share intents for promotion | No platform app reviews or OAuth scopes in v1 | Posting APIs: weeks of approvals |
-| D9 | Seed content generated once and committed, AI fields prefilled (embeddings backfilled separately) | Demo works with no API key and looks the same every time | Generating at seed time: slow, costs money, varies |
 | D10 | Vercel AI SDK through OpenRouter, models chosen by env | Swap models in one line; structured output with zod | Direct vendor SDK: lock-in |
 | D11 | Email codes instead of magic links | Works inside Instagram, TikTok and YouTube in-app browsers, where most fans arrive | Magic links: the session lands in the wrong browser |
 | D12 | Railway for the API and data, Vercel for the web | The API needs a long-lived process, Redis, a bucket and a cron; Vercel stays best for Next.js | Everything on Vercel: functions, cron limits and no private network to Postgres |

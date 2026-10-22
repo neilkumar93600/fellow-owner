@@ -22,7 +22,7 @@ export const user = pgTable('user', {
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
-  /** Trimmed and lowercased by the username plugin. Null on accounts made without one (social, demo). */
+  /** Trimmed and lowercased by the username plugin. Null on accounts made without one (social sign-in). */
   username: text('username').unique(),
   socialPlatform: text('social_platform'),
   socialHandle: text('social_handle'),

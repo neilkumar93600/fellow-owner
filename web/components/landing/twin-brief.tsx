@@ -9,7 +9,7 @@ export interface TwinBriefProps {
 
 /**
  * "Your AI twin": the twin's weekly read of every room, with its picks, each with a one-line why. Words
- * only, no controls, so callers can mark it inert. Demo data.
+ * only, no controls, so callers can mark it inert. Example data.
  */
 export function TwinBrief({ compact = false }: TwinBriefProps) {
   const picks = compact ? TWIN_BRIEF.picks.slice(0, 2) : TWIN_BRIEF.picks;
@@ -60,7 +60,7 @@ export function TwinBrief({ compact = false }: TwinBriefProps) {
         ))}
       </ol>
 
-      <p className="text-caption text-ink-muted">Demo data. Names are made up.</p>
+      <p className="text-caption text-ink-muted">Example data. Names are made up.</p>
     </div>
   );
 }

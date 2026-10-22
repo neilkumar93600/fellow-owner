@@ -154,7 +154,7 @@ components:
 
 ## 1. Overview: Parchment Frost
 
-**Creative North Star: "an editorial journal on warm parchment, lit by frosted glass."** Fellow Owners is where a lifestyle and travel creator (the demo is Mira Lane, a fictional LA vlogger) meets the fans who want to plan, shoot and explore with her. The serif announces, the mono instructs.
+**Creative North Star: "an editorial journal on warm parchment, lit by frosted glass."** Fellow Owners is where a lifestyle and travel creator (our sample creator is Mira Lane, a fictional LA vlogger) meets the fans who want to plan, shoot and explore with her. The serif announces, the mono instructs.
 
 **Where this came from.** On 2026-10-12 the owner adopted the "Monad" style reference and asked to keep frosted glassmorphism. Parchment Frost replaces "Golden Hour Frost" (cream, Instrument Serif and Inter, coral action, rainbow marketing button). The foundation lives in `web/app/globals.css`, `web/lib/fonts.ts` and `web/components/ui/button-variants.ts`. Light theme only.
 

@@ -1,8 +1,8 @@
 // Content and choreography data for "The problem" (landing brief v2, part 3).
-// Messages come from demo-data; everything added here (AI summaries, platforms, pile slots) is demo-only.
+// Messages come from example-data; everything added here (AI summaries, platforms, pile slots) is example-only.
 
 import type { PitchType } from '@fellow-owners/shared';
-import { avatarTint, DEMO, type DemoMessage, initials, messages } from './demo-data';
+import { avatarTint, EXAMPLE, type ExampleMessage, initials, messages } from './example-data';
 
 export { avatarTint, initials };
 
@@ -16,7 +16,7 @@ const TYPE_LABELS: Record<PitchType, string> = {
   other: 'Other',
 };
 
-export type ProblemMessage = DemoMessage & {
+export type ProblemMessage = ExampleMessage & {
   /** Where the DM arrived and how long ago, shown on the pile bubble. */
   meta: string;
   /** Small tag on the bubble. Spam shows what it claims to be; the AI sees through it. */
@@ -81,8 +81,8 @@ export const PICK_SET = new Set<string>(PICK_ORDER);
 
 /** Counts per breakpoint, so the closing line always matches what the scene showed. */
 export const COUNTS = {
-  wide: { total: DEMO.inbox.messages, filtered: DEMO.inbox.spam },
-  phone: { total: DEMO.inbox.messages, filtered: 2 },
+  wide: { total: EXAMPLE.inbox.messages, filtered: EXAMPLE.inbox.spam },
+  phone: { total: EXAMPLE.inbox.messages, filtered: 2 },
 } as const;
 
 /*

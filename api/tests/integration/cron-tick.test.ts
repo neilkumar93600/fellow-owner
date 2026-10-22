@@ -26,13 +26,9 @@ function fakeJobs(fail: JobName[] = []) {
   return { calls, jobs };
 }
 
-function setup(options: { fail?: JobName[]; demo?: boolean } = {}) {
+function setup(options: { fail?: JobName[] } = {}) {
   const fakes = fakeJobs(options.fail);
-  const base = buildContainer();
-  const container = buildContainer({
-    jobs: fakes.jobs,
-    ...(options.demo === false ? { env: { ...base.env, DEMO_ENABLED: false } } : {}),
-  });
+  const container = buildContainer({ jobs: fakes.jobs });
   const auth = `Bearer ${container.env.CRON_SECRET}`;
   return { ...fakes, container, app: createApp(container), auth };
 }
@@ -91,7 +87,6 @@ describe('POST|GET /api/cron/tick', () => {
       'close_challenges',
       'email_digests',
       'planner_reminders',
-      'demo_briefing',
     ];
     expect([...later].sort()).toEqual([...hourly].sort());
     await container.background.whenIdle();
@@ -122,16 +117,6 @@ describe('POST|GET /api/cron/tick', () => {
     const again = await request(app).post('/api/cron/tick').set('Authorization', auth).expect(202);
     expect(again.body.jobs).toContain('purge');
     await container.background.whenIdle();
-  });
-
-  it('leaves the demo reset and briefing warm-up out when the demo is off', async () => {
-    const { app, auth, calls, container } = setup({ demo: false });
-    const res = await request(app).post('/api/cron/tick').set('Authorization', auth).expect(202);
-    await container.background.whenIdle();
-    expect(res.body.jobs).not.toContain('demo_reset');
-    expect(res.body.jobs).not.toContain('demo_briefing');
-    expect(calls.demo_reset).toBe(0);
-    expect(calls.demo_briefing).toBe(0);
   });
 
   it('?job=<name> runs that one job now, even when its slot is done', async () => {

@@ -33,8 +33,6 @@ const factories = createFactories(sample);
 let owner: SignedIn;
 let mira: TestSpace;
 let other: SignedIn;
-let demo: SignedIn;
-let demoSpace: TestSpace;
 let fan: SignedIn;
 
 const json = (body: unknown, status = 200) =>
@@ -80,12 +78,6 @@ beforeAll(async () => {
     owner: { id: other.userId, email: other.email, name: 'Other Owner' },
     handle: 'otherfans',
   });
-  demo = await signInWithOtp(sampleApp, 'demo@fans.test', 'Demo Owner');
-  demoSpace = await factories.space({
-    owner: { id: demo.userId, email: demo.email, name: 'Demo Owner' },
-    handle: 'demofans',
-    isDemo: true,
-  });
   fan = await signInWithOtp(sampleApp, 'fan@fans.test', 'A Fan');
 });
 
@@ -121,47 +113,8 @@ describe('POST /api/spaces/:handle/followers/import/platform', () => {
       const res = await importFans(sampleApp, owner, 'natowner', url).expect(200);
       expect(res.body).toMatchObject({ status: 'skipped', reason: 'sample' });
     }
-    // Demo fixture handles only fill the demo space, even with a live provider.
-    const paths = stubApify();
-    const demoHandle = await importFans(
-      liveApp,
-      owner,
-      'natowner',
-      'https://www.instagram.com/miralane',
-    ).expect(200);
-    expect(demoHandle.body).toEqual({ status: 'skipped', platform: 'instagram', reason: 'sample' });
-    expect(paths).toEqual([]);
     expect(await rosterOf(mira.space.id)).toEqual([]);
     expect(await db.select().from(imports).where(eq(imports.spaceId, mira.space.id))).toEqual([]);
-  });
-
-  it('demo handles answer from fixtures in the demo space', async () => {
-    const res = await importFans(
-      sampleApp,
-      demo,
-      'demofans',
-      'https://www.instagram.com/miralane',
-    ).expect(200);
-    expect(res.body).toMatchObject({
-      status: 'done',
-      platform: 'instagram',
-      imported: 6,
-      posts: 5,
-    });
-    const yt = await importFans(
-      sampleApp,
-      demo,
-      'demofans',
-      'https://www.youtube.com/@miralane',
-    ).expect(200);
-    expect(yt.body).toMatchObject({ status: 'done', platform: 'youtube', imported: 6 });
-    const rows = await rosterOf(demoSpace.space.id);
-    expect(rows.filter((r) => r.platform === 'instagram')).toHaveLength(6);
-    const sources = await db
-      .select({ source: imports.source })
-      .from(imports)
-      .where(eq(imports.spaceId, demoSpace.space.id));
-    expect(sources.map((s) => s.source).sort()).toEqual(['paste', 'youtube']);
   });
 
   it('imports live commenters, deduped against the existing roster', async () => {

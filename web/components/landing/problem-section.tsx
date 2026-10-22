@@ -31,7 +31,7 @@ export function ProblemSection() {
         <div className={styles.inner} data-problem="inner">
           <div className={styles.head}>
             <p className={styles.counter} data-problem="counter">
-              <span className={styles.demoChip}>Demo</span>
+              <span className={styles.exampleChip}>Example</span>
               <span className={styles.counterDot} aria-hidden="true" />
               <span>
                 <Wide>{COUNTS.wide.total}</Wide>
@@ -113,7 +113,7 @@ export function ProblemSection() {
                   <p className={styles.tableSort}>Newest first</p>
                 </div>
                 <table className={styles.table}>
-                  <caption className="sr-only">Demo fan mail, newest first</caption>
+                  <caption className="sr-only">Example fan mail, newest first</caption>
                   <thead className={styles.thead}>
                     <tr className={styles.headRow}>
                       <th scope="col">From</th>

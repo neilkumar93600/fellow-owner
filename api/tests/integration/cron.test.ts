@@ -1,14 +1,11 @@
 import { RETENTION_DAYS } from '@fellow-owners/shared';
 import { sql } from 'drizzle-orm';
 import request from 'supertest';
-import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
-import type { SeedData } from '../../src/db/seed/seed.js';
-import { readSeedData } from '../../src/db/seed/seed.js';
 import { daysAgo, utcDayString } from '../../src/lib/dates.js';
 import { contentHash } from '../../src/lib/hash.js';
-import { resetDemo } from '../../src/workers/demo-reset.js';
 import { createFactories } from '../helpers/factories.js';
 import { closeDb, resetDatabase } from '../helpers/test-db.js';
 
@@ -19,104 +16,6 @@ const { repos, env } = container;
 
 const AUTH = `Bearer ${env.CRON_SECRET}`;
 
-/** Same database, demo mode off: the 403 path for the demo reset. */
-const demoOff = buildContainer({ env: { ...env, DEMO_ENABLED: false } });
-
-/**
- * A tiny stand-in for data/*.json. The real file has 1,200 members, which is the right size for a
- * demo and the wrong size for a test that only needs to prove the reseed happened.
- */
-const SMALL_SEED: SeedData = {
-  space: {
-    handle: 'mira',
-    displayName: 'Mira Lane',
-    bio: 'Small tools, heavy-ish things.',
-    avatarUrl: null,
-    platforms: [{ platform: 'youtube', url: 'https://youtube.com/@miralane', followers: 410_000 }],
-    tasteProfile: { promote: ['small tools'], never: ['crypto'], voice: [] },
-  },
-  communities: [
-    {
-      slug: 'budget-travel',
-      name: 'Budget Travel',
-      description: null,
-      tint: 'peach',
-      icon: 'globe',
-    },
-  ],
-  members: [
-    {
-      name: 'Priya Shah',
-      email: 'priya@example.com',
-      headline: 'Frontend engineer who lifts',
-      intro: null,
-      skills: ['react'],
-      links: [],
-      communities: ['budget-travel'],
-      joinedDaysAgo: 10,
-      isDemoFan: true,
-    },
-    {
-      name: 'Dev Sharma',
-      email: 'dev@example.com',
-      headline: null,
-      intro: null,
-      skills: [],
-      links: [],
-      communities: ['budget-travel'],
-      joinedDaysAgo: 4,
-    },
-  ],
-  posts: [
-    {
-      community: 'budget-travel',
-      authorIndex: 1,
-      type: 'idea',
-      title: 'A gym log app for solo developers',
-      body: 'A gym log app that turns lifts into stats worth sharing. One screen, one input.',
-      status: 'open',
-      rolesNeeded: [],
-      links: [],
-      createdDaysAgo: 3,
-      signals: { use: [0], build: [] },
-      team: [],
-      ai: {
-        summary: 'A gym log app for solo developers',
-        category: 'idea',
-        fitScore: 78,
-        fitReason: 'Matches "small tools".',
-        tags: ['tools'],
-        skills: ['typescript'],
-        isSpam: false,
-      },
-    },
-  ],
-  comments: [{ postIndex: 0, authorIndex: 0, body: 'Strong yes from me.', createdDaysAgo: 2 }],
-  pitches: [
-    {
-      senderIndex: 0,
-      type: 'collab',
-      subject: 'Six-week build-along with our team',
-      body: 'You set a brief, we build alongside your audience for six weeks, everything stays public.',
-      links: [],
-      status: 'new',
-      isFiltered: false,
-      creatorReply: null,
-      createdDaysAgo: 1,
-      ai: {
-        summary: 'Six-week build-along',
-        category: 'collab',
-        fitScore: 71,
-        fitReason: 'Has a deadline and a named owner.',
-        tags: ['collaboration'],
-        skills: [],
-        isSpam: false,
-      },
-    },
-  ],
-  promotions: [],
-};
-
 afterAll(async () => {
   await closeDb();
 });
@@ -126,7 +25,7 @@ describe('cron authentication', () => {
     await resetDatabase();
   });
 
-  for (const path of ['/api/cron/demo-reset', '/api/cron/purge']) {
+  for (const path of ['/api/cron/refresh-followers', '/api/cron/purge']) {
     it(`rejects ${path} with no Authorization header`, async () => {
       const res = await request(app).post(path).expect(401);
       expect(res.body.error.code).toBe('unauthorized');
@@ -329,107 +228,14 @@ describe('GET|POST /api/cron/purge', () => {
   });
 });
 
-describe('demo reset', () => {
-  beforeEach(async () => {
-    await resetDatabase();
-  });
-
-  it('builds the demo space from the seed data', async () => {
-    const { deleted, seeded } = await resetDemo(container, { data: SMALL_SEED });
-
-    expect(deleted).toBe(0);
-    expect(seeded.handle).toBe('mira');
-    expect(seeded.members).toBe(2);
-    expect(seeded.posts).toBe(1);
-
-    const [space] = await repos.spaces.listDemo();
-    expect(space?.handle).toBe('mira');
-    expect(space?.isDemo).toBe(true);
-
-    // The fan account the demo signs into is a real member with real content.
-    const fan = await repos.memberships.findByUser(space?.id ?? '', (await fanUserId()) ?? '');
-    expect(fan?.headline).toBe('Frontend engineer who lifts');
-  });
-
-  // Two full resets back to back, so it gets twice the budget of a one-reset test.
-  it('replaces the previous demo space instead of adding a second one', async () => {
-    const first = await resetDemo(container, { data: SMALL_SEED });
-    const second = await resetDemo(container, { data: SMALL_SEED });
-
-    expect(second.deleted).toBe(1);
-    expect(second.seeded.spaceId).not.toBe(first.seeded.spaceId);
-    expect(await repos.spaces.listDemo()).toHaveLength(1);
-
-    // Counters are rebuilt, not doubled.
-    const counts = await rowCounts(second.seeded.spaceId);
-    expect(counts.comments).toBe(1);
-  }, 60_000);
-
-  it('leaves spaces that are not the demo alone', async () => {
-    const real = await factories.space({ handle: 'someoneelse' });
-    await resetDemo(container, { data: SMALL_SEED });
-
-    expect(await repos.spaces.findByHandle('someoneelse')).not.toBeNull();
-    expect(await repos.spaces.findById(real.space.id)).not.toBeNull();
-  });
-
-  it('refuses when DEMO_ENABLED=false', async () => {
-    await expect(resetDemo(demoOff, { data: SMALL_SEED })).rejects.toMatchObject({
-      code: 'demo_disabled',
-    });
-    expect(await repos.spaces.listDemo()).toHaveLength(0);
-  });
-});
-
-describe('GET|POST /api/cron/demo-reset', () => {
-  beforeEach(async () => {
-    await resetDatabase();
-  });
-
-  // The only test that loads the committed data/*.json: it proves the files parse, satisfy every
-  // database constraint and reach the documented volumes. Slow on a remote database, which is why
-  // every other reset test above injects SMALL_SEED instead.
-  it('reseeds from the committed seed files', async () => {
-    const res = await request(app)
-      .post('/api/cron/demo-reset')
-      .set('Authorization', AUTH)
-      .expect(200);
-
-    const data = await readSeedData();
-    expect(res.body.ok).toBe(true);
-    expect(res.body.seeded).toMatchObject({
-      handle: data.space.handle,
-      communities: data.communities.length,
-      members: data.members.length,
-      posts: data.posts.length,
-      pitches: data.pitches.length,
-    });
-    const [demoSpace] = await repos.spaces.listDemo();
-    expect(demoSpace).toBeDefined();
-    // The reset warmed today's briefing, so the first visitor does not wait on the model.
-    expect(await repos.digests.findBriefing(demoSpace?.id ?? '', utcDayString())).not.toBeNull();
-  }, 180_000);
-
-  it('runs the demo_reset job (reset, then the briefing warm) and answers its result', async () => {
-    const result = { deleted: 1, seeded: { handle: 'mira' } };
-    const demoReset = vi.fn(async () => result);
-    const stubbed = createApp(buildContainer({ jobs: { demo_reset: demoReset } }));
-    const res = await request(stubbed)
-      .post('/api/cron/demo-reset')
-      .set('Authorization', AUTH)
-      .expect(200);
-    expect(demoReset).toHaveBeenCalledTimes(1);
-    expect(res.body).toEqual({ ok: true, ...result });
+describe('removed demo routes', () => {
+  it('no longer serves the demo reset or the demo sign-in', async () => {
+    await request(app).post('/api/cron/demo-reset').set('Authorization', AUTH).expect(404);
+    await request(app).post('/api/demo/session').send({ as: 'fan' }).expect(404);
   });
 });
 
 // ---------------------------------------------------------------- helpers
-
-async function fanUserId(): Promise<string | undefined> {
-  const ctx = await container.auth.$context;
-  const found = await ctx.internalAdapter.findUserByEmail(env.DEMO_FAN_EMAIL);
-  return found?.user.id;
-}
 
 /** Rows left in the tables the purge touches, for one space. */
 async function rowCounts(spaceId: string) {

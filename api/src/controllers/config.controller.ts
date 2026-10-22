@@ -14,7 +14,6 @@ export function createConfigController(deps: ConfigControllerDeps) {
       apple: env.APPLE_ENABLED,
       facebook: env.FACEBOOK_ENABLED,
     },
-    demoEnabled: env.DEMO_ENABLED,
     uploads: env.UPLOADS_ENABLED,
     youtubeImport: env.YOUTUBE_ENABLED,
   };

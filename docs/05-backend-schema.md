@@ -71,7 +71,7 @@ Better Auth's generated columns (`id`, `name`, `email` unique, `email_verified`,
 
 | Field | Type | Required | Default | Notes |
 |-------|------|----------|---------|-------|
-| username | text | no | | unique; trimmed and lowercased; the space-handle rules (3..30, `^[a-z0-9_.]+$`, not reserved when chosen, so a word reserved later can still log in; shared `usernameSchema`); null on accounts made without one (social, demo) |
+| username | text | no | | unique; trimmed and lowercased; the space-handle rules (3..30, `^[a-z0-9_.]+$`, not reserved when chosen, so a word reserved later can still log in; shared `usernameSchema`); null on accounts made without one (social) |
 | social_platform | text | no | | `instagram`, `tiktok`, `youtube`, `x` or `linkedin` (shared `SOCIAL_PLATFORMS`) |
 | social_handle | text | no | | <= 100, `^[A-Za-z0-9._-]+$`, stored without the leading @ |
 
@@ -88,7 +88,6 @@ Better Auth's generated columns (`id`, `name`, `email` unique, `email_verified`,
 | taste_profile | jsonb | yes | `{"promote":[],"never":[],"voice":[]}` | promote 1..10 lines, never 0..10, voice 0..5 samples |
 | taste_version | int | yes | 1 | +1 on each save |
 | ai_daily_token_budget | int | yes | 200000 | |
-| is_demo | boolean | yes | false | demo reset only touches these |
 | cover_url | text | no | | uploaded cover (`/api/media/<key>`) or an image link |
 | show_read_receipts | boolean | yes | true | Pitch Tracker: fans see when their pitch was read |
 | bio_link_shared_at | timestamptz | no | | setup checklist: first time the owner copied the bio link (set once) |
@@ -370,7 +369,6 @@ Details of the Better Auth setup are in `api/src/auth/index.ts` and 02, section 
 - **Password reset:** a 6-digit `forget-password` code (`/email-otp/request-password-reset`, then `/email-otp/reset-password`) sets the new hash and deletes every session of the user. No reset links.
 - **Change password:** `/change-password` is on for a signed-in user: the current password is required and the other sessions end. `/list-sessions` and `/revoke-other-sessions` list and end sessions.
 - **Session:** Better Auth `session` row + httpOnly cookie, 7 days, refreshed daily. Sign out deletes the session. Expired sessions are purged daily.
-- **Demo accounts:** two ordinary, already confirmed password accounts (emails and password from env: `DEMO_CREATOR_EMAIL`, `DEMO_FAN_EMAIL`, `DEMO_PASSWORD`), created or repaired by `ensureDemoUsers()` during seed and the demo reset. The demo buttons sign into them through `POST /api/demo/session`. They cannot be edited or deleted, and cannot see or end other sessions.
 - **Becoming an owner:** completing onboarding creates `spaces` + an `owner` membership in one transaction, and sets the user's `username` to the handle.
 - **Becoming a member:** confirming Join, or sending a first pitch, creates a `member` membership. A member can leave (`DELETE /api/spaces/:handle/me`): the membership gets `removed_at` and `left_at` and the member may rejoin. Joining again or sending a pitch brings a member who left back (the pitch Idea Coach also works for them; the post Coach needs an active membership). A member the owner removed (`removed_at` set, `left_at` null) gets 403 "You were removed from this space" on join, pitch and Coach.
 - **Account deletion:** `POST /delete-user` emails a 6-digit code; sending it back as `{ token }` deletes the user. The user's own space is deleted (cascade) and their memberships elsewhere are deleted; their posts and comments keep `author_membership_id = null` ("Former member").
@@ -436,19 +434,8 @@ Enforced by `api/src/workers/purge.ts` (the `purge` job, daily at 09:00 UTC thro
 | Space deletion | Cascades to everything with its `space_id` |
 | Export | `GET /api/me/export` returns the signed-in person's own data; `GET /api/studio/export/:kind` gives the creator CSVs of ideas, people, followers and pitches |
 
-## 9. Migration and seed data
+## 9. Migration
 
-- `drizzle-kit generate` produces SQL migrations committed under `api/src/db/migrations`; CI fails if `pnpm db:generate` would change them. Current files: `0000_enable_vector` (the `vector` extension), `0001_schema`, `0002_auth_username_social`, `0003_followers_notifications`, `0004_creator_pivot`, `0005_newsletter`, `0006_backend_complete` (adds `job_runs`, `reports`, `notification_prefs`, `page_visits`, `question_groups`, `studio_snoozes`, `support_requests` and the new columns and indexes above, and widens the notification kinds), `0007_membership_left_at`, `0008_newsletter_confirm_sent_at` (adds `newsletter_subscribers.confirm_sent_at`), `0009_hardening_indexes` (deletes duplicate `click_events`, then adds the click unique index and the `ai_feedback`, `inbound`, `notifications` and `page_visits` indexes above; no new columns). Migrations are additive in v1; any destructive change ships as two migrations.
+- `drizzle-kit generate` produces SQL migrations committed under `api/src/db/migrations`; CI fails if `pnpm db:generate` would change them. Current files: `0000_enable_vector` (the `vector` extension), `0001_schema`, `0002_auth_username_social`, `0003_followers_notifications`, `0004_creator_pivot`, `0005_newsletter`, `0006_backend_complete` (adds `job_runs`, `reports`, `notification_prefs`, `page_visits`, `question_groups`, `studio_snoozes`, `support_requests` and the new columns and indexes above, and widens the notification kinds), `0007_membership_left_at`, `0008_newsletter_confirm_sent_at` (adds `newsletter_subscribers.confirm_sent_at`), `0009_hardening_indexes` (deletes duplicate `click_events`, then adds the click unique index and the `ai_feedback`, `inbound`, `notifications` and `page_visits` indexes above; no new columns), `0011_remove_demo` (deletes the demo spaces and every `@example.com` account, the `demo_reset` and `demo_briefing` `job_runs` rows, then drops `spaces.is_demo`). Migrations are additive in v1; any destructive change ships as two migrations.
 - On Railway the `api` service's pre-deploy command runs `node dist/db/migrate.js` (it reads only `DATABASE_URL`) before the new container takes traffic. Locally: `pnpm db:migrate` (and `pnpm db:migrate:test` for the test database).
-- `pnpm db:seed` loads `api/src/db/seed/data/*.json` into a demo space:
-  - Creator Mira Lane (`/mira`), a travel creator with 620K on YouTube, 380K on Instagram and 140K on TikTok; taste profile and three voice samples.
-  - 6 communities: Budget Travel, Solo Travelers, Travel Photography, Food Finds, Road Trips & Van Life, Slow Living.
-  - 1,200 members (names, headlines, skills, join dates), including the demo fan Priya Shah.
-  - 140 posts (77 ideas, 44 projects, 19 discussions), 400 comments, signals and teams; 180 pitches with realistic noise (spam, fan mail, real collab and press offers).
-  - 2 published promotions with click history.
-  - 31 followers with notes, some tagged by creator and AI, a few linked to demo members.
-  - 2 challenges and 4 Answer Once question groups, plus notifications, spotlights and pitch-tracker states for the demo fan.
-  - AI fields (summary, category, fit score, reason, tags, skills, spam flag) prefilled in the JSON, so every screen works with no API key. `pnpm db:seed --reanalyze` reruns live triage.
-  - Embeddings are not committed (about 1,500 vectors of 1,536 floats would bloat the repo). `pnpm db:embed` backfills them when an API key is set. Similar ideas, people who could help, Ask your AI and Answer Once need them; people search uses skills and text search.
-- Seed text is written once by `api/src/db/seed/generate-content.ts` (uses the LLM) and committed. Seeding itself never calls the LLM.
-- Demo reset: delete the space where `is_demo = true` (cascade) and reseed. The `demo_reset` job runs it daily at 01:00 UTC through the tick, and on request through `POST /api/cron/demo-reset` or, for an allowlisted admin, `POST /api/admin/demo-reset`. It refuses when `DEMO_ENABLED=false`.
+- `pnpm db:embed` (`api/src/db/embed.ts`) backfills missing embeddings on posts, pitches and members when an API key is set. Similar ideas, people who could help, Ask your AI and Answer Once need them; people search uses skills and text search.

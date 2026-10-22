@@ -100,7 +100,7 @@ export interface OnboardingValues {
   handle: string;
   displayName: string;
   bio: string;
-  /** Only from an imported profile: a data: URL or a /demo/ path. Undefined means initials. */
+  /** Only from an imported profile: a data: URL. Undefined means initials. */
   avatarUrl?: string;
   platforms: PlatformDraft[];
   communities: CommunityDraft[];

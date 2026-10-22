@@ -32,7 +32,7 @@ export interface PlatformProfile {
   platform: LookupPlatform;
   handle: string;
   displayName: string | null;
-  /** The platform's (expiring) CDN URL for previews, or a site path for demo fixtures. */
+  /** The platform's (expiring) CDN URL for previews. */
   avatarUrl: string | null;
   bio: string | null;
   followers: number | null;
@@ -41,7 +41,7 @@ export interface PlatformProfile {
   /** Newest first, at most PLATFORM_LOOKUP_LIMITS.recentMax. */
   recent: PlatformRecentPost[];
   /** `simulated` means made-up sample data: the UI shows a "Sample data" chip. */
-  source: 'apify' | 'fixture' | 'simulated';
+  source: 'apify' | 'simulated';
   fetchedAt: string;
 }
 
@@ -107,7 +107,7 @@ export const platformProfileSchema = z.object({
   verified: z.boolean(),
   profileUrl: z.string().max(2048),
   recent: z.array(platformRecentPostSchema).max(PLATFORM_LOOKUP_LIMITS.recentMax),
-  source: z.enum(['apify', 'fixture', 'simulated']),
+  source: z.enum(['apify', 'simulated']),
   fetchedAt: z.string().max(40),
 });
 

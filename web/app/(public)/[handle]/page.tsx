@@ -29,11 +29,9 @@ export default async function Page({ params }: Props) {
   const { space } = page;
   return (
     <>
-      {/* The demo's platform links are made up and may be someone's real handle: no sameAs for it. */}
       <JsonLd
         data={profilePageJsonLd({
           ...space,
-          platforms: space.isDemo ? [] : space.platforms,
           path: routes.fan.space(space.handle),
         })}
       />

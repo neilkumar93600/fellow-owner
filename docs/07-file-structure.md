@@ -136,7 +136,7 @@ web/
 │
 ├─ lib/                                 flat files, plus api/ and fixtures/
 │  ├─ api/                              typed client, one file per backend route group (not web/api/: Vercel deploys that folder as Functions)
-│  │  ├─ account.ts, ask.ts, challenges.ts, coach.ts, config.ts, demo.ts, followers.ts, insights.ts
+│  │  ├─ account.ts, ask.ts, challenges.ts, coach.ts, config.ts, followers.ts, insights.ts
 │  │  ├─ metrics.ts, moderation.ts, notification-prefs.ts, notifications.ts, pitches.ts, posts.ts
 │  │  └─ question-groups.ts, similar.ts, snoozes.ts, spaces.ts, studio.ts, support.ts, uploads.ts
 │  ├─ utils.ts, format.ts, fonts.ts, toast.ts, constants.ts, routes.ts (typed path builders), seo.ts
@@ -149,7 +149,7 @@ web/
 │
 ├─ e2e/smoke.spec.ts                    Playwright smoke test (pnpm test:e2e; not run in CI)
 ├─ scripts/                             contrast and sidebar-cookie checks, creator media generation
-├─ public/                              logo, favicon, demo/, creator/ images, frames/
+├─ public/                              logo, favicon, creator/ images, frames/
 ├─ proxy.ts                             Next 16 proxy: cookie check for (dashboard) routes; on /api/* and /r/* sets x-edge-key + x-edge-client-ip and rewrites to API_URL
 ├─ next.config.ts                       fallback rewrites of /api/* and /r/* to API_URL; redirects
 ├─ components.json                      shadcn config
@@ -173,12 +173,11 @@ api/
 │  │
 │  ├─ auth/
 │  │  ├─ index.ts                       betterAuth(): drizzle adapter, email and password, username, Google, Apple, Facebook, emailOTP (encrypted codes), delete-account code, sessions, trustedOrigins, Redis rate-limit storage
-│  │  ├─ email.ts                       code emails through Resend, per-address send throttle
-│  │  └─ demo.ts                        demo account helpers
+│  │  └─ email.ts                       code emails through Resend, per-address send throttle
 │  │
 │  ├─ routes/                           URL -> middleware -> controller, nothing else (one file per area)
 │  │  ├─ index.ts                       mounts everything under /api and the root /r/:code
-│  │  ├─ health, config, demo, admin, cron, support, newsletter
+│  │  ├─ health, config, cron, support, newsletter
 │  │  ├─ public, spaces, coach, posts, pitches, moderation, similar, metrics
 │  │  ├─ account, notification-prefs, notifications, uploads
 │  │  └─ studio, followers, insights, challenges, question-groups, ask, snoozes   (each as <name>.routes.ts)
@@ -187,7 +186,7 @@ api/
 │  │
 │  ├─ services/                         business rules, authorization, caps (<name>.service.ts)
 │  │  ├─ access, limits, spaces, communities, memberships, posts, comments, signals, teams
-│  │  ├─ pitches, overview, briefing, discovery, promotions, clicks, demo
+│  │  ├─ pitches, overview, briefing, discovery, promotions, clicks
 │  │  ├─ followers, notifications, notification-emails, insights, challenges, question-groups
 │  │  └─ ask, coach, similar, moderation, account, support, newsletter, metrics, snoozes, uploads
 │  │
@@ -203,7 +202,7 @@ api/
 │  │  ├─ guard.ts                       untrusted-text wrapper, score clamping, id checks
 │  │  ├─ index.ts, types.ts             live services vs the fake; task names and errors
 │  │  ├─ fake.ts, fakes/                deterministic fake AI (no key needed)
-│  │  ├─ media.ts                       fal.ai image and video generation (seed assets)
+│  │  ├─ media.ts                       fal.ai image and video generation
 │  │  └─ tasks/                         one file per task: prompt + output schema + function
 │  │     ├─ triage-item, embed-item, suggest-communities, briefing, promote-drafts
 │  │     ├─ tag-followers, cluster-import, community-digest, suggest-reply, ask-ai
@@ -214,12 +213,12 @@ api/
 │  │  ├─ tick.ts                        the hourly tick: job names, schedule, slots, job_runs bookkeeping
 │  │  ├─ analyze-item.ts, sweep.ts, sweep-all.ts     triage + embed one item; claim pending items (SKIP LOCKED); sweep every space
 │  │  ├─ group-questions.ts, close-challenges.ts, community-digests.ts
-│  │  ├─ refresh-followers.ts, demo-reset.ts
+│  │  ├─ refresh-followers.ts
 │  │  └─ purge.ts                       retention rules from 05
 │  │
 │  ├─ middlewares/
 │  │  ├─ request-id, validate (zod for body, params, query), rate-limit
-│  │  ├─ require-session, require-member, require-owner, require-admin, cron-auth
+│  │  ├─ require-session, require-member, require-owner, cron-auth
 │  │  └─ not-found, error-handler
 │  │
 │  ├─ db/
@@ -228,18 +227,14 @@ api/
 │  │  ├─ schema/                        index, enums, columns, auth, spaces, communities, memberships, posts, social, inbound,
 │  │  │                                 promotions, ai, followers, later (notifications, imports, asks), question-groups,
 │  │  │                                 moderation, notification-prefs, page-visits, snoozes, support, newsletter, jobs
-│  │  ├─ migrations/                    generated SQL, committed: 0000 to 0008 (see 05, section 9)
-│  │  └─ seed/
-│  │     ├─ data/                       space, communities, members, posts, comments, pitches, promotions, followers, challenges, question-groups (.json)
-│  │     ├─ seed.ts                     pnpm db:seed [--reanalyze]; seedDemoSpace is also what the demo reset calls
-│  │     ├─ embed.ts                    pnpm db:embed
-│  │     └─ generate-content.ts         one-off: writes data/*.json with the LLM
+│  │  ├─ migrations/                    generated SQL, committed: 0000 to 0011 (see 05, section 9)
+│  │  └─ embed.ts                       pnpm db:embed: backfills missing embeddings
 │  │
 │  ├─ lib/
 │  │  ├─ errors, logger (pino with redaction), http, pagination (cursor encode/decode), dates
 │  │  ├─ ranking (pure scoring functions from 02), hash, short-code, slug, handles, signed-token
 │  │  ├─ audience-import (CSV/paste parser), csv (export writer), youtube (comment import)
-│  │  ├─ platform-lookup (+ platform-fixtures/), present (response shaping)
+│  │  ├─ platform-lookup, present (response shaping)
 │  │  └─ redis, pubsub (notifications), job-lock (advisory lock), mailer (Resend), storage (S3 presign), db-errors
 │  │
 │  └─ types/
@@ -247,7 +242,7 @@ api/
 │
 ├─ tests/
 │  ├─ unit/                             ranking, limits, guard, AI tasks and run, tick schedule, rate limits, storage, csv, youtube, ...
-│  ├─ integration/                      Supertest against a real Postgres, one file per route group or feature (including cron tick, migrations 0004 and 0006, seed)
+│  ├─ integration/                      Supertest against a real Postgres, one file per route group or feature (including cron tick, migrations 0004 and 0006)
 │  ├─ fixtures/                         recorded AI responses, Apify fixtures
 │  └─ helpers/                          test-db.ts, factories.ts, auth.ts, global-setup.ts
 ├─ Dockerfile                           production image for Railway (pre-deploy: node dist/db/migrate.js); context is the repo root

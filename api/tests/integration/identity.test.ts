@@ -57,7 +57,7 @@ async function holdersOf(handle: string): Promise<number> {
 
 /**
  * One identity (spec §11): user.username and spaces.handle share one namespace with one rule set.
- * The space owner `mira` has a space but no username (like the seeded demo creator), and
+ * The space owner `mira` has a space but no username (like an account made by social sign-in), and
  * `arjun.m` is a username with no space.
  */
 describe('one handle namespace', () => {

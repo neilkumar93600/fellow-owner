@@ -2,7 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import pill from '@/components/landing/demo-button.module.css';
+import pill from '@/components/landing/pill.module.css';
 import { Logo } from '@/components/shared/logo';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { DISPLAY_H1 } from '@/lib/constants';

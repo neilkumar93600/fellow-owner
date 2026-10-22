@@ -1,22 +1,20 @@
-import { ArrowUpRight, Check, Heart, MousePointerClick } from 'lucide-react';
-import Link from 'next/link';
+import { Check, Heart, MousePointerClick } from 'lucide-react';
 import { CreatorImage } from '@/components/shared/creator-image';
 import { cn } from '@/lib/utils';
 import {
   avatarTint,
-  creator,
-  DEMO,
-  type DemoCrewMember,
+  EXAMPLE,
+  type ExampleCrewMember,
   initials,
   type ShowcaseProject,
   showcase,
-} from './demo-data';
+} from './example-data';
 import st from './showcase.module.css';
 import { AfterMount, ShowcaseStage } from './showcase-motion';
 
 /*
  * "Made by fans, credited by name" (round 4 spec section 2, "Showcase"): on the page background, the fan
- * projects a demo creator featured, as one slow marquee. Demo data, labelled as such. One card is a real
+ * projects an example creator featured, as one slow marquee. Example data, labelled as such. One card is a real
  * "Made it" page crop (title, Made by roles, clicks), the rest are flat tinted cards with a cover of the
  * made thing (a room cover or vlog still, lazy-loaded) and the crew's avatar stack on its bottom edge. Each card has its own width, so the strip reads as six
  * different things. Only a card with a live showcase page is a link.
@@ -52,13 +50,8 @@ const COVER_SIZES: Record<(typeof SIZES)[number], string> = {
 /** Flat card tints, by position in the list. */
 const TINTS = ['peach', 'lilac', 'sky', 'mint', 'lilac', 'peach'] as const;
 
-/** Showcase pages that exist in the demo world, by card title. Cards without one render as plain cards. */
-const SHOWCASE_SLUGS: Record<string, string> = {
-  [DEMO.idea.title]: 'lisbon-on-60-a-day',
-};
-
-/** The crew photo for a demo fan, when there is one; other makers get initials. */
-const FACES = new Map(DEMO.crew.map((member) => [member.name, member.avatar]));
+/** The crew photo for an example fan, when there is one; other makers get initials. */
+const FACES = new Map(EXAMPLE.crew.map((member) => [member.name, member.avatar]));
 
 export function ShowcaseStrip() {
   return (
@@ -74,7 +67,7 @@ export function ShowcaseStrip() {
             <h2 id="showcase-title" className={cn('text-section', st.title)}>
               Made by fans, credited by name
             </h2>
-            <span className={st.badge}>Demo data</span>
+            <span className={st.badge}>Example data</span>
           </div>
         }
         line={<p className={cn('text-lead', st.line)}>Built by fan crews.</p>}
@@ -147,21 +140,6 @@ function Maker({ name, large }: { name: string; large?: boolean }) {
   );
 }
 
-/** The card's title: a stretched link when the project has a live showcase page. */
-function CardTitle({ title, slug }: { title: string; slug?: string }) {
-  return (
-    <h3 className={st.cardTitle}>
-      {slug ? (
-        <Link href={`/${creator.handle}/s/${slug}`} prefetch={false} className={st.cardLink}>
-          {title}
-        </Link>
-      ) : (
-        title
-      )}
-    </h3>
-  );
-}
-
 function ProjectCard({
   project,
   tint,
@@ -171,11 +149,10 @@ function ProjectCard({
   tint: (typeof TINTS)[number];
   size: (typeof SIZES)[number];
 }) {
-  const slug = SHOWCASE_SLUGS[project.title];
-  return project.title === DEMO.idea.title ? (
-    <MadeItCard project={project} crew={DEMO.crew} slug={slug} />
+  return project.title === EXAMPLE.idea.title ? (
+    <MadeItCard project={project} crew={EXAMPLE.crew} />
   ) : (
-    <FlatCard project={project} tint={tint} size={size} slug={slug} />
+    <FlatCard project={project} tint={tint} size={size} />
   );
 }
 
@@ -183,11 +160,9 @@ function ProjectCard({
 function MadeItCard({
   project,
   crew,
-  slug,
 }: {
   project: ShowcaseProject;
-  crew: readonly DemoCrewMember[];
-  slug?: string;
+  crew: readonly ExampleCrewMember[];
 }) {
   return (
     <article className={st.card}>
@@ -199,7 +174,7 @@ function MadeItCard({
           </span>
         </div>
         <div className={st.pageBody}>
-          <CardTitle title={project.title} slug={slug} />
+          <h3 className={st.cardTitle}>{project.title}</h3>
           <ul className={st.credits}>
             {crew.map((member) => (
               <li key={member.name}>
@@ -211,16 +186,11 @@ function MadeItCard({
             ))}
           </ul>
         </div>
-        {slug ? (
-          <span className={st.open} aria-hidden="true">
-            <ArrowUpRight size={16} strokeWidth={1.5} />
-          </span>
-        ) : null}
       </div>
       <div className={st.foot}>
         <span className={st.team}>
           <MousePointerClick size={15} strokeWidth={1.75} aria-hidden="true" />
-          <span className="tabular">{DEMO.clicks.total} clicks</span>
+          <span className="tabular">{EXAMPLE.clicks.total} clicks</span>
         </span>
         <Hearts count={project.hearts} />
       </div>
@@ -233,12 +203,10 @@ function FlatCard({
   project,
   tint,
   size,
-  slug,
 }: {
   project: ShowcaseProject;
   tint: (typeof TINTS)[number];
   size: (typeof SIZES)[number];
-  slug?: string;
 }) {
   const shown = project.crew.slice(0, 4);
   const more = project.team - shown.length;
@@ -256,12 +224,7 @@ function FlatCard({
             <span className={cn(st.avatar, st.avatarLg, st.avatarMore)}>+{more}</span>
           ) : null}
         </span>
-        <CardTitle title={project.title} slug={slug} />
-        {slug ? (
-          <span className={st.open} aria-hidden="true">
-            <ArrowUpRight size={16} strokeWidth={1.5} />
-          </span>
-        ) : null}
+        <h3 className={st.cardTitle}>{project.title}</h3>
       </div>
       <div className={st.foot}>
         <span className={st.team}>

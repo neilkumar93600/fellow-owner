@@ -60,10 +60,6 @@ function clip(text: string, max: number): string {
   return text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
 }
 
-// ponytail: only the demo creator has a generated portrait (a JPEG: satori cannot decode the webp); everyone else is read from
-// public/ when it is a local path, else initials.
-const DEMO_PORTRAIT = '/creator/mira-portrait-og.jpg';
-
 /** A photo under public/ as a data URI; null when it is missing, empty or remote. */
 async function localPhoto(src: string | null): Promise<string | null> {
   // A stored avatar (the onboarding import) is a data: URL already; satori only decodes jpeg and png.
@@ -133,17 +129,15 @@ export interface SpaceOgCard {
   line: string | null;
   /** Whose avatar shows (the creator); none on the site's own card. */
   person?: { name: string; avatarUrl: string | null };
-  /** The space is the demo world: it has a generated portrait and the card says Demo. */
-  isDemo?: boolean;
   /** Up to three tags: the rooms, or the site's three nouns. */
   chips: { name: string; tint: Tint }[];
   /** A small hairline pill above the title (the site card's "One link in your bio"). */
   eyebrow?: string;
 }
 
-export async function spaceOgImage({ title, line, person, chips, isDemo, eyebrow }: SpaceOgCard) {
+export async function spaceOgImage({ title, line, person, chips, eyebrow }: SpaceOgCard) {
   const [photo, fontList] = await Promise.all([
-    person ? localPhoto(isDemo ? DEMO_PORTRAIT : person.avatarUrl) : null,
+    person ? localPhoto(person.avatarUrl) : null,
     ogFonts(),
   ]);
   const has = (name: string) => fontList.some((font) => font.name === name);
@@ -304,9 +298,6 @@ export async function spaceOgImage({ title, line, person, chips, isDemo, eyebrow
           <circle cx="23" cy="11" r="9.25" fill={INK} fillOpacity="0.92" />
         </svg>
         <div style={{ fontFamily: serif, fontSize: 36, letterSpacing: -0.7 }}>Fellow Owners</div>
-        {isDemo ? (
-          <div style={{ ...pill, height: 40, fontSize: 17, marginLeft: 'auto' }}>Demo space</div>
-        ) : null}
       </div>
     </div>,
     {

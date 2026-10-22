@@ -83,7 +83,7 @@ export type PlatformEntryInput = z.input<typeof platformEntrySchema>;
 const AVATAR_DATA_URL_MAX = 350_000;
 const AVATAR_DATA_URL = /^data:image\/(?:jpeg|png|webp|gif|avif);base64,[A-Za-z0-9+/]+={0,2}$/;
 
-/** An http(s) link or a same-site path: /api/media/<key> (uploads) or /demo/mira.jpg. */
+/** An http(s) link or a same-site path such as /api/media/<key> (uploads). */
 function isImageLink(value: string): boolean {
   return (
     value.length <= LIMITS.link.urlMax &&
@@ -91,7 +91,7 @@ function isImageLink(value: string): boolean {
   );
 }
 
-/** An http(s) link, a site path (/api/media/..., /demo/mira.jpg), or a small base64 image. */
+/** An http(s) link, a site path (/api/media/...), or a small base64 image. */
 export const avatarUrlSchema = z
   .string()
   .trim()

@@ -51,7 +51,7 @@ const scenery = (() => {
 /**
  * Hero (Parchment Frost): a coastal landscape in one rounded frame, washed with parchment on the left so
  * the serif h1 reads, and fading into the canvas at the bottom. Left: eyebrow, h1, one line, the claim
- * form (the one Lake Blue button). Right: "Ask your AI twin", a demo chat with three question tabs.
+ * form (the one Lake Blue button). Right: "Ask your AI twin", an example chat with three question tabs.
  * Phones (below 768px): words and claim only; the chat is hidden. Copy is server-rendered and complete without
  * JavaScript.
  */

@@ -10,7 +10,7 @@ import { usePrefersReducedMotion } from '@/hooks/use-media-query';
 import type { CreatorAsset } from '@/lib/creator-assets';
 import { cn } from '@/lib/utils';
 import styles from './connect.module.css';
-import { DEMO, type DemoCrewMember } from './demo-data';
+import { EXAMPLE, type ExampleCrewMember } from './example-data';
 
 /**
  * The six step pictures for "New ways to connect". Each is a tiny piece of the real UI that plays once
@@ -107,11 +107,11 @@ function Face({ name, size = 'md' }: { name: CreatorAsset; size?: 'sm' | 'md' | 
   );
 }
 
-const [priya, ines, maya] = DEMO.crew as [
-  DemoCrewMember,
-  DemoCrewMember,
-  DemoCrewMember,
-  DemoCrewMember,
+const [priya, ines, maya] = EXAMPLE.crew as [
+  ExampleCrewMember,
+  ExampleCrewMember,
+  ExampleCrewMember,
+  ExampleCrewMember,
 ];
 
 /* 01 Reply in your voice: a fan's DM, then a draft types out. The creator still sends it. */
@@ -263,14 +263,14 @@ function HeartVisual({ on }: { on: boolean }) {
         <Face name={priya.avatar} />
         <span>
           <b>{priya.name}</b>
-          <span className={styles.muted}>{DEMO.idea.community}</span>
+          <span className={styles.muted}>{EXAMPLE.idea.community}</span>
         </span>
       </motion.div>
       <motion.p variants={rise} className={styles.postTitle}>
-        {DEMO.idea.title}
+        {EXAMPLE.idea.title}
       </motion.p>
       <motion.p variants={rise} className={styles.prices}>
-        {DEMO.idea.prices.map((price) => (
+        {EXAMPLE.idea.prices.map((price) => (
           <span key={price} className={styles.chip}>
             {price}
           </span>
@@ -315,7 +315,7 @@ function HeartVisual({ on }: { on: boolean }) {
         }}
       >
         <Heart size={14} strokeWidth={2} fill="currentColor" />
-        Loved by {DEMO.creator.firstName}
+        Loved by {EXAMPLE.creator.firstName}
       </motion.span>
     </Frame>
   );
@@ -329,10 +329,10 @@ function FeaturedVisual({ on }: { on: boolean }) {
         <span className={styles.noticeIcon}>
           <Bell size={14} strokeWidth={1.75} />
         </span>
-        {DEMO.idea.title}
+        {EXAMPLE.idea.title}
       </motion.p>
       <motion.ul variants={group(0.1)} className={styles.crew}>
-        {DEMO.crew.map((member) => (
+        {EXAMPLE.crew.map((member) => (
           <motion.li
             key={member.name}
             variants={{

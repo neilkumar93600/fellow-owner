@@ -24,7 +24,7 @@ import {
   type SQL,
   sql,
 } from 'drizzle-orm';
-import { chunk, type Db, type DbOrTx, inTransaction, likePattern } from '../db/client.js';
+import { type Db, type DbOrTx, inTransaction, likePattern } from '../db/client.js';
 import { user } from '../db/schema/auth.js';
 import { type InboundRow, inbound, type NewInboundRow } from '../db/schema/inbound.js';
 import { memberships } from '../db/schema/memberships.js';
@@ -142,15 +142,6 @@ export function createPitchesRepo(db: Db) {
       const [row] = await tx.insert(inbound).values(values).returning();
       if (!row) throw new Error('insert into inbound returned no row');
       return row;
-    },
-
-    /** Seed only. */
-    async insertMany(values: NewInboundRow[], tx: DbOrTx = db): Promise<InboundRow[]> {
-      const out: InboundRow[] = [];
-      for (const part of chunk(values, 200)) {
-        out.push(...(await tx.insert(inbound).values(part).returning()));
-      }
-      return out;
     },
 
     async findById(spaceId: string, id: string, tx: DbOrTx = db): Promise<InboundRow | null> {

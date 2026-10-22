@@ -189,7 +189,7 @@
 }
 
 /* The screens beside this story hold invented numbers; say so, as the fans and problem sections do. */
-.demoLabel {
+.exampleLabel {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -200,7 +200,7 @@
   line-height: 1.3;
 }
 
-.demoChip {
+.exampleChip {
   display: inline-flex;
   align-items: center;
   height: 24px;
@@ -662,7 +662,7 @@
   background: var(--glass);
 }
 
-.demoTag {
+.exampleTag {
   color: var(--ink-soft);
   font-size: 0.75rem;
   font-weight: 500;

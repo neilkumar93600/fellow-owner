@@ -1,36 +1,41 @@
-// Static props for the real components in the loop's live layer (loop-live.tsx), built from DEMO so the
+// Static props for the real components in the loop's live layer (loop-live.tsx), built from EXAMPLE so the
 // product UI says the same numbers as the cards. No queries, no router: fixtures only.
 
 import type { MemberRef, PostCard, PublicCommunity, PublicSpace } from '@fellow-owners/shared';
 import type { DecisionItem } from '@/components/dashboard/today/decision-items';
-import { CREATOR_ASSETS } from '@/lib/creator-assets';
-import { DEMO } from './demo-data';
+import { CREATOR_ASSETS, type CreatorAsset } from '@/lib/creator-assets';
+import { EXAMPLE } from './example-data';
 
 const SITE = 'fellowowners.app';
 
 /** The browser's URL pill per step (followers, communities, idea, crew, featured). */
 export const LIVE_URLS = [
-  `${SITE}/${DEMO.creator.handle}`,
-  `${SITE}/${DEMO.creator.handle}/join`,
-  `${SITE}/${DEMO.creator.handle}/c/${DEMO.idea.communitySlug}`,
-  `${SITE}/${DEMO.creator.handle}/p/lisbon-on-60-a-day`,
+  `${SITE}/${EXAMPLE.creator.handle}`,
+  `${SITE}/${EXAMPLE.creator.handle}/join`,
+  `${SITE}/${EXAMPLE.creator.handle}/c/${EXAMPLE.idea.communitySlug}`,
+  `${SITE}/${EXAMPLE.creator.handle}/p/lisbon-on-60-a-day`,
   `${SITE}/dashboard`,
 ] as const;
 
+/** The example creator's generated cover and portrait (real creators get the gradient and their avatar). */
+export const LIVE_PHOTOS: { cover: CreatorAsset; portrait: CreatorAsset } = {
+  cover: 'vlog-van-coast',
+  portrait: 'mira-portrait',
+};
+
 export const LIVE_SPACE: PublicSpace = {
-  id: 'demo-space',
-  handle: DEMO.creator.handle,
-  displayName: DEMO.creator.name,
+  id: 'example-space',
+  handle: EXAMPLE.creator.handle,
+  displayName: EXAMPLE.creator.name,
   bio: 'Slow travel and cheap flights.',
-  avatarUrl: DEMO.creator.avatarUrl,
-  platforms: DEMO.followers.platforms.map((entry) => ({
+  avatarUrl: EXAMPLE.creator.avatarUrl,
+  platforms: EXAMPLE.followers.platforms.map((entry) => ({
     platform: entry.platform,
     url: entry.url,
     followers: entry.count,
   })),
-  totalFollowers: DEMO.followers.total,
-  memberCount: DEMO.members,
-  isDemo: true,
+  totalFollowers: EXAMPLE.followers.total,
+  memberCount: EXAMPLE.members,
   coverUrl: null,
   mediaKitEnabled: false,
 };
@@ -44,7 +49,7 @@ const SHORT_ROOM: Record<string, string> = {
   'slow-living': 'Staying longer, going slower.',
 };
 
-export const LIVE_ROOMS: PublicCommunity[] = DEMO.rooms.map((room, index) => ({
+export const LIVE_ROOMS: PublicCommunity[] = EXAMPLE.rooms.map((room, index) => ({
   id: room.slug,
   slug: room.slug,
   name: room.name,
@@ -56,8 +61,8 @@ export const LIVE_ROOMS: PublicCommunity[] = DEMO.rooms.map((room, index) => ({
   coverUrl: null,
 }));
 
-const budgetTravel = LIVE_ROOMS.find((room) => room.slug === DEMO.idea.communitySlug);
-if (!budgetTravel) throw new Error('DEMO.idea.communitySlug must name one of DEMO.rooms');
+const budgetTravel = LIVE_ROOMS.find((room) => room.slug === EXAMPLE.idea.communitySlug);
+if (!budgetTravel) throw new Error('EXAMPLE.idea.communitySlug must name one of EXAMPLE.rooms');
 
 /** The room the fan joins in step 2 (shown as Joined). */
 export const LIVE_JOINED_ROOM = budgetTravel;
@@ -82,12 +87,12 @@ function memberRef(name: string, avatar?: keyof typeof CREATOR_ASSETS): MemberRe
 }
 
 /** The crew with photo URLs, for AvatarStack and AvatarInitials. */
-export const LIVE_CREW = DEMO.crew.map((member) => ({
+export const LIVE_CREW = EXAMPLE.crew.map((member) => ({
   ...member,
   image: CREATOR_ASSETS[member.avatar].src,
 }));
 
-const author = LIVE_CREW[0] ?? { name: DEMO.idea.author, image: null };
+const author = LIVE_CREW[0] ?? { name: EXAMPLE.idea.author, image: null };
 const room = {
   id: budgetTravel.id,
   slug: budgetTravel.slug,
@@ -127,13 +132,13 @@ export const LIVE_FEED: PostCard[] = [
     id: 'lisbon',
     type: 'project',
     status: 'forming_team',
-    title: DEMO.idea.title,
+    title: EXAMPLE.idea.title,
     excerpt: 'Seven days for $420 all in.',
     author: { ...memberRef(author.name), image: author.image },
-    rolesNeeded: DEMO.crew.map((member) => member.role),
-    openRoles: DEMO.crew.slice(1).map((member) => member.role),
-    useCount: DEMO.idea.use,
-    buildCount: DEMO.idea.build,
+    rolesNeeded: EXAMPLE.crew.map((member) => member.role),
+    openRoles: EXAMPLE.crew.slice(1).map((member) => member.role),
+    useCount: EXAMPLE.idea.use,
+    buildCount: EXAMPLE.idea.build,
     commentCount: 41,
     teamPreview: [{ ...memberRef(author.name), image: author.image }],
     teamSize: 1,
@@ -157,18 +162,18 @@ export const LIVE_DECISION: DecisionItem = {
   refId: 'lisbon',
   name: author.name,
   avatarUrl: author.image,
-  context: DEMO.idea.community,
-  title: DEMO.idea.title,
+  context: EXAMPLE.idea.community,
+  title: EXAMPLE.idea.title,
   quote: 'Seven days in Lisbon for $420 all in.',
   reason: 'Matches “budget-honest travel”.',
-  score: DEMO.idea.fit,
+  score: EXAMPLE.idea.fit,
   lovedAt: null,
   href: '#',
 };
 
 /** The stat beside it: the one click count. */
 export const LIVE_STAT = {
-  value: DEMO.clicks.total,
+  value: EXAMPLE.clicks.total,
   label: 'Clicks on the guide',
   descriptor: 'since you featured it',
 } as const;

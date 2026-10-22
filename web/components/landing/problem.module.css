@@ -84,7 +84,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-.demoChip {
+.exampleChip {
   display: inline-flex;
   align-items: center;
   height: 24px;

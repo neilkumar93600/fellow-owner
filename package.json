@@ -20,7 +20,6 @@
     "format": "biome format --write .",
     "db:generate": "pnpm --filter @fellow-owners/api db:generate",
     "db:migrate": "pnpm --filter @fellow-owners/api db:migrate",
-    "db:seed": "pnpm --filter @fellow-owners/api db:seed",
     "db:embed": "pnpm --filter @fellow-owners/api db:embed",
     "db:studio": "pnpm --filter @fellow-owners/api db:studio"
   },

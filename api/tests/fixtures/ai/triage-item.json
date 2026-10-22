@@ -1,6 +1,6 @@
 {
   "task": "triageItem",
-  "description": "Recorded fast-tier answers for triageItem (Mira Lane demo space). Expectations are after ai/tasks/triage-item.ts normalization.",
+  "description": "Recorded fast-tier answers for triageItem (a travel creator space). Expectations are after ai/tasks/triage-item.ts normalization.",
   "cases": [
     {
       "name": "post-project-strong-fit",

@@ -56,9 +56,6 @@ async function within(limit: RequestHandler, req: Request, res: Response): Promi
   }
 }
 
-/** Our own demo images may pass through as site paths; anything else must be fetched. */
-const SITE_AVATAR = /^\/demo\/[a-z0-9_-]+\.(?:jpe?g|png|webp)$/i;
-
 export function createPlatformController(deps: PlatformControllerDeps) {
   const lookup =
     deps.lookup ??
@@ -91,7 +88,6 @@ export function createPlatformController(deps: PlatformControllerDeps) {
     for (const profile of profiles) {
       const url = profile.avatarUrl;
       if (!url) continue;
-      if (profile.source === 'fixture' && SITE_AVATAR.test(url)) return url;
       const data = await fetchAvatar(url);
       if (data) return data;
     }

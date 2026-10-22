@@ -94,12 +94,6 @@ export const verifyOtpSchema = z.object({
 });
 export type VerifyOtpInput = z.input<typeof verifyOtpSchema>;
 
-/** POST /api/demo/session */
-export const demoSessionSchema = z.object({
-  as: z.enum(['creator', 'fan']),
-});
-export type DemoSessionInput = z.input<typeof demoSessionSchema>;
-
 /** Only same-site relative paths are allowed as a post-sign-in destination. */
 export function isSafeReturnTo(value: string | null | undefined): value is string {
   if (!value) return false;

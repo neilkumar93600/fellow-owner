@@ -201,7 +201,6 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
       intro: string,
     ): Promise<SuggestCommunitiesResponse> {
       const space = await access.spaceByHandle(handle);
-      await access.assertCanEnter(space, userId);
       const communities = await repos.communities.listBySpace(space.id);
       if (communities.length === 0) return { available: true, suggestions: [] };
       await limits.assertSuggestionsAllowed(userId);
@@ -259,7 +258,6 @@ export function createMembershipsService(deps: MembershipsServiceDeps) {
      */
     async join(handle: string, userId: string, input: JoinBody): Promise<JoinResponse> {
       const space = await access.spaceByHandle(handle);
-      await access.assertCanEnter(space, userId);
       const active = await activeCommunities(space.id);
       const communityIds = [...new Set(input.communityIds)];
       assertKnownCommunities(communityIds, active);

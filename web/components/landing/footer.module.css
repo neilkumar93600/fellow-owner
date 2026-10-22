@@ -121,7 +121,7 @@
   background-color: var(--glass-strong);
 }
 
-/* Two columns from the smallest phone: one column stacked all four groups into about two screens. */
+/* Two columns from the smallest phone: one column stacked the groups into about two screens. */
 .columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -136,7 +136,7 @@
 
 @media (min-width: 1024px) {
   .columns {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -155,7 +155,7 @@
   flex-direction: column;
 }
 
-/* Shared by links and the demo buttons (overrides the layered .btn sizing so both read as links). */
+/* The footer links. */
 .flink {
   display: inline-flex;
   align-items: center;

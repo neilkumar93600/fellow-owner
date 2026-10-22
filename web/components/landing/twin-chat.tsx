@@ -75,10 +75,10 @@ function Answer({ q, n }: { q: TwinQuestion; n: number }) {
 }
 
 /**
- * "Ask your AI twin": a demo chat in the hero. Three prewritten questions (the tabs under the panel, or
+ * "Ask your AI twin": an example chat in the hero. Three prewritten questions (the tabs under the panel, or
  * the send button, which asks the next one); the twin's answer types out, instantly under reduced
  * motion. All three answers share one grid cell, so the panel is as tall as the longest and never jumps.
- * Server render shows the first answer in full. Demo data: names are made up.
+ * Server render shows the first answer in full. Example data: names are made up.
  */
 export function TwinChat() {
   const id = useId();
@@ -187,7 +187,7 @@ export function TwinChat() {
             <Sparkles size={15} strokeWidth={1.75} />
           </span>
           <p className={styles.panelTitle}>Ask your AI twin</p>
-          <span className={styles.badge}>Demo</span>
+          <span className={styles.badge}>Example</span>
         </div>
 
         <div ref={threadRef} className={styles.thread}>
@@ -252,7 +252,7 @@ export function TwinChat() {
         ))}
       </div>
 
-      <p className={styles.footnote}>Demo data. Names are made up.</p>
+      <p className={styles.footnote}>Example data. Names are made up.</p>
     </div>
   );
 }

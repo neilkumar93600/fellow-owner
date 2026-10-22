@@ -1,14 +1,9 @@
-import { expect, type Page, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-// Smoke: every main screen renders a heading and not the error boundary.
-// The demo session cookie comes from POST /api/demo/session on the page's context.
+// Smoke: every public page renders a heading and not the error boundary. Signed-in screens need a real
+// account, so they are not covered here.
 
-async function signInAs(page: Page, as: 'creator' | 'fan') {
-  const res = await page.request.post('/api/demo/session', { data: { as } });
-  expect(res.ok()).toBeTruthy();
-}
-
-async function expectRendered(page: Page, path: string) {
+async function expectRendered(page: import('@playwright/test').Page, path: string) {
   const response = await page.goto(path);
   expect(response?.status(), path).toBeLessThan(400);
   // Headings may be visually hidden (sr-only), so match on presence, not visibility.
@@ -16,36 +11,32 @@ async function expectRendered(page: Page, path: string) {
   await expect(page.getByText(/something went wrong/i), path).toHaveCount(0);
 }
 
-const CREATOR_PAGES = [
-  '/dashboard',
-  '/dashboard/inbox',
-  '/dashboard/inbox/questions',
-  '/dashboard/ideas',
-  '/dashboard/communities',
-  '/dashboard/communities/reports',
-  '/dashboard/challenges',
-  '/dashboard/people',
-  '/dashboard/promote',
-  '/dashboard/settings',
+const PUBLIC_PAGES = [
+  '/',
+  '/about',
+  '/pricing',
+  '/blog',
+  '/contact',
+  '/login',
+  '/create-account',
+  '/terms',
+  '/privacy-policy',
 ];
 
-test('demo creator: every studio page renders', async ({ page }) => {
-  await signInAs(page, 'creator');
-  for (const path of CREATOR_PAGES) await expectRendered(page, path);
+test('public pages render', async ({ page }) => {
+  for (const path of PUBLIC_PAGES) await expectRendered(page, path);
 });
 
-test('demo fan: space, community, post, my space and account render', async ({ page }) => {
-  await signInAs(page, 'fan');
-  await expectRendered(page, '/mira');
+test('the landing has a Get started link', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('link', { name: 'Get started' }).first()).toHaveAttribute(
+    'href',
+    /\/start/,
+  );
+});
 
-  const community = page.locator('a[href^="/mira/c/"]').first();
-  await community.waitFor({ state: 'attached' });
-  await expectRendered(page, (await community.getAttribute('href')) as string);
-
-  const post = page.locator('a[href^="/mira/p/"]').first();
-  await post.waitFor({ state: 'attached' });
-  await expectRendered(page, (await post.getAttribute('href')) as string);
-
-  await expectRendered(page, '/mira/me');
-  await expectRendered(page, '/account');
+test('an unknown page is a 404', async ({ page }) => {
+  // One segment: /{handle}/c/* is a signed-in path, so proxy.ts would redirect it to /login (200).
+  const response = await page.goto('/no-such-creator-page');
+  expect(response?.status()).toBe(404);
 });

@@ -150,7 +150,7 @@ export function OnboardingPreview({
                 {/* Creator header */}
                 <div data-section="top" className="mt-7 flex flex-col items-center text-center">
                   {values.avatarUrl && failedAvatar !== values.avatarUrl ? (
-                    // ponytail: plain img; the avatar is a data: URL or a /demo/ path, never remote.
+                    // ponytail: plain img; the avatar is a data: URL, never remote.
                     // biome-ignore lint/performance/noImgElement: see above
                     <img
                       src={values.avatarUrl}

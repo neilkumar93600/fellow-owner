@@ -51,7 +51,6 @@ export type ApiErrorCode =
   | 'daily_cap_reached'
   | 'rate_limited'
   | 'edit_window_closed'
-  | 'demo_disabled'
   | 'ai_unavailable'
   | 'uploads_disabled'
   /** A key-optional feature whose server keys are not set (Instagram, email forwarding). */
@@ -118,14 +117,6 @@ export interface AiInsight {
   stale: boolean;
 }
 
-// ---------------------------------------------------------------- session and demo
-
-export interface DemoSessionResponse {
-  as: 'creator' | 'fan';
-  /** Where to send the browser next: /dashboard or /{handle}. */
-  redirectTo: string;
-}
-
 // ---------------------------------------------------------------- public: bio page and showcase
 
 export interface PublicSpace {
@@ -137,8 +128,6 @@ export interface PublicSpace {
   platforms: PlatformEntry[];
   totalFollowers: number;
   memberCount: number;
-  /** The seeded demo space: the web shows its demo cover and art. */
-  isDemo: boolean;
   /** Uploaded cover (/api/media/<key>) or an image link; null = the default art. */
   coverUrl: string | null;
   /** The creator turned on the public media kit (/{handle}/media-kit, F6). */
@@ -209,7 +198,7 @@ export interface TeamMember extends MemberRef {
 
 /** GET /api/spaces/:handle/showcase/:slug (public). */
 export interface Showcase {
-  space: Pick<PublicSpace, 'handle' | 'displayName' | 'avatarUrl' | 'isDemo'>;
+  space: Pick<PublicSpace, 'handle' | 'displayName' | 'avatarUrl'>;
   promotion: {
     showcaseSlug: string;
     headline: string | null;
@@ -985,7 +974,6 @@ export interface ReportsPage extends Page<ReportItem> {
 /** GET /api/config (public, cached 5 minutes): what the web may offer. */
 export interface PublicConfig {
   providers: { google: boolean; apple: boolean; facebook: boolean };
-  demoEnabled: boolean;
   uploads: boolean;
   youtubeImport: boolean;
 }

@@ -7,7 +7,7 @@ import { tickQuerySchema } from '../workers/tick.js';
 
 /**
  * /api/cron/* (Bearer CRON_SECRET): the hourly tick (Railway cron) and its run log, plus manual
- * triggers for demo-reset, retention purge and the follower refresh. GET and POST both work.
+ * triggers for the retention purge and the follower refresh. GET and POST both work.
  */
 export function createCronRoutes(container: Container): Router {
   const router = Router();
@@ -30,7 +30,6 @@ export function createCronRoutes(container: Container): Router {
       ),
     });
   });
-  router.route('/demo-reset').get(controller.demoReset).post(controller.demoReset);
   router.route('/purge').get(controller.purge).post(controller.purge);
   router
     .route('/refresh-followers')

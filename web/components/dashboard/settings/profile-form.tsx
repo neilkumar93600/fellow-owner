@@ -17,8 +17,6 @@ import { useImportPlatformFans } from '@/hooks/queries/use-followers';
 import { useUpdateSettings } from '@/hooks/queries/use-settings';
 import { ApiError } from '@/lib/fetcher';
 
-export const DEMO_READ_ONLY = 'Read-only in the demo. Create your own space to try it.';
-
 /** The first message at `path` or under it ("platforms" finds "platforms.1.url"). */
 function issueUnder(errors: Record<string, string>, path: string): string | undefined {
   return Object.entries(errors).find(([p]) => p === path || p.startsWith(`${path}.`))?.[1];
@@ -34,7 +32,7 @@ export function issuesByPath(issues: readonly { path: PropertyKey[]; message: st
 export interface ProfileFormProps {
   space: Pick<
     StudioSpace,
-    'displayName' | 'bio' | 'avatarUrl' | 'coverUrl' | 'platforms' | 'showReadReceipts' | 'isDemo'
+    'displayName' | 'bio' | 'avatarUrl' | 'coverUrl' | 'platforms' | 'showReadReceipts'
   >;
   isPending?: boolean;
 }
@@ -93,10 +91,7 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
             Fans see this at the top of your bio link and beside your replies.
           </p>
         </div>
-        {space.isDemo ? <p className="text-small text-ink-soft">{DEMO_READ_ONLY}</p> : null}
-
-        {/* ponytail: a disabled fieldset locks every native input and button inside in one go. */}
-        <fieldset disabled={space.isDemo} className="m-0 flex min-w-0 flex-col gap-6 border-0 p-0">
+        <div className="m-0 flex min-w-0 flex-col gap-6 border-0 p-0">
           <div className="flex flex-col gap-2">
             <ImageUpload
               kind="avatar"
@@ -145,7 +140,7 @@ export function ProfileForm({ space, isPending = false }: ProfileFormProps) {
             </Button>
             <p className="text-small text-ink-muted">Saves your name, bio and social accounts.</p>
           </div>
-        </fieldset>
+        </div>
       </form>
 
       <SocialAccounts

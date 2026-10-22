@@ -1,6 +1,6 @@
 /**
  * Product notes for /blog: short, plain explanations of why the product works the way it does, grounded
- * in PRODUCT.md and the build docs, and told through the demo creator Mira Lane (every name and number
+ * in PRODUCT.md and the build docs, and told through the example creator Mira Lane (every name and number
  * is made up). Static on purpose (docs/03-app-flow lists the blog as static or MDX); move to MDX files
  * the day a post needs more than paragraphs. Newest first.
  */
@@ -20,9 +20,9 @@ export const POSTS: readonly BlogPost[] = [
     title: 'How “Lisbon on $60 a day” went from a fan’s idea to Mira’s vlog',
     date: '2026-10-08',
     summary:
-      'A walk through the loop Fellow Owners is built around, using the demo world: one idea, four fans with different skills, and a creator who gives it her spotlight.',
+      'A walk through the loop Fellow Owners is built around, using an example world: one idea, four fans with different skills, and a creator who gives it her spotlight.',
     body: [
-      'This is the demo world, so every name and number is made up, but the loop is the real one. A fan in Mira’s Budget Travel community posts an idea: a Lisbon guide for people who have $60 a day, built from places that actually fit.',
+      'This is an example world, so every name and number is made up, but the loop is the real one. A fan in Mira’s Budget Travel community posts an idea: a Lisbon guide for people who have $60 a day, built from places that actually fit.',
       'Her post lists what it needs: a local guide who lives in the city, a photographer, a video editor and an itinerary planner. Other fans tap “Count me in” on the spot that suits them. Within a few days the four open spots are filled and the idea has a crew.',
       'Mira never has to dig for it. Her morning briefing lifts the idea as a “Strong match”, with one line saying why this one: it fits her love of local guides by people who live there, and the crew is already complete. She reads it in under a minute, taps Love, and gives it her spotlight.',
       'From there the page does the rest. The guide goes onto her public page under “Made by Mira’s fans”, every person who helped is credited by name, and she gets drafts for Instagram, TikTok and YouTube written in her voice to edit and post herself. A link that shows how it landed tells her how many people tapped through.',

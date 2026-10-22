@@ -7,12 +7,10 @@ import { getSpacePage } from '@/lib/server-api';
 
 // Prerendered, then regenerated in the background as the bio reads' 60 s fetch cache expires.
 
-/** Lists every public creator: { spaces: [{ handle }] }. Not in the API yet (404): then only the demo. */
+/** Lists every public creator: { spaces: [{ handle }] }. API down: this hour's file has no creators. */
 const CREATORS_PATH = '/api/sitemap';
 /** 200 when the creator turned their media kit on; 404 (off or unknown) and 501 (not built yet) skip it. */
 const mediaKitPath = (handle: string) => `/api/spaces/${encodeURIComponent(handle)}/media-kit`;
-/** The seeded demo creator, listed while the API cannot list creators; skipped when it is not seeded. */
-const DEMO_HANDLE = 'mira';
 
 /** A GET on the API (same base rule as lib/server-api.ts); null for anything but a 2xx, never a throw. */
 async function apiGet<T>(path: string): Promise<T | null> {
@@ -70,7 +68,7 @@ async function creatorPages(handle: string): Promise<MetadataRoute.Sitemap> {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const listed = await apiGet<{ spaces?: { handle: string }[] }>(CREATORS_PATH);
-  const handles = listed?.spaces?.map((space) => space.handle) ?? [DEMO_HANDLE];
+  const handles = listed?.spaces?.map((space) => space.handle) ?? [];
   // ponytail: one bio read per creator in parallel; past a few hundred creators let /api/sitemap return
   // the showcases and media-kit flags too.
   const creators = (await Promise.all(handles.map(creatorPages))).flat();

@@ -1,4 +1,4 @@
-import { DEMO_CAP_SCALE, LIMITS } from '@fellow-owners/shared';
+import { LIMITS } from '@fellow-owners/shared';
 import { eq } from 'drizzle-orm';
 import request from 'supertest';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
@@ -234,14 +234,12 @@ describe('POST /api/studio/ask', () => {
     expect(embed).not.toHaveBeenCalled();
   });
 
-  // CTO finding 1: judges share one demo creator, so the demo space gets DEMO_CAP_SCALE x asks.
-  describe('demo scaling and failed asks', () => {
-    async function newOwner(handle: string, isDemo = false) {
+  describe('caps per space and failed asks', () => {
+    async function newOwner(handle: string) {
       const who = await signInWithOtp(app, `${handle}@ask.test`, `Owner ${handle}`);
       const space = await factories.space({
         handle,
         displayName: `Owner ${handle}`,
-        isDemo,
         owner: { id: who.userId, email: who.email, name: `Owner ${handle}` },
       });
       return { who, space };
@@ -256,26 +254,14 @@ describe('POST /api/studio/ask', () => {
         status,
       });
 
-    it('a real space is refused on question 31; the demo space answers it', async () => {
-      const real = await newOwner('realcap');
-      await fillAskCap(real.space.space.id, real.who.userId);
-      await ask(real.who).expect(429);
+    it('a space is refused on question 31; another space still answers', async () => {
+      const full = await newOwner('realcap');
+      await fillAskCap(full.space.space.id, full.who.userId);
+      await ask(full.who).expect(429);
 
-      const demo = await newOwner('democap', true);
-      // Rows under another user: the per-user hourly embedding cap is not scaled (it is
-      // budget-exempt), so this checks the per-space question count only.
-      await fillAskCap(demo.space.space.id, otherOwner.userId);
-      const res = await ask(demo.who).expect(200);
-      expect(res.body.asksLeftToday).toBe(LIMITS.ask.perDay * DEMO_CAP_SCALE - 31);
-    });
-
-    it('the demo space still stops at its scaled cap', async () => {
-      const demo = await newOwner('demofull', true);
-      for (let i = 0; i < LIMITS.ask.perDay * DEMO_CAP_SCALE; i += 1) {
-        await run(demo.space.space.id, demo.who.userId, 'embedItem', 'ok');
-      }
-      const res = await ask(demo.who).expect(429);
-      expect(res.body.error.details).toMatchObject({ limit: LIMITS.ask.perDay * DEMO_CAP_SCALE });
+      const fresh = await newOwner('freshcap');
+      const res = await ask(fresh.who).expect(200);
+      expect(res.body.asksLeftToday).toBe(LIMITS.ask.perDay - 1);
     });
 
     it('a question whose AI call failed does not count toward the day', async () => {

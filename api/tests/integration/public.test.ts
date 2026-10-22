@@ -188,3 +188,11 @@ describe('GET /r/:code', () => {
     expect(page.body.featured).toEqual([]);
   });
 });
+
+describe('GET /api/sitemap', () => {
+  it('lists every creator handle, CDN-cached', async () => {
+    const res = await request(app).get('/api/sitemap').expect(200);
+    expect(res.body.spaces).toContainEqual({ handle: 'mira' });
+    expect(res.headers['cache-control']).toBe('public, s-maxage=60, stale-while-revalidate=300');
+  });
+});

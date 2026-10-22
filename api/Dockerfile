@@ -26,8 +26,7 @@ COPY shared/ shared/
 COPY api/ api/
 RUN pnpm --filter @fellow-owners/shared build \
  && pnpm --filter @fellow-owners/api exec tsc -p tsconfig.build.json \
- && cp -r api/src/db/migrations api/dist/db/migrations \
- && cp -r api/src/db/seed/data api/dist/db/seed/data
+ && cp -r api/src/db/migrations api/dist/db/migrations
 # Self-contained production install of the api with the built shared package.
 RUN --mount=type=cache,id=s/aff8dd82-5aa3-41e5-96d4-406bbe0ac277-pnpm,target=/pnpm/store \
     pnpm --filter @fellow-owners/api deploy --legacy --prod /prod/api \

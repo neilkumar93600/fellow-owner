@@ -4,7 +4,7 @@
   "cases": [
     {
       "name": "solo-traveler-who-loves-street-food",
-      "description": "The demo path: Solo Travelers and Food Finds preselected; the weak Slow Living guess is dropped.",
+      "description": "The common path: Solo Travelers and Food Finds preselected; the weak Slow Living guess is dropped.",
       "input": {
         "intro": "solo traveler who loves street food",
         "communities": [

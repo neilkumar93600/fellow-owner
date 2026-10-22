@@ -58,7 +58,7 @@ export interface MediaKitSettings {
 export interface MediaKit {
   space: Pick<
     PublicSpace,
-    'handle' | 'displayName' | 'bio' | 'avatarUrl' | 'coverUrl' | 'isDemo' | 'totalFollowers'
+    'handle' | 'displayName' | 'bio' | 'avatarUrl' | 'coverUrl' | 'totalFollowers'
   >;
   reach: Array<{
     platform: Platform;

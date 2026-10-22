@@ -4,7 +4,7 @@ import { CreatorImage } from '@/components/shared/creator-image';
 import type { CreatorAsset } from '@/lib/creator-assets';
 import { cn } from '@/lib/utils';
 import st from './cta.module.css';
-import { DEMO } from './demo-data';
+import { EXAMPLE } from './example-data';
 
 /*
  * Fans orbit (landing CTA): fan faces, initials and three glass chips drifting on two elliptical rings
@@ -24,18 +24,18 @@ type Item =
 const OUTER: Item[] = [
   { kind: 'fan', name: 'fan-1' },
   { kind: 'initials', text: 'AK', tone: 'lilac' },
-  { kind: 'chip', text: `Loved by ${DEMO.creator.firstName}`, Icon: Heart },
+  { kind: 'chip', text: `Loved by ${EXAMPLE.creator.firstName}`, Icon: Heart },
   { kind: 'fan', name: 'fan-4' },
   { kind: 'fan', name: 'fan-6' },
   { kind: 'initials', text: 'JT', tone: 'peach' },
-  { kind: 'chip', text: `+${DEMO.idea.use} would use this`, Icon: ThumbsUp },
+  { kind: 'chip', text: `+${EXAMPLE.idea.use} would use this`, Icon: ThumbsUp },
 ];
 
 const INNER: Item[] = [
   { kind: 'fan', name: 'fan-2' },
   { kind: 'initials', text: 'SM', tone: 'mint' },
   { kind: 'fan', name: 'fan-3' },
-  { kind: 'chip', text: `Crew of ${DEMO.crew.length} formed`, Icon: Users },
+  { kind: 'chip', text: `Crew of ${EXAMPLE.crew.length} formed`, Icon: Users },
   { kind: 'fan', name: 'fan-5' },
   { kind: 'initials', text: 'RB', tone: 'sky' },
 ];

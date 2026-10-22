@@ -11,8 +11,8 @@ import { MatchLabel } from '@/components/shared/match-label';
 import { cn } from '@/components/ui/cn';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { NEXT_CARD, TODAY_PULSE } from './creators-data';
-import { DEMO } from './demo-data';
 import { BrowserFrame } from './device-frames';
+import { EXAMPLE } from './example-data';
 import { LIVE_DECISION, LIVE_URLS } from './loop-live-data';
 
 /*
@@ -41,7 +41,7 @@ function person(name: string, posts: number, teams: number): PersonRow {
   };
 }
 
-/** Demo fans for "Fans to thank" (invented numbers; the whole shot is labelled Demo by its section). */
+/** Example fans for "Fans to thank" (invented numbers; the whole shot is labelled Example by its section). */
 const FANS_TO_THANK = [person('Sana Iqbal', 3, 1), person('Dev Rao', 2, 0)];
 
 function Rail() {
@@ -73,12 +73,12 @@ function Studio() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="font-display text-[2.25rem] leading-none text-ink">
-              Good morning, {DEMO.creator.firstName}
+              Good morning, {EXAMPLE.creator.firstName}
             </p>
             <p className="mt-2 text-body text-ink-soft">5 things need you · about 6 min</p>
           </div>
           <span className="glass-chip inline-flex h-8 items-center px-3 text-caption text-ink">
-            Demo
+            Example
           </span>
         </div>
         <div className="grid grid-cols-1 items-start gap-5 @[900px]:grid-cols-[minmax(0,1fr)_300px]">

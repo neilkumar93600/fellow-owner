@@ -1,7 +1,7 @@
 # 03 · App Flow
 
 Status: draft v0.2 for review · Updated: 2026-10-10
-Demo data used in examples: creator **Mira Lane** (`/mira`), a travel creator; communities Budget Travel, Solo Travelers, Travel Photography, Food Finds, Road Trips & Van Life, Slow Living. Demo fan: **Priya Shah**.
+Example data used throughout: creator **Mira Lane** (`/mira`), a travel creator; communities Budget Travel, Solo Travelers, Travel Photography, Food Finds, Road Trips & Van Life, Slow Living. Example fan: **Priya Shah**.
 
 ## 1. Entry points
 
@@ -21,8 +21,8 @@ Demo data used in examples: creator **Mira Lane** (`/mira`), a travel creator; c
 
 | Route | Screen | Purpose | Data | Access |
 |-------|--------|---------|------|--------|
-| `/` | Landing | Explain the product; Enter as creator; Enter as fan; Start your space (`/start`) | static | public |
-| `/login` | Log in | Email or username + password, with "Forgot password?" beside the Password label; or Google, Apple, Facebook (Google hidden inside in-app browsers). Links to Create account and to the demo | none | public |
+| `/` | Landing | Explain the product; Start your space (`/start`) | static | public |
+| `/login` | Log in | Email or username + password, with "Forgot password?" beside the Password label; or Google, Apple, Facebook (Google hidden inside in-app browsers). Links to Create account | none | public |
 | `/create-account` | Create account | Google, Apple, Facebook, or name, email, username (checked live), optional social profile (platform + handle), password with a strength meter, confirm password, then the line confirming 18+ and agreeing to the Terms and Privacy Policy. No creator-or-fan question: the role is per space (`memberships.role`), not per account. `/sign-up` permanently redirects here (keeps `returnTo`) | none | public |
 | `/verify-otp` | Confirm your email | 6-digit code, sent with the account's password (held from the screen before, or typed after a reload), confirms a new account's email and signs it in; a different password sends the person to reset it. Resend after 30s, 5 attempts. With no email in the tab, asks for it (and sends a new code unless one just went out) | email in session storage | public |
 | `/forgot-password`, `/reset-password` | Password recovery | Email, then a 6-digit code and a new password typed twice; the reset signs out every session (01, Q8) | email in session storage | public |
@@ -68,10 +68,10 @@ Access "member" means a member of the space: they can read every community feed.
 ## 3. Primary journeys
 
 **J1 · Fan joins and shares an idea**
-`/mira` -> Join -> sign in (email code inline, Google outside in-app browsers, or demo) -> intro "solo traveler who plans every trip around food" -> AI preselects Solo Travelers and Food Finds -> Confirm -> skills and links (Skip allowed) -> `/mira/c/solo-travelers` -> New post (Idea; the Idea Coach can check the draft first) -> Publish -> idea at top of feed -> success: idea visible with signals at zero.
+`/mira` -> Join -> sign in (email code inline, or Google outside in-app browsers) -> intro "solo traveler who plans every trip around food" -> AI preselects Solo Travelers and Food Finds -> Confirm -> skills and links (Skip allowed) -> `/mira/c/solo-travelers` -> New post (Idea; the Idea Coach can check the draft first) -> Publish -> idea at top of feed -> success: idea visible with signals at zero.
 
 **J2 · Creator finds what matters**
-Enter as creator -> `/dashboard` -> AI briefing highlights a fan-built trip planner with its fit score and reason -> open -> post side panel shows summary, fit reason, team, signals -> thumbs up on the highlight -> success: creator decides to promote (J3).
+Creator signs in -> `/dashboard` -> AI briefing highlights a fan-built trip planner with its fit score and reason -> open -> post side panel shows summary, fit reason, team, signals -> thumbs up on the highlight -> success: creator decides to promote (J3).
 
 **J3 · Creator promotes**
 Promote in the post side panel -> `/dashboard/promote/{postId}` -> drafts appear for X, Instagram, LinkedIn, YouTube -> edit the X draft -> Publish -> showcase page and short link created -> Copy or Open in X -> success: post shows "Featured by Mira" on the bio page; clicks counter starts at 0 and climbs.
@@ -84,9 +84,6 @@ Member opens a Project needing a Designer -> Join as Designer -> author sees the
 
 **J6 · A new creator sets up (pilot)**
 `/` -> Start your space -> `/create-account?returnTo=/onboarding` (email and password, then the 6-digit code on `/verify-otp` to confirm the email; or Google, Apple, Facebook) -> `/onboarding` 4 steps -> `/dashboard` with setup checklist -> Copy bio link -> success: `/{handle}` live and shareable.
-
-**J7 · Three-minute judge path (demo mode)**
-`/` -> Enter as creator -> Today (30s: briefing, decision cards, stats) -> Fan mail (30s: Filtered tab shows spam removed; open the top collab and its reason) -> Ideas (30s: ranked list, community chips) -> Promote the top idea (45s: drafts, Publish) -> open the showcase link (15s) -> back to `/` -> Enter as fan -> join flow with AI suggestions (30s). The demo space is reset daily at 01:00 UTC.
 
 **J8 · Fan mail, answered once**
 Several fans send pitches asking the same thing -> the hourly job groups them (at least 3 within 30 days) -> Fan mail shows a strip of repeated questions -> `/dashboard/inbox/questions` -> open a group -> edit the AI-drafted answer -> Send to everyone (optionally pin it as a post in chosen communities) -> success: every asker sees the reply in My space, the group is `answered`.
@@ -142,7 +139,6 @@ A member taps Report on a post or comment (reason, optional note) -> the creator
 | Auto-tag followers | "AI" button | untagged followers (up to 500) with a note | spinner | AutoTagResult: tagged count, skipped, aiPaused flag | if AI unavailable or capped, aiPaused=true, no error | stay |
 | Export CSV | "Export" button | owner | attachment download | CSV file sent as text/csv with attachment filename | none | stay |
 | Create space | Finish onboarding | handle 3..30 `[a-z0-9_.]`, unique, not reserved; >= 1 community | spinner | redirect to Today | "Handle taken" + 3 suggestions | Today |
-| Enter demo | Enter as creator or fan | `DEMO_ENABLED` | button spinner | session set | toast "Demo unavailable" | Today or `/mira` |
 | Check the draft | Idea Coach on the pitch or post form | body >= 20 characters; 10 a day per member | skeleton | clarity checklist and an optional rewrite (never a score) | the form keeps working without it | edit or send |
 | Upload an image | Choose a file for an avatar or cover | JPEG, PNG or WebP, up to 5 MB | progress | the form shows the new image | "Image uploads are turned off" when the bucket is not configured | save |
 | Report | Report on a post or comment | member; reason; one report per target; 20 a day | spinner | confirmation | inline error | stay |
@@ -168,7 +164,6 @@ A member taps Report on a post or comment (reason, optional note) -> the creator
 - Side panels open with `?item={id}`; Esc or Back closes them.
 - **Fan:** top bar with creator avatar (back to `/{handle}`), community switcher as horizontal pills, floating "New post" on phones, "My space" in the avatar menu.
 - **Deep links:** every route loads directly; member-only routes send non-members to Join with `returnTo`.
-- **Demo mode:** a "Switch to fan view / creator view" pill sits in the header.
 
 ## 7. Empty and blocked states
 

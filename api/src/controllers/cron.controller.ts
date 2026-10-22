@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express';
 import type { CoreDeps } from '../container.js';
 import { queryOf } from '../middlewares/validate.js';
-import type { DemoResetResult } from '../workers/demo-reset.js';
 import { purgeExpired } from '../workers/purge.js';
 import { refreshFollowers } from '../workers/refresh-followers.js';
 import { type Jobs, recentRuns, startTick, tickQuerySchema } from '../workers/tick.js';
@@ -26,12 +25,6 @@ export function createCronController(deps: CoreDeps & { jobs: Jobs }) {
     /** GET /api/cron/status -> { runs } (last 50 job runs, newest first) */
     async status(_req: Request, res: Response): Promise<void> {
       res.json({ runs: await recentRuns(deps) });
-    },
-
-    /** GET|POST /api/cron/demo-reset -> { ok, deleted, seeded } */
-    async demoReset(_req: Request, res: Response): Promise<void> {
-      const result = (await deps.jobs.demo_reset()) as DemoResetResult;
-      res.json({ ok: true, ...result });
     },
 
     /** GET|POST /api/cron/purge -> { ok, ...rows deleted per retention rule } */

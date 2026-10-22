@@ -1,5 +1,3 @@
-import { isDemoEmail } from '../auth/demo.js';
-import { env as defaultEnv, type Env } from '../config/env.js';
 import type { MembershipRow } from '../db/schema/memberships.js';
 import type { PostRow } from '../db/schema/posts.js';
 import type { SpaceRow } from '../db/schema/spaces.js';
@@ -44,8 +42,8 @@ export function isSpaceOwner(space: SpaceRow, userId: string | null | undefined)
   return Boolean(userId) && space.ownerUserId === userId;
 }
 
-export function createAccessService(deps: { repos: Repos; env?: Env }) {
-  const { repos, env = defaultEnv } = deps;
+export function createAccessService(deps: { repos: Repos }) {
+  const { repos } = deps;
 
   /** 403 unless `membership` is an active membership of `space` belonging to `userId`. */
   function assertMember(ctx: {
@@ -88,20 +86,6 @@ export function createAccessService(deps: { repos: Repos; env?: Env }) {
       const space = await repos.spaces.findByHandle(handle);
       if (!space) throw notFound('Space');
       return space;
-    },
-
-    /**
-     * Demo isolation, before a user joins, pitches or coach-checks a space: the demo space is only
-     * for the shared demo accounts (anyone can sign in as its owner), and those accounts stay in
-     * it (the nightly reset never undoes their writes elsewhere). 403 either way.
-     */
-    async assertCanEnter(space: SpaceRow, userId: string): Promise<void> {
-      const email = await repos.account.emailOf(userId);
-      const demoAccount = email !== null && isDemoEmail(env, email);
-      if (space.isDemo && !demoAccount) throw forbidden('This is a demo space');
-      if (!space.isDemo && demoAccount) {
-        throw forbidden('The demo accounts can only use the demo space');
-      }
     },
 
     /** The caller's active membership in the space, or null (removed members count as none). */

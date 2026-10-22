@@ -1,6 +1,6 @@
 import { CLICK_PLATFORMS, type ClickPlatform } from '@fellow-owners/shared';
 import { and, count, countDistinct, eq, inArray, lt, sql } from 'drizzle-orm';
-import { chunk, type Db, type DbOrTx, inTransaction, qcol } from '../db/client.js';
+import { chunk, type Db, type DbOrTx, inTransaction } from '../db/client.js';
 import { clickEvents, type NewClickEventRow, promotions } from '../db/schema/promotions.js';
 
 export interface NewClick {
@@ -75,16 +75,6 @@ export function createClicksRepo(db: Db) {
         .from(clickEvents)
         .where(eq(clickEvents.promotionId, promotionId));
       return row?.n ?? 0;
-    },
-
-    /** Sets click_count from click_events for a space's promotions (seed). */
-    async recountPromotionClicks(spaceId: string, tx: DbOrTx = db): Promise<void> {
-      await tx
-        .update(promotions)
-        .set({
-          clickCount: sql`(select count(*)::int from ${clickEvents} where ${qcol(clickEvents.promotionId)} = ${qcol(promotions.id)})`,
-        })
-        .where(eq(promotions.spaceId, spaceId));
     },
 
     /** Retention (05 §8: 180 days). click_count keeps the lifetime total. */

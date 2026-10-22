@@ -2,7 +2,6 @@ import { handleParamsSchema, updateMediaKitSchema } from '@fellow-owners/shared'
 import { Router } from 'express';
 import type { Container } from '../container.js';
 import { noStore } from '../lib/http.js';
-import { demoReadOnly } from '../middlewares/demo-read-only.js';
 import { createRateLimit } from '../middlewares/rate-limit.js';
 import { requireSpaceOwner } from '../middlewares/require-owner.js';
 import { validate } from '../middlewares/validate.js';
@@ -39,7 +38,6 @@ export function createMediaKitRoutes(container: Container): Router {
     '/:handle/media-kit',
     noStore(),
     owner,
-    demoReadOnly(container.env),
     validate({ params: handleParamsSchema, body: updateMediaKitSchema }),
     controller.updateSettings,
   );

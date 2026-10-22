@@ -1,7 +1,6 @@
 import {
   BRAND_LIMITS,
   DAILY_CAPS,
-  dailyCap,
   HOURLY_CAPS,
   LIMITS,
   PLANNER_LIMITS,
@@ -60,8 +59,6 @@ export interface AiAccounting {
   budgetState(spaceId: string, now?: Date): Promise<AiBudgetState>;
   countByUserTaskSince(userId: string, task: string, since: Date): Promise<number>;
   countBySpaceTaskSince(spaceId: string, task: string, since: Date): Promise<number>;
-  /** spaces.is_demo: the demo space gets every TASK_CAP x DEMO_CAP_SCALE. Absent reads as false. */
-  isDemoSpace?(spaceId: string): Promise<boolean>;
   /**
    * Runs `fn` with the accounting bound to one transaction that holds an advisory lock per key:
    * a cap count and the insert that reserves the slot cannot interleave with another call's.
@@ -97,8 +94,8 @@ export interface TaskCap {
  * Tasks that write ai_runs rows (caps, accounting) but are neither counted toward nor blocked by
  * the space's daily token budget: coach and suggestCommunities, because fans trigger them (C5)
  * and must not drain the creator's AI (their user and space caps bound them instead); embedItem,
- * because embeddings cost about 1% of chat tokens and a backfill (the nightly demo reset embeds
- * ~1500 rows) would otherwise pause triage and briefings for the day.
+ * because embeddings cost about 1% of chat tokens and a backfill (pnpm db:embed) would otherwise
+ * pause triage and briefings for the day.
  */
 export const BUDGET_EXEMPT_TASKS: readonly AiTaskName[] = [
   'coach',
@@ -111,9 +108,7 @@ export function isBudgetExempt(task: AiTaskName): boolean {
 }
 
 /**
- * Per-task caps counted from ai_runs (every model call counts, ok or error). In the demo space
- * (shared by every visitor) each max and spaceMax is scaled by dailyCap (x DEMO_CAP_SCALE), except
- * DEMO_UNSCALED_TASKS and BUDGET_EXEMPT_TASKS.
+ * Per-task caps counted from ai_runs (every model call counts, ok or error).
  * briefing and communityDigest are capped by their callers (1 a day + 5 regenerations, one per
  * community a day); the values here are safety nets against retry loops, not product limits.
  */
@@ -152,32 +147,20 @@ export const TASK_CAPS: Partial<Record<AiTaskName, TaskCap>> = {
 export const IN_PROGRESS_ERROR = 'in progress';
 
 /**
- * Paid per call (not per token, so the token budget does not bound them): never demo-scaled.
- * Budget-exempt tasks scale only their per-user cap: every judge shares the one demo creator and
- * fan, while the space-wide ceiling stays at base because the token budget never bounds them (and
- * only demo accounts can enter the demo space, so real users cannot reach these caps).
- */
-const DEMO_UNSCALED_TASKS: readonly AiTaskName[] = ['generateImage', 'generateVideo'];
-const isDemoScaled = (task: AiTaskName) => !DEMO_UNSCALED_TASKS.includes(task);
-
-/**
  * The cap `task` has reached for `ctx`, as a message; null while under every cap. Shared by the
  * live preflight and the fake (ai/fake.ts), so both refuse at the same count.
  */
 export async function taskCapReached(
   accounting: Pick<AiAccounting, 'countByUserTaskSince' | 'countBySpaceTaskSince'>,
   task: AiTaskName,
-  ctx: { spaceId: string; userId?: string | null; isDemo?: boolean },
+  ctx: { spaceId: string; userId?: string | null },
   now: Date,
 ): Promise<string | null> {
   const cap = TASK_CAPS[task];
   if (!cap) return null;
-  const space = { isDemo: (ctx.isDemo ?? false) && isDemoScaled(task) };
-  const max = dailyCap(cap.max, space);
+  const { max } = cap;
   const since = cap.window === 'hour' ? hoursAgo(1, now) : startOfUtcDay(now);
-  const baseSpaceMax = cap.scope === 'space' ? cap.max : cap.spaceMax;
-  const spaceScaled = cap.scope === 'user' && isBudgetExempt(task) ? { isDemo: false } : space;
-  const spaceMax = baseSpaceMax === undefined ? undefined : dailyCap(baseSpaceMax, spaceScaled);
+  const spaceMax = cap.scope === 'space' ? cap.max : cap.spaceMax;
   if (spaceMax !== undefined) {
     const used = await accounting.countBySpaceTaskSince(ctx.spaceId, task, since);
     if (used >= spaceMax) return `Limit of ${spaceMax} ${task} calls per ${cap.window} reached`;
@@ -216,19 +199,15 @@ export async function preflight(
   const now = rt.now?.() ?? new Date();
   const spaceId = ctx.spaceId;
   if (spaceId === null) return null;
-  // budgetState already applies the demo space's DEMO_AI_DAILY_TOKEN_BUDGET.
-  let isDemo: boolean | undefined;
   if (!isBudgetExempt(task)) {
     const budget = await rt.accounting.budgetState(spaceId, now);
     if (budget.paused) throw new AiUnavailableError('budget', undefined, { task });
-    isDemo = budget.isDemo;
   }
   const userId = ctx.userId ?? null;
   const keys = capLockKeys(task, spaceId, userId);
   if (keys.length === 0) return null;
-  isDemo ??= (await rt.accounting.isDemoSpace?.(spaceId)) ?? false;
   return rt.accounting.locked(keys, async (accounting) => {
-    const reached = await taskCapReached(accounting, task, { spaceId, userId, isDemo }, now);
+    const reached = await taskCapReached(accounting, task, { spaceId, userId }, now);
     if (reached) throw new AiUnavailableError('cap', reached, { task });
     // A row that is never completed (the process died mid-call) still counts and reads as an error.
     return accounting.insert({

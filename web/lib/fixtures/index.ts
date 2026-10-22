@@ -39,8 +39,8 @@ import spacePage from './space-page.json';
 import studioSpace from './studio-space.json';
 
 /**
- * Design fixtures: real responses captured from the seeded travel demo API (Mira's space, signed in as the
- * creator or as the demo fan Priya Shah) on 2026-10-09. Screens render from these until the data layer
+ * Design fixtures: real responses captured from the API for an example travel creator (Mira's space, as the
+ * creator and as the fan Priya Shah) on 2026-10-09. Screens render from these until the data layer
  * (web/api + web/hooks/queries) is wired in; swap a fixture for its hook and the props stay the same.
  * JSON imports widen string unions, hence the casts.
  */

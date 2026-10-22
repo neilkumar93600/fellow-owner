@@ -1,5 +1,5 @@
 /**
- * The demo creator's imagery (Mira Lane, fictional), generated with fal.ai into public/creator/ (prompts
+ * The example creator's imagery (Mira Lane, fictional), generated with fal.ai into public/creator/ (prompts
  * in prompt.md). Flip `ready` to true only once the file exists: until then CreatorImage draws a same-ratio
  * gradient in `tone`, so a missing image never breaks the layout or shows a broken-image icon.
  */

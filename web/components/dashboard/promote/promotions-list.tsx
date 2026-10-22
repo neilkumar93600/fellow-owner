@@ -12,7 +12,7 @@ import { routes } from '@/lib/routes';
 import { PromotionMenu } from './promotion-menu';
 import { dateLine, draftedFor, PromotionsEmpty, type PromotionsTab } from './promotions-table';
 
-/** The community's cover photo when one was generated for its slug (the six demo rooms), else none. */
+/** The community's cover photo when one was generated for its slug (the six example rooms), else none. */
 function coverFor(slug: string): CreatorAsset | null {
   const name = `cover-${slug}` as CreatorAsset;
   return name in CREATOR_ASSETS ? name : null;

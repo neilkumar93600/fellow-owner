@@ -1,25 +1,22 @@
-import { type CoachRequestInput, type CoachResult, dailyCap, LIMITS } from '@fellow-owners/shared';
+import { type CoachRequestInput, type CoachResult, LIMITS } from '@fellow-owners/shared';
 import { plainLine } from '../ai/guard.js';
 import { isAiUnavailable } from '../ai/types.js';
 import type { CoreDeps } from '../container.js';
 import { startOfUtcDay } from '../lib/dates.js';
 import { forbidden, notFound, rateLimited } from '../lib/errors.js';
-import type { AccessService } from './access.service.js';
 import { removedByOwner } from './memberships.service.js';
 
-export type CoachServiceDeps = Pick<CoreDeps, 'repos' | 'ai' | 'logger'> & {
-  access: AccessService;
-};
+export type CoachServiceDeps = Pick<CoreDeps, 'repos' | 'ai' | 'logger'>;
 
 const LIMIT_MESSAGE = 'You have used all of today’s coach checks. They reset tomorrow.';
 
 /**
  * F30 Idea Coach: clarity checks on a pitch or post draft. Any signed-in user may check a pitch
  * (their first pitch creates the membership); only members may check a post. Per-user cap
- * LIMITS.coach.perDay (x DEMO_CAP_SCALE in the shared demo space; ai_runs, task `coach`); the call
+ * LIMITS.coach.perDay (ai_runs, task `coach`); the call
  * never touches the space's AI budget.
  */
-export function createCoachService({ repos, ai, access }: CoachServiceDeps) {
+export function createCoachService({ repos, ai }: CoachServiceDeps) {
   const usedToday = (userId: string) =>
     repos.aiRuns.countByUserTaskSince(userId, 'coach', startOfUtcDay(new Date()));
 
@@ -27,7 +24,6 @@ export function createCoachService({ repos, ai, access }: CoachServiceDeps) {
     async check(handle: string, userId: string, input: CoachRequestInput): Promise<CoachResult> {
       const space = await repos.spaces.findByHandle(handle);
       if (!space) throw notFound('Space');
-      await access.assertCanEnter(space, userId);
       const membership = await repos.memberships.findByUser(space.id, userId);
       // A fan who left may check a pitch (sending it brings them back); the owner's removal may not.
       if (membership && removedByOwner(membership)) {
@@ -37,7 +33,7 @@ export function createCoachService({ repos, ai, access }: CoachServiceDeps) {
         throw forbidden('Join this space to check a post');
       }
 
-      const limit = dailyCap(LIMITS.coach.perDay, space);
+      const limit = LIMITS.coach.perDay;
       if ((await usedToday(userId)) >= limit) {
         throw rateLimited(LIMIT_MESSAGE, { checksLeftToday: 0 });
       }

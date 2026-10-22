@@ -30,13 +30,13 @@ export interface RefreshDeps extends Pick<CoreDeps, 'db' | 'env'> {
 
 /**
  * Daily follower refresh (Round 4 spec section 6), run by GET/POST /api/cron/refresh-followers:
- * every linked profile of the non-demo spaces, oldest `fetchedAt` first (never fetched = oldest),
+ * every linked profile of every space, oldest `fetchedAt` first (never fetched = oldest),
  * at most REFRESH_MAX_PER_RUN per run, resolved with recent posts off.
  *
  * A failed or simulated answer keeps the old follower count. It still stamps `fetchedAt`, so one
  * private or removed account moves to the back of the queue instead of being retried first every day.
  *
- * ponytail: reads every non-demo space's platforms to pick the oldest 50; add an indexed
+ * ponytail: reads every space's platforms to pick the oldest 50; add an indexed
  * "next refresh" column if the spaces table ever outgrows that scan.
  */
 export async function refreshFollowers(deps: RefreshDeps): Promise<RefreshResult> {
@@ -45,10 +45,7 @@ export async function refreshFollowers(deps: RefreshDeps): Promise<RefreshResult
     deps.lookup ??
     createPlatformLookup({ token: deps.env.APIFY_TOKEN, enabled: deps.env.APIFY_ENABLED, logger });
 
-  const rows = await db
-    .select({ id: spaces.id, platforms: spaces.platforms })
-    .from(spaces)
-    .where(eq(spaces.isDemo, false));
+  const rows = await db.select({ id: spaces.id, platforms: spaces.platforms }).from(spaces);
 
   const queue = rows
     .flatMap((row) =>

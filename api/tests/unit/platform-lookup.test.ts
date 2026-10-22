@@ -1,4 +1,4 @@
-import type { LookupPlatform } from '@fellow-owners/shared';
+import { type LookupPlatform, platformProfileSchema } from '@fellow-owners/shared';
 import { describe, expect, it, vi } from 'vitest';
 import {
   APIFY_ACTORS,
@@ -15,7 +15,6 @@ import xSample from '../fixtures/apify/x.json' with { type: 'json' };
 import youtubeSample from '../fixtures/apify/youtube.json' with { type: 'json' };
 
 const NOW = new Date('2026-10-09T12:00:00.000Z');
-const noSleep = async () => {};
 
 describe('parseProfileUrl', () => {
   it.each([
@@ -175,19 +174,12 @@ function okResponse(items: unknown): Response {
 }
 
 describe('createPlatformLookup', () => {
-  it('demo handles answer from fixtures without a network call', async () => {
-    const fetch = vi.fn();
-    const lookup = createPlatformLookup({ token: 't', enabled: true, fetch, sleep: noSleep });
+  it('looks every handle up live: no saved fixtures for any handle', async () => {
+    const fetch = vi.fn(async () => okResponse(youtubeSample));
+    const lookup = createPlatformLookup({ token: 't', enabled: true, fetch });
     const result = await lookup.lookup({ platform: 'youtube', handle: 'miralane' });
-    expect(result).toMatchObject({
-      status: 'ready',
-      profile: { source: 'fixture', followers: 620_000 },
-    });
-    const ig = await lookup.lookup({ platform: 'instagram', handle: 'mira' });
-    expect(ig).toMatchObject({ profile: { followers: 380_000 } });
-    const tt = await lookup.lookup({ platform: 'tiktok', handle: 'priya' });
-    expect(tt).toMatchObject({ profile: { followers: 140_000 } });
-    expect(fetch).not.toHaveBeenCalled();
+    expect(result).toMatchObject({ status: 'ready', profile: { source: 'apify' } });
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   it('no token -> deterministic simulated profile', async () => {
@@ -195,7 +187,6 @@ describe('createPlatformLookup', () => {
     const lookup = createPlatformLookup({
       enabled: false,
       fetch,
-      sleep: noSleep,
       now: () => NOW,
     });
     const a = await lookup.lookup({ platform: 'instagram', handle: 'someone' });
@@ -204,6 +195,14 @@ describe('createPlatformLookup', () => {
     if (a.status !== 'ready' || b.status !== 'ready') throw new Error('expected ready');
     expect({ ...a.profile, fetchedAt: '' }).toEqual({ ...b.profile, fetchedAt: '' });
     expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('simulated profiles always pass the shared schema (no negative views)', () => {
+    // tiktok/miralane hashes above 2^31: a signed shift used to give negative view counts.
+    for (const handle of ['miralane', 'someone', 'natgeo']) {
+      const profile = simulatedProfile('tiktok', handle, NOW);
+      expect(platformProfileSchema.safeParse(profile).success).toBe(true);
+    }
   });
 
   it('calls run-sync with the actor, a bearer token, caps and no raw URL', async () => {
@@ -298,7 +297,7 @@ describe('avatar fetch', () => {
     ['https://lh3.googleusercontent.com/a', false],
     ['https://169.254.169.254/latest', false],
     ['https://user@pbs.twimg.com/a.jpg', false],
-    ['/demo/mira.jpg', false],
+    ['/api/media/avatar.jpg', false],
   ])('%s allowed=%s', (url, allowed) => {
     expect(isAllowedAvatarHost(url)).toBe(allowed);
   });

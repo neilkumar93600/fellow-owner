@@ -1,6 +1,6 @@
-// Content for "For fans" (creator pivot spec §5, section 4). Demo names come from demo-data.ts.
+// Content for "For fans" (creator pivot spec §5, section 4). Example names come from example-data.ts.
 
-import { DEMO } from './demo-data';
+import { EXAMPLE } from './example-data';
 import { LIVE_JOIN } from './loop-live-data';
 
 export interface FanStep {
@@ -18,28 +18,28 @@ export const FAN_STEPS: readonly FanStep[] = [
     title: 'Join in 60 seconds',
     line: 'Fans add one line about themselves; the AI suggests rooms.',
     pageTitle: 'Join the space',
-    path: `/${DEMO.creator.handle}/join`,
+    path: `/${EXAMPLE.creator.handle}/join`,
   },
   {
     id: 'feed',
     title: 'Share an idea',
     line: 'Fans post ideas; you can love the best.',
     pageTitle: 'Budget Travel',
-    path: `/${DEMO.creator.handle}/c/budget-travel`,
+    path: `/${EXAMPLE.creator.handle}/c/budget-travel`,
   },
   {
     id: 'team',
     title: 'Join a crew',
     line: 'Every idea lists open spots to join.',
     pageTitle: 'Lisbon on $60 a day',
-    path: `/${DEMO.creator.handle}/p/lisbon-on-60-a-day`,
+    path: `/${EXAMPLE.creator.handle}/p/lisbon-on-60-a-day`,
   },
   {
     id: 'digest',
     title: 'Catch up in a minute',
     line: 'Each week the AI sums up what a room talked about.',
     pageTitle: 'Budget Travel',
-    path: `/${DEMO.creator.handle}/c/budget-travel`,
+    path: `/${EXAMPLE.creator.handle}/c/budget-travel`,
   },
 ] as const;
 
@@ -51,15 +51,15 @@ export const FAN_PICKS = LIVE_JOIN.picks.map(({ room, why }) => ({ slug: room.sl
 
 /**
  * The weekly digest of Budget Travel, in the shape of the AI's community-digest task (a summary, up to
- * three themes, up to three standout posts with a reason). The Lisbon count comes from DEMO; the idea count,
- * the other two ideas and their counts are demo numbers made up for this screen (the screen says so).
+ * three themes, up to three standout posts with a reason). The Lisbon count comes from EXAMPLE; the idea count,
+ * the other two ideas and their counts are example numbers made up for this screen (the screen says so).
  */
 export const DIGEST = {
   ideas: 41,
   summary: 'Fans swapped real prices for hostels, trams and street food.',
   themes: ['hostel prices', 'street food', 'solo safety'],
   top: [
-    { title: DEMO.idea.title, why: 'Four roles filled', use: DEMO.idea.use },
+    { title: EXAMPLE.idea.title, why: 'Four roles filled', use: EXAMPLE.idea.use },
     { title: 'Tokyo cafés under $5', why: 'Needs a photographer', use: 18 },
     { title: 'Montreal for under $250', why: 'Every price dated', use: 15 },
   ],

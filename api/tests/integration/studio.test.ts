@@ -154,7 +154,6 @@ describe('onboarding', () => {
       tasteVersion: 1,
       ownerName: 'Nina',
       memberCount: 0,
-      isDemo: false,
     });
     const communities = await studio('/communities', newcomer.cookie).expect(200);
     expect(communities.body.map((c: { slug: string }) => c.slug)).toEqual([

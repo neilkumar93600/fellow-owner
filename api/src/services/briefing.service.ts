@@ -4,7 +4,6 @@ import {
   type Briefing,
   type BriefingHighlight,
   type BriefingRefType,
-  dailyCap,
   type FeedbackResponse,
   idSchema,
   LIMITS,
@@ -370,7 +369,7 @@ export function createBriefingService(deps: BriefingServiceDeps) {
       headline: content.headline,
       highlights,
       watchouts: content.watchouts,
-      regenerationsLeft: limits.regenerationsLeft(digest.regenerations, owner.space),
+      regenerationsLeft: limits.regenerationsLeft(digest.regenerations),
       model: digest.model,
       generatedAt: digest.updatedAt.toISOString(),
     };
@@ -381,7 +380,6 @@ export function createBriefingService(deps: BriefingServiceDeps) {
     built: Exclude<Built, { kind: 'ready' }>,
     periodDate: string,
     regenerations: number | null | undefined,
-    space: { isDemo: boolean },
   ): Briefing {
     return {
       id: null,
@@ -393,7 +391,7 @@ export function createBriefingService(deps: BriefingServiceDeps) {
         built.counts,
         built.kind === 'unavailable' ? built.reason : null,
       ),
-      regenerationsLeft: limits.regenerationsLeft(regenerations, space),
+      regenerationsLeft: limits.regenerationsLeft(regenerations),
       model: null,
       generatedAt: null,
     };
@@ -422,7 +420,7 @@ export function createBriefingService(deps: BriefingServiceDeps) {
       if (memo && memo.until > Date.now() && memo.periodDate === periodDate) return memo.result;
       const built = await build(owner, periodDate);
       if (built.kind === 'unavailable') {
-        const result = uncached(built, periodDate, 0, owner.space);
+        const result = uncached(built, periodDate, 0);
         failedBuilds.set(owner.space.id, {
           until: Date.now() + FAILED_BUILD_MEMO_MS,
           periodDate,
@@ -430,7 +428,7 @@ export function createBriefingService(deps: BriefingServiceDeps) {
         });
         return result;
       }
-      if (built.kind !== 'ready') return uncached(built, periodDate, 0, owner.space);
+      if (built.kind !== 'ready') return uncached(built, periodDate, 0);
       failedBuilds.delete(owner.space.id);
       const row = await repos.digests.upsert({
         spaceId: owner.space.id,
@@ -446,10 +444,10 @@ export function createBriefingService(deps: BriefingServiceDeps) {
     async regenerate(owner: OwnerContext): Promise<Briefing> {
       const periodDate = utcDayString();
       const cached = await repos.digests.findBriefing(owner.space.id, periodDate);
-      limits.assertRegenerationAllowed(cached?.regenerations, owner.space);
+      limits.assertRegenerationAllowed(cached?.regenerations);
       const built = await build(owner, periodDate);
       if (built.kind !== 'ready') {
-        return uncached(built, periodDate, cached?.regenerations, owner.space);
+        return uncached(built, periodDate, cached?.regenerations);
       }
       failedBuilds.delete(owner.space.id);
       const values = {
@@ -460,11 +458,11 @@ export function createBriefingService(deps: BriefingServiceDeps) {
         model: built.model,
       };
       if (!cached) return present(owner, await repos.digests.upsert(values));
-      const maxRegenerations = dailyCap(LIMITS.briefing.regenerationsPerDay, owner.space);
+      const maxRegenerations = LIMITS.briefing.regenerationsPerDay;
       const row = await repos.digests.replaceCapped(values, maxRegenerations);
       if (!row) {
         // Another regenerate took the last slot meanwhile.
-        limits.assertRegenerationAllowed(maxRegenerations, owner.space);
+        limits.assertRegenerationAllowed(maxRegenerations);
         throw notFound('Briefing');
       }
       return present(owner, row);

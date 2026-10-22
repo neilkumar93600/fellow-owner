@@ -370,7 +370,7 @@
   color: var(--color-danger-deep);
 }
 
-/* "Ask your AI twin": the chat panel, its question tabs and the demo footnote. */
+/* "Ask your AI twin": the chat panel, its question tabs and the example footnote. */
 .chat {
   display: flex;
   flex-direction: column;

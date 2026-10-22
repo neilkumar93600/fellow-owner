@@ -9,7 +9,7 @@ import { DISPLAY_H1 } from '@/lib/constants';
 import { routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/seo';
 
-// From PRODUCT.md and docs/01-prd.md, told through the demo creator Mira Lane: who it is for, why, how it
+// From PRODUCT.md and docs/01-prd.md, told through the example creator Mira Lane: who it is for, why, how it
 // works, and the principles we hold to.
 export const metadata: Metadata = pageMetadata({
   title: 'About',

@@ -1,8 +1,8 @@
 import type { SignalKind } from '@fellow-owners/shared';
 import { and, eq, inArray, sql } from 'drizzle-orm';
-import { chunk, type Db, type DbOrTx, inTransaction } from '../db/client.js';
+import { type Db, type DbOrTx, inTransaction } from '../db/client.js';
 import { posts } from '../db/schema/posts.js';
-import { type NewSignalRow, signals } from '../db/schema/social.js';
+import { signals } from '../db/schema/social.js';
 
 /** Matches the shared SignalState response. */
 export interface SignalStateRow {
@@ -111,13 +111,6 @@ export function createSignalsRepo(db: Db) {
       for (const row of rows) out.get(row.postId)?.push(row.kind);
       for (const kinds of out.values()) kinds.sort();
       return out;
-    },
-
-    /** Seed only: no counter updates (follow with posts.recountCounters). */
-    async insertMany(values: NewSignalRow[], tx: DbOrTx = db): Promise<void> {
-      for (const part of chunk(values, 1000)) {
-        await tx.insert(signals).values(part).onConflictDoNothing();
-      }
     },
   };
 }

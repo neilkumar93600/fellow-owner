@@ -32,8 +32,7 @@ Lucide is itself a fork of Feather Icons, Copyright 2013–2022 Cole Bemis, MIT 
 
 | File | What it is | Licence |
 |------|------------|---------|
-| `web/public/creator/*` | Photographs of the fictional demo creator Mira Lane, her travel scenes, community covers, fan avatars, the sign-in art and the muted `one-week.mp4` clip | Generated for this project with fal.ai: GPT Image 2.5 for the stills and Seedance 2.5 for the clip. Prompts and request ids are recorded in `prompt.md`. Every person shown is fictional and none is a user. |
-| `web/public/demo/mira.jpg` | Earlier portrait of the demo creator "Mira" | **TODO(legal): record the stock licence here — provider, asset ID, licence type, date bought — or delete the file.** Superseded by `web/public/creator/mira-portrait.webp`. Until that line is real, do not ship this file. |
+| `web/public/creator/*` | Photographs of the fictional creator Mira Lane, her travel scenes, community covers, fan avatars, the sign-in art and the muted `one-week.mp4` clip | Generated for this project with fal.ai: GPT Image 2.5 for the stills and Seedance 2.5 for the clip. Prompts and request ids are recorded in `prompt.md`. Every person shown is fictional and none is a user. |
 | `web/public/logo.svg`, `favicon.ico` | Our mark | Ours |
 
 Every other picture in the product is drawn in CSS or SVG by us, or is a fan's own upload.

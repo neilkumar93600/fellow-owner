@@ -23,6 +23,5 @@ export default async function Image({
     line: post ? featuredBy : null,
     person: { name: space.displayName, avatarUrl: space.avatarUrl },
     chips: post ? [post.community] : [],
-    isDemo: space.isDemo,
   });
 }

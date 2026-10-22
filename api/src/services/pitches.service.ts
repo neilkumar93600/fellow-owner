@@ -130,7 +130,6 @@ export function createPitchesService(deps: PitchesServiceDeps) {
     async create(handle: string, userId: string, input: CreatePitchBody): Promise<Pitch> {
       const space = await access.spaceByHandle(handle);
       if (space.ownerUserId === userId) throw forbidden("You can't send a pitch to your own space");
-      await access.assertCanEnter(space, userId);
       const pitch: InboundRow = await db.transaction(async (tx) => {
         await limits.lockWrites(space.id, userId, tx);
         const inserted = await repos.memberships.insertOrGet(

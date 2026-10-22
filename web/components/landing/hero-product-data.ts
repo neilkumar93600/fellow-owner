@@ -1,16 +1,16 @@
 // Static copy for the hero's "Ask your AI twin" chat and the auth panel's twin brief. Names, rooms and
-// counts come from DEMO, so the hero never disagrees with the sections below it. Demo data: names are made up.
+// counts come from EXAMPLE, so the hero never disagrees with the sections below it. Example data: names are made up.
 
-import { DEMO } from './demo-data';
+import { EXAMPLE } from './example-data';
 
 function roomName(slug: string) {
-  const found = DEMO.rooms.find((entry) => entry.slug === slug);
-  if (!found) throw new Error(`DEMO.rooms has no ${slug}`);
+  const found = EXAMPLE.rooms.find((entry) => entry.slug === slug);
+  if (!found) throw new Error(`EXAMPLE.rooms has no ${slug}`);
   return found.name;
 }
 
 const read = 1240;
-const rooms = DEMO.rooms.length;
+const rooms = EXAMPLE.rooms.length;
 
 export interface TwinPick {
   id: string;
@@ -22,7 +22,7 @@ export interface TwinPick {
   why: string;
 }
 
-/** The AI twin's week across all rooms (demo), for the auth panel's card. */
+/** The AI twin's week across all rooms (example), for the auth panel's card. */
 export const TWIN_BRIEF = {
   read,
   rooms,
@@ -31,9 +31,9 @@ export const TWIN_BRIEF = {
     {
       id: 'lisbon',
       kind: 'Idea',
-      title: DEMO.idea.title,
-      from: DEMO.idea.community,
-      why: `Budget-honest, and ${DEMO.idea.use} would use it.`,
+      title: EXAMPLE.idea.title,
+      from: EXAMPLE.idea.community,
+      why: `Budget-honest, and ${EXAMPLE.idea.use} would use it.`,
     },
     {
       id: 'fare-pals',
@@ -69,7 +69,7 @@ export interface TwinQuestion {
   picks: readonly ChatPick[];
 }
 
-/** The hero chat's three prewritten conversations, one per tab (demo). */
+/** The hero chat's three prewritten conversations, one per tab (example). */
 export const TWIN_CHAT: readonly TwinQuestion[] = [
   {
     id: 'want',
@@ -77,9 +77,9 @@ export const TWIN_CHAT: readonly TwinQuestion[] = [
     lead: `I read ${read.toLocaleString('en-US')} messages in your ${rooms} rooms this week. Three asks keep coming back:`,
     picks: [
       {
-        title: DEMO.idea.title,
-        why: `${DEMO.idea.use} fans said they would use it. Every price checked by a local.`,
-        room: DEMO.idea.community,
+        title: EXAMPLE.idea.title,
+        why: `${EXAMPLE.idea.use} fans said they would use it. Every price checked by a local.`,
+        room: EXAMPLE.idea.community,
       },
       {
         title: 'A food map of Accra street stalls',
@@ -101,7 +101,7 @@ export const TWIN_CHAT: readonly TwinQuestion[] = [
       {
         title: 'Inês Duarte',
         why: 'Local guide on the Lisbon crew. Pitched a Porto series with real dates.',
-        room: DEMO.idea.community,
+        room: EXAMPLE.idea.community,
       },
       {
         title: 'Maya Chen',

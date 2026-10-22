@@ -1,9 +1,9 @@
 // "How it works: from follower to featured" (round 4 spec §2): five product steps, from a follower count
-// to a fan-made guide you feature. Told on an example travel creator; every number comes from DEMO.
+// to a fan-made guide you feature. Told on an example travel creator; every number comes from EXAMPLE.
 
 import type { CommunityIcon, Tint } from '@fellow-owners/shared';
 import type { CreatorAsset } from '@/lib/creator-assets';
-import { DEMO } from './demo-data';
+import { EXAMPLE } from './example-data';
 
 export type StoryStepId = 'followers' | 'communities' | 'idea' | 'crew' | 'featured';
 
@@ -19,7 +19,7 @@ export interface StoryStep {
   alt: string;
 }
 
-const { idea, followers } = DEMO;
+const { idea, followers } = EXAMPLE;
 
 export const storySteps: StoryStep[] = [
   {
@@ -65,7 +65,7 @@ export const storySteps: StoryStep[] = [
 ];
 
 /** The one disclosure line for the section. */
-export const storyDisclosure = 'Demo: the creator and fans are made up.';
+export const storyDisclosure = 'Example: the creator and fans are made up.';
 
 export const storyFollowers = {
   total: followers.label,
@@ -83,7 +83,7 @@ export const storyCommunities: {
   icon: StoryIcon;
   tint: Tint;
   fans: string;
-}[] = DEMO.rooms.map((room) => ({
+}[] = EXAMPLE.rooms.map((room) => ({
   name: room.name,
   icon: room.icon,
   tint: room.tint,
@@ -93,17 +93,17 @@ export const storyCommunities: {
 export const storyIdea = {
   title: idea.title,
   author: idea.author,
-  avatar: DEMO.crew[0]?.avatar ?? 'fan-1',
+  avatar: EXAMPLE.crew[0]?.avatar ?? 'fan-1',
   community: idea.community,
   prices: idea.prices,
   use: idea.use,
   join: idea.build,
 };
 
-export const storyCrew: { name: string; role: string; avatar: CreatorAsset }[] = DEMO.crew;
+export const storyCrew: { name: string; role: string; avatar: CreatorAsset }[] = EXAMPLE.crew;
 
 export const storyFeatured = {
-  clicks: DEMO.clicks.total,
+  clicks: EXAMPLE.clicks.total,
   /** Clicks per day since it was featured, oldest first; sums to `clicks`. */
-  clicksByDay: DEMO.clicks.byDay,
+  clicksByDay: EXAMPLE.clicks.byDay,
 };

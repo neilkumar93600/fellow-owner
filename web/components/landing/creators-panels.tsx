@@ -33,12 +33,12 @@ import {
 } from './creators-data';
 import { CreatorsClicks } from './creators-motion';
 import styles from './creators-panels.module.css';
-import { avatarTint, creator, initials, promoteDraft } from './demo-data';
+import { avatarTint, creator, initials, promoteDraft } from './example-data';
 
 /*
  * Three real screens from the creator studio, rebuilt in HTML in the Parchment Frost look: the decision-card
  * Today, the fan mail as cards, and the Spotlight composer. They are pictures of the product: nothing inside
- * is focusable, and every value is demo data. Match is always a label, never a number.
+ * is focusable, and every value is example data. Match is always a label, never a number.
  */
 
 const ICON = { strokeWidth: 1.5, 'aria-hidden': true } as const;
@@ -71,7 +71,7 @@ function Fake({ className, children }: { className?: string; children: React.Rea
   return <span className={className}>{children}</span>;
 }
 
-/** The app's top strip, cropped: the title, a line under it, and the Demo tray. */
+/** The app's top strip, cropped: the title, a line under it, and the Example tray. */
 function ScreenHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className={layout.screenHead}>
@@ -80,7 +80,7 @@ function ScreenHeader({ title, subtitle }: { title: string; subtitle: string }) 
         <p className={layout.screenSub}>{subtitle}</p>
       </div>
       <div className={layout.tray}>
-        <span className={layout.demoTag}>Demo</span>
+        <span className={layout.exampleTag}>Example</span>
         <MiraFace />
       </div>
     </div>
@@ -216,7 +216,7 @@ export function FanMailScreen() {
         </Fake>
       </div>
 
-      <ul className={styles.mailList} aria-label="Demo fan mail, best matches first">
+      <ul className={styles.mailList} aria-label="Example fan mail, best matches first">
         {FAN_MAIL_ROWS.map((row, index) => (
           <MailCard key={row.id} row={row} hover={index === 0} />
         ))}

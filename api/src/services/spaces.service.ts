@@ -68,7 +68,6 @@ export function publicSpace(space: SpaceRow, memberCount: number): PublicSpace {
     platforms: space.platforms ?? [],
     totalFollowers: totalFollowers(space.platforms),
     memberCount,
-    isDemo: space.isDemo,
     coverUrl: space.coverUrl,
     mediaKitEnabled: space.mediaKitEnabled,
   };
@@ -129,6 +128,17 @@ export function createSpacesService(deps: SpacesServiceDeps) {
 
   return {
     studioSpace,
+
+    /**
+     * GET /api/sitemap (public, CDN-cached): every creator's handle for web/app/sitemap.ts, which
+     * reads each bio page itself.
+     */
+    async sitemap(): Promise<{ spaces: { handle: string }[] }> {
+      // ponytail: one capped list, the web fetches each bio; past ~1000 creators page this and
+      // return showcase slugs here instead of a bio read per creator.
+      const handles = await repos.spaces.listHandles(1000);
+      return { spaces: handles.map((handle) => ({ handle })) };
+    },
 
     /**
      * GET /api/spaces/:handle (public, CDN-cached): profile, non-archived communities in sort

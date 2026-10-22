@@ -17,7 +17,7 @@ export interface SignalButtonsProps {
   disabledReason?: string;
   /**
    * Hands the toggle to the parent, who owns the state: the counts and pressed signals follow the props
-   * (an optimistic cache write, reverted on failure). Without it the pair toggles locally (kit demos).
+   * (an optimistic cache write, reverted on failure). Without it the pair toggles locally (the dev kit).
    */
   onToggle?: (kind: SignalKind, on: boolean) => void;
   className?: string;

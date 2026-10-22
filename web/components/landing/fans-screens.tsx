@@ -21,7 +21,7 @@ import type * as React from 'react';
 import { CreatorImage } from '@/components/shared/creator-image';
 import type { CreatorAsset } from '@/lib/creator-assets';
 import { cn } from '@/lib/utils';
-import { communities, creator, DEMO, fan } from './demo-data';
+import { communities, creator, EXAMPLE, fan } from './example-data';
 import { DIGEST, FAN_INTRO, FAN_PICKS, type FanStep } from './fans-data';
 import s from './fans-screens.module.css';
 
@@ -53,7 +53,7 @@ const ICONS: Record<string, LucideIcon> = {
 
 function room(slug: string) {
   const found = communities.find((c) => c.slug === slug);
-  if (!found) throw new Error(`Unknown demo community: ${slug}`);
+  if (!found) throw new Error(`Unknown example community: ${slug}`);
   return { ...found, Icon: ICONS[found.icon] ?? Wallet, cardTint: found.tint as CardTint };
 }
 
@@ -204,14 +204,14 @@ export function FeedScreen() {
             <ThumbsUp strokeWidth={1.75} />
             I’d use this
             <span className={cn(s.signalCount, 'tabular')}>
-              <span className={s.countBefore}>{DEMO.idea.use - 1}</span>
-              <span className={s.countAfter}>{DEMO.idea.use}</span>
+              <span className={s.countBefore}>{EXAMPLE.idea.use - 1}</span>
+              <span className={s.countAfter}>{EXAMPLE.idea.use}</span>
             </span>
           </span>
           <span className={s.signal}>
             <UserPlus strokeWidth={1.75} />
             Count me in
-            <span className={cn(s.signalCount, 'tabular')}>{DEMO.idea.build}</span>
+            <span className={cn(s.signalCount, 'tabular')}>{EXAMPLE.idea.build}</span>
           </span>
         </div>
         <p className={s.comments}>
@@ -308,7 +308,7 @@ export function ProjectScreen() {
         </span>
         <span className={s.teamText}>
           <span className={s.teamName}>
-            {DEMO.crew.length - 1} of {DEMO.crew.length} roles filled
+            {EXAMPLE.crew.length - 1} of {EXAMPLE.crew.length} roles filled
           </span>
         </span>
       </div>

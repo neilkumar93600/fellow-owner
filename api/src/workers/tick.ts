@@ -12,9 +12,6 @@ export const JOB_NAMES = [
   'email_digests',
   // Creator suite F3: hourly reminders for planned posts due within the hour.
   'planner_reminders',
-  'demo_reset',
-  // Hourly: keeps the demo space's Today briefing built (workers/demo-briefing.ts).
-  'demo_briefing',
   'purge',
   'refresh_followers',
   'community_digests',
@@ -35,8 +32,6 @@ const DAY = 24 * HOUR;
 
 /** Daily and weekly jobs (UTC); every other job runs hourly. `weekday` 1 = Monday. */
 const SCHEDULE: Partial<Record<JobName, { hour: number; weekday?: number }>> = {
-  // 01:00 UTC: 06:30 IST, 02:00 CET, evening in the US, so the reseed lands in a quiet hour.
-  demo_reset: { hour: 1 },
   purge: { hour: 9 },
   refresh_followers: { hour: 6 },
   community_digests: { hour: 13, weekday: 1 },
@@ -66,7 +61,7 @@ export function jobSlot(job: JobName, date: Date): Date {
 
 /**
  * The jobs scheduled in the hour of `date` (UTC): hourly sweep, group_questions, close_challenges,
- * email_digests, planner_reminders, demo_briefing; 01:00 demo_reset; 06:00 refresh_followers;
+ * email_digests, planner_reminders; 06:00 refresh_followers;
  * 07:00 refresh_performance; 09:00 purge; 14:00 brand_digest; Monday 13:00 community_digests.
  */
 export function dueJobs(date: Date): JobName[] {
@@ -74,7 +69,7 @@ export function dueJobs(date: Date): JobName[] {
   return JOB_NAMES.filter((job) => jobSlot(job, date).getTime() === hourStart);
 }
 
-export type TickDeps = Pick<CoreDeps, 'db' | 'env' | 'logger' | 'background'> & { jobs: Jobs };
+export type TickDeps = Pick<CoreDeps, 'db' | 'logger' | 'background'> & { jobs: Jobs };
 
 interface PlannedRun {
   job: JobName;
@@ -113,10 +108,9 @@ async function pendingRuns(deps: TickDeps, now: Date): Promise<PlannedRun[]> {
     .where(and(eq(jobRuns.status, 'ok'), gte(jobRuns.slot, new Date(now.getTime() - 8 * DAY))));
   const doneKeys = new Set(done.map((row) => `${row.job}@${row.slot.getTime()}`));
 
-  const demoJobs: JobName[] = ['demo_reset', 'demo_briefing'];
-  return JOB_NAMES.filter((job) => !demoJobs.includes(job) || deps.env.DEMO_ENABLED)
-    .map((job) => ({ job, slot: jobSlot(job, now), manual: false }))
-    .filter((run) => !doneKeys.has(`${run.job}@${run.slot.getTime()}`));
+  return JOB_NAMES.map((job) => ({ job, slot: jobSlot(job, now), manual: false })).filter(
+    (run) => !doneKeys.has(`${run.job}@${run.slot.getTime()}`),
+  );
 }
 
 async function hasOkRun(deps: TickDeps, job: JobName, slot: Date): Promise<boolean> {

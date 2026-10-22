@@ -4,7 +4,7 @@ import type * as React from 'react';
 import { useEffect, useRef } from 'react';
 
 /**
- * Client island for the demo CTA, the FAQ and the connect and trust sections. The server renders everything
+ * Client island for the closing CTA, the FAQ and the connect and trust sections. The server renders everything
  * complete and still (no JavaScript, reduced motion); this only adds motion, by writing attributes:
  *
  * - [data-cta-reveal] blocks that start below the fold get data-armed, then data-inview when they enter.

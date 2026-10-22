@@ -1,6 +1,6 @@
 import type { TeamStatus } from '@fellow-owners/shared';
 import { and, asc, count, eq, inArray, sql } from 'drizzle-orm';
-import { chunk, type Db, type DbOrTx } from '../db/client.js';
+import type { Db, DbOrTx } from '../db/client.js';
 import { user } from '../db/schema/auth.js';
 import { memberships } from '../db/schema/memberships.js';
 import { posts } from '../db/schema/posts.js';
@@ -50,13 +50,6 @@ export function createTeamsRepo(db: Db) {
     async insert(values: NewTeamMemberRow, tx: DbOrTx = db): Promise<TeamMemberRow | null> {
       const [row] = await tx.insert(teamMembers).values(values).onConflictDoNothing().returning();
       return row ?? null;
-    },
-
-    /** Seed only. */
-    async insertMany(values: NewTeamMemberRow[], tx: DbOrTx = db): Promise<void> {
-      for (const part of chunk(values, 1000)) {
-        await tx.insert(teamMembers).values(part).onConflictDoNothing();
-      }
     },
 
     async find(

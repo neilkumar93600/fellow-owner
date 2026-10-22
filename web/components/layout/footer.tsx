@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type * as React from 'react';
-import { DemoButton } from '@/components/landing/demo-button';
 import styles from '@/components/landing/footer.module.css';
 import { useSectionLink } from '@/components/landing/nav-scroll';
 import { FooterLandscape } from '@/components/layout/footer-landscape';
@@ -118,23 +117,6 @@ function SiteFooter() {
                   </Link>
                 </li>
               ))}
-            </Column>
-            <Column title="Try the demo">
-              <li>
-                <DemoButton as="creator" variant="secondary" className={styles.flink}>
-                  Creator view
-                </DemoButton>
-              </li>
-              <li>
-                <DemoButton as="fan" variant="secondary" className={styles.flink}>
-                  Fan view
-                </DemoButton>
-              </li>
-              <li>
-                <Link href="/mira" className={styles.flink}>
-                  Mira&rsquo;s demo page
-                </Link>
-              </li>
             </Column>
             <Column title="Company">
               <LinkItems links={COMPANY} />

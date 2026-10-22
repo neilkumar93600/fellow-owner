@@ -19,7 +19,7 @@ import { spaces } from '../../src/db/schema/spaces.js';
 import { supportRequests } from '../../src/db/schema/support.js';
 import { daysAgo, utcDayString } from '../../src/lib/dates.js';
 import { purgeExpired } from '../../src/workers/purge.js';
-import { type SignedIn, signInAsDemo, signInWithOtp, TEST_ORIGIN } from '../helpers/auth.js';
+import { type SignedIn, signInWithOtp, TEST_ORIGIN } from '../helpers/auth.js';
 import { createFactories, type TestSpace } from '../helpers/factories.js';
 import { closeDb, resetDatabase } from '../helpers/test-db.js';
 
@@ -194,16 +194,6 @@ describe('account deletion', () => {
       .send({ token: 'not-the-code' })
       .expect(404);
     expect(await db.select().from(user).where(eq(user.id, raj.userId))).toHaveLength(1);
-  });
-
-  it('keeps the demo accounts', async () => {
-    const demo = await signInAsDemo(container, 'fan');
-    const res = await request(app)
-      .post('/api/auth/delete-user')
-      .set('Origin', TEST_ORIGIN)
-      .set('Cookie', demo.cookie)
-      .send({});
-    expect(res.status).toBe(403);
   });
 });
 

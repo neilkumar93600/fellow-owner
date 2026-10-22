@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, TextArea, TextField } from '@/components/ui/field';
 import { useUpdateSettings } from '@/hooks/queries/use-settings';
-import { DEMO_READ_ONLY, issuesByPath } from './profile-form';
+import { issuesByPath } from './profile-form';
 
 type ListKey = keyof TasteProfile;
 type Line = { id: number; text: string };
@@ -63,7 +63,7 @@ let seq = 0;
 const toLines = (list: string[]): Line[] => list.map((text) => ({ id: seq++, text }));
 
 export interface TasteProfileFormProps {
-  space: Pick<StudioSpace, 'tasteProfile' | 'tasteVersion' | 'isDemo'>;
+  space: Pick<StudioSpace, 'tasteProfile' | 'tasteVersion'>;
   isPending?: boolean;
 }
 
@@ -134,10 +134,7 @@ export function TasteProfileForm({ space, isPending = false }: TasteProfileFormP
         </p>
       </div>
 
-      {space.isDemo ? <p className="text-small text-ink-soft">{DEMO_READ_ONLY}</p> : null}
-
-      {/* ponytail: a disabled fieldset locks every native input and button inside in one go. */}
-      <fieldset disabled={space.isDemo} className="m-0 flex min-w-0 flex-col gap-8 border-0 p-0">
+      <div className="m-0 flex min-w-0 flex-col gap-8 border-0 p-0">
         <div className="grid gap-8 @5xl:grid-cols-2">
           {LISTS.slice(0, 2).map((list) => (
             <LineList
@@ -173,7 +170,7 @@ export function TasteProfileForm({ space, isPending = false }: TasteProfileFormP
             Saving starts version {version + 1}. Items rated earlier say so until you rescore them.
           </p>
         </div>
-      </fieldset>
+      </div>
     </form>
   );
 }

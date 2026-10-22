@@ -2,7 +2,6 @@ import {
   type ClickPlatform,
   type cursorQuerySchema,
   DAILY_CAPS,
-  dailyCap,
   type FanSpotlight,
   hasPublishableDraft,
   LIMITS,
@@ -349,12 +348,9 @@ export function createPromotionsService(deps: PromotionsServiceDeps) {
    * limits.assertSuggestReplyAllowed.
    * ponytail: lives here because limits.service.ts belongs to another task; move it there.
    */
-  async function assertSpotlightDraftsAllowed(space: {
-    id: string;
-    isDemo: boolean;
-  }): Promise<void> {
+  async function assertSpotlightDraftsAllowed(space: { id: string }): Promise<void> {
     const now = new Date();
-    const limit = dailyCap(DAILY_CAPS.spotlightNote, space);
+    const limit = DAILY_CAPS.spotlightNote;
     const used = await repos.aiRuns.countBySpaceTaskSince(
       space.id,
       'spotlightNote',
@@ -618,7 +614,6 @@ export function createPromotionsService(deps: PromotionsServiceDeps) {
           handle: space.handle,
           displayName: space.displayName,
           avatarUrl: space.avatarUrl,
-          isDemo: space.isDemo,
         },
         promotion: {
           showcaseSlug: promotion.showcaseSlug,

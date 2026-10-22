@@ -3,7 +3,6 @@ import type { AiServices, Analyzer, BackgroundRunner } from './ai/types.js';
 import { type Auth, auth as defaultAuth } from './auth/index.js';
 import { env as defaultEnv, type Env } from './config/env.js';
 import { createAccountController } from './controllers/account.controller.js';
-import { createAdminController } from './controllers/admin.controller.js';
 import { createAskController } from './controllers/ask.controller.js';
 import { createBrandsController } from './controllers/brands.controller.js';
 import { createChallengesController } from './controllers/challenges.controller.js';
@@ -11,7 +10,6 @@ import { createCoachController } from './controllers/coach.controller.js';
 import { createCollabController } from './controllers/collab.controller.js';
 import { createConfigController } from './controllers/config.controller.js';
 import { createCronController } from './controllers/cron.controller.js';
-import { createDemoController } from './controllers/demo.controller.js';
 import { createFollowersController } from './controllers/followers.controller.js';
 import { createInsightsController } from './controllers/insights.controller.js';
 import { createInstagramController } from './controllers/instagram.controller.js';
@@ -51,7 +49,6 @@ import { createCoachService } from './services/coach.service.js';
 import { createCollabService } from './services/collab.service.js';
 import { createCommentsService } from './services/comments.service.js';
 import { createCommunitiesService } from './services/communities.service.js';
-import { createDemoService } from './services/demo.service.js';
 import { createDiscoveryService } from './services/discovery.service.js';
 import { createFollowersService } from './services/followers.service.js';
 import { createInsightsService } from './services/insights.service.js';
@@ -81,8 +78,6 @@ import { createUploadsService } from './services/uploads.service.js';
 import { createAnalyzer } from './workers/analyze-item.js';
 import { createChallengeCloser } from './workers/close-challenges.js';
 import { createDigestWriter } from './workers/community-digests.js';
-import { warmDemoBriefing } from './workers/demo-briefing.js';
-import { resetDemo } from './workers/demo-reset.js';
 import { createQuestionGrouper } from './workers/group-questions.js';
 import { purgeExpired } from './workers/purge.js';
 import { refreshFollowers } from './workers/refresh-followers.js';
@@ -163,7 +158,7 @@ export function createServices(deps: CoreDeps) {
 
 /** The services that existed before the backend completion. */
 function createBaseServices(deps: CoreDeps) {
-  const { auth, db, env, repos, ai, analyzer, background, logger, pubsub } = deps;
+  const { db, env, repos, ai, analyzer, background, logger, pubsub } = deps;
   const access = createAccessService({ repos });
   const limits = createLimitsService({ repos });
   const notifications = createNotificationsService({ db, repos, logger, pubsub });
@@ -234,7 +229,6 @@ function createBaseServices(deps: CoreDeps) {
     insights: createInsightsService({ env, repos, logger }),
     challenges: createChallengesService({ ...deps, limits, posts, notifications }),
     clicks: createClicksService({ env, repos, logger }),
-    demo: createDemoService({ env, auth, repos }),
     // Spread: newsletter (F11) may take env, mailer and logger (double opt-in).
     newsletter: createNewsletterService({ ...deps }),
   };
@@ -296,13 +290,6 @@ export function createJobs(services: Services, deps: CoreDeps): Jobs {
     group_questions: () => grouper.groupDueSpaces(new Date()),
     close_challenges: () => challengeCloser.closeOverdue(new Date()),
     email_digests: () => services.notificationEmails.sendDue(new Date()),
-    // Every reset path (tick, cron route, admin) re-warms today's briefing; the warm never throws.
-    demo_reset: async () => {
-      const result = await resetDemo(deps);
-      await warmDemoBriefing(bag);
-      return result;
-    },
-    demo_briefing: () => warmDemoBriefing(bag),
     purge: () => purgeExpired(bag),
     refresh_followers: () => refreshFollowers(bag),
     community_digests: () => digestWriter.writeDue(new Date()),
@@ -321,13 +308,12 @@ export function createControllers(services: Services, deps: CoreDeps, jobs: Jobs
     posts: createPostsController(services),
     pitches: createPitchesController(services),
     studio: createStudioController(services),
-    demo: createDemoController(services),
     followers: createFollowersController(services),
     notifications: createNotificationsController(services),
     insights: createInsightsController(services),
     challenges: createChallengesController(services),
     newsletter: createNewsletterController(services),
-    // The cron jobs are whole-space work (reseed, retention purge), not one service's business
+    // The cron jobs are whole-space work (retention purge, follower refresh), not one service's business
     // rules, so this one takes the core dependencies (+ jobs, for the tick) instead of `services`.
     cron: createCronController(bag),
     questionGroups: createQuestionGroupsController(bag),
@@ -342,7 +328,6 @@ export function createControllers(services: Services, deps: CoreDeps, jobs: Jobs
     metrics: createMetricsController(bag),
     snoozes: createSnoozesController(bag),
     config: createConfigController(bag),
-    admin: createAdminController(bag),
     // Creator suite (0010).
     performance: createPerformanceController(bag),
     planner: createPlannerController(bag),

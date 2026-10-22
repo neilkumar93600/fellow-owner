@@ -1,8 +1,6 @@
 import type { Express } from 'express';
 import request from 'supertest';
-import { type DemoRole, ensureDemoUsers, signInDemo } from '../../src/auth/demo.js';
 import { peekOtp } from '../../src/auth/email.js';
-import type { Container } from '../../src/container.js';
 
 /** Better Auth checks Origin on state-changing auth requests. */
 export const TEST_ORIGIN = 'http://localhost:3000';
@@ -42,11 +40,4 @@ export async function signInWithOtp(
     .send({ email, otp, name })
     .expect(200);
   return { cookie: cookieHeader(res.headers['set-cookie']), userId: res.body.user.id, email };
-}
-
-/** Creates the demo users if needed and signs in as one of them (server-side, like the API). */
-export async function signInAsDemo(container: Container, as: DemoRole): Promise<SignedIn> {
-  const users = await ensureDemoUsers(container.auth, container.env);
-  const { setCookies, user } = await signInDemo(container.auth, container.env, as);
-  return { cookie: cookieHeader(setCookies), userId: user.id, email: users[as].email };
 }

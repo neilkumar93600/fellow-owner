@@ -16,6 +16,5 @@ export default async function Image({ params }: { params: Promise<{ handle: stri
     line: space.bio,
     person: { name: space.displayName, avatarUrl: space.avatarUrl },
     chips: communities,
-    isDemo: space.isDemo,
   });
 }

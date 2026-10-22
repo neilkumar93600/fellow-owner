@@ -1,5 +1,5 @@
 import type { TasteProfile } from '@fellow-owners/shared';
-import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
+import { and, asc, eq, inArray, isNull, sql } from 'drizzle-orm';
 import type { Db, DbOrTx } from '../db/client.js';
 import { user } from '../db/schema/auth.js';
 import { type NewSpaceRow, type SpaceRow, spaces } from '../db/schema/spaces.js';
@@ -41,6 +41,16 @@ export function createSpacesRepo(db: Db) {
         .where(eq(spaces.handle, handle.trim().toLowerCase()))
         .limit(1);
       return row ?? null;
+    },
+
+    /** Every creator's handle, oldest space first (GET /api/sitemap). */
+    async listHandles(limit: number, tx: DbOrTx = db): Promise<string[]> {
+      const rows = await tx
+        .select({ handle: spaces.handle })
+        .from(spaces)
+        .orderBy(asc(spaces.createdAt))
+        .limit(limit);
+      return rows.map((row) => row.handle);
     },
 
     /** The caller's own space (one per user in the MVP). */
@@ -120,19 +130,6 @@ export function createSpacesRepo(db: Db) {
         .where(eq(spaces.id, spaceId))
         .limit(1);
       return row ?? null;
-    },
-
-    async listDemo(tx: DbOrTx = db): Promise<SpaceRow[]> {
-      return tx.select().from(spaces).where(eq(spaces.isDemo, true));
-    },
-
-    /** Demo reset: deletes every `is_demo` space; everything with its space_id cascades. */
-    async deleteDemoSpaces(tx: DbOrTx = db): Promise<number> {
-      const rows = await tx
-        .delete(spaces)
-        .where(eq(spaces.isDemo, true))
-        .returning({ id: spaces.id });
-      return rows.length;
     },
 
     async deleteById(id: string, tx: DbOrTx = db): Promise<boolean> {

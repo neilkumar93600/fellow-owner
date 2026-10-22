@@ -1,11 +1,6 @@
 import { PLATFORM_FANS_LIMITS } from '@fellow-owners/shared';
 import { describe, expect, it, vi } from 'vitest';
-import {
-  COMMENT_ACTORS,
-  createPlatformFans,
-  demoFans,
-  mapCommenters,
-} from '../../src/lib/platform-fans.js';
+import { COMMENT_ACTORS, createPlatformFans, mapCommenters } from '../../src/lib/platform-fans.js';
 import instagramProfile from '../fixtures/apify/instagram.json' with { type: 'json' };
 import instagramComments from '../fixtures/apify/instagram-comments.json' with { type: 'json' };
 import tiktokProfile from '../fixtures/apify/tiktok.json' with { type: 'json' };
@@ -151,13 +146,5 @@ describe('createPlatformFans', () => {
       status: 'skipped',
       reason: 'sample',
     });
-  });
-
-  it('demo fixtures exist for every fetched platform', () => {
-    for (const platform of ['instagram', 'tiktok', 'youtube'] as const) {
-      const fixture = demoFans(platform);
-      if (fixture.status !== 'ok') throw new Error('expected ok');
-      expect(fixture.commenters.length).toBeGreaterThan(0);
-    }
   });
 });

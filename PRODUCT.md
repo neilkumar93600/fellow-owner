@@ -34,7 +34,7 @@ The emotional goal for creators is relief and control ("I know what matters toda
 - **Paid DMs:** filtering fans by willingness to pay instead of by quality.
 - **One-way link-in-bio pages and Google Forms:** a list of links or a form that goes nowhere, with no community and no ranking.
 - **Low-contrast status text:** status shown as light orange or teal words on white that fail contrast.
-- **Placeholder copy:** lorem ipsum, "Lorem dashboard", or generic filler in any shipped or demo screen.
+- **Placeholder copy:** lorem ipsum, "Lorem dashboard", or generic filler in any shipped screen.
 - **The AI light show:** sparkles everywhere, glowing gradients, hype language, or AI acting on fan content without a creator click.
 
 ## Design Principles

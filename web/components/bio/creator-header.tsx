@@ -9,19 +9,13 @@ import { cn } from '@/components/ui/cn';
 import type { CreatorAsset } from '@/lib/creator-assets';
 import { formatCompact, formatNumber, pluralize } from '@/lib/format';
 
-// ponytail: only the demo creator has generated photos; every other creator gets the aurora gradient and
-// their avatar until creators can upload a cover and portrait.
-const DEMO_PHOTOS: { cover: CreatorAsset; portrait: CreatorAsset } = {
-  cover: 'vlog-van-coast',
-  portrait: 'mira-portrait',
-};
-
 const PLATFORM_CHIP =
   'glass-chip inline-flex h-11 items-center gap-2 px-4 text-small text-ink uppercase';
 
 export interface CreatorHeaderProps {
-  /** space.isDemo marks the demo world: it gets the generated cover and portrait. */
   space: PublicSpace;
+  /** Generated cover and portrait for the landing's example creator; real creators get the gradient and their avatar. */
+  photos?: { cover: CreatorAsset; portrait: CreatorAsset };
   /** The viewer's way in: Join for visitors, the first joined community for members, the studio for the owner. */
   cta: { href: string; label: string };
   /** The bio page's one h1; a preview inside another page (the landing mockups) passes 'p'. */
@@ -40,13 +34,13 @@ export interface CreatorHeaderProps {
  */
 export function CreatorHeader({
   space,
+  photos,
   cta,
   nameAs: Name = 'h1',
   priority = true,
   interactive = true,
 }: CreatorHeaderProps) {
   const first = space.displayName.split(' ')[0];
-  const photos = space.isDemo ? DEMO_PHOTOS : undefined;
   const ctaClass = cn(buttonVariants({ variant: 'secondary' }), 'w-full sm:w-auto sm:min-w-64');
   return (
     <header className="flex flex-col">

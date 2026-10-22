@@ -1,25 +1,20 @@
 import { fileURLToPath } from 'node:url';
 import { LIMITS } from '@fellow-owners/shared';
 import { and, asc, eq, isNull, ne, sql } from 'drizzle-orm';
-import { isAiUnavailable } from '../../ai/types.js';
-import { buildContainer, type CoreDeps } from '../../container.js';
-import { closeDb } from '../client.js';
-import { inbound } from '../schema/inbound.js';
-import { memberships } from '../schema/memberships.js';
+import { isAiUnavailable } from '../ai/types.js';
+import { buildContainer, type CoreDeps } from '../container.js';
+import { closeDb } from './client.js';
+import { inbound } from './schema/inbound.js';
+import { memberships } from './schema/memberships.js';
 
 /**
- * pnpm db:embed — fills in the embeddings the seed does not carry (05-backend-schema section 9).
- *
- * About 1,500 vectors of 1,536 floats would bloat the repo, so data/*.json has no embeddings and
- * seeded posts start with a null vector. P0 works without them (people search uses skills and text
- * search); the P1 features that need them — similar ideas, people who could help, Ask your AI —
- * call this once an OPENROUTER_API_KEY is set. It fills posts, pitches and members (headline, intro and
- * skills).
+ * pnpm db:embed — fills in embeddings that are still null on posts, pitches and members (headline,
+ * intro and skills), e.g. rows written while AI was off. The P1 features that need them (similar
+ * ideas, people who could help, Ask your AI) run this once an OPENROUTER_API_KEY is set.
  *
  * Safe to stop and rerun: it only ever reads rows whose embedding is still null, so a second run
  * picks up where the first stopped. With no key the fake AI returns deterministic vectors, which
  * are useless for real similarity but keep the column non-null for local work.
- *
  */
 
 /** Rows embedded per round trip to the model. */

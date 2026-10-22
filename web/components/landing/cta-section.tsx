@@ -5,12 +5,11 @@ import { cn } from '@/lib/utils';
 import st from './cta.module.css';
 import { CtaStage } from './cta-motion';
 import { CtaOrbit } from './cta-orbit';
-import { DemoButton } from './demo-button';
-import pill from './demo-button.module.css';
+import pill from './pill.module.css';
 
 /*
  * Closing CTA, the landing's last section, directly above the footer: "Fans orbit". Centered headline
- * and two buttons, fan avatars orbiting on two rings (cta-orbit.tsx, from 1280px), and two soft Monad
+ * and one button, fan avatars orbiting on two rings (cta-orbit.tsx, from 1280px), and two soft Monad
  * washes rising from the bottom edge that fade into the footer. Get started is the section's one Lake Blue
  * button (data-rainbow-cta, a legacy name, tells the navbar to step back to glass while it shows).
  */
@@ -21,9 +20,9 @@ function delay(ms: number) {
   return { '--d': `${ms}ms` } as React.CSSProperties;
 }
 
-export function DemoCta() {
+export function CtaSection() {
   return (
-    <section id="demo" aria-labelledby="demo-title" className={st.section}>
+    <section id="get-started" aria-labelledby="cta-title" className={st.section}>
       <CtaStage className={st.stage}>
         <div aria-hidden="true" className={st.washes} data-cta-reveal="washes">
           <div className={st.washA} />
@@ -38,7 +37,7 @@ export function DemoCta() {
             Ready when you are
           </p>
           <h2
-            id="demo-title"
+            id="cta-title"
             className={cn(st.title, st.rise)}
             data-cta-reveal="rise"
             style={delay(80)}
@@ -64,9 +63,6 @@ export function DemoCta() {
             >
               Get started
             </Link>
-            <DemoButton as="creator" variant="secondary" lift>
-              Try the live demo
-            </DemoButton>
           </div>
 
           <div className={cn(st.statsWrap, st.rise)} data-cta-reveal="rise" style={delay(320)}>

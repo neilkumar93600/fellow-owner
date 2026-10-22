@@ -54,9 +54,9 @@ export function CreatorsSection() {
                   worth your time, and written down why.
                 </p>
 
-                <p className={styles.demoLabel} data-creators-reveal>
-                  <span className={styles.demoChip}>Demo</span>A demo studio. Every name and number
-                  is made up.
+                <p className={styles.exampleLabel} data-creators-reveal>
+                  <span className={styles.exampleChip}>Example</span>An example studio. Every name
+                  and number is made up.
                 </p>
 
                 <ol className={styles.steps} data-creators-reveal>

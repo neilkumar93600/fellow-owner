@@ -136,7 +136,7 @@ describe('0006 shared contracts', () => {
 
   it('media urls: avatars and covers', () => {
     ok(avatarUrlSchema, '/api/media/avatar/u1/abc.png');
-    ok(avatarUrlSchema, '/demo/mira.jpg');
+    ok(avatarUrlSchema, '/api/media/avatar/a.jpg');
     bad(avatarUrlSchema, 'javascript:alert(1)');
     ok(coverUrlSchema, '/api/media/space_cover/s1/abc.webp');
     ok(coverUrlSchema, 'https://images.example.com/cover.jpg');

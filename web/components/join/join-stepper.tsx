@@ -1,7 +1,6 @@
 'use client';
 
-import type { PublicCommunity, PublicSpace, ViewerMembership } from '@fellow-owners/shared';
-import { useQueryClient } from '@tanstack/react-query';
+import type { PublicCommunity, PublicSpace } from '@fellow-owners/shared';
 import { Mail, PartyPopper } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -9,26 +8,14 @@ import { SocialButtons } from '@/components/auth/social-buttons';
 import { AvatarInitials } from '@/components/shared/avatar-initials';
 import { buttonVariants } from '@/components/ui/button-variants';
 import { cn } from '@/components/ui/cn';
-import { usePublicConfig } from '@/hooks/queries/use-public-config';
-import { membershipKeys, useMembership } from '@/hooks/use-membership';
+import { useMembership } from '@/hooks/use-membership';
 import { useUrlEnum, useUrlState } from '@/hooks/use-url-state';
-import { enterDemo } from '@/lib/api/demo';
 import { routes, withQuery } from '@/lib/routes';
-import { toastError, toastSuccess } from '@/lib/toast';
 import { IntroStep, listFormat } from './intro-step';
 import { ProfileStep } from './profile-step';
 
 const STEPS = ['1', '2', '3', 'done'] as const;
 type Step = (typeof STEPS)[number];
-
-/** The demo space (seeded for Mira): the only one that offers "Try the demo as Priya". */
-const DEMO_HANDLE = 'mira';
-
-/** Priya's line in the demo, so Suggest rooms has something to read. */
-const DEMO_INTRO = 'Solo traveler from Austin. I want to eat my way through Lisbon on a budget.';
-
-const TEXT_BUTTON =
-  'press inline-flex h-11 items-center rounded-full px-3 text-label text-ink underline decoration-ink/40 underline-offset-4 hover:decoration-ink';
 
 export interface JoinStepperProps {
   space: Pick<PublicSpace, 'handle' | 'displayName' | 'avatarUrl'>;
@@ -56,13 +43,10 @@ export function JoinStepper({
 }: JoinStepperProps) {
   const [urlStep, setStep] = useUrlEnum('step', STEPS, '1');
   const { get } = useUrlState();
-  const queryClient = useQueryClient();
   const { data: viewer } = useMembership(space.handle);
   const signedIn = viewer?.signedIn ?? initialSignedIn;
   // Signed in skips step 1; signed out cannot be past it.
   const step: Step = signedIn ? (urlStep === '1' ? '2' : urlStep) : '1';
-  const [demoPending, setDemoPending] = useState(false);
-  const demoOffered = usePublicConfig().data?.demoEnabled === true && space.handle === DEMO_HANDLE;
   const [homeSlug, setHomeSlug] = useState<string>();
   const [intro, setIntro] = useState('');
   const [selected, setSelected] = useState<string[]>(() => {
@@ -86,27 +70,6 @@ export function JoinStepper({
   const authPath = routes.auth.login(joinPath);
   const chosen = selected.flatMap((id) => communities.filter((c) => c.id === id));
   const home = communities.find((c) => c.slug === homeSlug) ?? chosen[0] ?? communities[0];
-
-  async function tryDemo() {
-    if (demoPending) return;
-    setDemoPending(true);
-    try {
-      await enterDemo('fan');
-      queryClient.setQueryData<ViewerMembership>(membershipKeys.detail(handle), {
-        signedIn: true,
-        isOwner: false,
-        membership: null,
-      });
-      void queryClient.invalidateQueries({ queryKey: membershipKeys.detail(handle) });
-      setIntro(DEMO_INTRO);
-      toastSuccess('You’re in as Priya, the demo fan');
-      go('2');
-    } catch (error) {
-      toastError(error, { retry: tryDemo, fallback: 'The demo is resting right now. Try again.' });
-    } finally {
-      setDemoPending(false);
-    }
-  }
 
   const copy: Record<Step, { title: string; body: string }> = {
     '1': {
@@ -162,18 +125,6 @@ export function JoinStepper({
               <Mail aria-hidden="true" className="size-5" />
               Continue with email
             </Link>
-            {demoOffered ? (
-              <div className="mt-2 flex justify-center">
-                <button
-                  type="button"
-                  disabled={demoPending}
-                  className={TEXT_BUTTON}
-                  onClick={tryDemo}
-                >
-                  Try the demo as Priya
-                </button>
-              </div>
-            ) : null}
           </div>
         ) : step === '2' ? (
           <IntroStep

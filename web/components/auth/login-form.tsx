@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { DemoButton } from '@/components/landing/demo-button';
 import { authClient, OTP_EMAIL_KEY } from '@/lib/auth-client';
 import { clearAuthHint, setAuthHint } from '@/lib/local-state';
 import { getQueryClient } from '@/lib/query-client';
@@ -18,15 +17,7 @@ import { DEFAULT_DESTINATION, withReturnTo } from './auth-return-to';
 import { type LoginFormValues, loginFormSchema } from './auth-schemas';
 import type { OAuthError } from './auth-server';
 import { OTP_SENT_AT_KEY, RESET_EMAIL_KEY, readSession, writeSession } from './auth-storage';
-import {
-  ALERT_ACTION,
-  AuthAlert,
-  AuthCard,
-  AuthHeading,
-  FOCUS_RING,
-  OrDivider,
-  SubmitButton,
-} from './auth-ui';
+import { ALERT_ACTION, AuthAlert, AuthCard, AuthHeading, OrDivider, SubmitButton } from './auth-ui';
 import { holdPendingLogin } from './pending-login';
 import { OAuthErrorAlert, SocialButtons } from './social-buttons';
 
@@ -212,8 +203,6 @@ export function LoginForm({ returnTo, inAppBrowser, oauthError }: AuthFormProps)
       </form>
 
       <AuthLegal className="mt-4" />
-
-      <DemoRow className="mt-5 border-t border-line pt-5" />
     </AuthCard>
   );
 }
@@ -239,24 +228,4 @@ function logInMessage(failure: AuthFailure): string {
       // Refused for a reason that is not the visitor's (a blocked origin, an unexpected rule).
       return 'We couldn’t log you in right now. Try again in a moment.';
   }
-}
-
-/** "Just looking?" Judges and curious fans can skip the account entirely (F22). */
-function DemoRow({ className }: { className?: string }) {
-  const buttonClass = cx('h-11 min-w-0 flex-1 px-4', FOCUS_RING);
-  return (
-    <section aria-labelledby="demo-row-title" className={cx('flex flex-col gap-3', className)}>
-      <h2 id="demo-row-title" className="font-mono text-small text-ink-muted">
-        Just looking? Open the demo, no account needed.
-      </h2>
-      <div className="flex gap-3">
-        <DemoButton as="creator" variant="secondary" className={buttonClass}>
-          <span className="sr-only">Open the demo in the </span>Creator view
-        </DemoButton>
-        <DemoButton as="fan" variant="secondary" className={buttonClass}>
-          <span className="sr-only">Open the demo in the </span>Fan view
-        </DemoButton>
-      </div>
-    </section>
-  );
 }

@@ -7,9 +7,7 @@ import {
   suggestSetupPrompt,
 } from '../../src/ai/tasks/suggest-setup.js';
 import type { SuggestSetupOutput } from '../../src/ai/types.js';
-import youtubeFixture from '../../src/lib/platform-fixtures/youtube-miralane.json' with {
-  type: 'json',
-};
+import youtubeFixture from '../fixtures/youtube-travel-profile.json' with { type: 'json' };
 
 const youtube = youtubeFixture as PlatformProfile;
 
@@ -184,7 +182,7 @@ describe('suggestSetup prompt and fake', () => {
     expect(flattenRecent([hostile])).toHaveLength(1);
   });
 
-  it('the fake suggests budget travel with a demand hint for the demo fixture', async () => {
+  it('the fake suggests budget travel with a demand hint for a travel profile', async () => {
     const raw = fakeSuggestSetup({ profiles: [youtube] });
     const result = buildSetupSuggestions([youtube], raw);
     expect(result.loves.length).toBeGreaterThanOrEqual(3);

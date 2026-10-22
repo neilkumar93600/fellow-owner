@@ -43,7 +43,7 @@
   padding-inline: var(--gutter);
 }
 
-.demoNote {
+.exampleNote {
   margin: 20px 0 0;
   color: var(--ink-muted);
   font-size: 0.8125rem;

@@ -1,4 +1,3 @@
-import { DEMO_AI_DAILY_TOKEN_BUDGET } from '@fellow-owners/shared';
 import { and, count, eq, gte, isNull, lt, ne, notInArray, or, sql } from 'drizzle-orm';
 import {
   type AiAccounting,
@@ -12,14 +11,12 @@ import { spaces } from '../db/schema/spaces.js';
 import { startOfUtcDay } from '../lib/dates.js';
 
 export interface AiBudgetState {
-  /** spaces.ai_daily_token_budget, or DEMO_AI_DAILY_TOKEN_BUDGET for the demo space. */
+  /** spaces.ai_daily_token_budget. */
   budget: number;
   /** input + output tokens of today's (UTC) ai_runs for the space. */
   used: number;
   /** used >= budget: "AI paused until tomorrow". */
   paused: boolean;
-  /** spaces.is_demo (the demo space gets scaled caps, ai/run.ts). Absent reads as false. */
-  isDemo?: boolean;
 }
 
 export function createAiRunsRepo(db: Db) {
@@ -54,23 +51,13 @@ export function createAiRunsRepo(db: Db) {
     tx: DbOrTx = db,
   ): Promise<AiBudgetState> {
     const [space] = await tx
-      .select({ budget: spaces.aiDailyTokenBudget, isDemo: spaces.isDemo })
+      .select({ budget: spaces.aiDailyTokenBudget })
       .from(spaces)
       .where(eq(spaces.id, spaceId))
       .limit(1);
-    const isDemo = space?.isDemo ?? false;
-    const budget = isDemo ? DEMO_AI_DAILY_TOKEN_BUDGET : (space?.budget ?? 0);
+    const budget = space?.budget ?? 0;
     const used = await tokensUsedSince(spaceId, startOfUtcDay(now), tx);
-    return { budget, used, paused: used >= budget, isDemo };
-  }
-
-  async function isDemoSpace(spaceId: string, tx: DbOrTx = db): Promise<boolean> {
-    const [space] = await tx
-      .select({ isDemo: spaces.isDemo })
-      .from(spaces)
-      .where(eq(spaces.id, spaceId))
-      .limit(1);
-    return space?.isDemo ?? false;
+    return { budget, used, paused: used >= budget };
   }
 
   async function countByUserTaskSince(
@@ -131,7 +118,6 @@ export function createAiRunsRepo(db: Db) {
     return {
       insert: (values) => insert(values, tx),
       budgetState: (spaceId, now) => budgetState(spaceId, now, tx),
-      isDemoSpace: (spaceId) => isDemoSpace(spaceId, tx),
       countByUserTaskSince: (userId, task, since) =>
         countByUserTaskSince(userId, task, since, {}, tx),
       countBySpaceTaskSince: (spaceId, task, since) =>
@@ -180,9 +166,6 @@ export function createAiRunsRepo(db: Db) {
 
     /** Today's usage vs the space budget (budget check, Overview.aiPaused). */
     budgetState,
-
-    /** spaces.is_demo, for the demo-scaled AI caps (ai/run.ts). */
-    isDemoSpace,
 
     /** Per-user task cap (e.g. suggestCommunities 10/hour). Every attempt counts. */
     countByUserTaskSince,

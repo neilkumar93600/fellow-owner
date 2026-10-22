@@ -23,16 +23,13 @@ import {
   updateCommunitySchema,
   updateSettingsSchema,
 } from '@fellow-owners/shared';
-import { type RequestHandler, Router } from 'express';
-import { isDemoEmail } from '../auth/demo.js';
+import { Router } from 'express';
 import type { Container } from '../container.js';
 import { createPlatformController } from '../controllers/platform.controller.js';
-import { forbidden } from '../lib/errors.js';
 import { noStore } from '../lib/http.js';
 import { redis } from '../lib/redis.js';
-import { demoReadOnly } from '../middlewares/demo-read-only.js';
 import { requireOwner } from '../middlewares/require-owner.js';
-import { requireSession, sessionOf } from '../middlewares/require-session.js';
+import { requireSession } from '../middlewares/require-session.js';
 import { validate } from '../middlewares/validate.js';
 
 /**
@@ -57,21 +54,7 @@ export function createStudioRoutes(container: Container): Router {
     validate({ query: handleCheckQuerySchema }),
     controller.handleCheck,
   );
-  // The demo accounts are shared by every visitor and the nightly reset only rebuilds the demo
-  // space, so they never get a space of their own.
-  const notDemoAccount: RequestHandler = (req, _res, next) => {
-    if (isDemoEmail(container.env, sessionOf(req).user.email)) {
-      throw forbidden('The demo accounts can only use the demo space');
-    }
-    next();
-  };
-  router.post(
-    '/space',
-    session,
-    notDemoAccount,
-    validate({ body: createSpaceSchema }),
-    controller.createSpace,
-  );
+  router.post('/space', session, validate({ body: createSpaceSchema }), controller.createSpace);
 
   // Platform auto-fetch (onboarding): rate limited per user inside the controller.
   const platform = createPlatformController({
@@ -93,19 +76,10 @@ export function createStudioRoutes(container: Container): Router {
     platform.setupSuggestions,
   );
   router.get('/space', owner, controller.getSpace);
-  // The demo creator's profile is the public /mira page every visitor sees: read-only. Settings
-  // that only affect the studio (showReadReceipts) still save.
-  const demoProfileReadOnly = demoReadOnly(container.env, (req) => {
-    const body = req.body as { profile?: unknown; tasteProfile?: unknown };
-    return body.profile !== undefined || body.tasteProfile !== undefined;
-  });
-  // The demo creator's rooms are part of the public /mira page too.
-  const demoLocked = demoReadOnly(container.env);
   router.put(
     '/settings',
     owner,
     validate({ body: updateSettingsSchema }),
-    demoProfileReadOnly,
     controller.updateSettings,
   );
 
@@ -173,7 +147,6 @@ export function createStudioRoutes(container: Container): Router {
   router.post(
     '/communities',
     owner,
-    demoLocked,
     validate({ body: createCommunitySchema }),
     controller.createCommunity,
   );
@@ -186,7 +159,6 @@ export function createStudioRoutes(container: Container): Router {
   router.patch(
     '/communities/:id',
     owner,
-    demoLocked,
     validate({ params: idParamsSchema, body: updateCommunitySchema }),
     controller.updateCommunity,
   );

@@ -1,23 +1,23 @@
-// Demo content for the landing page. Mirrors the seeded demo space (GET /api/spaces/mira and
-// api/src/db/seed/data): Mira Lane (@mira), a travel creator, six rooms and the fan Priya Shah. Every
-// landing number comes from DEMO below, so no two sections disagree. Everything shown from it is labelled "Demo".
+// Example content for the landing page: the made-up creator Mira Lane (@mira), a travel creator, six
+// rooms and the fan Priya Shah. No such account exists on the site. Every
+// landing number comes from EXAMPLE below, so no two sections disagree. Everything shown from it is labelled "Example".
 
 import type { CommunityIcon, PitchType, Platform, Tint } from '@fellow-owners/shared';
 import type { CreatorAsset } from '@/lib/creator-assets';
 
-export interface DemoCommunity {
+export interface ExampleCommunity {
   slug: string;
   name: string;
   icon: CommunityIcon;
   tint: Tint;
-  /** Fans in the room (seed memberCount). A fan can be in several rooms, so these sum past DEMO.members. */
+  /** Fans in the room (seed memberCount). A fan can be in several rooms, so these sum past EXAMPLE.members. */
   members: number;
   trend: string;
   cover: CreatorAsset;
   description: string;
 }
 
-export interface DemoCrewMember {
+export interface ExampleCrewMember {
   name: string;
   firstName: string;
   role: string;
@@ -27,15 +27,15 @@ export interface DemoCrewMember {
 /** Clicks on the featured guide's short link, oldest day first (seed: published 9 days ago, days 9..0). */
 const clicksByDay = [47, 5, 13, 4, 8, 12, 10, 19, 1, 4] as const;
 
-/** The canonical demo facts (spec round 4 §1). Every landing number imports from here. */
-export const DEMO = {
+/** The canonical example facts (spec round 4 §1). Every landing number imports from here. */
+export const EXAMPLE = {
   creator: {
     name: 'Mira Lane',
     firstName: 'Mira',
     handle: 'mira',
     niche: 'travel',
     bio: 'Slow travel, cheap flights, and the people I meet on the way.',
-    avatarUrl: '/demo/mira.jpg',
+    avatarUrl: '/creator/mira-portrait.webp',
   },
   followers: {
     total: 1_140_000,
@@ -127,7 +127,7 @@ export const DEMO = {
       cover: 'cover-slow-living',
       description: 'Staying longer, going slower, and coming home rested.',
     },
-  ] as DemoCommunity[],
+  ] as ExampleCommunity[],
   /** The one fan idea the story follows. */
   idea: {
     title: 'Lisbon on $60 a day',
@@ -171,7 +171,7 @@ export const DEMO = {
       role: 'Video editor',
       avatar: 'fan-3',
     },
-  ] as DemoCrewMember[],
+  ] as ExampleCrewMember[],
   clicks: {
     /** The one click count: every click on the featured guide's link since it was featured. */
     total: clicksByDay.reduce((sum, day) => sum + day, 0),
@@ -182,12 +182,12 @@ export const DEMO = {
 } as const;
 
 export const creator = {
-  name: DEMO.creator.name,
-  firstName: DEMO.creator.firstName,
-  handle: DEMO.creator.handle,
-  bio: DEMO.creator.bio,
-  followers: DEMO.followers.label,
-  platforms: DEMO.followers.platforms.map((entry) => ({
+  name: EXAMPLE.creator.name,
+  firstName: EXAMPLE.creator.firstName,
+  handle: EXAMPLE.creator.handle,
+  bio: EXAMPLE.creator.bio,
+  followers: EXAMPLE.followers.label,
+  platforms: EXAMPLE.followers.platforms.map((entry) => ({
     platform: entry.name,
     followers: entry.label,
   })),
@@ -199,12 +199,12 @@ export const fan = {
   headline: 'Solo traveler from Austin',
 } as const;
 
-/** Alias of DEMO.rooms, kept for the sections that import it. */
-export const communities: DemoCommunity[] = DEMO.rooms;
+/** Alias of EXAMPLE.rooms, kept for the sections that import it. */
+export const communities: ExampleCommunity[] = EXAMPLE.rooms;
 
-export const totalMembers = DEMO.members.toLocaleString('en-US');
+export const totalMembers = EXAMPLE.members.toLocaleString('en-US');
 
-export interface DemoMessage {
+export interface ExampleMessage {
   id: string;
   from: string;
   /** What the sender picked, or what the AI says it is. */
@@ -216,7 +216,7 @@ export interface DemoMessage {
 }
 
 /** The DM pile for "The problem": real-looking noise with a few messages that matter. */
-export const messages: DemoMessage[] = [
+export const messages: ExampleMessage[] = [
   {
     id: 'm1',
     from: 'Priya Shah',
@@ -325,8 +325,8 @@ export const briefing = {
   highlights: [
     {
       title: 'Lisbon on $60 a day, by Priya',
-      fit: DEMO.idea.fit,
-      why: `Matches “budget-honest travel”. ${DEMO.idea.use} fans said they would use it.`,
+      fit: EXAMPLE.idea.fit,
+      why: `Matches “budget-honest travel”. ${EXAMPLE.idea.use} fans said they would use it.`,
     },
     {
       title: 'Inês wants to walk Porto with you',
@@ -344,7 +344,7 @@ export const briefing = {
 export const stats = [
   {
     label: 'Fans',
-    value: DEMO.members,
+    value: EXAMPLE.members,
     trend: '+18% this week',
     tint: 'peach' as const,
   },
@@ -367,7 +367,7 @@ export const promoteDraft = {
   text: 'Priya from my Budget Travel room made a whole Lisbon guide on $60 a day, with a local guide, a photographer and an editor. I used it on my own trip. Go tell her what’s missing:',
   hashtags: ['lisbon', 'budgettravel'],
   shortLink: '/r/Gx7Lm2Qa',
-  clicks: DEMO.clicks.total,
+  clicks: EXAMPLE.clicks.total,
 } as const;
 
 export interface ShowcaseProject {
@@ -376,11 +376,11 @@ export interface ShowcaseProject {
   cover: CreatorAsset;
   team: number;
   hearts: number;
-  /** Names for the avatar stack, in join order (demo names). */
+  /** Names for the avatar stack, in join order (example names). */
   crew: readonly string[];
 }
 
-/** Projects shown in the showcase strip as "Made by Mira's fans" (demo data). */
+/** Projects shown in the showcase strip as "Made by Mira's fans" (example data). */
 export const showcase: readonly ShowcaseProject[] = [
   {
     title: 'Fare Pals: fare alerts for $60-a-day trips',
@@ -396,7 +396,7 @@ export const showcase: readonly ShowcaseProject[] = [
     cover: 'vlog-lisbon',
     team: 4,
     hearts: 212,
-    crew: DEMO.crew.map((member) => member.name),
+    crew: EXAMPLE.crew.map((member) => member.name),
   },
   {
     title: 'Tokyo cafés under $5',
@@ -440,7 +440,7 @@ export const showcase: readonly ShowcaseProject[] = [
   },
 ];
 
-/** The three-minute path through the demo. */
+/** The three-minute path through the example. */
 export const judgePath = [
   {
     step: 'Today',
@@ -504,16 +504,14 @@ export const faqs = [
     a: 'In one Postgres database in the US, and we never sell it. Email us to delete your account and we erase it, usually within a few working days. Posts other people already replied to stay, shown as from a former fan.',
   },
   {
-    q: 'What is real and what is demo data?',
-    a: 'The AI is real: sorting fan mail, matching ideas to your taste and drafting posts all run live. The creator, the fans, the rooms and every number are seeded demo data, and the demo resets every night.',
+    q: 'What is real and what is example data?',
+    /** About this page's mockups: left out of /llms.txt, where it would read as "the creators are fake". */
+    pageOnly: true,
+    a: 'The AI is real: sorting fan mail, matching ideas to your taste and drafting posts all run live. The creator, the fans, the rooms and every number on this page are made-up examples.',
   },
   {
     q: 'How does the AI sort rooms and summarize discussions?',
     a: 'A new fan writes one line about themselves, and the AI suggests the rooms that fit, with a short reason. Fans can always pick rooms themselves. It also reads a room’s new ideas and writes a short digest: the themes people keep raising and up to three standout ideas.',
-  },
-  {
-    q: 'Can I try it without signing up?',
-    a: 'Yes. Enter as creator to see a demo studio, or as a fan to join a demo creator’s rooms. No email needed; the demo resets every night.',
   },
 ] as const;
 

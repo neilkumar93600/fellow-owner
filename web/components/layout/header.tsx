@@ -27,10 +27,7 @@ import { useNotifications, useUnreadCount } from '@/hooks/queries/use-notificati
 import { routes } from '@/lib/routes';
 import { navTitle, SIGN_OUT_HREF } from './dashboard-nav';
 
-export type HeaderSpace = Pick<
-  StudioSpace,
-  'handle' | 'displayName' | 'ownerName' | 'avatarUrl' | 'isDemo'
->;
+export type HeaderSpace = Pick<StudioSpace, 'handle' | 'displayName' | 'ownerName' | 'avatarUrl'>;
 
 export interface HeaderProps {
   space: HeaderSpace;

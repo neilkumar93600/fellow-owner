@@ -1,5 +1,5 @@
 /*
- * Landing pill hover, one treatment per role (demo-button.tsx `lift`, demo-cta.tsx's Get started).
+ * Landing pill hover, one treatment per role (example-button.tsx `lift`, cta-section.tsx's Get started).
  * Primary (Lake Blue): lifts 1px over a deeper Lake shadow. Secondary (glass): inverts to an ink fill with
  * parchment text and lifts 1px. Keyboard focus gets the same as hover, on top of the focus ring. Reduced
  * motion keeps the colour change and the shadow, never the lift.

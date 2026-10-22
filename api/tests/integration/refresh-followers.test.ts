@@ -60,16 +60,14 @@ describe('refreshFollowers', () => {
     await resetDatabase();
   });
 
-  it('updates fresh counts, keeps old ones on failure and on samples, skips the demo', async () => {
+  it('updates fresh counts, keeps old ones on failure and on samples', async () => {
     const a = await factories.space({ handle: 'aa_space' });
     const b = await factories.space({ handle: 'bb_space' });
-    const demo = await factories.space({ handle: 'demo_space', isDemo: true });
     const old = '2026-01-01T00:00:00.000Z';
     await repos.spaces.update(a.space.id, {
       platforms: [entry('fresh_one', 100, old), entry('gone_one', 200, old)],
     });
     await repos.spaces.update(b.space.id, { platforms: [entry('sample_one', 300, old)] });
-    await repos.spaces.update(demo.space.id, { platforms: [entry('demo_one', 400, old)] });
 
     const { lookup, calls } = fakeLookup({
       fresh_one: ready('fresh_one', 150),
@@ -79,18 +77,16 @@ describe('refreshFollowers', () => {
 
     expect(result).toEqual({ checked: 3, updated: 1, kept: 2 });
     expect(calls.every((c) => c.recent === false)).toBe(true);
-    expect(calls.map((c) => c.target.handle)).not.toContain('demo_one');
 
     const [fresh, gone] = await platformsOf('aa_space');
     expect(fresh).toMatchObject({ followers: 150 });
     expect(gone).toMatchObject({ followers: 200 });
     const sample = (await platformsOf('bb_space'))[0];
     expect(sample).toMatchObject({ followers: 300 });
-    // every attempt moves to the back of the queue; the demo is untouched
+    // every attempt moves to the back of the queue
     for (const e of [fresh, gone, sample]) {
       expect(e?.fetchedAt && e.fetchedAt > old).toBe(true);
     }
-    expect((await platformsOf('demo_space'))[0]).toMatchObject({ followers: 400, fetchedAt: old });
   });
 
   it('refreshes oldest first, never-fetched first, at most 50 per run', async () => {
@@ -140,7 +136,7 @@ describe('avatarUrl validation', () => {
 
   it('accepts http(s), site paths and small base64 images', () => {
     expect(profile('https://cdn.example.com/a.jpg')).toBe(true);
-    expect(profile('/demo/mira.jpg')).toBe(true);
+    expect(profile('/api/media/avatar/a.jpg')).toBe(true);
     expect(profile(png)).toBe(true);
     expect(profile(null)).toBe(true);
   });

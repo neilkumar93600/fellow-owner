@@ -38,8 +38,8 @@ import {
 } from '../lib/errors.js';
 import type { Logger } from '../lib/logger.js';
 import { clampLimit, decodeTimeCursor, encodeTimeCursor, toPage } from '../lib/pagination.js';
-import { createPlatformFans, demoFans, type FansFetch } from '../lib/platform-fans.js';
-import { isDemoHandle, parseProfileUrl } from '../lib/platform-lookup.js';
+import { createPlatformFans } from '../lib/platform-fans.js';
+import { parseProfileUrl } from '../lib/platform-lookup.js';
 import {
   createYoutubeClient,
   parseChannelUrl,
@@ -370,7 +370,7 @@ export function createFollowersService(deps: FollowersServiceDeps) {
   /**
    * Commenters on a profile's recent posts -> followers, through runImport (imports record, dedupe
    * on platform + handle, AI suggestions). Made-up people never reach a real space: sample mode
-   * skips with `sample`, and the demo fixtures only fill the demo space. 400 for a link that is
+   * skips with `sample`. 400 for a link that is
    * not a profile; 429 past the caps (live fetches only).
    */
   async function importPlatformFans(
@@ -396,15 +396,9 @@ export function createFollowersService(deps: FollowersServiceDeps) {
     });
     if (platform === 'x') return skip('unsupported');
 
-    let fetched: FansFetch;
-    if (isDemoHandle(target.handle)) {
-      if (!owner.space.isDemo) return skip('sample');
-      fetched = demoFans(platform);
-    } else {
-      if (!fans.live(platform)) return skip('sample');
-      await assertFansCaps(owner.space.id, platform);
-      fetched = await fans.commenters({ platform, handle: target.handle });
-    }
+    if (!fans.live(platform)) return skip('sample');
+    await assertFansCaps(owner.space.id, platform);
+    const fetched = await fans.commenters({ platform, handle: target.handle });
     if (fetched.status === 'skipped') return skip(fetched.reason);
 
     const parsed: ParsedImport = {
@@ -610,18 +604,15 @@ export function createFollowersService(deps: FollowersServiceDeps) {
 
     /**
      * After onboarding creates the space: the fans import for every fetched (has a handle)
-     * Instagram, TikTok or YouTube entry, one after another in the background. Non-demo spaces and
-     * live providers only (sample mode would only skip), so it never runs in tests unless a test
+     * Instagram, TikTok or YouTube entry, one after another in the background. Live providers only (sample mode would only skip), so it never runs in tests unless a test
      * turns a provider on and awaits background.whenIdle(). Never throws; results are logged.
      */
     autoImportPlatforms(owner: OwnerContext): void {
       const { background } = deps;
-      if (!background || owner.space.isDemo) return;
+      if (!background) return;
       const urls = (owner.space.platforms ?? []).flatMap((entry) => {
         const target = entry.handle ? parseProfileUrl(entry.url) : null;
-        return target && fans.live(target.platform) && !isDemoHandle(target.handle)
-          ? [entry.url]
-          : [];
+        return target && fans.live(target.platform) ? [entry.url] : [];
       });
       if (urls.length === 0) return;
       const spaceId = owner.space.id;

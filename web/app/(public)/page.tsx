@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CtaSection } from '@/components/landing/cta-section';
 import {
   ConnectSection,
   CreatorsSection,
@@ -6,7 +7,6 @@ import {
   LoopSection,
   ProblemSection,
 } from '@/components/landing/deferred-sections';
-import { DemoCta } from '@/components/landing/demo-cta';
 import { Faq } from '@/components/landing/faq';
 import { Hero } from '@/components/landing/hero';
 import { ShowcaseStrip } from '@/components/landing/showcase-strip';
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 // Section order (round 4): hero, problem, how it works, for creators, for fans, connect, showcase, trust,
-// FAQ, then the demo CTA last, directly above the footer. The CTA lives here, never in the shared layout.
+// FAQ, then the closing CTA last, directly above the footer. The CTA lives here, never in the shared layout.
 export default function LandingPage() {
   return (
     <main id="main">
@@ -39,7 +39,7 @@ export default function LandingPage() {
       <ShowcaseStrip />
       <TrustSection />
       <Faq />
-      <DemoCta />
+      <CtaSection />
     </main>
   );
 }

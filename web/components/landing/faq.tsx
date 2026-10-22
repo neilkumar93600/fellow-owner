@@ -1,14 +1,13 @@
 import type * as React from 'react';
 import { cn } from '@/lib/utils';
 import { CtaStage } from './cta-motion';
-import { DemoButton } from './demo-button';
-import { faqs } from './demo-data';
+import { faqs } from './example-data';
 import st from './faq.module.css';
 import { FaqAccordion } from './faq-accordion';
 
 /*
- * FAQ (creator pivot spec section 5, part 9), on the page background. Desktop: the title and a way into the demo
- * hold still on the left while the accordion scrolls on the right. Questions and answers are in the
+ * FAQ (creator pivot spec section 5, part 9), on the page background. Desktop: the title
+ * holds still on the left while the accordion scrolls on the right. Questions and answers are in the
  * server HTML (crawlable, and described again as FAQPage structured data). Without JavaScript the
  * noscript style opens every answer; the questions stay plain headings until the accordion hydrates.
  */
@@ -32,7 +31,7 @@ export function Faq() {
     <section id="faq" aria-labelledby="faq-title" className={st.section}>
       <script
         type="application/ld+json"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: static FAQ data from demo-data, with < escaped.
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: static FAQ data from example-data, with < escaped.
         dangerouslySetInnerHTML={{ __html: FAQ_JSON_LD }}
       />
       <noscript>
@@ -44,8 +43,6 @@ export function Faq() {
           <h2 id="faq-title" className={cn('text-section', st.title)}>
             Questions, answered.
           </h2>
-          <p className={st.note}>Still curious? Enter the demo and look around.</p>
-          <DemoButton as="creator" variant="secondary" lift className={st.noteAction} />
         </div>
 
         <div

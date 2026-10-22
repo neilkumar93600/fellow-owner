@@ -6,8 +6,7 @@ import { type AiContext, type AiTaskName, AiUnavailableError } from './types.js'
  * Image and video generation through fal.ai (FAL_KEY). Text tasks use OpenRouter; anything that
  * produces media goes through here.
  *
- * - No v1 route generates media. The seed script (db/seed/generate-content.ts) can use the bare
- *   client to create the demo creator photo.
+ * - No v1 route generates media.
  * - A future feature that generates media for a space uses `createMediaServices`, which adds the
  *   same checks as ai/run.ts: enabled, the space's daily budget, a per-space daily cap
  *   (TASK_CAPS.generateImage / generateVideo) and one ai_runs row per call (tokens 0).

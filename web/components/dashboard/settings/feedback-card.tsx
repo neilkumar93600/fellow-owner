@@ -27,8 +27,7 @@ export function FeedbackCard() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string>();
 
-  // The demo creator is not a real person; there is nobody to quote.
-  if (!space || space.isDemo || !session?.user.email) return null;
+  if (!space || !session?.user.email) return null;
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

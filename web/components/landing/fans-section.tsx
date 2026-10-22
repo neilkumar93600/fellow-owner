@@ -58,8 +58,8 @@ export function FansSection() {
             );
           })}
           label={
-            <p className={st.demoLabel}>
-              <span className={st.demoChip}>Demo</span>A fan’s view
+            <p className={st.exampleLabel}>
+              <span className={st.exampleChip}>Example</span>A fan’s view
             </p>
           }
           callout={

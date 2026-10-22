@@ -9,7 +9,7 @@ import { CommunityChip } from '@/components/shared/community-chip';
 import { IdeaCard } from '@/components/shared/idea-card';
 import { SignalButtons } from '@/components/shared/signal-buttons';
 import { StatCard } from '@/components/shared/stat-card';
-import { DEMO } from './demo-data';
+import { EXAMPLE } from './example-data';
 import {
   LIVE_CREW,
   LIVE_DECISION,
@@ -75,7 +75,9 @@ export function LaterBrowserPage({ step }: { step: number }) {
               />
               <AvatarStack people={LIVE_CREW} />
             </div>
-            <p className="font-display text-[2.5rem] leading-[1.05] text-ink">{DEMO.idea.title}</p>
+            <p className="font-display text-[2.5rem] leading-[1.05] text-ink">
+              {EXAMPLE.idea.title}
+            </p>
             <p className="text-small-strong text-ink-soft">
               Crew · {LIVE_CREW.length} of {LIVE_CREW.length} roles filled
             </p>
@@ -105,7 +107,7 @@ export function LaterBrowserPage({ step }: { step: number }) {
         <div className="mx-auto flex max-w-[1040px] flex-col gap-6 p-8">
           <div>
             <p className="font-display text-[2.5rem] leading-none text-ink">
-              Good morning, {DEMO.creator.firstName}
+              Good morning, {EXAMPLE.creator.firstName}
             </p>
             <p className="mt-2 text-body text-ink-soft">5 things need you</p>
           </div>
@@ -190,13 +192,13 @@ export function LaterPhonePage({ step }: { step: number }) {
       return (
         <div className="flex flex-col gap-4 px-4 pt-14">
           <PhoneCard
-            kicker={`${DEMO.idea.author} in ${DEMO.idea.community}`}
-            title={DEMO.idea.title}
+            kicker={`${EXAMPLE.idea.author} in ${EXAMPLE.idea.community}`}
+            title={EXAMPLE.idea.title}
           >
             <p className="text-small text-ink-soft">Seven days for $420 all in.</p>
             <SignalButtons
-              useCount={DEMO.idea.use}
-              buildCount={DEMO.idea.build}
+              useCount={EXAMPLE.idea.use}
+              buildCount={EXAMPLE.idea.build}
               viewerSignals={['use']}
             />
           </PhoneCard>
@@ -213,7 +215,7 @@ export function LaterPhonePage({ step }: { step: number }) {
     default:
       return (
         <div className="flex flex-col gap-4 px-4 pt-14">
-          <PhoneCard kicker={`Featured by ${DEMO.creator.firstName}`} title={DEMO.idea.title}>
+          <PhoneCard kicker={`Featured by ${EXAMPLE.creator.firstName}`} title={EXAMPLE.idea.title}>
             <p className="text-small-strong text-ink">Made by</p>
             <ul className="flex flex-col gap-1.5">
               {LIVE_CREW.map((member) => (

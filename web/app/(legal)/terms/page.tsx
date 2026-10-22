@@ -348,14 +348,14 @@ export default function Page() {
         </P>
       </Section>
 
-      <Section id="our-ip" title="What we own, demo content and licenses">
+      <Section id="our-ip" title="What we own, example content and licenses">
         <P>
           We own the proprietary source code, interface designs, trade secrets, and trademarks
           associated with {OPERATOR.name}. You may not decompile, reverse-engineer, replicate, or
           exploit our intellectual property without prior written consent.
         </P>
-        <Callout title="About the demo content">
-          We do not use fake reviews, invented testimonials or deceptive marketing. Demo spaces,
+        <Callout title="About the example content">
+          We do not use fake reviews, invented testimonials or deceptive marketing. Example spaces,
           people (such as Mira Lane and Priya Shah), community names and the engagement figures in
           screenshots are working interface examples, not endorsements and not a promise of any
           financial outcome.
