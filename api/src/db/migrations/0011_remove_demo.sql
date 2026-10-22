@@ -1,5 +1,7 @@
--- Removes the demo account system. Data first, then the column. A no-op on a database without
--- demo data (fresh and test databases).
+-- Removes the demo account system's data. A no-op on a database without demo data (fresh and test
+-- databases). The spaces.is_demo column stays for now: Railway runs this while the previous API is
+-- still serving, and that code selects is_demo by name on every space read (and a rollback would
+-- too). Nothing reads it any more and its default is false, so a later migration drops it.
 --
 -- Seeded demo accounts, identified with certainty:
 --   1. the owner of an is_demo space (the seeded creator; only the seed ever set is_demo),
@@ -22,5 +24,4 @@ WHERE right("v"."identifier", length("d"."email") + 5) = '-otp-' || "d"."email";
 DELETE FROM "user" WHERE "id" IN (SELECT "id" FROM "demo_users");--> statement-breakpoint
 DROP TABLE "demo_users";--> statement-breakpoint
 -- job_runs.job is text: drop the history of the removed jobs.
-DELETE FROM "job_runs" WHERE "job" IN ('demo_reset', 'demo_briefing');--> statement-breakpoint
-ALTER TABLE "spaces" DROP COLUMN "is_demo";
+DELETE FROM "job_runs" WHERE "job" IN ('demo_reset', 'demo_briefing');
