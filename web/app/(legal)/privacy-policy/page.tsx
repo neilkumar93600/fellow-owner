@@ -86,9 +86,8 @@ export default function Page() {
             private relay address in place of your email.
           </li>
           <li>
-            <strong>Social profile (optional):</strong> The platform and handle you add when you
-            create your account, such as your Instagram or TikTok handle, so creators and fans can
-            find you.
+            <strong>Social profile (optional):</strong> A platform and handle on your account, such
+            as your Instagram or TikTok handle, so creators and fans can find you.
           </li>
           <li>
             <strong>Community profile:</strong> Profile headline, links, and skill tags that you

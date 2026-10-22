@@ -1,5 +1,6 @@
 import { PLATFORM_LABELS, type PublicSpace } from '@fellow-owners/shared';
 import { Globe } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { PlatformIcon } from '@/components/auth/platform-icons';
 import { AvatarInitials } from '@/components/shared/avatar-initials';
@@ -14,7 +15,7 @@ const PLATFORM_CHIP =
 
 export interface CreatorHeaderProps {
   space: PublicSpace;
-  /** Generated cover and portrait for the landing's example creator; real creators get the gradient and their avatar. */
+  /** Generated cover and portrait for the landing's example creator; real creators get their cover (or the default banner) and their avatar. */
   photos?: { cover: CreatorAsset; portrait: CreatorAsset };
   /** The viewer's way in: Join for visitors, the first joined community for members, the studio for the owner. */
   cta: { href: string; label: string };
@@ -62,9 +63,14 @@ export function CreatorHeader({
             sizes="(min-width: 840px) 792px, 100vw"
           />
         ) : (
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-[linear-gradient(135deg,#ffd9c2,#dccff7_55%,#bfddf7)]"
+          // Every creator's banner until they upload one (web/scripts/generate-default-profile.mjs).
+          <Image
+            src="/default/banner.webp"
+            alt=""
+            fill
+            priority={priority}
+            sizes="(min-width: 840px) 792px, 100vw"
+            className="object-cover"
           />
         )}
       </div>

@@ -11,11 +11,12 @@ import { APIError, createAuthMiddleware } from 'better-auth/api';
 import { verifyPassword } from 'better-auth/crypto';
 import { emailOTP } from 'better-auth/plugins/email-otp';
 import { username } from 'better-auth/plugins/username';
-import { and, eq, ne } from 'drizzle-orm';
+import { and, eq, inArray, ne } from 'drizzle-orm';
 import { env as defaultEnv, type Env } from '../config/env.js';
 import { type Db, db as defaultDb } from '../db/client.js';
 import { account, session, user, verification } from '../db/schema/auth.js';
 import { spaces } from '../db/schema/spaces.js';
+import { usernameCandidates } from '../lib/handles.js';
 import { logger as defaultLogger, type Logger, maskEmail } from '../lib/logger.js';
 import { connected, redis as defaultRedis, type Redis } from '../lib/redis.js';
 import { createStorage, mediaImageProblem, type Storage } from '../lib/storage.js';
@@ -45,6 +46,9 @@ const DAY_SECONDS = 60 * 60 * 24;
  * stops someone rotating IPs and addresses from running up Resend until the domain is suspended.
  */
 export const OTP_EMAILS_PER_HOUR = 300;
+
+/** Every new account's avatar until they pick one: a site path served by the web (web/public/default). */
+export const DEFAULT_AVATAR_URL = '/default/avatar.jpg';
 
 export interface AuthDeps {
   db?: Db;
@@ -127,8 +131,10 @@ export function redisRateLimitStorage(redis: Redis, logger: Logger): BetterAuthR
  *   `LIMITS.username`, reserved words refused), and a username that is another person's space
  *   handle answers 409 HANDLE_TAKEN (databaseHooks). Space creation (spaces.service.ts) writes the
  *   owner's username = handle in its transaction, so the username unique constraint settles a
- *   race between the two. The optional social profile is `socialPlatform` + `socialHandle`,
- *   checked with the shared schemas.
+ *   race between the two. A Google, Apple or Facebook sign-up gets the first free username made
+ *   from its name (`freeUsername`). The optional social profile is `socialPlatform` +
+ *   `socialHandle`, checked with the shared schemas (the sign-up form no longer asks for it).
+ * - A new account (sign-up or social) starts with DEFAULT_AVATAR_URL unless the provider sent a photo.
  * - `baseURL` is the WEB origin: the browser reaches /api/auth through the Next.js rewrite, so
  *   cookies are first-party and OAuth callbacks land on the web origin.
  * - Sessions: 7 days, refreshed daily; httpOnly, sameSite=lax, secure in production. They live in
@@ -213,6 +219,20 @@ export function createAuth(deps: AuthDeps = {}) {
     }
   };
 
+  /** The first of usernameCandidates that is no one's username or space handle; null when all are. */
+  const freeUsername = async (name: string, address: string) => {
+    const candidates = usernameCandidates(name, address);
+    if (candidates.length === 0) return null;
+    const [byUsername, bySpace] = await Promise.all([
+      db.select({ handle: user.username }).from(user).where(inArray(user.username, candidates)),
+      db.select({ handle: spaces.handle }).from(spaces).where(inArray(spaces.handle, candidates)),
+    ]);
+    const taken = new Set([...byUsername, ...bySpace].map((row) => row.handle));
+    // ponytail: two sign-ups racing for one name can both pick it; the unique constraint fails the
+    // later one, whose retry gets the next free name.
+    return candidates.find((candidate) => !taken.has(candidate)) ?? null;
+  };
+
   return betterAuth({
     appName: 'Fellow Owners',
     baseURL: env.BETTER_AUTH_URL,
@@ -275,8 +295,23 @@ export function createAuth(deps: AuthDeps = {}) {
     databaseHooks: {
       user: {
         create: {
-          before: async (data) => {
+          // A sign-up starts with the shared avatar unless the provider sent a photo. Google, Apple
+          // and Facebook bring a name but no username: they get the first free one made from it.
+          // The test helpers sign up by code and get neither.
+          before: async (data, ctx) => {
             await assertNotSpaceHandle(data.username);
+            const path = ctx?.path ?? '';
+            const social = path.startsWith('/callback/') || path === '/sign-in/social';
+            if (!social && path !== '/sign-up/email') return;
+            const username =
+              social && !data.username ? await freeUsername(data.name, data.email) : null;
+            return {
+              data: {
+                ...data,
+                image: data.image || DEFAULT_AVATAR_URL,
+                ...(username && { username }),
+              },
+            };
           },
         },
         update: {

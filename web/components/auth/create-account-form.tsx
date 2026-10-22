@@ -4,7 +4,7 @@ import { LIMITS } from '@fellow-owners/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { type ChangeEvent, type FocusEvent, useEffect, useRef, useState } from 'react';
-import { Controller, type FieldErrors, useForm, useWatch } from 'react-hook-form';
+import { type FieldErrors, useForm, useWatch } from 'react-hook-form';
 import { authClient, OTP_EMAIL_KEY } from '@/lib/auth-client';
 import { clearAuthHint } from '@/lib/local-state';
 import { FIELD_PAIR } from './auth-classes';
@@ -23,22 +23,15 @@ import type { AuthFormProps } from './login-form';
 import { PasswordStrength } from './password-strength';
 import { holdPendingLogin } from './pending-login';
 import { OAuthErrorAlert, SocialButtons } from './social-buttons';
-import { SocialProfileField } from './social-profile-field';
 import { normalizeUsernameInput, UsernameField, useUsernameStatus } from './username-field';
 
 /** Reading order, for focusing the first field that needs fixing. */
-const FIELD_ORDER = [
-  'name',
-  'email',
-  'username',
-  'socialHandle',
-  'password',
-  'confirmPassword',
-] as const;
+const FIELD_ORDER = ['name', 'email', 'username', 'password', 'confirmPassword'] as const;
 
 /**
- * /create-account: Google, Apple or Facebook, or a display name, email, handle (the page link and the
- * sign-in name, spec §11), optional social profile and a password typed twice. A new email account gets a 6‑digit code before its first session, so success
+ * /create-account: Google, Apple or Facebook (the name comes from the provider and the handle is made
+ * from it, api auth/index.ts), or a display name, email, handle (the page link and the sign-in name,
+ * spec §11) and a password typed twice. A new email account gets a 6‑digit code before its first session, so success
  * moves on to /verify-otp. An address that already has an account gets the same answer and no code,
  * so this screen cannot be used to learn who has signed up.
  */
@@ -75,8 +68,6 @@ export function CreateAccountForm({
       name: '',
       email: '',
       username: prefilledHandle,
-      socialPlatform: 'instagram',
-      socialHandle: '',
       password: '',
       confirmPassword: '',
     },
@@ -155,10 +146,6 @@ export function CreateAccountForm({
         email: values.email,
         password: values.password,
         username: values.username,
-        // Sent only as a pair: a platform with no handle says nothing.
-        ...(values.socialHandle
-          ? { socialPlatform: values.socialPlatform, socialHandle: values.socialHandle }
-          : {}),
         fetchOptions,
       }),
     );
@@ -281,17 +268,6 @@ export function CreateAccountForm({
             setFocus('username');
           }}
           error={errors.username?.message}
-        />
-        <Controller
-          control={control}
-          name="socialPlatform"
-          render={({ field }) => (
-            <SocialProfileField
-              platform={field}
-              handle={register('socialHandle', { onBlur: checkWhenFilled, onChange: recheck })}
-              error={errors.socialHandle?.message}
-            />
-          )}
         />
         <AuthPasswordField
           id="password"

@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { clearOutbox, peekOtp } from '../../src/auth/email.js';
+import { auth, DEFAULT_AVATAR_URL } from '../../src/auth/index.js';
 import { buildContainer } from '../../src/container.js';
 import { createApp } from '../../src/create-app.js';
 import { user } from '../../src/db/schema/auth.js';
@@ -68,6 +69,7 @@ describe('password accounts', () => {
       username: 'mira.k',
       socialPlatform: 'instagram',
       socialHandle: 'mira.k',
+      image: DEFAULT_AVATAR_URL,
     });
     expect(peekOtp(MIRA)).toMatch(/^\d{6}$/);
   });
@@ -197,5 +199,42 @@ describe('password accounts', () => {
     expect((await usernameCheck('arjun.m').expect(200)).body.available).toBe(true);
     const reserved = await usernameCheck('login').expect(422);
     expect(reserved.body.code).toBe('INVALID_USERNAME');
+  });
+
+  // OAuth needs a live provider, so the user-create hook is called the way the callback calls it.
+  describe('a Google, Apple or Facebook sign-up', () => {
+    const before = auth.options.databaseHooks?.user?.create?.before;
+    const create = (data: Record<string, unknown>, path = '/callback/:id') =>
+      before?.({ emailVerified: true, ...data } as never, { path } as never);
+
+    it('gets the first free username made from its name, and the shared avatar', async () => {
+      await db.insert(user).values({
+        id: 'neil-1',
+        name: 'Neil Kumar',
+        email: 'n1@social.test',
+        username: 'neilkumar',
+      });
+      expect(await create({ name: 'Neil Kumar', email: 'neil@social.test' })).toEqual({
+        data: {
+          name: 'Neil Kumar',
+          email: 'neil@social.test',
+          emailVerified: true,
+          username: 'neil.kumar',
+          image: DEFAULT_AVATAR_URL,
+        },
+      });
+    });
+
+    it('keeps the provider photo', async () => {
+      const photo = 'https://lh3.googleusercontent.com/a/photo';
+      const result = await create({ name: 'Ana Costa', email: 'ana@social.test', image: photo });
+      expect(result).toMatchObject({ data: { username: 'anacosta', image: photo } });
+    });
+
+    it('leaves a sign-up by code (the test helpers) as it was', async () => {
+      expect(
+        await create({ name: 'Neil Kumar', email: 'n2@social.test' }, '/sign-in/email-otp'),
+      ).toBeUndefined();
+    });
   });
 });

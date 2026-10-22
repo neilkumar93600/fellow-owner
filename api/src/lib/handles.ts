@@ -64,3 +64,22 @@ export function handleCandidates(input: string): string[] {
   }
   return out;
 }
+
+/**
+ * Usernames to try, best first, for someone who signed up with Google, Apple or Facebook: the name
+ * run together ("Priya Shah" is priyashah), then priya.shah and priya_shah, then handleCandidates.
+ * With no usable name, the same from the email's local part. The caller takes the first free one.
+ */
+export function usernameCandidates(name: string, email: string): string[] {
+  for (const source of [name, email.split('@')[0] ?? '']) {
+    const words = source
+      .split(/[\s._-]+/)
+      .map(handleBase)
+      .filter(Boolean);
+    const joined = words.join('');
+    const all = [joined, words.join('.'), words.join('_'), ...handleCandidates(joined)];
+    const usable = [...new Set(all)].filter((candidate) => handleProblem(candidate) === null);
+    if (usable.length > 0) return usable;
+  }
+  return [];
+}

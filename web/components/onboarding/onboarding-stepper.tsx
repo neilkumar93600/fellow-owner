@@ -103,7 +103,8 @@ export function OnboardingStepper() {
   const session = useSession();
   const sessionName = session.data?.user?.name;
   const sessionEmail = session.data?.user?.email;
-  // The handle chosen on /create-account (Better Auth's username). Google, Apple and Facebook have none.
+  // The handle chosen on /create-account, or made from the name for Google, Apple and Facebook (Better
+  // Auth's username). Null only when every name-based handle was taken.
   const sessionHandle =
     (session.data?.user as { username?: string | null } | undefined)?.username ?? null;
   const [changingHandle, setChangingHandle] = useState(false);

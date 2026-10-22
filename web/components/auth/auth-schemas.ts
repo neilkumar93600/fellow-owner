@@ -3,8 +3,6 @@ import {
   emailSchema,
   logInSchema,
   passwordSchema,
-  socialHandleSchema,
-  socialPlatformSchema,
   usernameSchema,
 } from '@fellow-owners/shared';
 import { z } from 'zod';
@@ -24,12 +22,6 @@ export type LoginFormValues = z.input<typeof loginFormSchema>;
 export const emailFormSchema = z.object({ email: requiredEmail });
 export type EmailFormValues = z.input<typeof emailFormSchema>;
 
-/** The social profile is optional: an empty handle is fine, and a typed one follows the shared rules. */
-const optionalHandle = z
-  .string()
-  .transform((value) => value.trim().replace(/^@+/, ''))
-  .pipe(z.union([z.literal(''), socialHandleSchema]));
-
 /**
  * Only compare once both passwords are strings and the second one has been typed, so the match error
  * shows even while another field still has its own (Zod skips object refinements otherwise).
@@ -46,8 +38,6 @@ export const createAccountFormSchema = createAccountSchema
   .extend({
     email: requiredEmail,
     username: z.string().trim().min(1, 'Choose a handle').pipe(usernameSchema),
-    socialPlatform: socialPlatformSchema,
-    socialHandle: optionalHandle,
     password: z.string().min(1, 'Choose a password').pipe(passwordSchema),
     confirmPassword: z.string().min(1, 'Type your password again'),
   })
