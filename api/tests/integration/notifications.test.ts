@@ -293,6 +293,9 @@ describe('reading and marking', () => {
         kind: 'comment_received',
         payload: { postId: project.id, title: `Post ${i}`, actorName: 'Priya', commentId: 'c' },
       });
+      // A CI runner's coarse clock can stamp back-to-back rows with the same created_at, which
+      // leaves "newest first" to the random id; a short gap keeps the order defined.
+      await new Promise((resolve) => setTimeout(resolve, 20));
     }
   }
 
