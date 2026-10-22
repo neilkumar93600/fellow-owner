@@ -69,12 +69,16 @@ beforeAll(async () => {
     { who: requested, role: 'Video editor', status: 'requested' as const },
     { who: declined, role: 'Video editor', status: 'declined' as const },
   ];
-  for (const { who, role, status } of team) {
+  // Credits follow join order (created_at). Back-to-back inserts can land in the same instant on a
+  // fast CI runner, which leaves the order to the random membership id, so each row gets its own second.
+  const start = Date.now() - team.length * 1000;
+  for (const [index, { who, role, status }] of team.entries()) {
     await container.repos.teams.insert({
       postId: project.id,
       membershipId: who.membership.id,
       role,
       status,
+      createdAt: new Date(start + index * 1000),
       ...(status === 'requested' ? {} : { decidedAt: new Date() }),
     });
   }
