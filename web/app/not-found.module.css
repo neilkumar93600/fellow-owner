@@ -1,0 +1,238 @@
+/*
+ * The 404 (not-found.tsx): one centred poster. A huge, heavy soft-white "404" as a background shape, the lost
+ * fan standing in front of the middle "0" with its hair breaking above the 0's top curve, and the heading, line
+ * and buttons centred right under it. `--num` is the numerals' font size; the fan, the 0's inner ring and the
+ * copy's gap all follow it, so the poster scales as one. The whole poster fits one screen at every size.
+ * Inter's digits are ~0.74em tall and, at line-height 0.8, the baseline sits ~0.76em below the box top, so
+ * the 0's top curve is ~0.025em below it. The 0's ink is ~0.66em wide and centred on the box.
+ */
+
+/* The root layout keeps a scrollbar gutter for long pages; this poster never scrolls, so drop the pale strip. */
+:global(html):has(.page) {
+  scrollbar-gutter: auto;
+}
+
+.page {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding: 1rem 1rem 1.5rem;
+  overflow-x: clip;
+}
+
+/* Peach, periwinkle and mint over the root layout's washes, still transformed gradients, never a blur. */
+.washes {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 50% at 10% 80%, rgb(255 217 204 / 0.7), transparent),
+    radial-gradient(60% 55% at 85% 18%, rgb(207 218 245 / 0.85), transparent),
+    radial-gradient(50% 45% at 72% 95%, rgb(210 253 229 / 0.7), transparent);
+}
+
+.home {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  border-radius: 9999px;
+}
+
+/*
+ * Phones: the numerals span about 90% of the width (the heavy "404" is ~1.95em wide, so 46vw is the most
+ * that fits without clipping a 4), and the stack sits a touch above the middle of the screen.
+ */
+.stage {
+  --num: min(46vw, 32vh);
+  width: 100%;
+  margin: auto;
+  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.art {
+  position: relative;
+  /* The fan's feet hang just below the numerals' box. */
+  margin-bottom: calc(var(--num) * 0.06);
+}
+
+/* Heavy, soft white numerals with a gentle depth shadow: a big soft shape on the washes. */
+.num {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: var(--num);
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  /* Gives back the last digit's negative tracking so the glyphs, not the box, sit on the centre line. */
+  padding-right: 0.04em;
+  /* Optical size at its largest so the 900 cut stays tight, not the text cut's open spacing. */
+  font-variation-settings: "opsz" 32;
+  color: rgb(255 255 255 / 0.78);
+  text-shadow:
+    0 0.01em 0.03em rgb(43 59 110 / 0.05),
+    0 0.05em 0.14em rgb(43 59 110 / 0.09);
+  user-select: none;
+}
+
+/* A faint inner ring in the 0 (inset ~18% of its width), so it still reads as a zero around the fan. */
+.art::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(var(--num) * 0.143);
+  width: calc(var(--num) * 0.422);
+  height: calc(var(--num) * 0.5);
+  border: 2px solid rgb(43 59 110 / 0.07);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+/* Centred on the "0" and in front of it, hair just above its top curve, feet a little below the baseline. */
+.figure {
+  position: absolute;
+  left: 50%;
+  /* Phones: a touch higher, so the hair still clears the smaller 0 by ~10px (desktop resets it). */
+  bottom: 0;
+  width: calc(var(--num) * 0.5);
+  transform: translateX(-50%);
+}
+
+/* The ground shadow stays put while the fan bobs above it. */
+.figure::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 8%;
+  right: 8%;
+  bottom: -2%;
+  height: 8%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(36 36 60 / 0.24), transparent);
+}
+
+.fan {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0.75rem 1rem rgb(36 36 60 / 0.12));
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 40rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+/* Warm dark grey: AA on the peach and mint washes. */
+.lede {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #4a4640;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+/* The primary pill carries a round arrow at its start: a white dot with a Lake Blue arrow. */
+.primary {
+  padding-left: 0.375rem;
+  padding-right: 1.75rem;
+  gap: 0.75rem;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: var(--color-lake);
+}
+
+.arrow svg {
+  transition: transform var(--dur-base) var(--ease-out-quart);
+}
+
+/* A flat cream glass fill, so the washes behind never streak it; hover and focus still invert it to ink. */
+.secondary:not(:hover):not(:focus-visible) {
+  background: rgb(253 251 247 / 0.9);
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fan {
+    animation: bob 4s ease-in-out infinite;
+  }
+
+  .primary:hover .arrow svg,
+  .primary:focus-visible .arrow svg {
+    transform: translateX(-3px);
+  }
+}
+
+@media (min-width: 640px) {
+  .stage {
+    --num: clamp(14rem, min(38vw, 56vh), 35rem);
+    padding-bottom: 0;
+  }
+
+  .figure {
+    bottom: calc(var(--num) * -0.017);
+  }
+
+  .copy {
+    margin-top: 1.25rem;
+  }
+
+  .lede {
+    font-size: 0.9375rem;
+  }
+
+  .actions {
+    flex-direction: row;
+    justify-content: center;
+    width: auto;
+    margin-top: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    padding: 1.5rem 3rem 2rem;
+  }
+
+  /* 52px up to 1664px wide, then up to 60px on the widest screens. */
+  .copy {
+    max-width: 48rem;
+    margin-top: 0.75rem;
+  }
+
+  .title {
+    font-size: clamp(3.25rem, 3.125vw, 3.75rem);
+  }
+}
