@@ -413,6 +413,19 @@
   line-height: 1.25rem;
 }
 
+/* Apply stays an inline underlined word: block padding on an inline box grows its hit area (24px, 44px
+   on phones) without touching the line box; the side padding is cancelled by an equal negative margin. */
+.apply {
+  padding-block: 4px;
+}
+
+@media (max-width: 767.98px) {
+  .apply {
+    margin-inline: -4px;
+    padding: 14px 4px;
+  }
+}
+
 /* ---------- Entrances (cta-motion.tsx arms blocks that start below the fold) ---------- */
 
 /* Reduced motion never hides a block, even one armed before the setting changed. */

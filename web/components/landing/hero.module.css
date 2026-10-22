@@ -454,6 +454,24 @@
   visibility: hidden;
 }
 
+/* Reduced motion: no crossfade, so inactive turns leave the tree (no hidden text). The thread reserves
+   the tallest turn's height instead. */
+@media (prefers-reduced-motion: reduce) {
+  .turn[data-active="false"] {
+    display: none;
+  }
+
+  /* twin-chat.tsx sets data-measure for one synchronous read of every turn's height. */
+  .thread[data-measure] .turn[data-active="false"] {
+    display: flex;
+    visibility: hidden;
+  }
+
+  .thread {
+    min-height: var(--thread-min, 0px);
+  }
+}
+
 .ask {
   align-self: flex-end;
   max-width: 85%;
@@ -628,11 +646,21 @@
   color: var(--color-ink);
 }
 
+/* Inactive tabs flood to Lake Blue with white text: unmistakable in a still. */
+.tab[aria-selected="false"]:focus-visible {
+  background: var(--color-lake);
+  color: #fff;
+}
+
 @media (hover: hover) {
-  .send:hover,
-  .tab[aria-selected="false"]:hover {
+  .send:hover {
     background: var(--color-periwinkle);
     color: var(--color-ink);
+  }
+
+  .tab[aria-selected="false"]:hover {
+    background: var(--color-lake);
+    color: #fff;
   }
 }
 

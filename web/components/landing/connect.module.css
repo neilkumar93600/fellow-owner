@@ -122,22 +122,17 @@
   margin-left: auto;
 }
 
-/* 44px targets; the visible dot is 8px and stretches (transform) when its step is active. */
+/* 44px targets; the visible dot is 8px and stretches (transform) into a pill when its step is active. */
 .dot {
   display: grid;
   width: 44px;
   height: 44px;
   place-items: center;
   border: 0;
-  /* The hover tint fills the content box: a 28px disc inside the 44px target. */
-  padding: 8px;
+  padding: 0;
   border-radius: 999px;
   background: none;
-  background-clip: content-box;
   cursor: pointer;
-  transition:
-    background-color var(--dur-base) var(--ease-out-quart),
-    box-shadow var(--dur-base) var(--ease-out-quart);
 }
 
 .dotMark {
@@ -148,7 +143,10 @@
   opacity: 0.45;
   transition:
     transform 250ms var(--ease-out-quart),
-    opacity 250ms var(--ease-out-quart);
+    translate var(--dur-base) var(--ease-out-quart),
+    opacity 250ms var(--ease-out-quart),
+    background-color var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart);
 }
 
 .dot[aria-current] .dotMark {
@@ -157,30 +155,26 @@
   transform: scaleX(2.5);
 }
 
-/* Stepper hover (shared with creators and fans): an inactive dot sits on a white tint and lifts 1px. */
-.dot:not([aria-current]):is(:hover, :focus-visible) {
-  background-color: rgb(255 255 255 / 0.7);
+/*
+ * Pill hover (shared with the How-it-works chips and the showcase control): an inactive dot floods Lake
+ * Blue and widens into the active pill shape; every dot lifts 2px over a shadow. The active dot stays ink.
+ * Reduced motion keeps the colour and the shape, and drops the lift.
+ */
+.dot:is(:hover, :focus-visible) .dotMark {
+  box-shadow: 0 4px 6px -2px rgb(45 45 48 / 0.45);
+}
+
+/* `translate`, not transform, so the lift composes with the pill's scaleX. */
+@media (prefers-reduced-motion: no-preference) {
+  .dot:is(:hover, :focus-visible) .dotMark {
+    translate: 0 -2px;
+  }
 }
 
 .dot:not([aria-current]):is(:hover, :focus-visible) .dotMark {
-  opacity: 0.85;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .dot:not([aria-current]):is(:hover, :focus-visible) .dotMark {
-    transform: translate3d(0, -1px, 0);
-  }
-}
-
-/* The active dot answers too: the same white tint, and its ink bar grows on toward the pill. */
-.dot[aria-current]:is(:hover, :focus-visible) {
-  background-color: rgb(255 255 255 / 0.7);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .dot[aria-current]:is(:hover, :focus-visible) .dotMark {
-    transform: scale(3.25, 1.25);
-  }
+  background: var(--color-lake);
+  opacity: 1;
+  transform: scaleX(2.5);
 }
 
 /* The row: native snap scroller by default; a translated strip inside a clipped viewport when pinned. */

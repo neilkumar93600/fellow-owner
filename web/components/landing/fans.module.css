@@ -295,8 +295,10 @@
   text-align: left;
 }
 
-.stepBtn:active {
-  transform: scale(0.98);
+/* Press the whole row (title and frosted bar together), on the individual scale property so it stacks
+   with the hover lift instead of replacing it. */
+.step:has(.stepBtn:active) {
+  scale: 0.98;
 }
 
 /* The whole row is the target. */
@@ -306,62 +308,40 @@
   z-index: -1;
   inset: 0 -12px;
   border-radius: 20px;
-  transition: background-color var(--dur-base) var(--ease-out-quart);
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart);
 }
 
 /*
- * Stepper hover (shared with creators and connect): an inactive row takes a soft white tint and its
- * number lifts 1px; focus-visible gets the same. The active row keeps its filled ink number and bar.
+ * Step-row hover (shared with creators): a full-width frosted bar behind the row and, on an inactive row,
+ * the number floods Lake Blue; focus-visible gets the same. The active row keeps its filled ink number
+ * and hairline, and lifts 2px with the bar's shadow like any hovered row. Reduced motion drops the lift.
  */
 @media (min-width: 768px) {
-  .step:not([data-state="active"]) .stepBtn:is(:hover, :focus-visible)::after {
-    background: rgb(255 255 255 / 0.45);
-  }
-
-  .step:not([data-state="active"]) .stepBtn:is(:hover, :focus-visible) .num {
-    background: #fff;
-    color: var(--ink);
+  .stepBtn:is(:hover, :focus-visible)::after {
+    background: rgb(255 255 255 / 0.78);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
     box-shadow:
       inset 0 0 0 1px var(--glass-edge),
-      0 6px 14px -8px rgb(45 45 48 / 0.35);
+      0 14px 28px -18px rgb(45 45 48 / 0.5);
   }
-}
 
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
   .step:not([data-state="active"]) .stepBtn:is(:hover, :focus-visible) .num {
-    transform: translate3d(0, -1px, 0);
-  }
-}
-
-/*
- * The active row answers the pointer too, and stays clearly active: a fainter tint than an inactive row,
- * its title slides 4px and its ink hairline thickens (`scale`, so it composes with the inline scaleX the
- * pinned mode writes). Reduced motion keeps the tint only.
- */
-@media (min-width: 768px) {
-  .step[data-state="active"] .stepBtn:is(:hover, :focus-visible)::after {
-    background: rgb(255 255 255 / 0.3);
+    background: var(--color-lake);
+    color: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-lake);
   }
 }
 
 @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  /* Raised specificity: beats the later .stepTitle transition and the pinned mode's `transition: none`. */
-  .stepBtn .stepTitle {
-    transition:
-      color var(--dur-slow) var(--ease-out-quart),
-      transform var(--dur-base) var(--ease-out-quart);
+  .step {
+    transition: translate var(--dur-base) var(--ease-out-quart);
   }
 
-  .step .rule .fill {
-    transition: scale var(--dur-base) var(--ease-out-quart);
-  }
-
-  .step[data-state="active"] .stepBtn:is(:hover, :focus-visible) .stepTitle {
-    transform: translate3d(4px, 0, 0);
-  }
-
-  .step[data-state="active"]:has(.stepBtn:is(:hover, :focus-visible)) .fill {
-    scale: 1 1.75;
+  .step:has(.stepBtn:is(:hover, :focus-visible)) {
+    translate: 0 -2px;
   }
 }
 

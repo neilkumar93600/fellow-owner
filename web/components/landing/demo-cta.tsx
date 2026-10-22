@@ -80,7 +80,7 @@ export function DemoCta() {
             <p className={st.note}>
               Founding creators: we set it up with you and ship one change you ask for within 48
               hours.{' '}
-              <Link href="/contact?topic=founding" className="underline">
+              <Link href="/contact?topic=founding" className={cn('underline', st.apply)}>
                 Apply
               </Link>
             </p>

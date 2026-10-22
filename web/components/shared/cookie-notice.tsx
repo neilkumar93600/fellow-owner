@@ -21,9 +21,10 @@ import { giveConsent, hasConsent } from '@/lib/local-state';
 // 360px wide, in a bottom corner, so it never sits over a heading or a CTA in the middle of the page.
 const BAR =
   'pointer-events-none fixed inset-x-0 z-30 p-2 sm:p-4 md:inset-x-auto md:w-[22.5rem] md:p-0';
-// Marketing pages: no bottom tab bar on phones, so the bar sits on the edge; the toast takes the left corner.
+// Marketing pages: no bottom tab bar on phones, so the bar sits on the edge; the toast takes the right
+// corner (the left one covers the reading column).
 const BAR_ON_EDGE =
-  'bottom-[env(safe-area-inset-bottom)] md:bottom-[calc(1rem+env(safe-area-inset-bottom))] md:left-4';
+  'bottom-[env(safe-area-inset-bottom)] md:right-4 md:bottom-[calc(1rem+env(safe-area-inset-bottom))]';
 // App pages: the bar clears the phone tab bar; from 768px the left corner is the icon rail, so the right.
 const BAR_CLEAR_TABS =
   'bottom-0 max-md:bottom-[calc(4.75rem+env(safe-area-inset-bottom))] md:bottom-4 md:right-4';

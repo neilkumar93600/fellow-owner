@@ -183,6 +183,7 @@
   cursor: pointer;
   transition:
     background-color var(--dur-base) var(--ease-out-quart),
+    border-color var(--dur-base) var(--ease-out-quart),
     color var(--dur-base) var(--ease-out-quart),
     box-shadow var(--dur-base) var(--ease-out-quart),
     transform var(--dur-base) var(--ease-out-quart);
@@ -198,28 +199,28 @@
   }
 }
 
-/* Inactive steps answer hover and keyboard focus alike: a Lake Blue tint and a 1px lift. The active
-   step keeps its periwinkle fill and dot, so it stays distinct. */
-.chip:not([aria-current]):hover,
-.chip:not([aria-current]):focus-visible {
-  background: color-mix(in srgb, var(--color-lake) 9%, rgb(255 255 255 / 0.92));
-  transform: translateY(-1px);
+/*
+ * Pill hover (shared with the connect dots and the showcase control): an inactive step floods Lake Blue
+ * with white text; every pill lifts 2px over a shadow. The active step keeps its periwinkle fill and dot,
+ * deepened, so it stays the selected one. Reduced motion keeps the colours and drops the lift.
+ */
+.chip:not([aria-current]):is(:hover, :focus-visible) {
+  border-color: var(--color-lake);
+  background: var(--color-lake);
+  color: #fff;
+  box-shadow: 0 10px 20px -10px rgb(43 89 209 / 0.7);
 }
 
-/* The active step answers the pointer too: a deeper periwinkle, a soft shadow and the same 1px lift. */
-.chip[aria-current]:hover,
-.chip[aria-current]:focus-visible {
-  background: color-mix(in srgb, var(--color-lake) 14%, var(--color-periwinkle));
+.chip[aria-current]:is(:hover, :focus-visible) {
+  background: color-mix(in srgb, var(--color-lake) 22%, var(--color-periwinkle));
   box-shadow:
     var(--glass-highlight),
-    0 6px 14px -8px rgb(45 45 48 / 0.35);
-  transform: translateY(-1px);
+    0 10px 20px -10px rgb(45 45 48 / 0.45);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .chip:hover,
-  .chip:focus-visible {
-    transform: none;
+@media (prefers-reduced-motion: no-preference) {
+  .chip:is(:hover, :focus-visible) {
+    transform: translate3d(0, -2px, 0);
   }
 }
 
@@ -259,6 +260,11 @@
     overflow: visible;
     clip-path: none;
     color: var(--color-ink);
+  }
+
+  /* White on the Lake Blue hover flood (see the pill hover above). */
+  .chip:not([aria-current]):is(:hover, :focus-visible) .chipName {
+    color: #fff;
   }
 }
 

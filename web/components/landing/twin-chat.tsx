@@ -86,6 +86,7 @@ export function TwinChat() {
   const [n, setN] = useState(Number.POSITIVE_INFINITY);
   const [asked, setAsked] = useState('');
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const threadRef = useRef<HTMLDivElement>(null);
   const next = TWIN_CHAT[(active + 1) % TWIN_CHAT.length] ?? TWIN_CHAT[0];
 
   useEffect(() => {
@@ -130,6 +131,26 @@ export function TwinChat() {
     };
   }, [active]);
 
+  // Reduced motion hides inactive turns with display:none, so reserve the tallest turn's height on the
+  // thread (measured with them briefly shown, before paint) and the panel never jumps between tabs.
+  useEffect(() => {
+    const thread = threadRef.current;
+    if (!thread) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const measure = () => {
+      thread.style.removeProperty('--thread-min');
+      thread.setAttribute('data-measure', '');
+      const tallest = Math.max(
+        ...Array.from(thread.children, (c) => (c as HTMLElement).offsetHeight),
+      );
+      thread.removeAttribute('data-measure');
+      if (reduce.matches) thread.style.setProperty('--thread-min', `${tallest + 28}px`);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+
   const select = (index: number, focus = false) => {
     setActive(index);
     if (focus) tabs.current[index]?.focus();
@@ -169,7 +190,7 @@ export function TwinChat() {
           <span className={styles.badge}>Demo</span>
         </div>
 
-        <div className={styles.thread}>
+        <div ref={threadRef} className={styles.thread}>
           {TWIN_CHAT.map((q, index) => (
             <div
               key={q.id}

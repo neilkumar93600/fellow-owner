@@ -96,7 +96,8 @@
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: var(--glass-strong);
+  /* Denser than --glass-strong so text under the bar never reads through. */
+  background: rgb(255 255 255 / 0.9);
   border: 1px solid var(--glass-edge);
   box-shadow: var(--glass-highlight), var(--shadow-glass);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
@@ -362,7 +363,7 @@
   max-width: 420px;
   padding: 12px;
   border-radius: 24px;
-  background: var(--glass-strong);
+  background: rgb(255 255 255 / 0.9);
   border: 1px solid var(--glass-edge);
   box-shadow: var(--glass-highlight), var(--shadow-glass);
   -webkit-backdrop-filter: blur(24px) saturate(160%);

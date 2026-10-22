@@ -37,7 +37,43 @@ const STEPS: { id: StepVisualId; title: string; line: string }[] = [
 
 const COUNT = STEPS.length;
 const LAST = COUNT - 1;
+const INDEX = STEPS.map((_, index) => index);
 const pad = (value: number) => String(value).padStart(2, '0');
+
+/** Pinned: the row holds still for the first and last quarter of each step's scroll, so it rests with a card on the content edge. */
+const HOLD = 0.25;
+
+/** Piecewise-linear lookup: where `value` falls along the ascending `xs`, read off `ys`. */
+function lookup(xs: number[], ys: number[], value: number) {
+  for (let i = 1; i < xs.length; i++) {
+    const x0 = xs[i - 1] ?? 0;
+    const x1 = xs[i] ?? 0;
+    if (value > x1 && i < xs.length - 1) continue;
+    const f = x1 > x0 ? Math.min(1, Math.max(0, (value - x0) / (x1 - x0))) : 1;
+    return (ys[i - 1] ?? 0) + f * ((ys[i] ?? 0) - (ys[i - 1] ?? 0));
+  }
+  return ys[0] ?? 0;
+}
+
+/**
+ * Swipe mode: which step (fractional) a scroll offset shows. The last cards can't reach the content edge
+ * and share the end offset, so the end belongs to the last step.
+ */
+function stepAt(stops: number[], offset: number) {
+  const end = stops[LAST] ?? 0;
+  const keep = INDEX.filter((index) => index === LAST || (stops[index] ?? 0) < end - 1);
+  return lookup(
+    keep.map((index) => stops[index] ?? 0),
+    keep,
+    offset,
+  );
+}
+
+/** The pager marks the card arriving at the content edge: between stops that is the next card, fully in view. */
+function activeAt(pos: number) {
+  const near = Math.round(pos);
+  return Math.abs(pos - near) < 0.02 ? near : Math.ceil(pos);
+}
 
 /**
  * Pin: a wide window with a fine pointer, room to spare and motion allowed. Vertical scroll through a tall
@@ -49,23 +85,23 @@ const PIN_QUERY =
 
 function Step({
   index,
-  progress,
+  pos,
   dim,
   on,
 }: {
   index: number;
-  progress: MotionValue<number>;
+  pos: MotionValue<number>;
   dim: MotionValue<number>;
   on: boolean;
 }) {
   const step = STEPS[index];
-  // Distance from the active step: neighbours rest at 55% and a touch smaller.
-  const opacity = useTransform([progress, dim], ([p, d]: number[]) => {
-    const offset = Math.min(Math.abs((p ?? 0) * LAST - index), 1);
+  // Distance from the step on the content edge: neighbours rest at 55% and a touch smaller.
+  const opacity = useTransform([pos, dim], ([p, d]: number[]) => {
+    const offset = Math.min(Math.abs((p ?? 0) - index), 1);
     return 1 - offset * 0.45 * (d ?? 0);
   });
-  const scale = useTransform([progress, dim], ([p, d]: number[]) => {
-    const offset = Math.min(Math.abs((p ?? 0) * LAST - index), 1);
+  const scale = useTransform([pos, dim], ([p, d]: number[]) => {
+    const offset = Math.min(Math.abs((p ?? 0) - index), 1);
     return 1 - offset * 0.05 * (d ?? 0);
   });
   if (!step) return null;
@@ -102,48 +138,65 @@ export function ConnectSteps() {
   const { scrollXProgress } = useScroll({ container: rowRef });
   /** Whichever drives the row: page scroll when pinned, the row's own scroll otherwise. */
   const progress = useMotionValue(0);
-  const distance = useMotionValue(0);
+  /** The step on the content edge, fractional between stops. */
+  const pos = useMotionValue(0);
   const dim = useMotionValue(0);
-  const x = useTransform([scrollYProgress, distance], ([p, d]: number[]) => -(p ?? 0) * (d ?? 0));
+  const x = useMotionValue(0);
+  /** Each card's row offset when it sits on the content edge, capped where the last card meets the gutter. */
+  const stops = useRef<number[]>([]);
 
   const [active, setActive] = useState(0);
   const [reached, setReached] = useState(0);
   const seen = useInView(rowRef, { amount: 0.35, once: true });
 
-  const track = useCallback(
-    (value: number) => {
-      progress.set(value);
-      const index = Math.min(LAST, Math.max(0, Math.round(value * LAST)));
-      setActive(index);
-      setReached((max) => Math.max(max, index));
-    },
-    [progress],
-  );
-  useMotionValueEvent(scrollYProgress, 'change', (value) => {
-    if (pin) track(value);
+  const track = useCallback(() => {
+    const row = rowRef.current;
+    if (!row || !stops.current.length) return;
+    let at: number;
+    if (pin) {
+      progress.set(scrollYProgress.get());
+      const t = scrollYProgress.get() * LAST;
+      const i = Math.min(LAST - 1, Math.max(0, Math.floor(t)));
+      const f = Math.min(1, Math.max(0, (t - i - HOLD) / (1 - 2 * HOLD)));
+      at = i + f * f * (3 - 2 * f);
+      x.set(-lookup(INDEX, stops.current, at));
+    } else {
+      progress.set(scrollXProgress.get());
+      at = stepAt(stops.current, row.scrollLeft);
+      x.set(0);
+    }
+    pos.set(at);
+    const index = Math.min(LAST, Math.max(0, activeAt(at)));
+    setActive(index);
+    setReached((max) => Math.max(max, index));
+  }, [pin, progress, pos, x, scrollYProgress, scrollXProgress]);
+  useMotionValueEvent(scrollYProgress, 'change', () => {
+    if (pin) track();
   });
-  useMotionValueEvent(scrollXProgress, 'change', (value) => {
-    if (!pin) track(value);
+  useMotionValueEvent(scrollXProgress, 'change', () => {
+    if (!pin) track();
   });
 
-  // The pinned row slides until the last card meets the right gutter (no dead space); re-measured on resize.
+  // The row travels until the last card meets the right gutter (no dead space); re-measured on resize.
   useEffect(() => {
     dim.set(reduced ? 0 : 1);
     const row = rowRef.current;
     if (!row) return;
     const measure = () => {
-      const first = row.firstElementChild as HTMLElement | null;
-      const last = row.lastElementChild as HTMLElement | null;
-      const end = last ? last.offsetLeft + last.offsetWidth : 0;
-      const lead = first?.offsetLeft ?? 0;
-      distance.set(pin ? Math.max(0, end + lead - row.clientWidth) : 0);
-      track(pin ? scrollYProgress.get() : scrollXProgress.get());
+      const cards = Array.from(row.children) as HTMLElement[];
+      const first = cards[0];
+      const last = cards[LAST];
+      if (!first || !last) return;
+      const lead = first.offsetLeft;
+      const end = Math.max(0, last.offsetLeft + last.offsetWidth + lead - row.clientWidth);
+      stops.current = cards.map((card) => Math.min(end, card.offsetLeft - lead));
+      track();
     };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(row);
     return () => observer.disconnect();
-  }, [pin, reduced, distance, dim, scrollYProgress, scrollXProgress, track]);
+  }, [reduced, dim, track]);
 
   const goTo = (index: number) => {
     const row = rowRef.current;
@@ -212,7 +265,7 @@ export function ConnectSteps() {
                 <Step
                   key={step.id}
                   index={index}
-                  progress={progress}
+                  pos={pos}
                   dim={dim}
                   on={reduced || (seen && index <= reached)}
                 />
