@@ -24,8 +24,8 @@
     "db:studio": "pnpm --filter @fellow-owners/api db:studio"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.15",
-    "turbo": "^2.11.6",
+    "@biomejs/biome": "2.6.3",
+    "turbo": "^2.11.10",
     "typescript": "^5.9.3"
   }
 }
