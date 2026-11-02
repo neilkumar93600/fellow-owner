@@ -36,7 +36,7 @@
     "postgres": "^3.4.9",
     "redis": "^6.3.0",
     "resend": "^6.31.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
